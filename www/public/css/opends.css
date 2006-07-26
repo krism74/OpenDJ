@@ -25,7 +25,7 @@
 .info-table td {border: solid 1px #B5B5B5;padding:10px;vertical-align:top}
 
 .secmasttable {}
-td .secmasttable { vertical-align:bottom }
+.secmasttable td { vertical-align:bottom }
 
 
 .white{
