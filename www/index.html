@@ -1,45 +1,144 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
 <html>
 <head>
-<title>Project Home Page</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="SHORTCUT ICON" href="public/images/opends_favicon.gif">
+ <style type="text/css"> /* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */</style>
+ <link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+ <link rel="stylesheet" href="public/css/opends.css" type="text/css">
+<title>OpenDS Project</title>
 </head>
-
-<body bgcolor="#FFFFFF" text="#000000">
-<h1>Default project home page </h1>
-<p>Congratulations on your new java.net project! </p>
-<p>This page is the home page for your new project. This content is appearing 
-  because you have selected the option <b>Use project index.html</b>. To edit 
-  the information displayed on this page, just use CVS to check out your project's 
-  CVS repository and edit index.html in directory www. You can get more information 
-  on how to set-up your local CVS client, click on <b>Version Control</b> on the 
-  left nav bar. </p>
-<p>If you don't want to use CVS to manage your home page, click on the <b>Edit 
-  project</b> link on this page and unclick the option <b>Use project index.html</b>. 
-  Your project home page contents will be generated from the <b>Edit project</b> 
-  field <b>Description</b>. Edit the text on that field to change your home page 
-  contents. Click on <b>Submit changes</b> to save your edits. </p>
-<p>If you are looking for <a href="https://java-net.dev.java.net/ProjectPages.html#templates">sample 
-  home page templates</a>, check out the <a href="https://java-net.dev.java.net/ProjectPages.html">java.net 
-  Project Starter Kit</a>. Copy either of the templates into your project's html 
-  to get started on your project's home page. </p>
-<p>You can find lots of helpful information in the Starter Kit to get your project 
-  started. Some of the things you will find in there include:</p>
-<ul>
-  <li>Hints on how to <a href="https://java-net.dev.java.net/ProjectPages.html#pages">set-up 
-    your project's</a> home page</li>
-  <li>Ideas on how to <a href="https://java-net.dev.java.net/ProjectPages.html#publicity">publicize 
-    your project</a> including RSS feeds</li>
-  <li>Hints on <a href="https://java-net.dev.java.net/pagedesign.html">project 
-    page HTML</a></li>
-  <li>Setting up project <a href="https://java-net.dev.java.net/ProjectPages.html#wiki">wiki 
-    pages</a></li>
-  <li>And places to go if <a href="https://java-net.dev.java.net/ProjectPages.html#feedback">you 
-    have questions</a>.</li>
-</ul>
-<p>Remember that you will attract more new members and your project team will 
-  work more effectively if you, as the project owner, supply sufficient information 
-  about your project for visitors to your project space. Good luck with your new 
-  project! </p>
+<body>
+<script>
+// kill "description" h3 bar
+ld = document.getElementById("longdescription");
+for( n=ld.firstChild; n!=null; n=n.nextSibling ) {
+  if(n.nodeType==1 && n.innerHTML=="Description" ) {
+    n.parentNode.removeChild(n);
+    break;
+  }
+}
+</script>
+<table border="0" width="100%">
+  <tbody>
+    <tr>
+      <td><table width="100%">
+          <tbody>
+            <tr>
+              <td><p><img src="public/images/opends_logo.gif" alt="OpenDS" align="left"></p></td>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              <td><font color="#E76F00" size="+1">
+                <p>A better, stronger, faster, open source<br />
+                  Directory Server brewed with 100% pure java.</p>
+                </font></td>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              <td align="center"><p><b><a href="#"><img src="public/images/download-sm.gif" alt="Download OpenDS" border="0"><br>
+                  Get it!</a></b></td>
+            </tr>
+          </tbody>
+        </table>
+        <hr>
+        <!-- begin container table -->
+        <table border="0">
+          <tbody>
+            <tr>
+              <td><!-- begin left column-->
+                <p>The OpenDS Directory Server is a pure Java implementation of a network-accessible database that is able to store information in a hierarchical form. Clients may communicate with it using a standard protocol (at present, only LDAP, and DSML via a DSML to LDAP gateway, are supported) to retrieve and update information in a variety of ways. </p>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td><p><a href="public/about_index.html"><img src="public/images/info.gif" border="0" width="40"></a></td>
+                      <td><table>
+                          <tbody>
+                            <tr>
+                              <td><p><b><a href="public/about_index.html">About OpenDS</a></b><br>
+                                  OpenDS is an open source directory server written from the ground up using 100% pure java. Find out more at the <a href="public/about_index.html">About OpenDS</a> page<br>
+                                  <br>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td><p><a href="public/community_index.html"><img src="public/images/communities.gif" border="0" width="40"></a></td>
+                      <td><table>
+                          <tbody>
+                            <tr>
+                              <td><p><b><a href="public/community_index.html">Community</a></b><br>
+                                  Looking to help drive this project or just track its progress? Find out how to join the OpenDS community on our <a href="public/community_index.html">community</a> page.<br>
+                                  <br>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td><p><a href="public/downloads_index.html"><img src="public/images/download-sm.gif" border="0" width="40"></a></td>
+                      <td><table>
+                          <tbody>
+                            <tr>
+                              <td><p><b><a href="public/downloads_index.html">Downloads</a></b><br>
+                                  Ready to give OpenDS a try? Head to the <a href="public/downloads_index.html">downloads</a> page to grab a build. <!--If you have feedback, comments, or questions be sure to let us know. You can <a href="#">send us an e-mail</a> or post on the <a href="#">Discussion Forums</a> --><br>
+                                  <br>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td><p><a href="public/contribute_index.html"><img src="public/images/srcbrowse.gif" border="0" width="40"></a></td>
+                      <td><table>
+                          <tbody>
+                            <tr>
+                              <td><p><b><a href="public/contribute_index.html">Contributing Code</a></b><br>
+                                  Are you a developer who is ready, willing, and able to help improve OpenDS? Head to the <a href="public/contribute_index.html">developers</a> page to get started. <br>
+                                  <br>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table></td>
+                    </tr>
+                  </tbody>
+                </table></td>
+              <!-- end left column-->
+              <!-- begin rt column-->
+              <td valign="top"><div style="border: 0px solid rgb(170, 170, 170); float: right;">
+                  <div style="border: 1px solid rgb(170, 170, 170); padding: 5px; background: rgb(238, 238, 238) none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; width: 220px; margin-top: 1em;">
+                    <p> <strong>OpenDS Highlights</strong> <br>
+                      <br>
+                      <strong>Latest Project News</strong> <br>
+&#8226; <a href="#">Item</a><br>
+&#8226; <a href="#">Item</a><br>
+                      <br>
+                      <strong>Latest Builds</strong> <br>
+&#8226; <a href="#">Item</a><br>
+&#8226; <a href="#">Item</a><br>
+                      <br>
+                  </div>
+                </div></td>
+              <!-- end rt column -->
+            </tr>
+          </tbody>
+        </table>
+        <!-- end container table -->
+      </td>
+      <!-- BODY ENDS HERE -->
+    </tr>
+  </tbody>
+</table>
 </body>
 </html>
-

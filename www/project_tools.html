@@ -1,0 +1,149 @@
+</dd>
+<script id="eraser">
+// hide all default navigation bars
+
+// get to the block
+var dd = document.getElementById("eraser").previousSibling;
+for( n=dd; n!=null; n=n.previousSibling ) {
+  if(n.nodeType==1) { // if element
+    if(n.tagName=="DD") { // kill all the link items
+      n.style.display = "none";
+    }
+    if(n.tagName=="DT") { // change the title
+      n.innerHTML = "<strong>OpenDS project</strong>";
+    }
+  }
+}
+
+// delete the "get involved" block
+for( n=dd.parentNode.previousSibling; n!=null; n=n.previousSibling ) {
+  if(n.nodeType==1) { // if element
+    if(n.tagName=="DL") {
+      n.style.display = "none";
+    }
+  }
+}
+</script>
+
+
+          <dd>
+            <ul>
+              <li> <a href="https://opends.dev.java.net/servlets/ProjectHome" class="selfref">Project Home</a> </li>
+            </ul>
+          </dd>
+          <dd>
+            <ul>
+              <li> <a href="http://sun.m3iworks.com/opends/about_opends.html" class="selfref" style="font-weight: bold;">About OpenDS</a> </li>
+            <!--  <li> <a href="#">Announcements</a> </li> -->
+              <li> <a href="https://opends.dev.java.net/public/docs/faq.html">Project FAQ</a> </li>
+              <li> <a href="https://opends.dev.java.net/public/docs/index.html">Documentation Depot</a> </li>
+            </ul>
+          </dd>
+          <dd>
+            <ul>
+              <li> <a href="https://opends.dev.java.net/public/community/index.html" class="selfref" style="font-weight: bold;">Community</a> </li>
+              <li> <a href="#">Join Us!</a> </li>
+     <!--         <li> <a href="#">OpenDS Blogs</a> </li>
+              <li> <a href="#">OpenDS Wiki</a> </li>
+              <li> <a href="#">Discussion Forums</a> </li>-->
+              <li> <a href="https://opends.dev.java.net/servlets/ProjectMailingListList">Mailing Lists</a> </li>
+            </ul>
+          </dd>
+          <dd>
+            <ul>
+              <li> <a href="#" class="selfref" style="font-weight: bold;">Downloads</a> </li>
+              <li><a href="#">Getting Started</a> </li>
+              <li><a href="#">Weekly Builds</a> </li>
+            </ul>
+          </dd>
+          <dd>
+            <ul>
+              <li> <a href="#" class="selfref" style="font-weight: bold;">Contributing Code</a> </li>
+              <li><a href="#">Version control - SCM</a> </li>
+              <li> <a href="#">Issue tracker</a> </li>
+            </ul>
+          </dd>
+        </dl>
+
+
+<!--<dd>
+  <ul>
+      <li>
+	<a href="https://opends.dev.java.net/servlets/ProjectHome">OpenDS Project Home</a>
+      </li>
+      <li>
+		<a href="https://opends.dev.java.net/public/downloadsindex.html">Downloads</a><br>
+      </li>
+      <li>
+        <a href="https://opends.dev.java.net/public/faq/index.html">OpenDS FAQ</a><br>
+      </li>
+      <li>
+        <a href="https://opends.dev.java.net/servlets/ProjectMembershipRequest">Join GlassFish</a>
+      </li>
+      <li>
+	<a href="http://wiki.java.net/bin/view/Projects/GlassFish">GlassFish Wiki</a><br>
+      </li>
+	        <li>
+	<a href="https://opends.dev.java.net/javaee5/docs/DocsIndex.html">Documentation</a><br>
+      </li>
+  </ul>
+<dd>
+  <ul>
+      <li>
+	<b><a href="https://opends.dev.java.net/public/users.html">Use it</a></b>
+      </li>
+      <li>
+	  <a href="https://opends.dev.java.net/public/TipsandBlogs.html">Tech Tips and Blogs</a><br>
+      </li>
+      <li>
+	  <a href="https://opends.dev.java.net/nonav/javaee5/api/index.html">javadocs</a><br>
+      </li>
+      <li>
+	  <a href="mailto:feedback@opends.dev.java.net">Send us feedback</a><br>
+      </li>
+      <li>
+	<a href="https://opends.dev.java.net/servlets/ProjectNewsList">Announcements</a>
+      </li>
+      <li>
+	<a href="http://forums.java.net/jive/forum.jspa?forumID=56&amp;start=0">Discussion forums</a>
+      </li>
+  </ul>
+<dd>
+  <ul>
+      <li>
+	<b><a href="https://opends.dev.java.net/public/devindex.html">Improve it</a></b>
+      </li>
+      <li>
+	<a href="https://opends.dev.java.net/servlets/ProjectMailingListList">Mailing lists</a>
+      </li>
+      <li>
+  	<a href="https://opends.dev.java.net/source/browse/opends">Version Control - SCM</a><br>
+      </li>
+      <li>
+  	<a href="https://opends.dev.java.net/servlets/ProjectIssues">Issue tracker</a><br>
+      </li>
+      <li>
+        <form method="get" action="https://opends.dev.java.net/issues/show_bug.cgi">
+        <input type="submit" value="Go to"/>Issue #<input name="id" size="3"/>
+        </form>
+      </li>
+      <li>
+  </ul>
+  -->
+<!-- the following code is required for statcounter PLEASE DO NOT REMOVE IT --><!-- Start of StatCounter Code
+<script type="text/javascript" language="javascript">
+var sc_project=1289830;
+var sc_invisible=1;
+var sc_partition=11;
+var sc_security="ae5ef92d";
+var sc_https=1;
+</script>
+
+
+
+<script type="text/javascript" language="javascript" src="https://secure.statcounter.com/counter/counter.js"></script>
+<noscript><a href="http://www.statcounter.com/" target="_blank"><img
+src="https://c12.statcounter.com/counter.php?sc_project=1289830&amp;amp;java=0&amp;amp;security=ae5ef92d&amp;amp;invisible=1"
+alt="stats count" border="0"></a> </noscript>
+ -->
+<!-- End of StatCounter Code -->
