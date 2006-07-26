@@ -14,35 +14,35 @@
 <table width="100%" cellspacing="0">
   <tbody>
     <tr>
-      <td width="90%"><p><img src="../images/opends_logo.gif" alt="OpenDS" align="left"></p></td>
-      <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-      <td align="center" nowrap="nowrap"><p><a class="headlink" href="#"><img src="../images/info_30.gif" alt="Download OpenDS" width="30" height="30" border="0"><br>
+    <td><span class="collectionheader"> Documentation Depot</span></td>
+      <!--  <td align="center" nowrap="nowrap"><p><a class="headlink" href="#"><img src="../images/info_30.gif" alt="Download OpenDS" width="30" height="30" border="0"><br>
           About</a></td>
       <td align="center" nowrap="nowrap"><p><a class="headlink" href="#"><img src="../images/communities_30.gif" alt="Download OpenDS" width="30" height="30" border="0"><br>
           Community</a></td>
       <td align="center" nowrap="nowrap"><p><a class="headlink" href="#"><img src="../images/download_30.gif" alt="Download OpenDS" width="30" height="30" border="0"><br>
           Download</a></td>
       <td align="center" nowrap="nowrap"><p><a class="headlink" href="#"><img src="../images/srcbrowse_30.gif" alt="Download OpenDS" width="30" height="30" border="0"><br>
-          Contribute</a></td>
+          Contribute</a></td> -->
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../images/opends_logo.gif" alt="OpenDS Logo" width="158" height="49" border="0" align="middle"></a> </td>
     </tr>
   </tbody>
 </table>
 <hr />
 <div class="h3" id="overview">
   <h3>Documentation Overview</h3>
-  <div>[paragraph introducing documentation and such, including formats available]</div>
+  <p>Most of the project documentation is available in OpenDocument and Adobe Acrobat (PDF) format.</p>
 </div>
 <div class="h3" id="architecturaldocs">
   <h3>Architecture Documents</h3>
-  <div>[ consider making all ducumentation sections tables with description columns and maybe icons for each of the doc formats ]
+  <div>
     <ul>
-      <li>Architecture Guide (<a href="http://samsonite/docs/ds7_architecture.sxw">OpenDocument</a> | <a href="http://samsonite/docs/ds7_architecture.pdf">PDF</a>)</li>
-      <li>High-Level Architecture Diagram (<a href="http://samsonite/docs/architecture_diagram.pdf">PDF</a>) </li>
-      <li><a href="http://samsonite/standards/index.html">Directory Server Standards and Specifications</a></li>
-      <li><a href="http://samsonite/docs/assigned-oids.ods">Directory Server OID Assignments</a></li>
-      <li>Synchronization Design (<a href="http://samsonite/synchronization/synchronization.odt">OpenDocument</a> | <a href="http://samsonite/synchronization/synchronization.pdf">PDF</a>)</li>
-      <li>Password Policy Architecture (<a href="http://samsonite/docs/opends_pwpolicy_architecture.odt">OpenDocument</a> | <a href="http://samsonite/docs/opends_pwpolicy_architecture.pdf">PDF</a>)</li>
-      <li>Database Backend Implementation (OpenDocument| PDF)</li>
+      <li>Architecture Guide ( <a href="architecture/OpenDS-Architecture.odt">OpenDocument</a> | <a href="architecture/OpenDS-Architecture.pdf">PDF</a> )</li>
+      <li>High-Level Architecture Diagram ( <a href="architecture/OpenDS-High-Level-Architecture.odg">OpenDocument</a> | <a href="architecture/OpenDS-High-Level-Architecture.pdf">PDF</a> )</li>
+      <li><a href="../standards/index.html">Directory Server Standards and Specifications</a></li>
+      <li>Directory Server OID Assignments ( <a href="assigned-oids.ods">OpenDocument</a> )</li>
+      <li>Synchronization Design ( <a href="architecture/OpenDS-Synchronization-Architecture.odt">OpenDocument</a> | <a href="architecture/OpenDS-Synchronization-Architecture.pdf">PDF</a> )</li>
+      <li>Password Policy Architecture ( <a href="architecture/OpenDS-PWPolicy-Architecture.odt">OpenDocument</a> | <a href="architecture/OpenDS-PWPolicy-Architecture.pdf">PDF</a> )</li>
+      <li>Database Backend Implementation ( <a href="architecture/OpenDS-JE-Backend-Design.odt">OpenDocument</a> | <a href="architecture/OpenDS-JE-Backend-Design.pdf">PDF</a> )</li>
     </ul>
   </div>
 </div>
@@ -50,10 +50,12 @@
   <h3>OpenDS Installation and Configuration </h3>
   <div>
     <ul>
-      <li>Running the Server [[Link to HTML to be written]]</li>
-      <li>OpenDS Installation Guide (<a href="http://samsonite/opends-docs/OpenDS-Install-Guide.odt">OpenDocument</a> | <a href="http://samsonite/opends-docs/OpenDS-Install-Guide.pdf">PDF</a>)</li>
-      <li>OpenDS Configuration Guide (<a href="http://samsonite/opends-docs/OpenDS-Config-Guide.odt">OpenDocument</a> | <a href="http://samsonite/opends-docs/OpenDS-Config-Guide.pdf">PDF</a>)</li>
-      <li>Troubleshooting Guide (OpenDocument| PDF)</li>
+      <li>OpenDS Installation Guide ( <a href="user-docs/OpenDS-Install-Guide.odt">OpenDocument</a> | <a href="user-docs/OpenDS-Install-Guide.pdf">PDF</a> )</li>
+      <li>OpenDS Configuration Guide ( <a href="user-docs/OpenDS-Config-Guide.odt">OpenDocument</a> | <a href="user-docs/OpenDS-Config-Guide.pdf">PDF</a> )</li>
+       <li><a href="user-docs/HowtoRun.html">Running the Server</a></li>
+      <li><a href="user-docs/OpenDS-Troubleshooting.html">Troubleshooting the Server</a></li>
+       <li><a href="user-docs/HowtoSync.html">Configuring Synchronization</a></li>
+      <li>Synchronization Deployments ( <a href="user-docs/OpenDS-Synchronization-Deployments.odt">OpenDocument</a> | <a href="user-docs/OpenDS-Synchronization-Deployments.pdf">PDF</a> )</li>
     </ul>
   </div>
 </div>
@@ -61,9 +63,10 @@
   <h3>Contributing Code</h3>
   <div>
     <ul>
-      <li>Subversion Access Information [[Link to HTML to be written]]</li>
-      <li>Build Instructions [[Link to HTML to be written]]</li>
-      <li>OpenDS Source Guide (<a href="http://samsonite/opends-docs/OpenDS-Source-Guide.odt">OpenDocument</a> | <a href="http://samsonite/opends-docs/OpenDS-Source-Guide.pdf">PDF</a>)</li>
+      <li><a href="dev-docs/OpenDS-Access-Information.html">Subversion Access Information</a></li>
+      <li>OpenDS Source Guide ( <a href="dev-docs/OpenDS-Source-Guide.odt">OpenDocument</a> | <a href="dev-docs/OpenDS-Source-Guide.pdf">PDF</a> )</li>
+      <li><a href="dev-docs/OpenDS-Build-Instructions.html">Build Instructions</a> </li>
+      <li><a href="dev-docs/IntegrationTestSuite-ReadMe.txt">Integration Test Suite ReadMe</a> </li>
     </ul>
   </div>
 </div>
@@ -71,8 +74,8 @@
   <h3>Contributing Documentation</h3>
   <div>[paragraph on how to contribute documentation]
     <ul>
-      <li><a
- href="http://samsonite/opends-docs/OpenDS-Documentation-Template.odt">OpenDS Documentation Template</a></li>
+      <li>OpenDS Documentation Template ( <a
+ href="dev-docs/OpenDS-Documentation-Template.odt">OpenDocument</a> )</li>
     </ul>
   </div>
 </div>

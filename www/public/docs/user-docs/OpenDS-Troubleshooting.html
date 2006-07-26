@@ -1,0 +1,316 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Troubleshooting Guide</title>
+</head>
+<body>
+<table width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><span class="collectionheader">Troubleshooting Guide </span></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../images/opends_logo.gif" alt="OpenDS Logo" width="158" height="49" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <ul>
+      <li><a href="#general_debugging">General debugging tips</a></li>
+      <li><a href="#wont_start">The server won't start</a></li>
+      <li><a href="#no_accept">The server isn't accepting client
+          connections</a></li>
+      <li><a href="#unresponsive">The server is unresponsive</a></li>
+      <li><a href="#error_results">The server is returning error
+          results</a></li>
+      <li><a href="#slow">The server is very slow</a></li>
+      <li><a href="#je_debugging">Berkeley DB JE debugging tips</a></li>
+      <li><a href="#monitoring">Obtaining monitoring information</a></li>
+      <li><a href="#known_jvm_problems">Known problems with the JVM</a></li>
+    </ul>
+
+    <br><br>
+    <a name="general_debugging" />
+    <b>General debugging tips</b>
+    <br>
+    For most problems, the best place to look for help in finding the
+    underlying cause is in the server log files.  In most cases, the error log
+    will contain any available information serious warnings and errors,
+    although some of this information (particularly during server startup) may
+    go into the server.out file on startup when running on UNIX-based systems.
+    For failures during operation processing, the access log may be the best
+    place to look.
+    <br><br>
+    If the problem is reproducible, then running the server in debug mode may
+    also be useful.  Most of the debug functionality of the OpenDS Directory
+    Server is tied into the assertions framework so that it will be completely
+    ignored (and therefore have no performance impact whatsoever) if assertions
+    are disabled.  To enable assertions, pass the "-ea" argument to the JVM
+    when the server is started (by setting the <code>JAVA_ARGS</code>
+    environment variable to have the value "-ea").  Note that enabling
+    assertions can have a significant impact on performance because of the
+    significantly greater amount of work that the server must do.
+
+    <br><br><br>
+
+    <a name="wont_start">
+    <b>The server won't start</b>
+    <br>
+    The most common reasons for the server not starting include:
+    <ul>
+      <li>The startup script or batch file cannot find the Java environment to
+          use to run the server.</li>
+      <li>That instance of the server is already running.</li>
+      <li>There is a problem with the configuration.</li>
+      <li>The JVM has been passed an argument that is either illegal or is out
+          of range (e.g., the JVM couldn't allocate the specified amount of
+          memory).</li>
+      <li>An invalid command-line argument was provided to the server.</li>
+    </ul>
+
+    On UNIX systems, starting the server with "-nodetach" as the first
+    argument will cause the server to run in the foreground rather than as a
+    background process, and it may be easier to see any applicable error
+    message (at present, the server will always run in this mode on Windows
+    systems).  If the server doesn't provide any useful information about the
+    problem by default in either the error log or the server.out file, then
+    enabling assertions in the JVM will likely help.
+    <br><br>
+    If an adequate Java environment cannot be found, then its location can be
+    explicitly specified by setting the <code>JAVA_HOME</code> environment
+    variable to point to the root of the Java installation.  Alternately, you
+    can set the <code>JAVA_BIN</code> environment variable to point directly to
+    the full path to the "java" (or "java.exe" on Windows) command to invoke.
+    On Windows systems, make sure that when setting these environment variables
+    that the paths are NOT surrounded with quotation marks.
+    <br><br>
+    If the startup failure is due to an invalid configuration, then the
+    configuration archiving feature of the server may help.  The server will
+    automatically keep track of each configuration that it has used in the past
+    and will store previous configurations in the archived-config.zip file.
+    Note that this functionality is not completely implemented yet, as it will
+    only track configuration changes made with the server online (i.e., changes
+    made over LDAP or JMX), but in the future it should also have the ability
+    to detect changes made with the server offline (i.e., changes made by
+    directly editing the configuration file).
+
+    <br><br><br>
+
+    <a name="no_accept">
+    <b>The server isn't accepting client connections</b>
+    <br>
+    If the server is running but isn't accepting client connections, then
+    there was likely a problem that prevented the listener from completing its
+    initialization.  The most likely reasons for this are:
+    <ul>
+      <li>There's already something else listening on the specified port</li>
+      <li>The uer the server is running as does not have sufficient privileges
+          to listen on the specified port</li>
+      <li>If SSL is enabled, then there is a problem with the key manager
+          and/or trust manager provider configuration.
+    </ul>
+    In any of these cases, the server error log should provide useful
+    information about the underlying failure, and running with assertions
+    enabled may provide even more insight into the problem.
+    <br><br>
+    If the user running the server does not have sufficient privileges to
+    listen on the specified port (particularly on UNIX-based systems), then the
+    port number should be changed to a value greater than 1024, the server
+    should be run as the root user, or the account being used to run the server
+    should be given the ability to bind to privileged ports (on Solaris 10,
+    this can be accomplished by granting the user the PRIV_NETADDR privilege).
+
+    <br><br><br>
+
+    <a name="unresponsive">
+    <b>The server is unresponsive</b>
+    <br>
+    If the server is online and will accept connections but is not returning
+    responses for some reason, then the most likely cause is that the server is
+    hung or stuck in a deadlocked state, or that all of the worker threads are
+    busy processing other requests.  The most useful tool for debugging the
+    server in this case is to capture one or more stack traces so that we can
+    see what all of the threads are doing.
+    <br><br>
+    The best way to obtain a stack trace is to use the jstack utility provided
+    with the Java development kit.  Simply issue the command:
+    <br>
+    <blockquote>
+      <code>jstack </code><i>{pid}</i>
+    </blockquote>
+    <br>
+    where <i>{pid}</i> is the process ID for the Directory Server process (this
+    can be found by running the jps utility provided with the Java development
+    kit with no arguments, taking the number next to the DirectoryServer
+    process).  On UNIX systems, it may also be possible to obtain the stack
+    trace by issuing the command:
+    <br>
+    <blockquote>
+      <code>kill -3 </code><i>{pid}</i>
+    </blockquote>
+
+    <br><br><br>
+
+    <a name="error_results">
+    <b>The server is returning error results</b>
+    <br>
+    If the server is responsive but operations are not completing successfully,
+    then in most cases the response that the server sends back to the client
+    should have sufficient information to understand the cause of the problem.
+    These responses should also be written to the server's access log, and it
+    may be necessary to look there if the client does not expose the error
+    message or result code from the server.  Also, the server will
+    intentionally not send any error message to the client for failures that
+    occur during bind processing in order to avoid potentially leaking
+    information that could be useful to an attacker (e.g., if the bind fails,
+    is it because the target user doesn't exist, the password is incorrect,
+    the account is locked, etc.).  In these cases, the access log will be the
+    only place to find a message explaining the underlying cause for the
+    operation failure.
+    <br><br>
+    If the operations are failing because of an internal error within the
+    server, then it is possible that the error log may include information
+    about the cause of the problem.  Further, running with assertions enabled
+    may make additional debugging information available for understanding the
+    underlying cause of the problem.
+
+    <br><br><br>
+
+    <a name="slow">
+    <b>The server is very slow</b>
+    <br>
+    If the server is running properly but seems to be slower than expected,
+    then there are a number of things that can be checked:
+    <ul>
+      <li>If the underlying system itself is starved for resources, then that
+          would cause the server to appear sluggish.  If system analysis shows
+          that the CPUs are 100% busy, the disks are 100% busy, the system is
+          swapping, or there is some other fundamental problem (e.g., a
+          hardware failure), then the problem may be with the underlying system
+          rather than the Directory Server itself.</li>
+      <li>If the JVM has been started with assertions enabled, then it is
+          normal to see the server performing more slowly than normal.  With
+          assertions enabled, the server will be doing a lot more work (e.g.,
+          checking to see if it should write debug messages on every method
+          entry).  Restarting with assertions disabled should restore normal
+          levels of performance.</li>
+      <li>If other debugging facilities have been enabled within the JVM
+          (e.g., if certain DTrace probes have been enabled, or if the server
+          is running with HPROF or some other profiling enabled), then it is
+          normal to see significantly degraded performance.</li>
+      <li>If the JVM is spending a lot of time performing garbage collection
+          tasks, then performance can suffer.  Running the JVM with the
+          "<code>-XX:+PrintGCDetails</code>" argument will cause the server to
+          display information about the garbage collection tasks it is
+          performing.  If there is a lot of expensive garbage collection
+          activity in place, then tuning the JVM (e.g., making more memory
+          available to the server, or choosing an alternate garbage collector)
+          may help.</li>
+    </ul>
+    If none of these is the cause of the problem, then profiling may be a good
+    way to understand what's happening inside the server.  Any standard Java
+    profiling tools may be used, including the HPROF utility provided with the
+    Java Development Kit, or a graphical tool like the NetBeans profiler, but
+    it may also be useful to enable the profiler built into the Directory
+    Server itself.  Instructions for doing this may be found in the OpenDS
+    Configuration Guide (<a href="OpenDS-Config-Guide.odt">OpenDocument</a> or
+    <a href="OpenDS-Config-Guide.pdf">PDF</a> form) in the section on
+    configuring the profiler plugin.
+
+    <br><br><br>
+
+    <a name="je_debugging">
+    <b>Berkeley DB JE debugging tips</b>
+    <br>
+    If you suspect a problem in the way that the server interacts with the
+    Berkeley DB Java Edition backend, then there are a number of facilities for
+    debugging problems in that area.
+    <br><br>
+    Some of these tools are provided by the database itself.  For example, the
+    <a href="http://www.sleepycat.com/jedocs/GettingStartedGuide/commandlinetools.html">DbDump
+    and DbVerify</a> command-line tools may be used to examine the contents of
+    the database and verify its integrity.  In addition, the database contains
+    its own informational logging subsystem that may be controlled through the
+    ds-cfg-database-logging-file-handler-on and ds-cfg-database-logging-level
+    configuration attributes as documented in the OpenDS Configuration Guide
+    (avaialble in <a href="OpenDS-Config-Guide.odt">OpenDocument</a> or
+    <a href="OpenDS-Config-Guide.pdf">PDF</a> form).
+    <br><br>
+    Additional debugging information may be obtained through the Directory
+    Server.  The <code>bin/verify-index.sh</code> script on UNIX-based systems
+    or <code>bin\verify-ds.bat</code> batch file on Windows may be used to
+    ensure that the contents of the indexes match up with the data actually
+    stored in the directory.  It is also possible to issue a query to the
+    server and request the "debugsearchindex" attribute (in all lowercase
+    characters), which will cause the server to return information about the
+    index processing required for that query (e.g., the number of candidates
+    identified for each component of the filter and the filter as a whole, as
+    well as whether any or all of the search is unindexed).
+
+    <br><br><br>
+
+    <a name="monitoring">
+    <b>Obtaining monitoring information</b>
+    <br>
+    The OpenDS Directory Server exposes a significant amount of monitoring
+    information, both over LDAP and JMX.  This monitoring information may
+    provide data on the health of the server, how busy it has been, and what
+    exactly may be happening at any given time.  Over LDAP, this information
+    may be retrieved by performing a subtree search below the "cn=monitor"
+    entry.  Monitor information that is currently available includes:
+    <ul>
+      <li>General statistics, like the time the server was started, the total
+          number of connections that have been made, the number of current
+          connections, and the maximum number of concurrent connections since
+          startup.</li>
+      <li>Low-level information about processing in the backend database.</li>
+      <li>Information about the system on which the server is running.</li>
+      <li>Information about the state of the work queue, the total number of
+          requests processed, the current and average backlog of requests
+          awaiting processing, and the number of requests that were rejected
+          because the queue was too full.</li>
+      <li>Information about the LDAP communication performed by the server,
+          including the number of operations of each type, and the total number
+          of LDAP messages and bytes read from and written to clients.</li>
+      <li>A current stack trace of all threads active in the JVM at the time of
+          the request.</li>
+      <li>Information about the Directory Server version.</li>
+    </ul>
+
+    <br><br><br>
+
+    <a name="known_jvm_problems">
+    <b>Known problems with the JVM</b>
+    <br>
+    In some cases, problems experienced while running the Directory Server may
+    not be the result of any problems in the Directory Server or the way in
+    which you are running it, but rather due to a bug or anomaly in the
+    underlying JVM.  Known problems in the JVM that can interfere with the
+    operation of the Directory Server include:
+    <ul>
+      <li>In some cases when running on multi-CPU systems there may be a
+          problem with the use of NIO if there are not enough file descriptors
+          available.  In this case, the server will throw a number of
+          exceptions in the doSelect method and will not be able to accept any
+          connections.  The workaround in this case is to update the
+          environment so that at least 8193 file descriptors are available to
+          the user invoking the Java process.  See
+          <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6322825">CR 6322825</a>
+          for further details.</li>
+      <li>There are notable problems with JMX functionality in certain Java 6
+          builds (particularly with regard to the use of JConsole).  Mustang
+          builds 86 through 88 (including Java 6 Beta 2) are impacted by this
+          problem.  Using a more recent Java 6 build will avoid the issue.  See
+          <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6387250">CR 6387250</a>
+          for further details.
+    </ul>
+  </body>
+</html>
+

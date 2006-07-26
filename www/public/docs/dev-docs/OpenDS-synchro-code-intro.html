@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../css/opends.css" type="text/css">
+<title>Introduction to OpenDS Synchronization Code</title>
+</head>
+<body>
+<table width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><span class="collectionheader">Introduction to OpenDS Synchronization Code </span></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../images/opends_logo.gif" alt="OpenDS Logo" width="158" height="49" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" ><br />
+
+The first thing to know is that the synchronization feature of Open DS
+is still a work in progress.<br>
+As such the code does not always match what is described in the
+Synchronization architecture document. <br>
+it is also important to understand that this code is not fully
+completed and not fully unit tested.<br>
+<h3>Design goals</h3>
+Each OpenDS module should have as little dependencies on each other,
+therefore the Synchronization code should 100% stay in the
+sycnhronization plugin. It should be able to work on any type of
+backend. For example it should be able to synchronize information in
+the cn=config backend or cn=schema backend.<br>
+<h3>Features currently available</h3>
+LDAP server publisher code is available.<br>
+LDAP server receiver code is available.<br>
+Changelog service is available.<br>
+These three parts allow to replicate all types of operations reliably
+and with good performances.<br>
+Changelog service save the changes to stable storage.<br>
+Conflict resolution on modify operation is partially implemented.<br>
+Some Synchronous service is prototyped but needs a lot of rework.<br>
+<h3>Features to be done</h3>
+Some security (authentication and crypto) needs to be added to the
+synchronization protocol. As of now any application can connect to the
+changelog service and submit and receive changes without any
+credentials.<br>
+Configuration of the synchronization needs to be finalized.<br>
+Dependencies of the operations needs to be implemented.<br>
+Naming conflict resolution must be implemented.<br>
+Should have a way to export/import changelog databases.<br>
+Synchronization messages encoding should add a version number for
+compatibility with further releases.<span style="font-weight: bold;"><br>
+</span>
+<h3>Structure of packages</h3>
+Below the <span style="font-family: monospace;">org.opends.server</span>
+package two subpackages are used :<br>
+<ul>
+  <li><span style="font-family: monospace;">changelog</span> package
+holds all the code that runs on the changelog server side.</li>
+  <li><span style="font-family: monospace;">synchronization</span>
+package holds all the code that runs on the directory server side.</li>
+</ul>
+<h3>Main classes of the synchronization package</h3>
+<ul>
+  <li><span style="font-family: monospace;">MultimasterSynchronization</span>
+contains the synchronization provider code and more generally all the
+code that makes the glue between the core server and the
+synchronization code<br>
+  </li>
+  <li><span style="font-family: monospace;">SynchronizationDomain</span>
+contains the bulk of the Directory Server side of the synchronization
+code. Most notably it contains the root method for publishing a change,
+processing a change received from the changelog service, handle
+conflict resolution, handle protocol messages from the changelog server.<br>
+  </li>
+  <li><span style="font-family: monospace;">ChangeNumber</span> and <span
+ style="font-family: monospace;">ChangeNumberGenerator</span> contain
+the code related to Change Numbers code and their generation.<br>
+  </li>
+  <li><span style="font-family: monospace;">ServerState</span> contain
+the code necessary for maintaining the updatedness of a server.<br>
+  </li>
+  <li><span style="font-family: monospace;">Historical</span> and the
+classes that it uses contain the code for generating and loading the
+historical information (only modify aspects are implemented)<br>
+  </li>
+  <li><span style="font-family: monospace;">SynchronizationMessage</span>
+and the classes that inherit from it contain the description of the
+protocol messages that are exchanged between the directory servers and
+the changelog servers and their encoding/decoding.<br>
+  </li>
+</ul>
+<h3>Main classes of the changelog package</h3>
+<ul>
+  <li>SocketSession implements the ProtocolSession interface that is
+used by the changelog server and the directory server to communicate.
+This is done by using the innate encoding/decoding capabilities of the
+SynchronizationMessages objects. This class is used by both the
+changelog and the synchronization package.</li>
+  <li>ChangelogCache implements the multiplexing part of the changelog
+server. It contains method for forwarding all the received messages to
+the ServerHandler and to the dbHandler objects.<br>
+  </li>
+  <li>ServerHandler contains the code related to handler of remote
+server. It can manage changelog servers of directory servers (may be it
+shoudl be splitted in two different classes, one for each of these).<br>
+  </li>
+  <li>ServerWriter the thread responsible for writing to the remote
+server.<br>
+  </li>
+  <li>ServerReader the thread responsible for reading from the remote
+object.<br>
+  </li>
+  <li>DbHandler contains the code responsible for saving the changes to
+stable storage.<br>
+  </li>
+</ul>
+<h3>Unit tests</h3>
+A few tests have been written and stay in <span
+ style="font-family: monospace;">tests/unit-tests-testng/src/server</span>,
+package <span style="font-family: monospace;">org.opends.server.synchronization</span><br>
+Currently tests are availables for SynchronizationMessage
+encoding/decoding and for modify conflict resolution code.<br>
+More tests should be developped shortly.<br>
+</body>
+</html>

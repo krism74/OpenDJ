@@ -1,0 +1,1089 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../css/opends.css" type="text/css">
+<title>OpenDS Directory Server Standards and Specifications</title>
+<body>
+<table width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><span class="collectionheader">Directory Server Standards and Specifications</span></td>
+      <!--  <td align="center" nowrap="nowrap"><p><a class="headlink" href="#"><img src="../images/info_30.gif" alt="Download OpenDS" width="30" height="30" border="0"><br>
+          About</a></td>
+      <td align="center" nowrap="nowrap"><p><a class="headlink" href="#"><img src="../images/communities_30.gif" alt="Download OpenDS" width="30" height="30" border="0"><br>
+          Community</a></td>
+      <td align="center" nowrap="nowrap"><p><a class="headlink" href="#"><img src="../images/download_30.gif" alt="Download OpenDS" width="30" height="30" border="0"><br>
+          Download</a></td>
+      <td align="center" nowrap="nowrap"><p><a class="headlink" href="#"><img src="../images/srcbrowse_30.gif" alt="Download OpenDS" width="30" height="30" border="0"><br>
+          Contribute</a></td> -->
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../images/opends_logo.gif" alt="OpenDS Logo" width="158" height="49" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+<h2>RFCs</h2>
+<table width="100%"  class="info-table" border="1" cellpadding="3" cellspacing="1">
+  <tr>
+    <th align="LEFT" valign="TOP" width="10%">Document</th>
+    <th align="LEFT" valign="TOP" width="50%">Description</th>
+    <th align="LEFT" valign="TOP" width="20%">See Also</th>
+    <th align="LEFT" valign="TOP" width="10%">Planned for OpenDS?</th>
+    <th align="LEFT" valign="TOP" width="10%">Implemented in OpenDS?</th>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc1274.txt">RFC 1274</a></td>
+    <td align="LEFT" valign="TOP">The COSINE and Internet X.500 Schema</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4524.txt">RFC 4524</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc1321.txt">RFC 1321</a></td>
+    <td align="LEFT" valign="TOP">The MD5 Message-Digest Algorithm</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc1777.txt">RFC 1777</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAPv2)</td>
+    <td align="LEFT" valign="TOP"><a href="rfc2251.txt">RFC 2251</a><br>
+      <a href="rfc4511.txt">RFC 4511</a> </td>
+    <td align="LEFT" valign="TOP">Legacy</td>
+    <td align="LEFT" valign="TOP">Legacy</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc1778.txt">RFC 1778</a></td>
+    <td align="LEFT" valign="TOP">The String Representation of Standard Attribute Syntaxes</td>
+    <td align="LEFT" valign="TOP"><a href="rfc2252.txt">RFC 2252</a><br>
+      <a href="rfc4517.txt">RFC 4517</a> </td>
+    <td align="LEFT" valign="TOP">Legacy</td>
+    <td align="LEFT" valign="TOP">Legacy</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc1779.txt">RFC 1779</a></td>
+    <td align="LEFT" valign="TOP">A String Representation of Distinguished Names</td>
+    <td align="LEFT" valign="TOP"><a href="rfc2253.txt">RFC 2253</a><br>
+      <a href="rfc4514.txt">RFC 4514</a> </td>
+    <td align="LEFT" valign="TOP">Legacy</td>
+    <td align="LEFT" valign="TOP">Legacy</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2079.txt">RFC 2079</a></td>
+    <td align="LEFT" valign="TOP">Definition of an X.500 Attribute Type and an Object Class to Hold Uniform Resource Identifiers (URIs)</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2222.txt">RFC 2222</a></td>
+    <td align="LEFT" valign="TOP">Simple Authentication and Security Layer (SASL)</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4422.txt">RFC 4422</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2246.txt">RFC 2246</a></td>
+    <td align="LEFT" valign="TOP">The TLS Protocol Version 1.0</td>
+    <td align="LEFT" valign="TOP"><a href="rfc3546.txt">RFC 3546</a><br>
+      <a href="rfc4346.txt">RFC 4346</a> </td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2247.txt">RFC 2247</a></td>
+    <td align="LEFT" valign="TOP">Using Domains in LDAP/X.500 Distinguished Names</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2251.txt">RFC 2251</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (v3)</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4511.txt">RFC 4511</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2252.txt">RFC 2252</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (v3): Attribute Syntax Definitions</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4517.txt">RFC 4517</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2253.txt">RFC 2253</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (v3): UTF-8 String Representation of Distinguished Names</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4514.txt">RFC 4514</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2254.txt">RFC 2254</a></td>
+    <td align="LEFT" valign="TOP">The String Representation of LDAP Search Filters</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4515.txt">RFC 4515</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2255.txt">RFC 2255</a></td>
+    <td align="LEFT" valign="TOP">The LDAP URL Format</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4516.txt">RFC 4516</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2256.txt">RFC 2256</a></td>
+    <td align="LEFT" valign="TOP">A Summary of the X.500(96) User Schema for use with LDAPv3</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4519.txt">RFC 4519</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2307.txt">RFC 2307</a></td>
+    <td align="LEFT" valign="TOP">An Approach for Using LDAP as a Network Information Service</td>
+    <td align="LEFT" valign="TOP"><a href="draft-howard-rfc2307bis.txt">draft-howard-rfc2307bis</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2377.txt">RFC 2377</a></td>
+    <td align="LEFT" valign="TOP">Naming Plan for Internet Directory-Enabled Applications</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Partial</td>
+    <td align="LEFT" valign="TOP">Partial</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2589.txt">RFC 2589</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (v3): Extensions for Dynamic Directory Services</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2605.txt">RFC 2605</a></td>
+    <td align="LEFT" valign="TOP">Directory Server Monitoring MIB</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Partial</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">No</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2649.txt">RFC 2649</a></td>
+    <td align="LEFT" valign="TOP">An LDAP Control and Schema for Holding Operation Signatures</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">No</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2696.txt">RFC 2696</a></td>
+    <td align="LEFT" valign="TOP">LDAP Control Extension for Simple Paged Results Manipulation</td>
+    <td align="LEFT" valign="TOP"><a href="draft-ietf-ldapext-ldapv3-vlv.txt">draft-ietf-ldapext-ldapv3-vlv</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2713.txt">RFC 2713</a></td>
+    <td align="LEFT" valign="TOP">Schema for Representing Java(tm) Objects in an LDAP Directory</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2714.txt">RFC 2714</a></td>
+    <td align="LEFT" valign="TOP">Schema for Representing CORBA Object References in an LDAP Directory</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2739.txt">RFC 2739</a></td>
+    <td align="LEFT" valign="TOP">Calendar Attributes for vCard and LDAP</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2788.txt">RFC 2788</a></td>
+    <td align="LEFT" valign="TOP">Network Services Monitoring MIB</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">No</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2798.txt">RFC 2798</a></td>
+    <td align="LEFT" valign="TOP">Definition of the inetOrgPerson LDAP Object Class</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4524.txt">RFC 4524</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2820.txt">RFC 2820</a></td>
+    <td align="LEFT" valign="TOP">Access Control Requirements for LDAP</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">Needs Consideration</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2829.txt">RFC 2829</a></td>
+    <td align="LEFT" valign="TOP">Authentication Methods for LDAP</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4513.txt">RFC 4513</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2830.txt">RFC 2830</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (v3): Extension for Transport Layer Security</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4513.txt">RFC 4513</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2831.txt">RFC 2831</a></td>
+    <td align="LEFT" valign="TOP">Using Digest Authentication as a SASL Mechanism</td>
+    <td align="LEFT" valign="TOP"><a href="draft-ietf-sasl-rfc2831bis.txt">draft-ietf-sasl-rfc2831bis</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">Partial</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2849.txt">RFC 2849</a></td>
+    <td align="LEFT" valign="TOP">The LDAP Data Interchange Format (LDIF) - Technical Specification</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2891.txt">RFC 2891</a></td>
+    <td align="LEFT" valign="TOP">LDAP Control Extension for Server Side Sorting of Search Results</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">No</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc2926.txt">RFC 2926</a></td>
+    <td align="LEFT" valign="TOP">Conversion of LDAP Schemas to and from SLP Templates</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Partial</td>
+    <td align="LEFT" valign="TOP">Partial</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3045.txt">RFC 3045</a></td>
+    <td align="LEFT" valign="TOP">Storing Vendor Information in the LDAP root DSE</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3062.txt">RFC 3062</a></td>
+    <td align="LEFT" valign="TOP">LDAP Password Modify Extended Operation</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3112.txt">RFC 3112</a></td>
+    <td align="LEFT" valign="TOP">LDAP Authentication Password Schema</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3296.txt">RFC 3296</a></td>
+    <td align="LEFT" valign="TOP">Named Subordinate References in Lightweight Directory Access Protocol (LDAP) Directories</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">Partial</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3377.txt">RFC 3377</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (v3): Technical Specification</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4510.txt">RFC 4510</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3383.txt">RFC 3383</a></td>
+    <td align="LEFT" valign="TOP">Internet Assigned Numbers Authority (IANA) Considerations for the Lightweight Directory Access Protocol (LDAP)</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4520.txt">RFC 4520</a><br>
+      <a href="ldap-parameters.txt">ldap-parameters</a> </td>
+    <td align="LEFT" valign="TOP">Partial</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3384.txt">RFC 3384</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (version 3) Replication Requirements</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">Needs Consideration</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3454.txt">RFC 3454</a></td>
+    <td align="LEFT" valign="TOP">Preparation of Internationalized Strings ("stringprep")</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4518.txt">RFC 4518</a></td>
+    <td align="LEFT" valign="TOP">Partial</td>
+    <td align="LEFT" valign="TOP">Partial</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3494.txt">RFC 3494</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol version 2 (LDAPv2) to Historic Status</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3546.txt">RFC 3546</a></td>
+    <td align="LEFT" valign="TOP">Transport Layer Security (TLS) Extensions</td>
+    <td align="LEFT" valign="TOP"><a href="rfc2246.txt">RFC 2246</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3641.txt">RFC 3641</a></td>
+    <td align="LEFT" valign="TOP">Generic String Encoding Rules (GSER) for ASN.1 Types</td>
+    <td align="LEFT" valign="TOP"><a href="draft-legg-ldap-gser-ei.txt">draft-legg-ldap-gser-ei</a></td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3642.txt">RFC 3642</a></td>
+    <td align="LEFT" valign="TOP">Common Elements of Generic String Encoding Rules (GSER) Encodings</td>
+    <td align="LEFT" valign="TOP"><a href="draft-legg-ldap-gser-ei.txt">draft-legg-ldap-gser-ei</a></td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3663.txt">RFC 3663</a></td>
+    <td align="LEFT" valign="TOP">Domain Administrative Data in Lightweight Directory Access Protocol (LDAP)</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3671.txt">RFC 3671</a></td>
+    <td align="LEFT" valign="TOP">Collective Attributes in the Lightweight Directory Access Protocol (LDAP)</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">No</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3672.txt">RFC 3672</a></td>
+    <td align="LEFT" valign="TOP">Subentries in the Lightweight Directory Access Protocol (LDAP)</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">No</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3673.txt">RFC 3673</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol version 3 (LDAPv3): All Operational Attributes</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3674.txt">RFC 3674</a></td>
+    <td align="LEFT" valign="TOP">Feature Discovery in Lightweight Directory Access Protocol (LDAP)</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3687.txt">RFC 3687</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP) and X.500 Component Matching Rules</td>
+    <td align="LEFT" valign="TOP"><a href="rfc3727.txt">RFC 3727</a></td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3698.txt">RFC 3698</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP): Additional Matching Rules</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4517.txt">RFC 4517</a></td>
+    <td align="LEFT" valign="TOP">Partial</td>
+    <td align="LEFT" valign="TOP">Partial</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3703.txt">RFC 3703</a></td>
+    <td align="LEFT" valign="TOP">Policy Core Lightweight Directory Access Protocol (LDAP) Schema</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4104.txt">RFC 4104</a></td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3712.txt">RFC 3712</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP): Schema for Printer Services</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3727.txt">RFC 3727</a></td>
+    <td align="LEFT" valign="TOP">ASN.1 Module Definition for the LDAP and X.500 Component Matching Rules</td>
+    <td align="LEFT" valign="TOP"><a href="rfc3687.txt">RFC 3687</a></td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3771.txt">RFC 3771</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP) Intermediate Response Message</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3829.txt">RFC 3829</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP) Authorization Identity Request and Response Controls</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4532.txt">RFC 4532</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3866.txt">RFC 3866</a></td>
+    <td align="LEFT" valign="TOP">Language Tags and Ranges in the Lightweight Directory Access Protocol (LDAP)</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Partial</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">No</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3876.txt">RFC 3876</a></td>
+    <td align="LEFT" valign="TOP">Returning Matched Values with the Lightweight Directory Access Protocol version 3 (LDAPv3)</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3909.txt">RFC 3909</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP) Cancel Operation</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc3928.txt">RFC 3928</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP) Client Update Protocol (LCUP)</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4104.txt">RFC 4104</a></td>
+    <td align="LEFT" valign="TOP">Policy Core Extension Lightweight Directory Access Protocol Schema (PCELS)</td>
+    <td align="LEFT" valign="TOP"><a href="rfc3703.txt">RFC 3703</a></td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4237.txt">RFC 4237</a></td>
+    <td align="LEFT" valign="TOP">Voice Messaging Directory Service</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4346.txt">RFC 4346</a></td>
+    <td align="LEFT" valign="TOP">The Transport Layer Security (TLS) Protocol Version 1.1</td>
+    <td align="LEFT" valign="TOP"><a href="rfc2246.txt">RFC 2246</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4370.txt">RFC 4370</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP) Proxied Authorization Control</td>
+    <td align="LEFT" valign="TOP"><a href="draft-weltman-ldapv3-proxy.txt">draft-weltman-ldapv3-proxy</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4373.txt">RFC 4373</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP) Bulk Update/Replication Protocol (LBURP)</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4403.txt">RFC 4403</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP) Schema for Universal Description, Discovery, and Integration version 3 (UDDIv3)</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4422.txt">RFC 4422</a></td>
+    <td align="LEFT" valign="TOP">Simple Authentication and Security Layer (SASL)</td>
+    <td align="LEFT" valign="TOP"><a href="rfc2222.txt">RFC 2222</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4505.txt">RFC 4505</a></td>
+    <td align="LEFT" valign="TOP">Anonymous Simple Authentication and Security Layer (SASL) Mechanism</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4510.txt">RFC 4510</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP): Technical Specification Road Map</td>
+    <td align="LEFT" valign="TOP"><a href="rfc3377.txt">RFC 3377</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4511.txt">RFC 4511</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP): The Protocol</td>
+    <td align="LEFT" valign="TOP"><a href="rfc2251.txt">RFC 2251</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4512.txt">RFC 4512</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP): Directory Information Models</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4513.txt">RFC 4513</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP): Authentication Methods and Security Mechanisms</td>
+    <td align="LEFT" valign="TOP"><a href="rfc2829.txt">RFC 2829</a><br>
+      <a href="rfc2830.txt">RFC 2830</a> </td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4514.txt">RFC 4514</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP): String Representation of Distinguished Names</td>
+    <td align="LEFT" valign="TOP"><a href="rfc2253.txt">RFC 2253</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4515.txt">RFC 4515</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP): String Representation of Search Filters</td>
+    <td align="LEFT" valign="TOP"><a href="rfc2254.txt">RFC 2254</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4516.txt">RFC 4516</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP): Uniform Resource Locator</td>
+    <td align="LEFT" valign="TOP"><a href="rfc2255.txt">RFC 2255</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4517.txt">RFC 4517</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP): Syntaxes and Matching Rules</td>
+    <td align="LEFT" valign="TOP"><a href="rfc2252.txt">RFC 2252</a><br>
+      <a href="rfc3698.txt">RFC 3698</a> </td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4518.txt">RFC 4518</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP): Internationalized String Preparation</td>
+    <td align="LEFT" valign="TOP"><a href="rfc3454.txt">RFC 3454</a></td>
+    <td align="LEFT" valign="TOP">Partial</td>
+    <td align="LEFT" valign="TOP">Partial</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4519.txt">RFC 4519</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP): Schema for User Applications</td>
+    <td align="LEFT" valign="TOP"><a href="rfc2256.txt">RFC 2256</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4520.txt">RFC 4520</a></td>
+    <td align="LEFT" valign="TOP">Internet Assigned Numbers Authority (IANA) Considerations for the Lightweight Directory Access Protocol (LDAP)</td>
+    <td align="LEFT" valign="TOP"><a href="rfc3383.txt">RFC 3383</a></td>
+    <td align="LEFT" valign="TOP">Partial</td>
+    <td align="LEFT" valign="TOP">Partial</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4521.txt">RFC 4521</a></td>
+    <td align="LEFT" valign="TOP">Considerations for Lightweight Directory Access Protocol (LDAP) Extensions</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4522.txt">RFC 4522</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP): The Binary Encoding Option</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">No</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4523.txt">RFC 4523</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP) Schema Definitions for X.509 Certificates</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4524.txt">RFC 4524</a></td>
+    <td align="LEFT" valign="TOP">COSINE LDAP/X.500 Schema</td>
+    <td align="LEFT" valign="TOP"><a href="rfc1274.txt">RFC 1274</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4525.txt">RFC 4525</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP) Modify-Increment Extension</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4526.txt">RFC 4526</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP) Absolute True and False Filters</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4527.txt">RFC 4527</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP) Read Entry Controls</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4528.txt">RFC 4528</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP) Assertion Control</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4529.txt">RFC 4529</a></td>
+    <td align="LEFT" valign="TOP">Requesting Attributes by Object Class in the Lightweight Directory Access Protocol (LDAP)</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4530.txt">RFC 4530</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP) entryUUID Operational Attribute</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4531.txt">RFC 4531</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP) Turn Operation</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4532.txt">RFC 4532</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP) "Who am I?" Operation</td>
+    <td align="LEFT" valign="TOP"><a href="rfc3829.txt">RFC 3829</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4533.txt">RFC 4533</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP) Content Synchronization Operation</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+</table>
+<br>
+Explanation of "Legacy" notations:
+<ul>
+  <li>The Directory Server is designed as an LDAPv3 server, and LDAPv2 has been transitioned to "historic" status. Some support for LDAPv2-specific elements does exist (e.g., use of semicolons instead of commas in DNs, or escaping with quotation marks rather than backslashes), and the server will avoid sending LDAPv2 clients LDAPv3-specific elements like controls or referrals. However, strict compliance with the LDAPv2 specification may not be enforced in all areas.</li>
+</ul>
+<br>
+Explanation of "Partial" notations:
+<ul>
+  <li>RFC 2377 -- Only the uidObject class is defined in the Directory Server schema. The name forms are not defined in the schema, as that would interfere with legitimate uses of attributes other than "dc" in the RDNs of he associated objects.</li>
+  <li>RFC 2831 -- At the present time, only the "auth" quality of protection may be used. Neither the "auth-int" or "auth-conf" modes are currently supported.</li>
+  <li>RFC 2926 -- None of the SLP-specific attribute syntaxes referenced in this document have been implemented. References to those syntaxes have been replaced with references to the IA5 String syntax.</li>
+  <li>RFC 3296 -- The Directory Server schema does contain the ref attribute type and the referral objectclass, but referral support is not yet implemented in the Directory Server, nor is support for the ManageDsaIT control.</li>
+  <li>RFC 3383 -- Not all of the specifications referenced in this document have been implemented.</li>
+  <li>RFC 3454 -- Not all of the specifications referenced in this document have been implemented.</li>
+  <li>RFC 3698 -- Not all of the matching rules referenced in this document have been implemented. Only those specified in RFC 4517 are currently supported.</li>
+  <li>RFC 4518 -- The string parsing mechanism is not in strict compliance with this document.</li>
+  <li>RFC 4520 -- Not all of the specifications referenced in this document have been implemented.</li>
+</ul>
+<br>
+<br>
+<h2>Internet Drafts</h2>
+<table class="info-table" width=100% border=1 cellpadding=2 cellspacing=3>
+  <tr>
+    <th align="LEFT" valign="TOP" width="10%">Document</th>
+    <th align="LEFT" valign="TOP" width="50%">Description</th>
+    <th align="LEFT" valign="TOP" width="20%">See Also</th>
+    <th align="LEFT" valign="TOP" width="10%">Planned for OpenDS?</th>
+    <th align="LEFT" valign="TOP" width="10%">Implemented in OpenDS?</th>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-armijo-ldap-treedelete.txt">draft-armijo-ldap-treedelete</a></td>
+    <td align="LEFT" valign="TOP">Tree Delete Control</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-behera-ldap-password-policy.txt">draft-behera-ldap-password-policy</a></td>
+    <td align="LEFT" valign="TOP">Password Policy for LDAP Directories</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">Partial</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-byrne-ldap-alias.txt">draft-byrne-ldap-alias</a></td>
+    <td align="LEFT" valign="TOP">Use of Aliases within LDAP</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-chu-ldap-logschema.txt">draft-chu-ldap-logschema</a></td>
+    <td align="LEFT" valign="TOP">A Schema for Logging the LDAP Protocol</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-chu-ldap-xordered.txt">draft-chu-ldap-xordered</a></td>
+    <td align="LEFT" valign="TOP">Ordered Entries and Values in LDAP</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-furuseth-ldap-untypedobject.txt">draft-furuseth-ldap-untypedobject</a></td>
+    <td align="LEFT" valign="TOP">Structural object class 'untypedObject' for LDAP/X.500</td>
+    <td align="LEFT" valign="TOP"><a href="draft-howard-namedobject.txt">draft-howard-namedobject</a></td>
+    <td align="LEFT" valign="TOP">Partial</td>
+    <td align="LEFT" valign="TOP">Partial</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-good-ldap-changelog.txt">draft-good-ldap-changelog</a></td>
+    <td align="LEFT" valign="TOP">Definition of an Object Class to Hold LDAP Change Records</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP"><font size="#FF0000">Partial</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-haripriya-ldapext-dynamicgroup.txt">draft-hariprya-ldapext-dynamicgroup</a></td>
+    <td align="LEFT" valign="TOP">LDAP: Dynamic Groups for LDAPv3</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Partial</td>
+    <td align="LEFT" valign="TOP"><font size="#FF0000">No</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-howard-namedobject.txt">draft-howard-namedobject</a></td>
+    <td align="LEFT" valign="TOP">A Structural Object Class for Arbitrary Auxiliary Object Classes</td>
+    <td align="LEFT" valign="TOP"><a href="draft-furuseth-ldap-untypedobject.txt">draft-furuseth-ldap-untypedobject</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-howard-rfc2307bis.txt">draft-howard-rfc2307bis</a></td>
+    <td align="LEFT" valign="TOP">An Approach for Using LDAP as a Network Information Service</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-ietf-dhc-ldap-schema.txt">draft-ietf-dhc-ldap-schema</a></td>
+    <td align="LEFT" valign="TOP">LDAP Schema for DHCP</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-ietf-ldapext-acl-model.txt">draft-ietf-ldapext-acl-model</a></td>
+    <td align="LEFT" valign="TOP">Access Control Model for LDAPv3</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-ietf-ldapext-ldapv3-dupent.txt">draft-ietf-ldapext-ldapv3-dupent</a></td>
+    <td align="LEFT" valign="TOP">LDAP Control for a Duplicate Entry Representation of Search Results</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">No</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-ietf-ldapext-ldapv3-vlv.txt">draft-ietf-ldapext-ldapv3-vlv</a></td>
+    <td align="LEFT" valign="TOP">LDAP Extensions for Scrolling View Browsing of Search Results</td>
+    <td align="LEFT" valign="TOP"><a href="rfc2696.txt">RFC 2696</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">No</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-ietf-ldapext-psearch.txt">draft-ietf-ldapext-psearch</a></td>
+    <td align="LEFT" valign="TOP">Persistent Search: A Simple LDAP Change Notification Mechanism</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-ietf-ldup-subentry.txt">draft-ietf-ldup-subentry</a></td>
+    <td align="LEFT" valign="TOP">LDAP Subentry Schema</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-ietf-sasl-crammd5.txt">draft-ietf-sasl-crammd5</a></td>
+    <td align="LEFT" valign="TOP">The CRAM-MD5 SASL Mechanism</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-ietf-sasl-gssapi.txt">draft-ietf-sasl-gssapi</a></td>
+    <td align="LEFT" valign="TOP">The Kerberos V5 ("GSSAPI") SASL Mechanism</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">Partial</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-ietf-sasl-plain.txt">draft-ietf-sasl-plain</a></td>
+    <td align="LEFT" valign="TOP">The PLAIN SASL Mechanism</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-ietf-sasl-rfc2831bis.txt">draft-ietf-sasl-rfc2831bis</a></td>
+    <td align="LEFT" valign="TOP">Using Digest Authentication as a SASL Mechanism</td>
+    <td align="LEFT" valign="TOP"><a href="rfc2831.txt">RFC 2831</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">Partial</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-joslin-config-schema.txt">draft-joslin-config-schema</a></td>
+    <td align="LEFT" valign="TOP">A Configuration Profile Schema for LDAP-based agents</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-legg-ldap-gser-ei.txt">draft-legg-ldap-gser-ei</a></td>
+    <td align="LEFT" valign="TOP">Encoding Instructions for the Generic String Encoding Rules (GSER)</td>
+    <td align="LEFT" valign="TOP"><a href="rfc3641.txt">RFC 3641</a></td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-legg-ldap-transfer.txt">draft-legg-ldap-transfer</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP): Transfer Encoding Options</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-melnikov-ldap-distr-auth.txt">draft-melnikov-ldap-distr-auth</a></td>
+    <td align="LEFT" valign="TOP">Distributed SASL authentication in LDAP</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-poitou-ldap-schema-update.txt">draft-poitou-ldap-schema-update</a></td>
+    <td align="LEFT" valign="TOP">LDAP Schema Update Procedures</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">No</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-rajasekaran-kerberos-schema.txt">draft-rajasekaran-kerberos-schema</a></td>
+    <td align="LEFT" valign="TOP">Kerberos version 5 schema for LDAP Directories</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-schleiff-ldap-xri.txt">draft-schleiff-ldap-xri</a></td>
+    <td align="LEFT" valign="TOP">LDAP Schema for eXtensible Resource Identifier (XRI)</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-sermersheim-ldap-chaining.txt">draft-sermersheim-ldap-chaining</a></td>
+    <td align="LEFT" valign="TOP">LDAP Control to Specify Chaining Behavior</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-sermersheim-ldap-csn.txt">draft-sermersheim-ldap-csn</a></td>
+    <td align="LEFT" valign="TOP">The LDAP Change Sequence Number</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-sermersheim-ldap-distproc.txt">draft-sermersheim-ldap-distproc</a></td>
+    <td align="LEFT" valign="TOP">Distributed Procedures for LDAP Operations</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-sermersheim-ldap-subordinate-scope.txt">draft-sermersheim-ldap-subordinate-scope</a></td>
+    <td align="LEFT" valign="TOP">Subordinate Subtree Search Scope for LDAP</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-wahl-ldap-p3p.txt">draft-wahl-ldap-p3p</a></td>
+    <td align="LEFT" valign="TOP">P3P Policy Attributes for LDAP</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">No</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-weltman-ldapv3-proxy.txt">draft-weltman-ldapv3-proxy</a></td>
+    <td align="LEFT" valign="TOP">LDAP Proxied Authorization Control</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4370.txt">RFC 4370</a></td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-zeilenga-auth-lvl.txt">draft-zeilenga-auth-lvl</a></td>
+    <td align="LEFT" valign="TOP">Authentication Mechanisms Levels</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-zeilenga-ldap-dontusecopy.txt">draft-zeilenga-ldap-dontusecopy</a></td>
+    <td align="LEFT" valign="TOP">The LDAP Don't Use Copy Control</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-zeilenga-ldap-entrydn.txt">draft-zeilenga-ldap-enrydn</a></td>
+    <td align="LEFT" valign="TOP">The LDAP entryDN Operational Attribute</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">No</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-zeilenga-ldap-grouping.txt">draft-zeilenga-ldap-grouping</a></td>
+    <td align="LEFT" valign="TOP">LDAP: Grouping of Related Operations</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-zeilenga-ldap-managedit.txt">draft-zeilenga-ldap-managedit</a></td>
+    <td align="LEFT" valign="TOP">The LDAP Manage Directory Information Tree Control</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-zeilenga-ldap-noop.txt">draft-zeilenga-ldap-noop</a></td>
+    <td align="LEFT" valign="TOP">The LDAP No-Op Control</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP"><font color="#FF0000">Partial</font></td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-zeilenga-ldap-proxy-grp.txt">draft-zeilenga-ldap-proxy-grp</a></td>
+    <td align="LEFT" valign="TOP">LDAPv3 Proxy Group</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-zeilenga-ldap-relax.txt">draft-zeilenga-ldap-relax</a></td>
+    <td align="LEFT" valign="TOP">The LDAP Relax Rules Control</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="draft-zeilenga-ldap-txn.txt">draft-zeilenga-ldap-txn</a></td>
+    <td align="LEFT" valign="TOP">LDAP Transactions</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">No</td>
+    <td align="LEFT" valign="TOP">No</td>
+  </tr>
+</table>
+<br>
+Explanation of "Partial" notations:
+<ul>
+  <li>draft-behera-ldap-password-policy -- This draft will not be supported in its entirety. In particular, the operational attributes will be supported, but the configuration schema will not. The OpenDS password policy implementation includes features not in this draft, and the implementation of other features differs from that specified in the draft.</li>
+  <li>draft-furuseth-ldap-untypedobject -- No official OID has yet been assigned for the untypedObject class. A temporary OID from the OpenDS experimental range has been allocated for use until the official OID is assigned by IANA.</li>
+  <li>draft-good-ldap-changelog -- The schema elements defined in this document are available in the Directory Server, but the server does not currently publish a changelog in this form.</li>
+  <li>draft-ietf-sasl-gssapi -- At the present time, only the "auth" quality of protection mode may be used. Neither the "auth-int" or "auth-conf" modes are currently supported.</li>
+  <li>draft-ietf-sasl-rfc2831bis -- At the present time, only the "auth" quality of protection mode may be used. Neither the "auth-int" or "auth-conf" modes are currently supported.</li>
+  <li>draft-zeilenga-ldap-noop -- Recent versions of this draft do not have an OID assigned for this control. However, earlier forms of the draft did provide an OID from the OpenLDAP private enterprise range. Until IANA assigns an official OID for this control, the server will use the OID originally assigned by the OpenLDAP Foundation.</li>
+</ul>
+<br>
+<br>
+<h2>Other Documents and Specifications</h2>
+<table class="info-table" width=100% border=1 cellpadding=2 cellspacing=3>
+  <tr>
+    <th align="LEFT" valign="TOP" width="10%">Document</th>
+    <th align="LEFT" valign="TOP" width="50%">Description</th>
+    <th align="LEFT" valign="TOP" width="20%">See Also</th>
+    <th align="LEFT" valign="TOP" width="10%">Planned for OpenDS?</th>
+    <th align="LEFT" valign="TOP" width="10%">Implemented in OpenDS?</th>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="DSMLv2.doc">DSMLv2.doc</a></td>
+    <td align="LEFT" valign="TOP">OASIS DSMLv2 Documentation</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="DSMLv2.xsd">DSMLv2.xsd</a></td>
+    <td align="LEFT" valign="TOP">OASIS DSMLv2 Standard</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="fips-180-1.pdf">FIPS 180-1</a></td>
+    <td align="LEFT" valign="TOP">Secure Hash Standard (SHA-1)</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="fips-180-2.pdf">FIPS 180-2</a></td>
+    <td align="LEFT" valign="TOP">Secure Hash Standard (SHA-2)</td>
+    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+    <td align="LEFT" valign="TOP">Yes</td>
+  </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="ldap-parameters.txt">ldap-parameters</a></td>
+    <td align="LEFT" valign="TOP">Lightweight Directory Access Protocol (LDAP) Parameters per [RFC-ietf-ldapbis-bcp64]</td>
+    <td align="LEFT" valign="TOP"><a href="rfc3383.txt">RFC 3383</a><br>
+      <a href="rfc4520.txt">RFC 4520</a><br>
+      <a href="http://www.iana.org/assignments/ldap-parameters">Source Document</a> </td>
+    <td align="LEFT" valign="TOP">Partial</td>
+    <td align="LEFT" valign="TOP">Partial</td>
+  </tr>
+</table>
+<br>
+Explanation of "Partial" notations:
+<ul>
+  <li>ldap-parameters -- Not all of the specifications referenced in this document have been implemented.</li>
+</ul>
+</body>
+</html>

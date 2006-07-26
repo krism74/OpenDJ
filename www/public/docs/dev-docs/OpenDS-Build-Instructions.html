@@ -1,0 +1,231 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../css/opends.css" type="text/css">
+<title>OpenDS Build Instructions</title>
+</head>
+<body>
+<table width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><span class="collectionheader">OpenDS Build Instructions </span></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../images/opends_logo.gif" alt="OpenDS Logo" width="158" height="49" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" ><br />
+Once the Directory Server source code has been <a
+ href="OpenDS-Access-Information.html">checked out</a>, you
+may build it. This requires a Java 5.0 or higher SDK installation (the
+JRE by itself is not sufficient; the full SDK is needed). If the
+default Java environment on your system is Java 5.0 or higher (i.e.,
+issuing the command "<code>java -version</code>" prints out a message
+indicating the version is at least 1.5.0), then this should be fine.
+Otherwise, it will be necessary to set the <code>JAVA_HOME</code>
+environment variable to specify the full path to the root of the Java
+5.0 SDK installation. If necessary the Java SDK can be downloaded from <a
+ href="http://java.sun.com">java.sun.com</a><br>
+<br>
+To perform a default build of the Directory Server (which will compile
+all the code and package it up into a zip file), go
+into the <font size="2"><font face="Courier New">OpenDS</font></font>
+directory that was created when the code was checked out of the
+repository. The correct directory should contain the build.xml,
+build.sh
+and build.bat scripts. Then simply issue the command:
+<blockquote> <code>./build.sh on Unixes<br>
+./build.bat on Windows<br>
+  </code> </blockquote>
+No arguments are required, and after a few seconds everything should be
+done. <br>
+<br>
+Once the server has been built, you should be left with a server that
+can be started and handle requests. See <a href="HowtoRun.html">this
+page</a> for details
+on starting and running the server.<br>
+<p there="" are="" a="" number="" of="" that="" may="" be="" provided=""
+ when="" building="" opends="" directory="" server="" to="" control=""
+ what="" processing="" is="" performed="" during="" the="" build=""
+ these="" targets="" include=""></p>
+<ul>
+  <li>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"> <span style="font-family: monospace;">checkstyle </span>--
+Performs a number of style checks against the OpenDS source code to
+ensure that it meets the code guidelines that have been defined for the
+project. See the <a href="OpenDS-Source-Guide.pdf">Open Source Guide</a>
+for more informations on the code guidelines.</p>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"></p>
+  </li>
+  <li>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"> <span style="font-family: monospace;">clean </span>--
+Removes any dynamically-generated files that were created as part of an
+earlier build, including the <font size="2"><font face="Courier New">build</font></font>
+subdirectory and the <span style="font-family: monospace;">src/server/org/opends/server/util/DynamicConstants.java</span>
+source file.</p>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"></p>
+  </li>
+  <li>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"> <span style="font-family: monospace;">compile </span>--
+Compiles the main Directory Server source code into the<span
+ style="font-family: monospace;"> build/classes</span> directory. The
+compiled classes will not be packaged in any usable form, but this can
+be a relatively fast way to determine whether the code will compile.</p>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"></p>
+  </li>
+  <li>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"> <span style="font-family: monospace;">package </span>--
+Performs all of the work done by the compile target, but also creates a
+    <span style="font-family: monospace;">build/package</span>
+directory that contains the OpenDS Directory Server in a form that may
+be used immediately for testing purposes, as well as bundled in a ZIP
+file that can be easily copied to another system. This is the default
+that will be used if no target is explicitly specified.</p>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"></p>
+  </li>
+  <li>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"> <span style="font-family: monospace;">dsml --</span>
+Performs all of the work done by the <span
+ style="font-family: monospace;">package </span>target, but also
+builds a Web application that may be used as a DSML to LDAP gateway.
+The WAR file containing the DSML to LDAP gateway application will be
+placed in the <font size="2"><font face="Courier New">war</font></font>
+subdirectory under the packaged Directory Server.</p>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"></p>
+  </li>
+  <li>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"> <span style="font-family: monospace;">test </span>--
+Performs all of the work done by the <font size="2"><font
+ face="Courier New">compile</font></font> target, but also compiles and
+runs all of the unit tests associated with the server.</p>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"></p>
+  </li>
+  <li>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"> <span style="font-family: monospace;">javadoc </span>--
+Performs all of the work done by the <font size="2"><font
+ face="Courier New">dsml</font></font> target, but also generates
+Javadoc documentation from all of the server source code. The generated
+documentation will be placed in the <font size="2"><font
+ face="Courier New">build/javadoc</font></font> subdirectory.</p>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"></p>
+  </li>
+  <li>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"> <span style="font-family: monospace;">precommit </span>--
+Performs all of the work done by the <font size="2"><font
+ face="Courier New">checkstyle</font></font>, <font size="2"><font
+ face="Courier New">javadoc</font></font>, and <font size="2"><font
+ face="Courier New">test</font></font> targets. The code must build
+cleanly (i.e., with no warnings or errors) using this target before it
+is eligible to be committed to the repository.</p>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"></p>
+  </li>
+  <li>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"> <span style="font-family: monospace;">daily </span>--
+Performs all of the work that will be included as part of an OpenDS
+daily build. At present, this includes all of the work done by the <span
+ style="font-family: monospace;">precommit </span>target, and also
+generates a code coverage report that details how much of the server
+code is exercised by the unit tests. In the future, this may include
+other processing that takes too long to be conveniently included in the
+    <span style="font-family: monospace;">precommit </span>target.</p>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"></p>
+  </li>
+  <li>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"> <span style="font-family: monospace;">weekly </span>--
+Performs all of the work that will be included as part of an OpenDS
+weekly build. At present, this includes all of the work done in the <font
+ size="2"><font face="Courier New">daily</font></font> target, but in
+the future may include additional processing that takes too long to be
+included in the daily build process.</p>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"></p>
+  </li>
+  <li>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"> <span style="font-family: monospace;">all </span>--
+Performs a build that includes virtually all build targets that have
+been defined.</p>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"></p>
+  </li>
+  <li>
+    <p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left"> <span style="font-family: monospace;">rebuild</span> --
+Performs a specialized version of the package build that does not
+invoke the clean target in the process. In particular, it rebuilds all
+of the source classes and creates the corresponding JAR files in the
+existing <span style="font-family: monospace;">build/package</span>
+directory without destroying any of the other content in that
+directory. This can be particularly useful for cases in which the
+OpenDS instance created under the <span style="font-family: monospace;">build/package</span>
+directory is configured and/or populated with data but a problem is
+found that requires a code change.</p>
+  </li>
+</ul>
+<p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
+ align="left">To
+use one of these build targets, simply include the target name on the
+command line. For example:</p>
+<p
+ style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-left: 0.5in; margin-bottom: 0in; font-family: monospace;"
+ align="left">
+./build.sh precommit<br>
+</p>
+<br>
+A complete source guide document containing detailed information
+about checking out the source, the source layout and the style
+guidelines is available on the OpenDS pages and should be read by every
+developer planning to participate to OpenDS.<br>
+<br>
+</body>
+</html>

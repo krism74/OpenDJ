@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../css/opends.css" type="text/css">
+<title>OpenDS Directory Server Standards and Specifications</title>
+</head>
+<body>
+<table width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><span class="collectionheader">Frequently Asked Questions </span></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../images/opends_logo.gif" alt="OpenDS Logo" width="158" height="49" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" ><br /><br />
+    <b>General Project Questions</b>
+    <ul>
+      <li><a href="#what_is_opends">What is the OpenDS Directory Server?</a></li>
+      <li><a href="#goals">What are the primary goals of the OpenDS Directory Server?</a></li>
+      <li><a href="#state">What is the current state of the OpenDS Directory Server?</a></li>
+      <li><a href="#roadmap">What is the projected roadmap for the OpenDS Directory Server?</a></li>
+      <li><a href="#future_of_sjsds">What is the future of the Sun Java System Directory
+          Server?</a></li>
+    </ul>
+
+    <br>
+    <b>Open Source Questions</b>
+    <ul>
+      <li><a href="#why_os">Why release the OpenDS Directory Server as open source?</a></li>
+      <li><a href="#why_not_os_sjsds">Why not open source the current Sun Java System Directory
+          Server?</a></li>
+      <li><a href="#why_not_contribute">Why not contribute to an existing open source
+          project?</a></li>
+      <li><a href="#why_cddl">Why use CDDL instead of some other license?</a></li>
+    </ul>
+
+    <br>
+    <b>End User Questions</b>
+    <ul>
+      <li><a href="#prebuilt">How can I get pre-built versions of the OpenDS Directory
+          Server?</a></li>
+      <li><a href="#running">How do I run the OpenDS Directory Server?</a></li>
+      <li><a href="#configuring">How do I configure the OpenDS Directory Server?</a></li>
+    </ul>
+
+    <br>
+    <b>Developer Questions</b>
+    <ul>
+      <li><a href="#building">How can I check out and build the OpenDS Directory Server?</a></li>
+      <li><a href="#contributing">How can I contribute to the OpenDS Directory Server?</a></li>
+      <li><a href="#why_java">Why use Java instead of some other language like C or C++?</a></li>
+    </ul>
+
+<br /><br />
+<hr noshade size="1" >
+    <br><br>
+
+    <a name="what_is_opends">
+    <b>What is the OpenDS Directory Server?</b>
+    <br>
+    The OpenDS Directory Server is a pure Java implementation of a network-accessible database that
+    is able to store information in a hierarchical form.  Clients may communicate with it using a
+    standard protocol like LDAP or DSML in order to retrieve and update information in a variety of
+    ways.  Other examples of directory servers include:
+    <ul>
+      <li>Sun Java System Directory Server</li>
+      <li>Novell eDirectory</li>
+      <li>Oracle Internet Directory</li>
+      <li>CA eTrust Directory Server</li>
+      <li>Microsoft Active Directory</li>
+      <li>The OpenLDAP Project</li>
+      <li>The Apache Directory Project</li>
+    </ul>
+    Initial development on the OpenDS Directory Server was conducted by Sun Microsystems, but it
+    has been made available under the open source Common Development and Distribution License
+    (CDDL), and all future development will be conducted under this license.
+
+    <br><br><br>
+
+    <a name="goals">
+    <b>What are the primary goals of the OpenDS Directory Server?</b>
+    <br>
+    The primary goals for the OpenDS Directory Server include:
+    <ul>
+      <li><b>Performance</b> -- It must be extremely fast, outperforming all other servers on the
+          market wherever possible.</li>
+      <li><b>Upward Vertical Scalability</b> -- It must be capable of handling billions of entries
+          in a single instance on appropriately-sized hardware.  It should be able to make
+          efficient use at least hundreds of gigabytes of memory, and it should be able to make
+          effective use of at least 32 CPU cores.</li>
+      <li><b>Downward Vertical Scalability</b> -- It must be capable of running adequately in
+          low-memory environments so that all essential components may be functional with a Java
+          heap of no more than 16 megabytes.</li>
+      <li><b>Horizontal Scalability</b> -- It must be possible to use synchronization to achieve
+          horizontal read scalability.  It must be possible to use data distribution in conjunction
+          with synchronization to achieve horizontal read and write scalability.</li>
+      <li><b>Supportability</b> -- The server should work properly and in an intuitive manner
+          wherever possible.  If a problem does arise, the server must be able to provide
+          sufficient information to determine the cause of the problem so that it can be corrected
+          as quickly as possible.  All messages that may be written to the error log or included in
+          a response to the client must be given unique integer IDs.  The server must be able to
+          integrate with common monitoring frameworks, and must be able to generate alert
+          notifications in the event that a significant problem is detected.</li>
+      <li><b>Security</b> -- The server must provide unmatched security in areas like access
+          control, encryption, authentication, auditing, and password and account management.</li>
+      <li><b>Extensibility</b> -- Virtually every aspect of the server should be customizable.  It
+          will have a safe and simple plugin API (with more plugin points than the current Sun Java
+          System Directory Server), but will also have additional points of extensibility,
+          including password validation algorithms, password generators, monitor information
+          providers, logging subsystems, backend repositories, protocol handlers, administrative
+          tasks, SASL mechanisms, extended operations, attribute syntaxes, and matching rules.</li>
+      <li><b>Synchronization</b> -- The server must support data synchronization between instances,
+          including not only total data synchronization but also partial synchronization (with
+          fractional, filtered, and subtree capabilities), and must also provide a means of
+          synchronizing with other applications.</li>
+      <li><b>Availability</b> -- The server must be robust so that it can continue running properly
+          even in the case of all but the most severe errors.  Virtually all configuration changes
+          should be able to take effect without restarting or significantly impacting availability.
+          The server should have a mechanism for attempting to notify proxy servers and/or load
+          balancers if a change will be made to its availability so that future requests can be
+          routed away from that server if possible.</li>
+      <li><b>Portability</b> -- The server must be written entirely in Java so that it may run on
+          any platform with a Java SE 5.0 or higher runtime environment.  Any administrative and/or
+          wrapper scripts needed to invoke the Java code should be written as portable Bourne shell
+          scripts for all UNIX (and UNIX-like) platforms, and batch files for Windows systems.
+          Platform-specific elements must be kept to a minimum.</li>
+      <li><b>Migratability</b> -- Even though the Sun Java System Directory Server will continue to
+          be maintained for some period of time and will not be immediately supplanted by the
+          OpenDS Directory Server, the OpenDS server must provide support for virtually all
+          existing features of the Sun Java System Directory Server.  Any functionality that is not
+          carried forward should be explicitly identified and justification must be provided to
+          indicate why it has been deprecated.  Note that this requirement does not mandate that
+          the feature is implemented in the same way or using the same syntax if there is a
+          significant advantage in varying from the current implementation, although the migration
+          path should always be a consideration.  Migration from other directory server
+          implementations should also be taken into consideration when applicable.  Automating the
+          migration process in these cases is a lower priority, but features in other products that
+          could make migration difficult should be identified and addressed.</li>
+    </ul>
+
+    <br><br><br>
+
+    <a name="state">
+    <b>What is the current state of the OpenDS Directory Server?</b>
+    <br>
+    The OpenDS Directory Server is very much a work in progress.  We have decided to pursue an open
+    development process so that everyone can see and comment on the work that is being done, and
+    contribute to it wherever applicable.  However, we also felt that we needed a
+    minimally-functional codebase before entering the open source community so that other people
+    interested in the project can have something immediately available for experimentation and to
+    get an understanding of the basic framework.  As such, the code that is currently available
+    provides support fro the following components:
+    <ul>
+      <li>Basic support for all core LDAPv3 operations, including abandon, add, bind, compare,
+          delete, extended operations, modify, modify DN, search, and unbind operations.</li>
+      <li>Basic support for a number of controls, including proxied authorization, persistent
+          search, LDAP pre-read and post-read, LDAP assertions, matched values, paged results,
+          authorization identity request, password policy, and account usability controls.</li>
+      <li>Basic support for several SASL mechanisms, including ANONYMOUS, CRAM-MD5, DIGEST-MD5,
+          EXTERNAL, GSSAPI, and PLAIN.  There is also an API for adding support for new SASL
+          mechanisms.</li>
+      <li>Support for a number of extended operations, including "Who am I?", StartTLS, cancel, and
+          password modify operations.  There is also an API for adding support for new extended
+          operations.</li>
+      <li>A number of APIs that allow for the addition of components into the server, including
+          plugins, password storage schemes, password validators, password generators, monitor
+          providers, logging subsystems, attribute syntaxes, matching rules, and many more.</li>
+      <li>Support for backup and restore for server backends, as well as for LDIF import and export
+          capabilities.</li>
+    </ul>
+    There are, however, a number of things that are not yet complete.  This includes:
+    <ul>
+      <li>No access control model is currently in place in the server.  Until the access control
+          subsystem is added, all operations will be allowed for all users.</li>
+      <li>There are no CLI or GUI mechanisms for managing the server configuration (although there
+          are some command-line tools for performing administrative tasks, and the configuration
+          file can be directly edited, or modified through either LDAP or JMX).</li>
+      <li>Only a minimal amount of data synchronization functionality is available.</li>
+      <li>The password policy functionality is only partially implemented.</li>
+      <li>The server does not currently support online schema updates.</li>
+      <li>The current logging implementation exhibits poor performance and does not have
+          sufficient flexibility.</li>
+      <li>The server lacks support for a number of controls and extended operations that are
+          expected to be implemented in the future.</li>
+      <li>There is no mechanism for dealing with virtual attributes.</li>
+    </ul>
+
+    Note that neither of these lists is all-inclusive, and their contents are subject to change as
+    development progresses.  The
+    <a href="https://OpenDS.dev.java.net/servlets/ProjectIssues">issue tracking system</a> is the
+    best way to identify the current state of the server and what is planned.
+
+    <br><br><br>
+
+    <a name="roadmap">
+    <b>What is the projected roadmap for the OpenDS Directory Server?</b>
+    <br>
+    <font color="#FF0000">FIXME:  Add this</font>
+
+    <br><br><br>
+
+    <a name="future_of_sjsds">
+    <b>What is the future of the Sun Java System Directory Server?</b>
+    <br>
+    The Sun Java System Directory Server is still under active development.  The 6.0 version will
+    be released in the near future, and work has already started on the 6.1 release after that.  It
+    has not yet been decided whether the OpenDS codebase will completely supplant the current code
+    for future versions beyond that.  The OpenDS Directory Server is being developed for production
+    use in high-performance and high-volume environments, but it is expected to provide features to
+    meet the wide range of customers using the current Sun Java System Directory Server.
+
+    <br><br><br>
+
+    <a name="why_os">
+    <b>Why release the OpenDS Directory Server as open source?</b>
+    <br>
+    Sun believes very strongly in the value of open source and open development, and has
+    contributed more software to the open source community than any other organization.  Open
+    source provides a number of benefits, both to Sun and the community:
+    <ul>
+      <li>It helps drive interest in the product and make it more appealing to organizations that
+          prefer open source solutions.</li>
+      <li>It allows customers to more easily communicate what features they would like to see in
+          the product, and even gives them the opportunity to participate in their design and
+          implementation if they so desire.</li>
+      <li>It gives customers access to the source code so that they can more easily debug problems
+          and understand the operation of the server.</li>
+      <li>It helps make it easier for OEM partners and other interested parties to create
+          customized versions of the product that are optimized for a particular use.</li>
+    </ul>
+
+    <br><br><br>
+
+    <a name="why_not_os_sjsds">
+    <b>Why not open source the current Sun Java System Directory Server?</b>
+    <br>
+    The current Sun Java System Directory Server has a distinguished heritage and a proven track
+    record.  However, the initial development and release of the codebase was over ten years ago,
+    and the performance, scalability, and feature set requirements were very different at that time
+    than they are today.  Maintaining this codebase can be challenging, and making a change in one
+    area can require an in-depth understanding of a number of different components.  Starting from
+    scratch allows us to design for current and future needs, while allowing us to draw on many
+    years of experience supporting all manner of customer needs.  We can devise a much more
+    readable and compartmentalized codebase that will be more maintainable for the future and
+    provides a much lower barrier to entry for developers.
+    <br><br>
+    It is also worth noting that the current Sun Java System Directory Server shares a common
+    ancestor with the Netscape Directory Server, which was purchased by Red Hat and released under
+    an open source license by Red Hat.  We have not seen any significant interest in that project,
+    and even though there are a number of fixes and enhancements in the current Sun Java System
+    Directory Server that are not available from the Red Hat / Fedora Directory Server, we do not
+    believe that the benefits of releasing that code base would justify the effort that it would
+    require.
+
+    <br><br><br>
+
+    <a name="why_not_contribute">
+    <b>Why not contribute to an existing open source project?</b>
+    <br>
+    There are already a few open source directory servers available, most notably the OpenLDAP,
+    Fedora Directory Server, and Apache Directory projects.  However, we feel that creating a new
+    project is a better option for us, our customers, and the community at large.  The primary
+    reasons for this include:
+    <ul>
+      <li>Starting from scratch allows us to create a server from the ground up that can be best
+          suited to meet the needs of our customers, both now and in the future.  The goals of the
+          existing projects do not necessarily line up with the needs of our customers and
+          partners, and we would not want to face the danger of forking the code or not being able
+          to meet the needs of our customers should they diverge from the goals of the established
+          projects.</li>
+      <li>It would take a significant effort for us to learn a third-party codebase and update it
+          to merely match the feature set, performance, and scalability of our existing product,
+          much less to make new improvements and innovations.</li>
+      <li>The licenses used by existing open source projects contain terms that are not acceptable
+          for our needs.</li>
+    </ul>
+
+    <br><br><br>
+
+    <a name="why_cddl">
+    <b>Why use CDDL instead of some other license?</b>
+    <br>
+    The Common Development and Distribution License (CDDL) is an OSI-approved open source license
+    that is based on the Mozilla Public License (MPL), but adds additional benefits like extending
+    the use of any covered patents to those using the code, and offering some degree of protection
+    against patent litigation.  Further, the CDDL is a file-based license, which ensures that any
+    code released under the CDDL will remain open, but it does allow it to interact with code under
+    other licenses (even closed source licenses).  It will be possible for vendors to create
+    components that work with the OpenDS Directory Server under other licenses if they so desire.
+    <br><br>
+    The OpenLDAP Project and the Red Hat Fedora Directory Server are both available under the GNU
+    Public License (GPL), but we did not feel that it was appropriate for use with OpenDS because
+    it lacks the patent protection benefits that the CDDL provides, and it does not interact well
+    with code under any other license.  Recent proposals for the GPLv3 do appear as if they might
+    address these concerns, and if the released version is acceptable then we may consider
+    dual-licensing the code under both CDDL and GPLv3.
+    <br><br>
+    The Apache Directory Project is available under the Apache Public License (APL), but we did not
+    feel that it was appropriate for use with OpenDS because it does not ensure that the code will
+    remain freely available.  The Apache Public License is much like the BSD license in that it
+    would allow anyone to create proprietary modifications of the code that are not given back to
+    the community.  We want this code to remain free, and the CDDL ensures that will happen.
+
+    <br><br><br>
+
+    <a name="prebuilt">
+    <b>How can I get pre-built versions of the OpenDS Directory Server?</b>
+    <br>
+    Pre-built versions of the OpenDS Directory Server are available for download under the
+    "builds" folder at
+    <a href="https://OpenDS.dev.java.net/servlets/ProjectDocumentList">https://OpenDS.dev.java.net/servlets/ProjectDocumentList</a>.
+    These builds will generally be updated on a weekly basis.  We also intend to provide a
+    publicly-accessible daily build or continuous build system at some point in the near future,
+    which may help ensure that code changes can be made available in pre-built form more quickly.
+
+    <br><br><br>
+
+    <a name="running">
+    <b>How do I run the OpenDS Directory Server?</b>
+    <br>
+    For the basic instructions that can help you get started quickly in most cases, see the
+    instructions on <a href="HowToRun.html">this page</a>.  For a more detailed document, see the
+    OpenDS Install Guide in either <a href="OpenDS-Install-Guide.odt">OpenDocument</a> or
+    <a href="OpenDS-Install-Guide.pdf">PDF</a> format.
+
+    <br><br><br>
+
+    <a name="configuring">
+    <b>How do I configure the OpenDS Directory Server?</b>
+    <br>
+    The configuration provided with the OpenDS Directory Server may be sufficient for initial
+    testing, but there are a number of configurable options.  Some of the most basic options
+    (including the TCP port on which to listen, the base DN for the server, and the root user DN
+    and password) can be configured using a tool that is documented in the OpenDS Install Guide
+    (available in either <a href="OpenDS-Install-Guide.odt">OpenDocument</a> or
+    <a href="OpenDS-Install-Guide.pdf">PDF</a> format).  A more comprehensive reference for
+    interacting with the OpenDS configuration may be found in the OpenDS Configuration Guide (also
+    available in <a href="OpenDS-Config-Guide.odt">OpenDocument</a> and
+    <a href="OpenDS-Config-Guide.pdf">PDF</a> form).
+
+    <br><br><br>
+
+    <a name="building">
+    <b>How can I check out and build the OpenDS Directory Server?</b>
+    <br>
+    Basic instructions for <a href="OpenDS-Access-Information.html">checking out</a> and
+    <a href="OpenDS-Build-Instructions.html">building</a> the OpenDS Directory Server are available
+    online in HTML form.  For more complete details, see the OpenDS Source Guide which is available
+    in both <a href="OpenDS-Source-Guide.odt">OpenDocument</a> and
+    <a href="OpenDS-Source-Guide.pdf">PDF</a> forms.
+
+    <br><br><br>
+
+    <a name="contributing">
+    <b>How can I contribute to the OpenDS Directory Server?</b>
+    <br>
+    <font color="#FF0000">FIXME:  Add this</font>
+
+    <br><br><br>
+
+    <a name="why_java">
+    <b>Why use Java instead of some other language like C or C++?</b>
+    <br>
+    Java is a very portable language that allows for quick development of robust applications that
+    work without recompilation on a wide variety of platforms (including those that we have been
+    unable to support in the past).  It has special support for networking and concurrent
+    processing, which has been particularly improved in recent versions.  Its exception handling
+    capabilities make it possible to devise very stable and failure-resistant applications, and it
+    can provide a wealth of debugging information when a problem does occur so that its cause can
+    be quickly identified.
+    <br><br>
+    It is also worth noting that despite a reputation to the contrary, Java offers excellent
+    performance.  Java bytecode is natively compiled at runtime, which benefits from inspecting the
+    running code and can result in performance that exceeds that of C and C++ applications.
+    Further, there are a number of profiling and other performance analysis tools for Java that can
+    help identify potential hotspots and areas of contention.  Finally, Java applications can also
+    benefit from performance improvements in the JVM, which is an area that is frequently being
+    improved.  In many ways, the performance of the OpenDS Directory Server already exceeds that of
+    the Sun Java System Directory Server, which is widely regarded as the fastest server on the
+    market.
+  </body>
+</html>
+
