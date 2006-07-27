@@ -11,6 +11,7 @@ for( n=dd; n!=null; n=n.previousSibling ) {
     }
     if(n.tagName=="DT") { // change the title
       n.innerHTML = "<strong>OpenDS project</strong>";
+      n.style.margin.top = "10px";
     }
   }
 }
@@ -25,7 +26,7 @@ for( n=dd.parentNode.previousSibling; n!=null; n=n.previousSibling ) {
 }
 </script>
 
-<dd style="border-top:solid #fff 5px;">
+<dd>
   <ul>
     <li> <a href="https://opends.dev.java.net/servlets/ProjectHome" class="selfref">Project Home</a> </li>
   </ul>
@@ -51,14 +52,15 @@ for( n=dd.parentNode.previousSibling; n!=null; n=n.previousSibling ) {
 <dd>
   <ul>
     <li> <a href="https://opends.dev.java.net/public/downloads_index.html" style="font-weight: bold;">Downloads</a> </li>
-    <li><a href="#">Getting Started</a> </li>
-    <li><a href="#">Weekly Builds</a> </li>
+   <!-- <li><a href="#">Getting Started</a> </li> -->
+    <li><a href="https://opends.dev.java.net/servlets/ProjectDocumentList">Weekly Builds</a> </li>
   </ul>
 </dd>
 <dd>
   <ul>
     <li> <a href="https://opends.dev.java.net/public/contribute_index.html" style="font-weight: bold;">Contributing Code</a> </li>
-    <li><a href="https://opends.dev.java.net/source/browse/opends/">Version Control - SCM</a> </li>
+    <li><a href="https://opends.dev.java.net/source/browse/opends/">Browse Project Files</a> </li>
+    <li><a href="https://opends.dev.java.net/public/docs/dev-docs/OpenDS-Access-Information.html">Version Control</a> </li>
     <li> <a href="https://opends.dev.java.net/servlets/ProjectIssues">Issue Tracker</a><br>
     </li>
     <li>

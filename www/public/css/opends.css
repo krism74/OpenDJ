@@ -1,6 +1,6 @@
 /* override default content */
 
-	BODY, TH, TD, P, DIV, SPAN  { font-size: 12px; }
+	BODY, TH, TD, P, DIV, SPAN, UL, LI, DL, DD { font-size: 12px; !important}
 
   	/* H2 {font-size:16px;margin:0px 5px;} */
 	
@@ -26,7 +26,7 @@
 .info-table th.th-right {border: solid 1px #B5B5B5;padding:5px 10px;background-color:#EEEEEE;font-weight:bold;text-align:right;vertical-align:bottom}
 .info-table td {border: solid 1px #B5B5B5;padding:10px;vertical-align:top}
 
-.secmasttable {}
+.secmasttable {margin-top:10px;}
 .secmasttable td { vertical-align:bottom }
 
 a:visited {color: #069 !important} 
