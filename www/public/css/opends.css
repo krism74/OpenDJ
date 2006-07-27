@@ -19,7 +19,7 @@
 
 .headlink { font-size:11px; margin:0px 5px; text-align:center }
 .curheadlink { font-size:12px; font-weight:bold; margin:0px 5px; }
-.collectionheader {font-size:24px;color:#333; }
+.collectionheader {margin-bottom:5px;font-size:24px;color:#333; }
 .info-table {border:solid 1px #000; border-collapse:collapse; font-size:12px}
 .info-table th {border: solid 1px #B5B5B5;padding:5px 10px;background-color:#EEEEEE;font-weight:bold;text-align:left;vertical-align:bottom}
 .info-table th.th-center { border: solid 1px B5B5B5;padding:5px 10px;background-color:#EEEEEE;font-weight:bold;text-align:center;vertical-align:bottom}
