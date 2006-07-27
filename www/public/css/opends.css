@@ -1,6 +1,6 @@
 /* override default content */
 
-	BODY, TH, TD, P, DIV, SPAN { font-size: 12px; !important}
+	BODY, TH, TD, P, DIV, SPAN, TABLE { font-size: 12px; !important}
 
   	/* H2 {font-size:16px;margin:0px 5px;} */
 	
@@ -28,6 +28,10 @@
 
 .secmasttable {margin-top:10px;}
 .secmasttable td { vertical-align:bottom }
+
+.tertmasttable {margin-top:10px;}
+.tertmasttable td { vertical-align:bottom }
+
 
 a:visited {color: #069 !important} 
 
