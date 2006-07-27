@@ -27,6 +27,11 @@
 .secmasttable {}
 .secmasttable td { vertical-align:bottom }
 
+a:visited {color: #069}
+
+.highlightsdiv {border: 1px solid rgb(170, 170, 170); padding: 5px; background: rgb(238, 238, 238); margin-bottom:10px}
+.highlightsheader {font-size:14px; font-weight:bold; }
+
 
 .white{
     color:ffffff;
