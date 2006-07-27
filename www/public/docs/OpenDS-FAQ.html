@@ -26,10 +26,13 @@
     <ul>
       <li><a href="#what_is_opends">What is OpenDS?</a></li>
       <li><a href="#is_opends_sun_product">Is OpenDS a Sun Microsystems product?</a></li>
-      <li><a href="#why_open_source">Why release the OpenDS Directory Service as open source?</a></li>
+      <li><a href="#why_open_source">Why release the OpenDS Directory Service as open
+          source?</a></li>
       <li><a href="#goals">What are the primary goals of the OpenDS software?</a></li>
-      <li><a href="#why_not_contribute">Why not contribute to an existing open source directory project?</a></li>
-      <li><a href="#why_not_os_sjsds">Why not open source the current Sun Java System Directory Server?</a></li>
+      <li><a href="#why_not_contribute">Why not contribute to an existing open source directory
+          project?</a></li>
+      <li><a href="#why_not_os_sjsds">Why not open source the current Sun Java System Directory
+          Server?</a></li>
       <li><a href="#why_java">Why use Java instead of some other language like C or C++?</a></li>
       <li><a href="#opends_start">How did OpenDS start?</a></li>
     </ul>
@@ -38,11 +41,15 @@
     <b>Roadmap</b>
     <ul>
       <li><a href="#current_state">What is the current state of OpenDS?</a></li>
-      <li><a href="#future_of_sjsds">What is the future of the Sun Java System Directory Server?</a></li>
-      <li><a href="#sun_opends_product">When will Sun provide a product offering based on OpenDS?</a></li>
+      <li><a href="#future_of_sjsds">What is the future of the Sun Java System Directory
+          Server?</a></li>
+      <li><a href="#sun_opends_product">When will Sun provide a product offering based on
+          OpenDS?</a></li>
       <li><a href="#jes">Is OpenDS going to be part of the Sun Java Enterprise System?</a></li>
-      <li><a href="#compatibility">Is OpenDS compatible with Sun Java System Directory Server 5.2 or 6.0?</a></li>
-      <li><a href="#migration">Are there plans to provide migration tools from the Sun Java System Directory Server 5.2 or 6.0 to OpenDS?</a></li>
+      <li><a href="#compatibility">Is OpenDS compatible with Sun Java System Directory Server 5.2
+          or 6.0?</a></li>
+      <li><a href="#migration">Are there plans to provide migration tools from the Sun Java System
+          Directory Server 5.2 or 6.0 to OpenDS?</a></li>
     </ul>
 
     <br>
@@ -64,7 +71,8 @@
       <li><a href="#license">What license is used for the OpenDS codebase?</a></li>
       <li><a href="#governance_model">What is the OpenDS governance model?</a></li>
       <li><a href="#create_features">Can I create specific features for OpenDS?</a></li>
-      <li><a href="#call_opends_or_sjsds">If I build the code for OpenDS, can I call it OpenDS or Sun Java System Directory Server?</a></li>
+      <li><a href="#call_opends_or_sjsds">If I build the code for OpenDS, can I call it OpenDS or
+          Sun Java System Directory Server?</a></li>
       <li><a href="#repackage">Can I repackage OpenDS and bundle it in my own solution?</a></li>
       <li><a href="#redistribute">Can I build OpenDS and provide distributions to others?</a></li>
       <li><a href="#expand_interfaces">Can I expand OpenDS interfaces?</a></li>
@@ -75,11 +83,15 @@
     <br>
     <b>Other Questions</b>
     <ul>
-      <li><a href="#jes_work_with_opends">Can Sun Java Enterprise System applications work with OpenDS?</a></li>
-      <li><a href="#solaris_license_entries">Does the 200,000 entry Directory Server license provided in Solaris licenses apply to OpenDS?</a></li>
+      <li><a href="#jes_work_with_opends">Can Sun Java Enterprise System applications work with
+          OpenDS?</a></li>
+      <li><a href="#solaris_license_entries">Does the 200,000 entry Directory Server license
+          provided in Solaris licenses apply to OpenDS?</a></li>
       <li><a href="#cost">Is there any cost for using OpenDS?</a></li>
-      <li><a href="#why_buy_support">If there is a strong community for OpenDS, should I still buy a service contract from Sun to get support on Sun's commercial offering?</a></li>
-      <li><a href="#terms">What is the difference between a project, a community, a codebase, and a product?</a></li>
+      <li><a href="#why_buy_support">If there is a strong community for OpenDS, should I still buy
+          a service contract from Sun to get support on Sun's commercial offering?</a></li>
+      <li><a href="#terms">What is the difference between a project, a community, a codebase, and a
+          product?</a></li>
     </ul>
 
 <br /><br />
@@ -283,16 +295,25 @@
     The only part of OpenDS that is currently being developed is the Directory Server and it is
     very much a work in progress.  The community provides an open development process everyone can
     see and comment on as the work is being done.  However, a minimal functional codebase has been
-    developed so the early participants in the OpenDS community can have something to try and play      with for experimentation and to get an understanding of the basic framework.  As such, the code
+    developed so the early participants in the OpenDS community can have something to try and play
+    with for experimentation and to get an understanding of the basic framework.  As such, the code
     available now provides support for the following components and functions:
     <br>
     <ul>
       <li>Basic support for all core LDAPv3 operations, including search, bind, modify, add,
           delete, compare, abandon, and extended operations.</li>
-      <li>Basic support for a number of controls, including proxied authorization, persistent                 search, LDAP pre-read and post-read controls, LDAP assertions, retrieving matched values,           paged results, authorization identity request, password policy controls, and account                usability controls.</li>
-      <li>Basic support for several SASL authentication mechanisms, including ANONYMOUS, CRAM-MD5,            DIGEST-MD5, EXTERNAL, GSSAPI, and PLAIN. There is also an API to add support for new SASL           mechanisms.</li>
-      <li>Support for the "Who Am I?", StartTLS, and cancel extended operations, and an API to add            support for new extended operations.</li>
-      <li>A number of APIs to add components to the server, including plugins, password storage               schemes, password validators, password generators, monitor providers, logging subsystems,           etc.</li>
+      <li>Basic support for a number of controls, including proxied authorization, persistent
+          search, LDAP pre-read and post-read controls, LDAP assertions, retrieving matched values,
+          paged results, authorization identity request, password policy controls, and account
+          usability controls.</li>
+      <li>Basic support for several SASL authentication mechanisms, including ANONYMOUS, CRAM-MD5,
+          DIGEST-MD5, EXTERNAL, GSSAPI, and PLAIN. There is also an API to add support for new SASL
+          mechanisms.</li>
+      <li>Support for the "Who Am I?", StartTLS, and cancel extended operations, and an API to add
+          support for new extended operations.</li>
+      <li>A number of APIs to add components to the server, including plugins, password storage
+          schemes, password validators, password generators, monitor providers, logging subsystems,
+          etc.</li>
       <li>LDIF import and export capabilities.</li>
       <li>Backend backup and restore capabilities.</li>
     </ul>
@@ -457,7 +478,8 @@
     and at <a href="http://www.sun.com/cddl/">http://www.sun.com/cddl/</a>.
     <br><br>
     The CDDL is an OSI-approved open source license that is based on the Mozilla Public License
-    (MPL) but adds additional benefits like extending the use of any covered patents to those that      use the code and offering a degree of protection against patent litigation.  Further, the CDDL
+    (MPL) but adds additional benefits like extending the use of any covered patents to those that
+    use the code and offering a degree of protection against patent litigation.  Further, the CDDL
     is a file-based license, which ensures that any code released under the CDDL will remain open
     but does allow it to interact with code under other licenses (even closed source licenses).
     <br><br>
@@ -584,7 +606,8 @@
     <br><br><br>
 
     <a name="why_buy_support">
-    <b>If there is a strong community for OpenDS, should I still buy a service contract from Sun to get support on Sun's commercial offering?</b>
+    <b>If there is a strong community for OpenDS, should I still buy a service contract from Sun to
+       get support on Sun's commercial offering?</b>
     <br>
     Sun's commercial offering is not expected to be available before late 2007.  At that time
     buying support for the Sun product will provide to you high level of service and ensure timely
