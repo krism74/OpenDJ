@@ -2,7 +2,7 @@
 
 	BODY, TH, TD, P, DIV, SPAN  { font-size: 12px; }
 
-  	H2 {font-size:16px;margin:0px 5px;}
+  	/* H2 {font-size:16px;margin:0px 5px;} */
 	
 	.app H3 {
   		clear: none;
@@ -31,8 +31,9 @@
 
 a:visited {color: #069 !important} 
 
-.highlightsdiv {border: 1px solid rgb(170, 170, 170); padding: 5px; background: rgb(238, 238, 238); margin:10px 0px}
+.highlightsdiv {border: 1px solid rgb(170, 170, 170); padding: 5px; background: rgb(238, 238, 238); margin:10px}
 .highlightsheader {font-size:14px; font-weight:bold; }
+.secpageheader {font-size:18px; font-weight:bold;margin:15px 0px; }
 
 
 .white{
