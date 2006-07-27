@@ -17,7 +17,7 @@
   		display: none;
   	}
 
-.headlink { font-size:11px; margin:0px 5px }
+.headlink { font-size:11px; margin:0px 5px; text-align:center }
 .curheadlink { font-size:12px; font-weight:bold; margin:0px 5px; }
 .collectionheader {margin-top:20px;font-size:24px;color:#333; }
 .info-table {border:solid 1px #000; border-collapse:collapse; font-size:12px}

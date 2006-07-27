@@ -17,105 +17,45 @@
   <tbody>
     <tr>
       <td><div class="collectionheader">Running OpenDS Directory Server </div></td>
-      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../images/opends_logo.gif" alt="OpenDS Logo" width="155" height="50" border="0" align="middle"></a> </td>
+      <td width="10%" style="vertical-align:bottom"><a href="https://opends.dev.java.net/"><img src="../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="bottom"></a></td>
     </tr>
   </tbody>
 </table>
 <hr noshade size="1" >
-<p style="margin-bottom: 0in"><br>Once the Directory Server has been
-<a href="OpenDS-Build-Instructions.html">built</a> using
-either the default &quot;<code>package</code>&quot; or the &quot;<code>all</code>&quot;
-targets, a packaged version of the server will be placed in the
-<code>package</code> subdirectory. In particular, the
-<code>package/OpenDS-0.1</code> directory should contain a &quot;working&quot;
-copy of the server. <br><br>You may need to change the server listen
-port from the standard port 389 since this is a privileged port on
-many systems and also because there may be another Directory Server
-installation on the system already using port 389. To do this edit
-the <code>ds-cfg-listen-port</code> in the file <code>config/config.ldif
-</code>before running the server and change it to a port of your
-choosing.</p>
-<p>To run the server, first try issuing the command: 
-</p>
-<blockquote><code>bin/start-ds.sh -nodetach</code> (on
-Unixes)<br><code>bin\start-ds.bat</code> (on Windows)</blockquote>
-<p>If everything is configured properly, then the Directory Server
-should start and be able to handle client requests. If something is
-not configured properly, then the startup script or Directory Server
-itself should report an error with sufficient information to help you
-diagnose the problem. <br><br>One potential problem could arise if
-the <code>JAVA_HOME</code> environment variable is not set, or does
-not point to the root of a valid Java 5.0 or higher installation, in
-which setting that variable should help work around the problem.
-Alternately, using the <code>JAVA_BIN</code> variable to point to the
-absolute path of the Java executable may be helpful if you wish to
-use a 64-bit JVM rather than the default 32-bit version (e.g.,
-&quot;<code>$JAVA_HOME/bin/sparcv9/java</code>&quot; or
-&quot;<code>$JAVA_HOME/bin/amd64/java</code>&quot;). <br><br>Another
-useful environment variable that may be set is <code>JAVA_ARGS</code>.
-This may be used to pass arguments directly to the JVM. This may be
-used with standard options like &quot;<code>-Xms</code>&quot; and
-&quot;<code>-Xmx</code>&quot; to specify the amount of memory that
-may be used, or &quot;<code>-d64</code>&quot; to request a 64-bit
-JVM. However, there are some special JVM arguments that may be of
-particular interest when running the Directory Server, including: 
-</p>
+<p><br>
+  Once the Directory Server has been <a href="OpenDS-Build-Instructions.html">built</a> using either the default &quot;<code>package</code>&quot; or the &quot;<code>all</code>&quot; targets, a packaged version of the server will be placed in the <code>package</code> subdirectory. In particular, the <code>package/OpenDS-0.1</code> directory should contain a &quot;working&quot; copy of the server. <br>
+  <br>
+  You may need to change the server listen port from the standard port 389 since this is a privileged port on many systems and also because there may be another Directory Server installation on the system already using port 389. To do this edit the <code>ds-cfg-listen-port</code> in the file <code>config/config.ldif </code>before running the server and change it to a port of your choosing.</p>
+<p>To run the server, first try issuing the command: </p>
+<blockquote><code>bin/start-ds.sh -nodetach</code> (on Unixes)<br>
+  <code>bin\start-ds.bat</code> (on Windows)</blockquote>
+<p>If everything is configured properly, then the Directory Server should start and be able to handle client requests. If something is not configured properly, then the startup script or Directory Server itself should report an error with sufficient information to help you diagnose the problem. <br>
+  <br>
+  One potential problem could arise if the <code>JAVA_HOME</code> environment variable is not set, or does not point to the root of a valid Java 5.0 or higher installation, in which setting that variable should help work around the problem. Alternately, using the <code>JAVA_BIN</code> variable to point to the absolute path of the Java executable may be helpful if you wish to use a 64-bit JVM rather than the default 32-bit version (e.g., &quot;<code>$JAVA_HOME/bin/sparcv9/java</code>&quot; or &quot;<code>$JAVA_HOME/bin/amd64/java</code>&quot;). <br>
+  <br>
+  Another useful environment variable that may be set is <code>JAVA_ARGS</code>. This may be used to pass arguments directly to the JVM. This may be used with standard options like &quot;<code>-Xms</code>&quot; and &quot;<code>-Xmx</code>&quot; to specify the amount of memory that may be used, or &quot;<code>-d64</code>&quot; to request a 64-bit JVM. However, there are some special JVM arguments that may be of particular interest when running the Directory Server, including: </p>
 <ul>
-	<li><p><code>-ea</code> -- Enables assertions within the JVM. This
-	has a special meaning for the Directory Server because it will allow
-	the server to operate in debug mode so that things like exception
-	stack traces, protocol encoding and decoding output, and database
-	interactions may be observed. Using Java assertions for this
-	capability is very useful because it makes it possible to provide a
-	single Directory Server build that contains both &quot;production-ready&quot;
-	and &quot;debug&quot; versions of the code, but the presence of the
-	debug code will not impact performance in any way if assertions are
-	not enabled. 
-	</p>
-	<li><p><code>-Xrunhprof:cpu=samples,depth=10,doe=y</code> -- Enables
-	the HPROF profiler provided with Java so that it may be possible to
-	identify potential hot-spots or areas of poor performance in the
-	code. The set of arguments provided above are a good set for many
-	purposes, but other settings may be useful in other cases. See <a href="http://java.sun.com/developer/technicalArticles/Programming/HPROF.html">this
-	page</a> for more information on using the HPROF utility to profile
-	JVM CPU and memory usage. 
-	</p>
+  <li>
+    <p><code>-ea</code> -- Enables assertions within the JVM. This has a special meaning for the Directory Server because it will allow the server to operate in debug mode so that things like exception stack traces, protocol encoding and decoding output, and database interactions may be observed. Using Java assertions for this capability is very useful because it makes it possible to provide a single Directory Server build that contains both &quot;production-ready&quot; and &quot;debug&quot; versions of the code, but the presence of the debug code will not impact performance in any way if assertions are not enabled. </p>
+  <li>
+    <p><code>-Xrunhprof:cpu=samples,depth=10,doe=y</code> -- Enables the HPROF profiler provided with Java so that it may be possible to identify potential hot-spots or areas of poor performance in the code. The set of arguments provided above are a good set for many purposes, but other settings may be useful in other cases. See <a href="http://java.sun.com/developer/technicalArticles/Programming/HPROF.html">this page</a> for more information on using the HPROF utility to profile JVM CPU and memory usage. </p>
 </ul>
-<p>If multiple JVM arguments are to be used, then they should all be
-included in the <code>JVM_ARGS</code> environment variable separated
-by spaces. For example: 
-</p>
-<blockquote><code>JVM_ARGS=&quot;-Xms1500m -Xmx1500m&quot;</code> 
-</blockquote>
-<p>This will set the minimum and maximum Java heap sizes to 1500
-megabytes. <br><br>Except on Windows, if <code>-nodetach</code> is
-given as a command-line argument, then the Directory Server will be
-started as a foreground process and will not detach from the console,
-which is helpful for debugging purposes. If it is not provided, then
-the server will start as a background process. Note that this
-argument is interpreted by the shell script rather than the Directory
-Server, and if it is provided, it must be the first argument. On
-Windows there is no method provided to invoke the server in the
-background and the <code>-nodetach</code> argument is not recognized.
-<br><br>The Directory Server itself does allow for a few command-line
-arguments as well. The &quot;<code>-H</code>&quot; argument may be
-provided to see a listing of the arguments (although for it to be of
-any use, you also need to provide the <code>-nodetach</code>
-argument, like &quot;<code>bin/start-ds.sh -nodetach -H</code>&quot;).
-There are a couple of other &quot;undocumented&quot; arguments that
-may be provided, including: 
-</p>
+<p>If multiple JVM arguments are to be used, then they should all be included in the <code>JVM_ARGS</code> environment variable separated by spaces. For example: </p>
+<blockquote><code>JVM_ARGS=&quot;-Xms1500m -Xmx1500m&quot;</code> </blockquote>
+<p>This will set the minimum and maximum Java heap sizes to 1500 megabytes. <br>
+  <br>
+  Except on Windows, if <code>-nodetach</code> is given as a command-line argument, then the Directory Server will be started as a foreground process and will not detach from the console, which is helpful for debugging purposes. If it is not provided, then the server will start as a background process. Note that this argument is interpreted by the shell script rather than the Directory Server, and if it is provided, it must be the first argument. On Windows there is no method provided to invoke the server in the background and the <code>-nodetach</code> argument is not recognized. <br>
+  <br>
+  The Directory Server itself does allow for a few command-line arguments as well. The &quot;<code>-H</code>&quot; argument may be provided to see a listing of the arguments (although for it to be of any use, you also need to provide the <code>-nodetach</code> argument, like &quot;<code>bin/start-ds.sh -nodetach -H</code>&quot;). There are a couple of other &quot;undocumented&quot; arguments that may be provided, including: </p>
 <ul>
-	<li><p><code>--fullVersion</code> -- Displays detailed information
-	about the Directory Server build and the environment in which it was
-	created. 
-	</p>
-	<li><p><code>--systemInfo</code> -- Displays information about the
-	system on which the Directory Server is being run. 
-	</p>
+  <li>
+    <p><code>--fullVersion</code> -- Displays detailed information about the Directory Server build and the environment in which it was created. </p>
+  <li>
+    <p><code>--systemInfo</code> -- Displays information about the system on which the Directory Server is being run. </p>
 </ul>
-<p>Both of these may provide useful information if it is necessary to
-get help to diagnose a problem with the server.<!-- Try to avoid lines longer than this --------------------------------------><!-- Don't edit anything below here -->
+<p>Both of these may provide useful information if it is necessary to get help to diagnose a problem with the server.
+  <!-- Try to avoid lines longer than this -------------------------------------->
+  <!-- Don't edit anything below here -->
 </p>
 </body>
 </html>
