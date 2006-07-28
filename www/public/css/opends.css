@@ -61,7 +61,8 @@
  .tertmasttable {margin-top:10px;}
  .tertmasttable td { vertical-align:bottom }
  .collectionheader {margin-bottom:5px;font-size:24px;color:#333; }
-small, div#footer, #login, .tabs th, .tabs td, #bodycol .tabs th, #bodycol .tabs td,  #navcol, input, select, .paginate, .functnbar, .functnbar2, .functnbar3, .functnbar4, #breadcrumbs, .courtesylinks, .colbar, .tasknav, #sidebar, .legend, .bars, #rightcol div.www, #rightcol div.siteinfo { /*may need to add div#footer table, #rightcol div.help */
+/* Replace tigris css */
+ #navcol li, #navcol a, #navcol dd, #navcol dt, #navcol, #footer table, #footer td, #footer a  { 
 	font-family: Verdana, Helvetica, Arial, sans-serif;
 	font-size: xx-small;
 	voice-family: "\"}\"";
