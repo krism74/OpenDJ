@@ -34,8 +34,7 @@
 
 
 /* STYLES REPEATED FOR NONAV */
- { font-size: 12px;}
- table,  td,  th,  p,  div,  span,  li { font-size: 12px}
+ body, table,  td,  th,  p,  div,  span,  li { font-size: 12px}
  H1 {font-size:18px;color:#000}
  H2 {font-size:16px;color:#000}
  H3 {font-size:14px;color:#000;margin:15px 0px 3px;}
@@ -43,7 +42,6 @@
  a:visited {color: #069;text-decoration:none } 
  a:hover {text-decoration:underline } 
  a:hover img {text-decoration:none } 
-
 /* Table Style */
  .info-table {border:solid 1px #000; border-collapse:collapse; font-size:12px; margin-top:10px;}
  .info-table th {border: solid 1px #B5B5B5;padding:5px 10px;background-color:#EEEEEE;font-weight:bold;text-align:left;vertical-align:bottom; font-size:12px}
@@ -51,7 +49,6 @@
  .info-table th.th-right {border: solid 1px #B5B5B5;padding:5px 10px;background-color:#EEEEEE;font-weight:bold;text-align:right;vertical-align:bottom; font-size:12px}
  .info-table td {border: solid 1px #B5B5B5;padding:10px;vertical-align:top; font-size:12px}
  .info-table td.td-center {border: solid 1px #B5B5B5;padding:10px;vertical-align:top; text-align:center; font-size:12px}
-
 /* Styles for Header Used in About, Community, Downloads and Contrib pages*/
  .secmasttable {margin-top:10px;}
  .secmasttable td { vertical-align:bottom }
@@ -60,8 +57,14 @@
  .highlightsdiv {border: 1px solid rgb(170, 170, 170); padding: 5px; background: rgb(238, 238, 238); margin:10px}
  .highlightsheader {font-size:14px; font-weight:bold; }
  .secpageheader {font-size:18px; font-weight:bold;margin:15px 0px; }
-
 /* Styles for Header Used in Individual Documents pages*/
  .tertmasttable {margin-top:10px;}
  .tertmasttable td { vertical-align:bottom }
  .collectionheader {margin-bottom:5px;font-size:24px;color:#333; }
+small, div#footer, #login, .tabs th, .tabs td, #bodycol .tabs th, #bodycol .tabs td,  #navcol, input, select, .paginate, .functnbar, .functnbar2, .functnbar3, .functnbar4, #breadcrumbs, .courtesylinks, .colbar, .tasknav, #sidebar, .legend, .bars, #rightcol div.www, #rightcol div.siteinfo { /*may need to add div#footer table, #rightcol div.help */
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	font-size: xx-small;
+	voice-family: "\"}\"";
+	voice-family: inherit;
+	font-size: x-small;
+}
