@@ -3,20 +3,19 @@
 
 Network Working Group                                            M. Wahl
 Internet-Draft                                     Informed Control Inc.
-Expires: September 8, 2005                                 March 7, 2005
+Intended status: Informational                             July 28, 2006
+Expires: January 29, 2007
 
 
                      P3P Policy Attributes for LDAP
-                         draft-wahl-ldap-p3p-00
+                         draft-wahl-ldap-p3p-01
 
 Status of this Memo
 
-   This document is an Internet-Draft and is subject to all provisions
-   of Section 3 of RFC 3667.  By submitting this Internet-Draft, each
-   author represents that any applicable patent or other IPR claims of
-   which he or she is aware have been or will be disclosed, and any of
-   which he or she become aware will be disclosed, in accordance with
-   RFC 3668.
+   By submitting this Internet-Draft, each author represents that any
+   applicable patent or other IPR claims of which he or she is aware
+   have been or will be disclosed, and any of which he or she becomes
+   aware will be disclosed, in accordance with Section 6 of BCP 79.
 
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF), its areas, and its working groups.  Note that
@@ -34,35 +33,115 @@ Status of this Memo
    The list of Internet-Draft Shadow Directories can be accessed at
    http://www.ietf.org/shadow.html.
 
-   This Internet-Draft will expire on September 8, 2005.
+   This Internet-Draft will expire on January 29, 2007.
 
 Copyright Notice
 
-   Copyright (C) The Internet Society (2005).
+   Copyright (C) The Internet Society (2006).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wahl                    Expires January 29, 2007                [Page 1]
+
+Internet-Draft       P3P Policy Attributes for LDAP            July 2006
+
 
 Abstract
 
    This document defines attributes that can be retrieved via
    Lightweight Directory Access Protocol version 3 (LDAP) requests,
-   which contain URIs pointing to the privacy policy documents
-   describing access to a directory server and that apply to the
-   contents of a subtree of entries.  These attributes enable a
-   directory client to retrieve the privacy policies before sending
-   further requests to the directory server.
+   which contain URIs pointing to the privacy policy documents.  These
+   documents describe the privacy policy concerning access to a
+   directory server, and the privacy policies that apply to the contents
+   of the directory (a subtree of entries).
 
 
 
-Wahl                    Expires September 8, 2005               [Page 1]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wahl                    Expires January 29, 2007                [Page 2]
 
-Internet-Draft       P3P Policy Attributes for LDAP           March 2005
+Internet-Draft       P3P Policy Attributes for LDAP            July 2006
 
 
 1.  Introduction
 
-   This document discusses how clients can obtain a P3P1.0 privacy
-   policy statement [1] from a directory server via LDAPv3 [2].
+   The W3C Platform for Privacy Preferences 1.0 (P3P1.0) specifications
+   [1] describe an XML document format for encoding privacy policy
+   information for an Internet-accessible resource.  The initial
+   targeted application for P3P was web sites accessed by web browsers
+   using HTTP, and thus the specifications include a lookup mechanisms
+   and conventions for how to find a P3P document governing a web site.
+   These mechanisms are specific to the HTTP protocol and do not
+   translate well into other protocols that use URIs which are not HTTP
+   URIs.
 
-   The words "MUST" and "MAY" are used as defined in [3].
+   One of the major network-accessible repositories of personal
+   information within an enterprise is its directory service.  It is
+   desirable to be able to determine the privacy policy of a directory
+   service: what policy statements does the enterprise make concerning
+   the contents of the directory?  In addition, as most directory
+   servers log personal identifiers in their log files, it is also
+   desirable to be able to determine the privacy policy of the directory
+   server itself.
+
+   This document discusses how LDAP clients can obtain the URI of a P3P
+   privacy policy statement from a directory server via LDAPv3 [2].
+
+   These attributes enable a directory client to retrieve the privacy
+   policies and ensure their appropriateness to the planned interaction,
+   before sending further requests to the directory server.
+
+   The words "MUST" and "MAY" are used as defined in RFC 2119 [3].
 
    Please send comments to the author at mark.wahl@informed-control.com.
 
@@ -85,49 +164,28 @@ Internet-Draft       P3P Policy Attributes for LDAP           March 2005
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Wahl                    Expires September 8, 2005               [Page 2]
+Wahl                    Expires January 29, 2007                [Page 3]
 
-Internet-Draft       P3P Policy Attributes for LDAP           March 2005
+Internet-Draft       P3P Policy Attributes for LDAP            July 2006
 
 
 2.  Policy documents
 
    The attributes defined in this document contain Uniform Resource
-   Identifiers (URIs) [6].  The URIs are anticipated to be of a form,
-   such as http [7], which has a protocol for the retrieval of an XML
+   Identifiers (URIs) [5].  The URIs are anticipated to be of a scheme,
+   such as http [6], which has a protocol for the retrieval of an XML
    document.  This document does not define how to retrieve XML content
-   from the directory server itself.
+   from the directory server itself; it is expected that an LDAP client
+   that wishes to parse P3P-formatted XML documents would also be
+   capable of having an HTTP client embedded within it, it just needs to
+   know what HTTP URI to use to obtain the document.
 
    Unlike the use of privacy policies in web protocols described in
-   section 2 of P3P [1], this specification does not incorporate the
+   section 2 of P3P1.0 [1], this specification does not incorporate the
    indirection procedures of the policy reference file.  (Policy
-   reference files are omitted as their INCLUDE and EXCLUDE elements
-   assume a relative URL hierarchy, which not appropriate to the
-   identification of resources in directory servers which follow a
-   different hierarchy, and the policy documents are likely stored on a
+   reference files are not used as their INCLUDE and EXCLUDE elements
+   assume a relative URL hierarchy that incompatible with the hierarchy
+   used in LDAP URLs, and the policy documents are likely stored on a
    different kind of server than the directory server itself).  Instead,
    the URI directly identifies the document containing the POLICIES
    element.
@@ -155,18 +213,16 @@ Internet-Draft       P3P Policy Attributes for LDAP           March 2005
              discuri="http://www.example.com/disc.html"> .... </POLICY>
        </POLICIES>
 
-   The client would locate the POLICY element which has a name matching
-   that of the fragment in the URI, policy-ds.  The client processing of
-   this information MUST be in accordance with section 2.4.4 of P3P1.0
-   [1].
+   The client would then locate the POLICY element which has a name
+   matching that of the fragment in the URI, policy-ds.  The client
+   processing of this information MUST be in accordance with section
+   2.4.4 of P3P1.0 [1].
 
 
 
-
-
-Wahl                    Expires September 8, 2005               [Page 3]
+Wahl                    Expires January 29, 2007                [Page 4]
 
-Internet-Draft       P3P Policy Attributes for LDAP           March 2005
+Internet-Draft       P3P Policy Attributes for LDAP            July 2006
 
 
 3.  Attribute for Directory Server Privacy Policy
@@ -188,20 +244,20 @@ Internet-Draft       P3P Policy Attributes for LDAP           March 2005
 
    The attribute is defined as follows:
 
-       attributeTypes: ( OID-TBD
+       attributeTypes: ( 1.3.6.1.4.1.21008.97.74.1.1
                         NAME 'serverP3PrivacyPolicy'
                         EQUALITY caseIgnoreMatch
                         SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
                         SINGLE-VALUE USAGE directoryOperation )
 
    The value is a single URI, which is encoded as a string in the UTF-8
-   charset [5].  The form of URI is specified in section 2 above.
+   charset.  The form of URI is specified in section 2 above.
 
    This attribute MAY be present in the directory server's root DSE.
    The attribute is retrievable if a client performs a base object
    search of the root DSE (with a distinguished name of zero length)
-   with a filter of "(objectClass=*)", as described in section 4 of RFC
-   2251 [4].
+   with a filter of "(objectClass=*)", as described in section 5.1 of
+   RFC 4512 [4].
 
 
 
@@ -220,9 +276,9 @@ Internet-Draft       P3P Policy Attributes for LDAP           March 2005
 
 
 
-Wahl                    Expires September 8, 2005               [Page 4]
+Wahl                    Expires January 29, 2007                [Page 5]
 
-Internet-Draft       P3P Policy Attributes for LDAP           March 2005
+Internet-Draft       P3P Policy Attributes for LDAP            July 2006
 
 
 4.  Attribute for Directory Subtree Privacy Policy
@@ -244,21 +300,21 @@ Internet-Draft       P3P Policy Attributes for LDAP           March 2005
 
    The attribute is defined as follows:
 
-       attributeTypes: ( OID-TBD
+       attributeTypes: ( 1.3.6.1.4.1.21008.97.74.1.2
                         NAME 'subtreeP3PrivacyPolicy'
                         EQUALITY caseIgnoreMatch
                         SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
                         SINGLE-VALUE )
 
    The value is a single URI, which is encoded as a string in the UTF-8
-   charset [5].  The form of URI is specified in section 2 above.
+   charset.  The form of URI is specified in section 2 above.
 
    This attribute MAY be present in any entry.
 
    In order to allow this class to be present on objects of many
    different structural classes, an auxiliary object class is defined.
 
-       objectClasses: ( OID-TBD
+       objectClasses: ( 1.3.6.1.4.1.21008.97.74.1.3
                        NAME 'subtreeP3PrivacyPolicyClass'
                        AUXILIARY
                        MAY ( subtreeP3PrivacyPolicy ) )
@@ -276,9 +332,9 @@ Internet-Draft       P3P Policy Attributes for LDAP           March 2005
 
 
 
-Wahl                    Expires September 8, 2005               [Page 5]
+Wahl                    Expires January 29, 2007                [Page 6]
 
-Internet-Draft       P3P Policy Attributes for LDAP           March 2005
+Internet-Draft       P3P Policy Attributes for LDAP            July 2006
 
 
    before searching to extract data from those entries.  For example,
@@ -332,9 +388,9 @@ Internet-Draft       P3P Policy Attributes for LDAP           March 2005
 
 
 
-Wahl                    Expires September 8, 2005               [Page 6]
+Wahl                    Expires January 29, 2007                [Page 7]
 
-Internet-Draft       P3P Policy Attributes for LDAP           March 2005
+Internet-Draft       P3P Policy Attributes for LDAP            July 2006
 
 
 5.  Data Schema
@@ -346,10 +402,10 @@ Internet-Draft       P3P Policy Attributes for LDAP           March 2005
    For a policy referenced by a serverP3PPrivacyPolicy, the anticipated
    P3P data structures that would be used in the policy would be those
    of sections 5.5.3 (logins), 5.5.4 (certificates) and 5.5.7 (access
-   logs and internet addresses) of P3P1.0 [1].  The login id would
+   logs and Internet addresses) of P3P1.0 [1].  The login id would
    correspond to the distinguished name or other identifier which the
    client provides in an authenticated bind request.  A client which
-   sends add, modify or modrdn operations SHOULD also check for the
+   sends add, modify or modDN operations SHOULD also check for the
    subtreeP3PrivacyPolicy for the subtree in which these operations are
    targeted.
 
@@ -388,9 +444,9 @@ Internet-Draft       P3P Policy Attributes for LDAP           March 2005
 
 
 
-Wahl                    Expires September 8, 2005               [Page 7]
+Wahl                    Expires January 29, 2007                [Page 8]
 
-Internet-Draft       P3P Policy Attributes for LDAP           March 2005
+Internet-Draft       P3P Policy Attributes for LDAP            July 2006
 
 
 6.  Security Considerations
@@ -435,7 +491,7 @@ Internet-Draft       P3P Policy Attributes for LDAP           March 2005
    to access the resources identified by the URIs present in the
    serverP3PrivacyPolicy and subtreeP3PrivacyPolicy attributes.
 
-   Section 7 of RFC 3986 [6] also discusses security considerations when
+   Section 7 of RFC 3986 [5] also discusses security considerations when
    handling URIs.
 
 
@@ -444,9 +500,9 @@ Internet-Draft       P3P Policy Attributes for LDAP           March 2005
 
 
 
-Wahl                    Expires September 8, 2005               [Page 8]
+Wahl                    Expires January 29, 2007                [Page 9]
 
-Internet-Draft       P3P Policy Attributes for LDAP           March 2005
+Internet-Draft       P3P Policy Attributes for LDAP            July 2006
 
 
 7.  IANA Considerations
@@ -457,7 +513,7 @@ Internet-Draft       P3P Policy Attributes for LDAP           March 2005
 
       Subject: Request for LDAP Descriptor Registration
       Descriptor (short name): serverP3PrivacyPolicy
-      Object Identifier: OID-TBD
+      Object Identifier: 1.3.6.1.4.1.21008.97.74.1.1
       Person & email address to contact for further information:
       Mark Wahl <Mark.Wahl@informed-control.com>
       Usage: attributeTypes
@@ -468,7 +524,7 @@ Internet-Draft       P3P Policy Attributes for LDAP           March 2005
 
       Subject: Request for LDAP Descriptor Registration
       Descriptor (short name): subtreeP3PrivacyPolicy
-      Object Identifier: OID-TBD
+      Object Identifier: 1.3.6.1.4.1.21008.97.74.1.2
       Person & email address to contact for further information:
       Mark Wahl <Mark.Wahl@informed-control.com>
       Usage: attributeTypes
@@ -479,7 +535,7 @@ Internet-Draft       P3P Policy Attributes for LDAP           March 2005
 
       Subject: Request for LDAP Descriptor Registration
       Descriptor (short name): subtreeP3PrivacyPolicyClass
-      Object Identifier: OID-TBD
+      Object Identifier: 1.3.6.1.4.1.21008.97.74.1.3
       Person & email address to contact for further information:
       Mark Wahl <Mark.Wahl@informed-control.com>
       Usage: objectClasses
@@ -500,51 +556,36 @@ Internet-Draft       P3P Policy Attributes for LDAP           March 2005
 
 
 
-Wahl                    Expires September 8, 2005               [Page 9]
+Wahl                    Expires January 29, 2007               [Page 10]
 
-Internet-Draft       P3P Policy Attributes for LDAP           March 2005
+Internet-Draft       P3P Policy Attributes for LDAP            July 2006
 
 
 8.  References
 
-8.1  Normative References
+8.1.  Normative References
 
    [1]  Cranor, L., Langheinrich, M., Marchiori, M., Presler-Marshall,
         M., and J. Reagle, "The Platform for Privacy Preferences 1.0
         (P3P1.0) Specification", April 2002,
         <http://www.w3.org/TR/P3P/>.
 
-   [2]  Hodges, J. and R. Morgan, "Lightweight Directory Access Protocol
-        (v3): Technical Specification", RFC 3377, September 2002.
+   [2]  Zeilenga, K., "Lightweight Directory Access Protocol (LDAP):
+        Technical Specification Road Map", RFC 4510, June 2006.
 
    [3]  Bradner, S., "Key words for use in RFCs to Indicate Requirement
         Levels", RFC 2119, BCP 14, March 1997.
 
-   [4]  Wahl, M., Howes, T., and S. Kille, "Lightweight Directory Access
-        Protocol (v3)", RFC 2251, December 1997.
+   [4]  Zeilenga, K., "Lightweight Directory Access Protocol (LDAP):
+        Directory Information Models", RFC 4512, June 2006.
 
-   [5]  Wahl, M., Coulbeck, A., Howes, T., and S. Kille, "Lightweight
-        Directory Access Protocol (v3): Attribute Syntax Definitions",
-        RFC 2252, December 1997.
-
-   [6]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
+   [5]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
         Resource Identifier (URI): Generic Syntax", RFC 3986,
         January 2005.
 
-8.2  Informative References
+8.2.  Informative References
 
-   [7]  "Hypertext Transfer Protocol -- HTTP/1.1", RFC 2616, June 1999.
-
-
-Author's Address
-
-   Mark Wahl
-   Informed Control Inc.
-   PO Box 90626
-   Austin, TX  78709
-   US
-
-   Email: mark.wahl@informed-control.com
+   [6]  "Hypertext Transfer Protocol -- HTTP/1.1", RFC 2616, June 1999.
 
 
 
@@ -556,14 +597,29 @@ Author's Address
 
 
 
-Wahl                    Expires September 8, 2005              [Page 10]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wahl                    Expires January 29, 2007               [Page 11]
 
-Internet-Draft       P3P Policy Attributes for LDAP           March 2005
+Internet-Draft       P3P Policy Attributes for LDAP            July 2006
 
 
 Appendix A.  Copyright
 
-   Copyright (C) The Internet Society 2005.  This document is subject to
+   Copyright (C) The Internet Society 2006.  This document is subject to
    the rights, licenses and restrictions contained in BCP 78, and except
    as set forth therein, the authors retain all their rights.  This
    document and the information contained herein are provided on an "AS
@@ -612,12 +668,85 @@ Appendix A.  Copyright
 
 
 
-Wahl                    Expires September 8, 2005              [Page 11]
+Wahl                    Expires January 29, 2007               [Page 12]
 
-Internet-Draft       P3P Policy Attributes for LDAP           March 2005
+Internet-Draft       P3P Policy Attributes for LDAP            July 2006
 
 
-Intellectual Property Statement
+Author's Address
+
+   Mark Wahl
+   Informed Control Inc.
+   PO Box 90626
+   Austin, TX  78709
+   US
+
+   Email: mark.wahl@informed-control.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wahl                    Expires January 29, 2007               [Page 13]
+
+Internet-Draft       P3P Policy Attributes for LDAP            July 2006
+
+
+Full Copyright Statement
+
+   Copyright (C) The Internet Society (2006).
+
+   This document is subject to the rights, licenses and restrictions
+   contained in BCP 78, and except as set forth therein, the authors
+   retain all their rights.
+
+   This document and the information contained herein are provided on an
+   "AS IS" basis and THE CONTRIBUTOR, THE ORGANIZATION HE/SHE REPRESENTS
+   OR IS SPONSORED BY (IF ANY), THE INTERNET SOCIETY AND THE INTERNET
+   ENGINEERING TASK FORCE DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED,
+   INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE
+   INFORMATION HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED
+   WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+
+Intellectual Property
 
    The IETF takes no position regarding the validity or scope of any
    Intellectual Property Rights or other rights that might be claimed to
@@ -642,31 +771,14 @@ Intellectual Property Statement
    ietf-ipr@ietf.org.
 
 
-Disclaimer of Validity
-
-   This document and the information contained herein are provided on an
-   "AS IS" basis and THE CONTRIBUTOR, THE ORGANIZATION HE/SHE REPRESENTS
-   OR IS SPONSORED BY (IF ANY), THE INTERNET SOCIETY AND THE INTERNET
-   ENGINEERING TASK FORCE DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED,
-   INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE
-   INFORMATION HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED
-   WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
-
-
-Copyright Statement
-
-   Copyright (C) The Internet Society (2005).  This document is subject
-   to the rights, licenses and restrictions contained in BCP 78, and
-   except as set forth therein, the authors retain all their rights.
-
-
 Acknowledgment
 
-   Funding for the RFC Editor function is currently provided by the
-   Internet Society.
+   Funding for the RFC Editor function is provided by the IETF
+   Administrative Support Activity (IASA).
 
 
 
 
-Wahl                    Expires September 8, 2005              [Page 12]
+
+Wahl                    Expires January 29, 2007               [Page 14]
 
