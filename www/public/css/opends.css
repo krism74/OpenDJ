@@ -4,8 +4,8 @@
 #bodycol H1 {font-size:18px;color:#000}
 #bodycol H2 {font-size:16px;color:#000}
 #bodycol H3 {font-size:14px;color:#000;margin:15px 0px 3px;}
-a:link {text-decoration:none } 
-#bodycol a:visited {color: #069 } 
+#bodycol a:link {text-decoration:none } 
+#bodycol a:visited {color: #069;text-decoration:none } 
 #bodycol a:hover {text-decoration:underline } 
 #bodycol a:hover img {text-decoration:none } 
 
