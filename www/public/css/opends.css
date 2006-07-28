@@ -32,8 +32,20 @@
 #bodycol .tertmasttable td { vertical-align:bottom }
 #bodycol .collectionheader {margin-bottom:5px;font-size:24px;color:#333; }
 
+/* Welcome Page */
+table.welcometable { }
+table.welcometable td.welcomelogo {text-align:left; vertical-align:middle; padding:5px; width:190px}
+table.welcometable td.welcometag {text-align:left; vertical-align:middle; padding:5px; width:380px; background-color:#eee}
+table.welcometable td.welcomejavanet {text-align:left; vertical-align:middle; padding:5px; width:190px; background-color:#f5994f}
+table.welcometable td.welcomenarrowside {text-align:left; vertical-align:top; padding:5px; width:190px; background-color:#B9E3F9}
+table.welcometable td.welcomeimage {text-align:left; vertical-align:middle; padding:0px; width:390px}
+table.welcometable td.welcomenarrowbot {text-align:left; vertical-align:top; padding:5px; width:190px; background-color:#f7f7f7}
 
-/* STYLES REPEATED FOR NONAV */
+
+
+
+
+/* STYLES REPEATED WITHOUT SELECTOR FOR NONAV */
  body, table,  td,  th,  p,  div,  span,  li { font-size: 12px}
  H1 {font-size:18px;color:#000}
  H2 {font-size:16px;color:#000}
@@ -61,7 +73,7 @@
  .tertmasttable {margin-top:10px;}
  .tertmasttable td { vertical-align:bottom }
  .collectionheader {margin-bottom:5px;font-size:24px;color:#333; }
-/* Replace tigris css */
+/* Replace tigris css spec overridden by the above */
  #navcol li, #navcol a, #navcol dd, #navcol dt, #navcol, #footer table, #footer td, #footer a, #footer p { 
 	font-family: Verdana, Helvetica, Arial, sans-serif;
 	font-size: xx-small;
