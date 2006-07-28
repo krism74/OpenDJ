@@ -12,11 +12,11 @@
 
 /* Table Style */
 #bodycol .info-table {border:solid 1px #000; border-collapse:collapse; font-size:12px; margin-top:10px;}
-#bodycol .info-table th {border: solid 1px #B5B5B5;padding:5px 10px;background-color:#EEEEEE;font-weight:bold;text-align:left;vertical-align:bottom}
-#bodycol .info-table th.th-center { border: solid 1px B5B5B5;padding:5px 10px;background-color:#EEEEEE;font-weight:bold;text-align:center;vertical-align:bottom}
-#bodycol .info-table th.th-right {border: solid 1px #B5B5B5;padding:5px 10px;background-color:#EEEEEE;font-weight:bold;text-align:right;vertical-align:bottom}
-#bodycol .info-table td {border: solid 1px #B5B5B5;padding:10px;vertical-align:top;}
-#bodycol .info-table td.td-center {border: solid 1px #B5B5B5;padding:10px;vertical-align:top; text-align:center}
+#bodycol .info-table th {border: solid 1px #B5B5B5;padding:5px 10px;background-color:#EEEEEE;font-weight:bold;text-align:left;vertical-align:bottom; font-size:12px}
+#bodycol .info-table th.th-center { border: solid 1px B5B5B5;padding:5px 10px;background-color:#EEEEEE;font-weight:bold;text-align:center;vertical-align:bottom; font-size:12px}
+#bodycol .info-table th.th-right {border: solid 1px #B5B5B5;padding:5px 10px;background-color:#EEEEEE;font-weight:bold;text-align:right;vertical-align:bottom; font-size:12px}
+#bodycol .info-table td {border: solid 1px #B5B5B5;padding:10px;vertical-align:top; font-size:12px}
+#bodycol .info-table td.td-center {border: solid 1px #B5B5B5;padding:10px;vertical-align:top; text-align:center; font-size:12px}
 
 /* Styles for Header Used in About, Community, Downloads and Contrib pages*/
 #bodycol .secmasttable {margin-top:10px;}
