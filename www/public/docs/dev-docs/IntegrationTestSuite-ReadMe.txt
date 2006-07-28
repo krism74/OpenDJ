@@ -8,7 +8,7 @@
  *
  * You can obtain a copy of the license at
  * trunk/opends/resource/legal-notices/OpenDS.LICENSE
- * or https://OpenDS.dev.java.net/OpenDS.LICENSE.
+ * or https://opends.dev.java.net/OpenDS.LICENSE.
  * See the License for the specific language governing permissions
  * and limitations under the License.
  *
