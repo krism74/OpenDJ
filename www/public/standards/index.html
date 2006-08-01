@@ -688,6 +688,14 @@
     <td align="LEFT" valign="TOP">No</td>
     <td align="LEFT" valign="TOP">No</td>
   </tr>
+  <tr>
+    <td align="LEFT" valign="TOP"><a href="rfc4634.txt">RFC 4634</a></td>
+    <td align="LEFT" valign="TOP">US Secure Hash Algorithms (SHA and HMAC-SHA)</td>
+    <td align="LEFT" valign="TOP"><a href="fips-180-1.pdf">FIPS 180-1 (PDF)</a><br>
+      <a href="fips-180-2.pdf">FIPS 180-2 (PDF)</a> </td>
+    <td align="LEFT" valign="TOP">Partial</td>
+    <td align="LEFT" valign="TOP">Partial</td>
+  </tr>
 </table>
 <br>
 Explanation of "Legacy" notations:
@@ -706,6 +714,7 @@ Explanation of "Partial" notations:
   <li>RFC 3698 -- Not all of the matching rules referenced in this document have been implemented. Only those specified in RFC 4517 are currently supported.</li>
   <li>RFC 4518 -- The string parsing mechanism is not in strict compliance with this document.</li>
   <li>RFC 4520 -- Not all of the specifications referenced in this document have been implemented.</li>
+  <li>RFC 4634 -- At least the SHA-1, SHA-256, SHA-384, and SHA-512 digests should be implemented as password storage schemes.  The SHA-224 scheme may not be available, as it is currently not provided by JCE.</li>
 </ul>
 <br>
 <br>
@@ -1058,14 +1067,14 @@ Explanation of "Partial" notations:
   <tr>
     <td align="LEFT" valign="TOP"><a href="fips-180-1.pdf">FIPS 180-1</a></td>
     <td align="LEFT" valign="TOP">Secure Hash Standard (SHA-1)</td>
-    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4634.txt">RFC 4634</td>
     <td align="LEFT" valign="TOP">Yes</td>
     <td align="LEFT" valign="TOP">Yes</td>
   </tr>
   <tr>
     <td align="LEFT" valign="TOP"><a href="fips-180-2.pdf">FIPS 180-2</a></td>
     <td align="LEFT" valign="TOP">Secure Hash Standard (SHA-2)</td>
-    <td align="LEFT" valign="TOP">N/A</td>
+    <td align="LEFT" valign="TOP"><a href="rfc4634.txt">RFC 4634</td>
     <td align="LEFT" valign="TOP">Yes</td>
     <td align="LEFT" valign="TOP">Yes</td>
   </tr>
