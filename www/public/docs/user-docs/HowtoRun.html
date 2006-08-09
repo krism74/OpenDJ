@@ -23,7 +23,7 @@
 </table>
 <hr noshade size="1" >
 <p><br>
-  Once the Directory Server has been <a href="OpenDS-Build-Instructions.html">built</a> using either the default &quot;<code>package</code>&quot; or the &quot;<code>all</code>&quot; targets, a packaged version of the server will be placed in the <code>package</code> subdirectory. In particular, the <code>package/OpenDS-0.1</code> directory should contain a &quot;working&quot; copy of the server. <br>
+  Once the Directory Server has been <a href="../dev-docs/OpenDS-Build-Instructions.html">built</a> using either the default &quot;<code>package</code>&quot; or the &quot;<code>all</code>&quot; targets, a packaged version of the server will be placed in the <code>package</code> subdirectory. In particular, the <code>package/OpenDS-0.1</code> directory should contain a &quot;working&quot; copy of the server. <br>
   <br>
   You may need to change the server listen port from the standard port 389 since this is a privileged port on many systems and also because there may be another Directory Server installation on the system already using port 389. To do this edit the <code>ds-cfg-listen-port</code> in the file <code>config/config.ldif </code>before running the server and change it to a port of your choosing.</p>
 <p>To run the server, first try issuing the command: </p>
