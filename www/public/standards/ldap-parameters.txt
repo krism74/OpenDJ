@@ -1,7 +1,7 @@
 
 Lightweight Directory Access Protocol (LDAP) Parameters per [RFC-ietf-ldapbis-bcp64-07.txt]
  
-(last updated 07 Jun 2006) 
+(last updated 03 August 2006) 
  
 Registries included below:
 - Protocol Mechanism
@@ -33,13 +33,13 @@ Object Identifier          Type  Description                                    
 1.3.6.1.1.13.2              C    LDAP Post-read Control                           [RFC-zeilenga-ldap-readentry-04.txt]
 1.3.6.1.1.14                F    Modify-Increment                                 [RFC-zeilenga-ldap-incr-01.txt]
 1.3.6.1.4.1.1466.101.119.1  E    Dynamic Refresh                                  [RFC2589]
-1.3.6.1.4.1.1466.20037      E    StartTLS                                         [RFC-ietf-ldapbis-protocol-32.txt], [RFC-ietf-ldapbis-authmeth-19.txt]
+1.3.6.1.4.1.1466.20037      E    StartTLS                                         [RFC4511], [RFC4513]
 1.3.6.1.4.1.4203.1.5.1      F    All Op Attrs                                     [RFC3673]
 1.3.6.1.4.1.4203.1.5.2      F    OC AD Lists                                      [RFC-zeilenga-ldap-adlist-11.txt]
 1.3.6.1.4.1.4203.1.5.3      F    True/False filters                               [RFC-zeilenga-ldap-t-f-10.txt]
 1.3.6.1.4.1.4203.1.5.4      F    Language Tag Options                             [RFC3866]
 1.3.6.1.4.1.4203.1.5.5      F    Language Range Options                           [RFC3866]
-1.3.6.1.4.1.4203.1.9.1.1    C    LDAP Content Synchronization Control             [RFC-zeilenga-ldup-sync-06.txt]
+1.3.6.1.4.1.4203.1.9.1.1    C    LDAP Content Synchronization Control             [RFC4533]
 1.3.6.1.4.1.4203.1.10.1     C    Subentries                                       [RFC3672]
 1.3.6.1.4.1.4203.1.11.1     E    Modify Password                                  [RFC3062]
 1.3.6.1.4.1.4203.1.11.3     E    Who am I?                                        [RFC-zeilenga-ldap-authzid-10.txt]
@@ -76,11 +76,11 @@ accessControlSpecificArea             R  2.5.23.2                     [RFC3672]
 account                               O  0.9.2342.19200300.100.4.5    [RFC-zeilenga-ldap-cosine-02.txt]
 administrativeRole                    A  2.5.18.5                     [RFC3672]
 algorithmIdentifierMatch              M  2.5.13.40                    [RFC-zeilenga-ldap-x509-02.txt]  
-alias                                 O  2.5.6.1                      [RFC-ietf-ldapbis-models-14.txt]
+alias                                 O  2.5.6.1                      [RFC4512]
 aliasedEntryName                      A  2.5.4.1                      [X.501]
-aliasedObjectName                     A  2.5.4.1                      [RFC-ietf-ldapbis-models-14.txt]
+aliasedObjectName                     A  2.5.4.1                      [RFC4512]
 allComponentsMatch                    M  1.2.36.79672281.1.13.6       [RFC3687]
-altServer                             A  1.3.6.1.4.1.1466.101.120.6   [RFC-ietf-ldapbis-models-14.txt]
+altServer                             A  1.3.6.1.4.1.1466.101.120.6   [RFC4512]
 applicationEntity                     O  2.5.6.12                     [RFC2256]
 applicationProcess                    O  2.5.6.11                     [RFC-ietf-ldapbis-user-schema-11.txt]
 aRecord                               A  0.9.2342.19200300.100.1.26   [RFC1274]
@@ -89,7 +89,7 @@ associatedInternetGateway             A  1.3.6.1.4.1.453.7.2.8        [RFC2164]
 associatedName                        A  0.9.2342.19200300.100.1.38   [RFC-zeilenga-ldap-cosine-02.txt]
 associatedORAddress                   A  1.3.6.1.4.1.453.7.2.6        [RFC2164]
 associatedX400Gateway                 A  1.3.6.1.4.1.453.7.2.3        [RFC2164]
-attributeTypes                        A  2.5.21.5                     [RFC-ietf-ldapbis-models-14.txt]
+attributeTypes                        A  2.5.21.5                     [RFC4512]
 audio                                 A  0.9.2342.19200300.100.1.55   [RFC1274]
 authorityRevocationList               A  2.5.4.38                     [RFC-zeilenga-ldap-x509-02.txt] 
 autonomousArea                        R  2.5.23.1                     [RFC3672] 
@@ -153,8 +153,8 @@ commonName                            A  2.5.4.3                      [RFC-ietf-
 componentFilterMatch                  M  1.2.36.79672281.1.13.2       [RFC3687]
 country                               O  2.5.6.2                      [RFC-ietf-ldapbis-user-schema-11.txt]
 countryName                           A  2.5.4.6                      [RFC-ietf-ldapbis-user-schema-11.txt]
-createTimestamp                       A  2.5.18.1                     [RFC-ietf-ldapbis-models-14.txt]
-creatorsName                          A  2.5.18.3                     [RFC-ietf-ldapbis-models-14.txt]
+createTimestamp                       A  2.5.18.1                     [RFC4512]
+creatorsName                          A  2.5.18.3                     [RFC4512]
 cRLDistributionPoint                  O  2.5.6.19                     [RFC-zeilenga-ldap-x509-02.txt]
 crossCertificatePair                  A  2.5.4.40                     [RFC-zeilenga-ldap-x509-02.txt]
 DC                                    A  0.9.2342.19200300.100.1.25   [RFC-ietf-ldapbis-user-schema-11.txt]
@@ -170,9 +170,9 @@ distinguishedName                     A  2.5.4.49                     [RFC-ietf-
 distinguishedNameMatch                M  2.5.13.1                     [RFC-ietf-ldapbis-syntaxes-11.txt]
 distinguishedNameTableEntry           O  1.3.6.1.4.1.453.7.1.5        [RFC2293]
 distinguishedNameTableKey             A  1.3.6.1.4.1.453.7.2.3        [RFC2293]
-dITContentRules                       A  2.5.21.2                     [RFC-ietf-ldapbis-models-14.txt]
+dITContentRules                       A  2.5.21.2                     [RFC4512]
 dITRedirect                           A  0.9.2342.19200300.100.1.54   [RFC1274]
-dITStructureRules                     A  2.5.21.1                     [RFC-ietf-ldapbis-models-14.txt]
+dITStructureRules                     A  2.5.21.1                     [RFC4512]
 dmd                                   O  2.5.6.20                     [RFC2256]
 dmdName                               A  2.5.4.54                     [RFC2256]
 dnQualifier                           A  2.5.4.46                     [RFC-ietf-ldapbis-user-schema-11.txt]
@@ -197,7 +197,7 @@ dynamicSubtrees                       A  1.3.6.1.4.1.1466.101.119.4   [RFC2589]
 enhancedSearchGuide                   A  2.5.4.47                     [RFC-ietf-ldapbis-user-schema-11.txt]
 entryTtl                              A  1.3.6.1.4.1.1466.101.119.3   [RFC2589]
 entryUUID                             A  1.3.6.1.1.16.4               [RFC-zeilenga-ldap-uuid-06.txt]
-extensibleObject                      O  1.3.6.1.4.1.1466.101.120.111 [RFC-ietf-ldapbis-models-14.txt]
+extensibleObject                      O  1.3.6.1.4.1.1466.101.120.111 [RFC4512]
 facsimileTelephoneNumber              A  2.5.4.23                     [RFC-ietf-ldapbis-user-schema-11.txt]
 favouriteDrink                        A* 0.9.2342.19200300.100.1.5    [RFC-zeilenga-ldap-cosine-02.txt]
 friendlyCountry                       O  0.9.2342.19200300.100.4.18   [RFC-zeilenga-ldap-cosine-02.txt]
@@ -207,7 +207,7 @@ generalizedTimeOrderingMatch          M  2.5.13.28                    [RFC-ietf-
 generationQualifier                   A  2.5.4.44                     [RFC-ietf-ldapbis-user-schema-11.txt]
 givenName                             A  2.5.4.42                     [RFC-ietf-ldapbis-user-schema-11.txt]
 GN                                    A  RESERVED                     [RFC-ietf-ldapbis-user-schema-11.txt]
-governingStructureRule                A  2.5.21.10                    [RFC-ietf-ldapbis-models-14.txt]
+governingStructureRule                A  2.5.21.10                    [RFC4512]
 groupOfNames                          O  2.5.6.9                      [RFC-ietf-ldapbis-user-schema-11.txt]
 groupOfUniqueNames                    O  2.5.6.17                     [RFC-ietf-ldapbis-user-schema-11.txt]
 homePhone                             A  0.9.2342.19200300.100.1.20   [RFC-zeilenga-ldap-cosine-02.txt]
@@ -230,33 +230,33 @@ labeledURI                            A  1.3.6.1.4.1.250.1.57         [RFC2079]
 labeledURIObject                      A  1.3.6.1.4.1.250.3.15         [RFC2079]
 lastModifiedBy                        A  0.9.2342.19200300.100.1.24   [RFC1274]
 lastModifiedTime                      A  0.9.2342.19200300.100.1.23   [RFC1274]
-ldapSyntaxes                          A  1.3.6.1.4.1.1466.101.120.16  [RFC-ietf-ldapbis-models-14.txt]
+ldapSyntaxes                          A  1.3.6.1.4.1.1466.101.120.16  [RFC4512]
 locality                              O  2.5.6.3                      [RFC-ietf-ldapbis-user-schema-11.txt]
 localityName                          A  2.5.4.7                      [RFC-ietf-ldapbis-user-schema-11.txt]
 mail                                  A  0.9.2342.19200300.100.1.3    [RFC-zeilenga-ldap-cosine-02.txt]
 mailPreferenceOption                  A  0.9.2342.19200300.100.1.47   [RFC1274]
 manager                               A  0.9.2342.19200300.100.1.10   [RFC-zeilenga-ldap-cosine-02.txt]
-matchingRules                         A  2.5.21.4                     [RFC-ietf-ldapbis-models-14.txt]
-matchingRuleUse                       A  2.5.21.8                     [RFC-ietf-ldapbis-models-14.txt]
+matchingRules                         A  2.5.21.4                     [RFC4512]
+matchingRuleUse                       A  2.5.21.8                     [RFC4512]
 mcgamTables                           A  1.3.6.1.4.1.453.7.2.9        [RFC2164]
 mDRecord                              A  0.9.2342.19200300.100.1.27   [RFC1274]
 member                                A  2.5.4.31                     [RFC-ietf-ldapbis-user-schema-11.txt]
 mixerGateway                          O  1.3.6.1.4.1.453.7.1.4        [RFC2164]
 mobile                                A  0.9.2342.19200300.100.1.41   [RFC-zeilenga-ldap-cosine-02.txt]
 mobileTelephoneNumber                 A* 0.9.2342.19200300.100.1.41   [RFC-zeilenga-ldap-cosine-02.txt]
-modifiersName                         A  2.5.18.4                     [RFC-ietf-ldapbis-models-14.txt]
-modifyTimestamp                       A  2.5.18.2                     [RFC-ietf-ldapbis-models-14.txt]
+modifiersName                         A  2.5.18.4                     [RFC4512]
+modifyTimestamp                       A  2.5.18.2                     [RFC4512]
 mXRecord                              A  0.9.2342.19200300.100.1.28   [RFC1274]
 name                                  A  2.5.4.41                     [RFC-ietf-ldapbis-user-schema-11.txt]
-nameForms                             A  2.5.21.7                     [RFC-ietf-ldapbis-models-14.txt]
-namingContexts                        A  1.3.6.1.4.1.1466.101.120.5   [RFC-ietf-ldapbis-models-14.txt]
+nameForms                             A  2.5.21.7                     [RFC4512]
+namingContexts                        A  1.3.6.1.4.1.1466.101.120.5   [RFC4512]
 nSRecord                              A  0.9.2342.19200300.100.1.29   [RFC1274]
 numericStringMatch                    M  2.5.13.8                     [RFC-ietf-ldapbis-syntaxes-11.txt]
 numericStringOrderingMatch            M  2.5.13.9                     [RFC-ietf-ldapbis-syntaxes-11.txt]
 numericStringSubstringsMatch          M  2.5.13.10                    [RFC-ietf-ldapbis-syntaxes-11.txt]
 o                                     A  2.5.4.10                     [RFC-ietf-ldapbis-user-schema-11.txt]
-objectClass                           A  2.5.4.0                      [RFC-ietf-ldapbis-models-14.txt]
-objectClasses                         A  2.5.21.6                     [RFC-ietf-ldapbis-models-14.txt]
+objectClass                           A  2.5.4.0                      [RFC4512]
+objectClasses                         A  2.5.21.6                     [RFC4512]
 objectIdentifierFirstComponentMatch   M  2.5.13.30                    [RFC-ietf-ldapbis-syntaxes-11.txt]
 objectIdentifierMatch                 M  2.5.13.0                     [RFC-ietf-ldapbis-syntaxes-11.txt]
 octetStringMatch                      M  2.5.13.17                    [RFC-ietf-ldapbis-syntaxes-11.txt]
@@ -540,22 +540,22 @@ storedPrefixMatch                     M  2.5.13.41                    [RFC3698]
 street                                A  2.5.4.9                      [RFC-ietf-ldapbis-user-schema-11.txt]
 streetAddress                         A  2.5.4.9                      [RFC2256]
 strongAuthenticationUser              O  2.5.6.15                     [RFC-zeilenga-ldap-x509-02.txt]
-structuralObjectClass                 A  2.5.21.9                     [RFC-ietf-ldapbis-models-14.txt]
+structuralObjectClass                 A  2.5.21.9                     [RFC4512]
 subentry                              O  2.5.17.0                     [RFC3672]
-subschema                             O  2.5.20.1                     [RFC-ietf-ldapbis-models-14.txt]
+subschema                             O  2.5.20.1                     [RFC4512]
 subschemaAdminSpecificArea            R  2.5.23.4                     [RFC3672] 
-subschemaSubentry                     A  2.5.18.10                    [RFC-ietf-ldapbis-models-14.txt]
+subschemaSubentry                     A  2.5.18.10                    [RFC4512]
 subtree                               O  1.3.6.1.4.1.453.7.1.1        [RFC2293]
 subtreeMaximumQuality                 A  0.9.2342.19200300.100.1.52   [RFC1274]
 subtreeMinimumQuality                 A  0.9.2342.19200300.100.1.51   [RFC1274]
 subtreeSpecification                  A  2.5.18.6                     [RFC3672]
 supportedAlgorithms                   A  2.5.4.52                     [RFC-zeilenga-ldap-x509-02.txt]
 supportedApplicationContext           A  2.5.4.30                     [RFC2256]
-supportedControl                      A  1.3.6.1.4.1.1466.101.120.13  [RFC-ietf-ldapbis-models-14.txt]
-supportedExtension                    A  1.3.6.1.4.1.1466.101.120.7   [RFC-ietf-ldapbis-models-14.txt]
-supportedFeatures                     A  1.3.6.1.4.1.4203.1.3.5       [RFC-ietf-ldapbis-models-14.txt]
-supportedLDAPVersion                  A  1.3.6.1.4.1.1466.101.120.15  [RFC-ietf-ldapbis-models-14.txt]
-supportedSASLMechanisms               A  1.3.6.1.4.1.1466.101.120.14  [RFC-ietf-ldapbis-models-14.txt]
+supportedControl                      A  1.3.6.1.4.1.1466.101.120.13  [RFC4512]
+supportedExtension                    A  1.3.6.1.4.1.1466.101.120.7   [RFC4512]
+supportedFeatures                     A  1.3.6.1.4.1.4203.1.3.5       [RFC4512]
+supportedLDAPVersion                  A  1.3.6.1.4.1.1466.101.120.15  [RFC4512]
+supportedSASLMechanisms               A  1.3.6.1.4.1.1466.101.120.14  [RFC4512]
 surname                               A  2.5.4.4                      [RFC-ietf-ldapbis-user-schema-11.txt]
 table                                 O  1.3.6.1.4.1.453.7.1.2        [RFC2293]
 tableEntry                            O  1.3.6.1.4.1.453.7.1.3        [RFC2293]
@@ -569,7 +569,7 @@ textTableEntry                        O  1.3.6.1.4.1.453.7.1.4        [RFC2293]
 textTableKey                          A  1.3.6.1.4.1.453.7.2.1        [RFC2293]
 textTableValue                        A  1.3.6.1.4.1.453.7.2.2        [RFC2293]
 title                                 A  2.5.4.12                     [RFC-ietf-ldapbis-user-schema-11.txt]
-top                                   O  2.5.6.0                      [RFC-ietf-ldapbis-models-14.txt]
+top                                   O  2.5.6.0                      [RFC4512]
 uddiAccessPoint                       A  1.3.6.1.1.10.4.19            [RFC4403]
 uddiAddress                           O  1.3.6.1.1.10.6.3             [RFC4403]
 uddiAddressLine                       A  1.3.6.1.1.10.4.13            [RFC4403]
@@ -693,8 +693,8 @@ Registration Procedures: Standards Action
 
 Name                         Code Owner  Reference
 ---------------------------  ---- -----  ---------
-bindRequest                     0  IESG  [RFC-ietf-ldapbis-authmeth-19.txt][RFC-ietf-ldapbis-protocol-32.txt]
-bindResponse                    1  IESG  [RFC-ietf-ldapbis-authmeth-19.txt][RFC-ietf-ldapbis-protocol-32.txt]
+bindRequest                     0  IESG  [RFC4513][RFC-ietf-ldapbis-protocol-32.txt]
+bindResponse                    1  IESG  [RFC4513][RFC-ietf-ldapbis-protocol-32.txt]
 unbindRequest                   2  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
 searchRequest                   3  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
 searchResEntry                  4  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
@@ -726,51 +726,51 @@ Registration Procedures:
 
 Name                         Code Owner     Reference
 ---------------------------  ---- --------  ---------
-success                         0  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-operationsError                 1  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-protocolError                   2  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-timeLimitExceeded               3  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-sizeLimitExceeded               4  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-compareFalse                    5  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-compareTrue                     6  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-authMethodNotSupported          7  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-strongerAuthRequired            8  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-reserved (partialResults)       9  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-referral                       10  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-adminLimitExceeded             11  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-unavailableCriticalExtension   12  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-confidentialityRequired        13  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-saslBindInProgress             14  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-noSuchAttribute                16  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-undefinedAttributeType         17  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-inappropriateMatching          18  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-constraintViolation            19  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-attributeOrValueExists         20  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-invalidAttributeSyntax         21  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-noSuchObject                   32  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-aliasProblem                   33  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-invalidDNSyntax                34  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-reserved (isLeaf)              35  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-aliasDereferencingProblem      36  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
+success                         0  IESG     [RFC4511]
+operationsError                 1  IESG     [RFC4511]
+protocolError                   2  IESG     [RFC4511]
+timeLimitExceeded               3  IESG     [RFC4511]
+sizeLimitExceeded               4  IESG     [RFC4511]
+compareFalse                    5  IESG     [RFC4511]
+compareTrue                     6  IESG     [RFC4511]
+authMethodNotSupported          7  IESG     [RFC4511]
+strongerAuthRequired            8  IESG     [RFC4511]
+reserved (partialResults)       9  IESG     [RFC4511]
+referral                       10  IESG     [RFC4511]
+adminLimitExceeded             11  IESG     [RFC4511]
+unavailableCriticalExtension   12  IESG     [RFC4511]
+confidentialityRequired        13  IESG     [RFC4511]
+saslBindInProgress             14  IESG     [RFC4511]
+noSuchAttribute                16  IESG     [RFC4511]
+undefinedAttributeType         17  IESG     [RFC4511]
+inappropriateMatching          18  IESG     [RFC4511]
+constraintViolation            19  IESG     [RFC4511]
+attributeOrValueExists         20  IESG     [RFC4511]
+invalidAttributeSyntax         21  IESG     [RFC4511]
+noSuchObject                   32  IESG     [RFC4511]
+aliasProblem                   33  IESG     [RFC4511]
+invalidDNSyntax                34  IESG     [RFC4511]
+reserved (isLeaf)              35  IESG     [RFC4511]
+aliasDereferencingProblem      36  IESG     [RFC4511]
 reserved                    37-47  IESG
-inappropriateAuthentication    48  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-invalidCredentials             49  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-insufficientAccessRights       50  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-busy                           51  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-unavailable                    52  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-unwillingToPerform             53  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-loopDetect                     54  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
+inappropriateAuthentication    48  IESG     [RFC4511]
+invalidCredentials             49  IESG     [RFC4511]
+insufficientAccessRights       50  IESG     [RFC4511]
+busy                           51  IESG     [RFC4511]
+unavailable                    52  IESG     [RFC4511]
+unwillingToPerform             53  IESG     [RFC4511]
+loopDetect                     54  IESG     [RFC4511]
 reserved                    55-63  IESG
-namingViolation                64  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-objectClassViolation           65  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-notAllowedOnNonLeaf            66  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-notAllowedOnRDN                67  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-entryAlreadyExists             68  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-objectClassModsProhibited      69  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-reserved (resultsTooLarge)     70  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
+namingViolation                64  IESG     [RFC4511]
+objectClassViolation           65  IESG     [RFC4511]
+notAllowedOnNonLeaf            66  IESG     [RFC4511]
+notAllowedOnRDN                67  IESG     [RFC4511]
+entryAlreadyExists             68  IESG     [RFC4511]
+objectClassModsProhibited      69  IESG     [RFC4511]
+reserved (resultsTooLarge)     70  IESG     [RFC4511]
 reserved                    71-79  IESG
-other                          80  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
-reserved (APIs)             81-90  IESG     [RFC-ietf-ldapbis-protocol-32.txt]
+other                          80  IESG     [RFC4511]
+reserved (APIs)             81-90  IESG     [RFC4511]
 reserved (LDAP APIs)       91-112  
 lcupResourcesExhausted        113  IESG     [RFC3928]
 lcupSecurityViolation         114  IESG     [RFC3928]
@@ -786,7 +786,7 @@ authorizationDenied           123  WELTMAN  [RFC4370]
 
 
 First Come, First Serve Range (4096-16383)
-e-syncRefreshRequired        4096  [KDZ][JHC] [RFC-zeilenga-ldup-sync-06.txt]
+e-syncRefreshRequired        4096  [KDZ][JHC] [RFC4533]
 
 
 Bind Authentication Method - per [RFC-ietf-ldapbis-bcp64-07.txt]
@@ -798,10 +798,10 @@ Registration Procedures:
 
 Method      Value  Owner  Usage        Reference
 ------      -----  -----  -----------  -----------------
-simple          0  IESG   LIMITED USE  [RFC-ietf-ldapbis-authmeth-19.txt][RFC-ietf-ldapbis-protocol-32.txt]
+simple          0  IESG   LIMITED USE  [RFC4513][RFC4511]
 krbv42LDAP      1  IESG   OBSOLETE*    [RFC1777]
 krbv42DSA       2  IESG   OBSOLETE*    [RFC1777]
-sasl            3  IESG   COMMON       [RFC-ietf-ldapbis-authmeth-19.txt][RFC-ietf-ldapbis-protocol-32.txt]
+sasl            3  IESG   COMMON       [RFC4513][RFC4511]
 
 * These LDAPv2-only mechanisms were deprecated in favor of the
 LDAPv3 SASL authentication method, specifically the GSSAPI mechanism.
@@ -902,8 +902,8 @@ All others, Standards Action or Expert Review with Specification Required
                          
 Name              Prefix  Owner Reference
 ----------------  ------  ----- ---------
-dnAuthzId         dn:     IESG  [RFC-ietf-ldapbis-authmeth-19.txt]
-uAuthzId          u:      IESG  [RFC-ietf-ldapbis-authmeth-19.txt]
+dnAuthzId         dn:     IESG  [RFC4513]
+uAuthzId          u:      IESG  [RFC4513]
 
 
 
@@ -959,13 +959,12 @@ References
 [RFC-zeilenga-ldap-authzid-10.txt]
            K. Zeilenga, 'LDAP "Who am I?" Operation', RFC XXXX, Month Year.
 
-[RFC-zeilenga-ldup-sync-06.txt]
+[RFC4533]
            K. Zeilenga and J.H. Choi, "The LDAP Content Synchronization Operation",
-           RFC XXXX, Month Year.
+           RFC 4533, June 2006.
 
-[RFC-ietf-ldapbis-models-14.txt]
-           K. Zeilenga, Ed., "LDAP: Directory Information Models", RFC XXXX, 
-           Month Year.
+[RFC4512]  K. Zeilenga, Ed., "LDAP: Directory Information Models", RFC 4512, 
+           June 2006.
 
 [RFC-zeilenga-ldap-t-f-10.txt]
            K. Zeilenga, "LDAP Absolute True and False Filters", RFC XXXX, Month Year.
@@ -998,30 +997,27 @@ References
 [RFC-zeilenga-ldap-cosine-02.txt]
            K. D. Zeilenga, "COSINE LDAP/X.500 Schema", RFC XXXX, Month Year.
 
-[RFC-ietf-ldapbis-authmeth-19.txt] 
-           Harrison, R., "LDAP: Authentication Methods and Connection 
-           Level Security Mechanisms", RFC XXXX, Month Year.
+[RFC4513]  Harrison, R., "LDAP: Authentication Methods and Connection 
+           Level Security Mechanisms", RFC 4513, June 2006.
 
 [RFC-legg-ldap-binary-04.txt]
            S. Legg, "Lightweight Directory Access Protocol (LDAP): The Binary 
            Encoding Option", RFC XXXX, Month Year.
 
 [RFC-ietf-ldapbis-user-schema-11.txt]
-          A. Sciberras, "LDAP: Schema for User Applications", RFC XXXX,
-          Month Year.
+           A. Sciberras, "LDAP: Schema for User Applications", RFC XXXX,
+           Month Year.
 
 [RFC-zeilenga-ldap-turn-03.txt]
-         K. Zeilenga, "LDAP Turn Operation", RFC XXXX, Month Year.
+           K. Zeilenga, "LDAP Turn Operation", RFC XXXX, Month Year.
 
 [RFC-ietf-ldapbis-bcp64-07.txt]
-         K. D. Zeilenga, "IANA Considerations for LDAP", RFC XXXX, Month Year.
+           K. D. Zeilenga, "IANA Considerations for LDAP", RFC XXXX, Month Year.
 
+[RFC4511]  Sermersheim, J., "LDAP: The Protocol", RFC 4511, June 2006.
 
-[Protocol]  Sermersheim, J. (editor), "LDAP: The Protocol",
-            draft-ietf-ldapbis-protocol-xx.txt, a work in progress.
-
-[LDAPURL]   Smith, M. (editor), "LDAP: Uniform Resource Locator",
-            draft-ietf-ldapbis-url-xx.txt, a work in progress.
+[LDAPURL]  Smith, M. (editor), "LDAP: Uniform Resource Locator",
+           draft-ietf-ldapbis-url-xx.txt, a work in progress.
 
 [JHC]      Jong Hyuk Choi, <jongchoi@us.ibm.com>, April 2005.
 
