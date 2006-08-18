@@ -23,9 +23,9 @@
 </table>
 <hr noshade size="1" >
 <p><br>
-  Once the Directory Server has been <a href="../dev-docs/OpenDS-Build-Instructions.html">built</a> using either the default &quot;<code>package</code>&quot; or the &quot;<code>all</code>&quot; targets, a packaged version of the server will be placed in the <code>package</code> subdirectory. In particular, the <code>package/OpenDS-0.1</code> directory should contain a &quot;working&quot; copy of the server. <br>
+  Once the Directory Server has been <a href="../dev-docs/OpenDS-Build-Instructions.html">built</a> using either the default &quot;<code>package</code>&quot; or the &quot;<code>all</code>&quot; targets, a packaged version of the server will be placed in the <code>package</code> subdirectory. In particular, the <code>package/OpenDS-0.1</code> directory should contain a &quot;working&quot; copy of the server.  Alternately, you may download a <a HREF="https://opends.dev.java.net/servlets/ProjectDocumentList?folderID=5700&expandFolder=5700&folderID=0">pre-built version of the server</a>.<br>
   <br>
-  You may need to change the server listen port from the standard port 389 since this is a privileged port on many systems and also because there may be another Directory Server installation on the system already using port 389. To do this edit the <code>ds-cfg-listen-port</code> in the file <code>config/config.ldif </code>before running the server and change it to a port of your choosing.</p>
+  The simplest way to get started is to run the <code>setup.sh</code> shell script on UNIX-based systems or the <code>setup.bat</code> batch file on Windows.  This will provide an interactive process that may prompt you for several key settings, including the LDAP port number, the base DN, and the root DN and password.  It will also offer the ability to create the base entry or import an existing LDIF file.</p>
 <p>To run the server, first try issuing the command: </p>
 <blockquote><code>bin/start-ds.sh -nodetach</code> (on Unixes)<br>
   <code>bin\start-ds.bat</code> (on Windows)</blockquote>
