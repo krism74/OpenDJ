@@ -1,14 +1,14 @@
 
 
 
-
-SASL                                                         A. Melnikov
+SASL                                                    A. Melnikov, Ed.
 Internet-Draft                                                     Isode
-Expires: December 1, 2006                                   May 30, 2006
+Intended status: Informational                           August 25, 2006
+Expires: February 26, 2007
 
 
                The Kerberos V5 ("GSSAPI") SASL mechanism
-                       draft-ietf-sasl-gssapi-05
+                       draft-ietf-sasl-gssapi-07
 
 Status of this Memo
 
@@ -33,7 +33,7 @@ Status of this Memo
    The list of Internet-Draft Shadow Directories can be accessed at
    http://www.ietf.org/shadow.html.
 
-   This Internet-Draft will expire on December 1, 2006.
+   This Internet-Draft will expire on February 26, 2007.
 
 Copyright Notice
 
@@ -41,37 +41,37 @@ Copyright Notice
 
 Abstract
 
-   The Simple Authentication and Security Layer (SASL, RFC XXXX) is a
+   The Simple Authentication and Security Layer (SASL, RFC 4422) is a
    framework for adding authentication support to connection-based
    protocols.  This document describes the method for using the Generic
-   Security Service Application Program Interface (GSS-API) KERBEROS V5
-   in the Simple Authentication and Security Layer.
+   Security Service Application Program Interface (GSS-API) Kerberos V5
+   in the SASL.
 
    This document replaces section 7.2 of RFC 2222, the definition of the
    "GSSAPI" SASL mechanism.
 
 
 
-
-Melnikov                Expires December 1, 2006                [Page 1]
+Melnikov                Expires February 26, 2007               [Page 1]
 
-Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
+Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism    August 2006
 
 
 Table of Contents
 
    1.  Conventions Used in this Document  . . . . . . . . . . . . . .  3
-   2.  Introduction and Overview  . . . . . . . . . . . . . . . . . .  3
+   2.  Introduction . . . . . . . . . . . . . . . . . . . . . . . . .  3
+     2.1.  Relationship to Other Documents  . . . . . . . . . . . . .  3
    3.  Kerberos V5 GSS-API mechanism  . . . . . . . . . . . . . . . .  3
      3.1.  Client side of authentication protocol exchange  . . . . .  3
-     3.2.  Server side of authentication protocol exchange  . . . . .  4
+     3.2.  Server side of authentication protocol exchange  . . . . .  5
      3.3.  Security layer . . . . . . . . . . . . . . . . . . . . . .  6
-   4.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . .  6
+   4.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . .  7
    5.  Security Considerations  . . . . . . . . . . . . . . . . . . .  7
-   6.  Acknowledgements . . . . . . . . . . . . . . . . . . . . . . .  7
+   6.  Acknowledgements . . . . . . . . . . . . . . . . . . . . . . .  8
    7.  References . . . . . . . . . . . . . . . . . . . . . . . . . .  8
      7.1.  Normative References . . . . . . . . . . . . . . . . . . .  8
-     7.2.  Informative References . . . . . . . . . . . . . . . . . .  8
+     7.2.  Informative References . . . . . . . . . . . . . . . . . .  9
    Author's Address . . . . . . . . . . . . . . . . . . . . . . . . .  9
    Intellectual Property and Copyright Statements . . . . . . . . . . 10
 
@@ -108,10 +108,9 @@ Table of Contents
 
 
 
-
-Melnikov                Expires December 1, 2006                [Page 2]
+Melnikov                Expires February 26, 2007               [Page 2]
 
-Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
+Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism    August 2006
 
 
 1.  Conventions Used in this Document
@@ -121,21 +120,31 @@ Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
    use in RFCs to Indicate Requirement Levels" [KEYWORDS].
 
 
-2.  Introduction and Overview
+2.  Introduction
 
-   This specification documents currently deployed Kerberos V5 GSS-API
-   mechanism used within SASL framework [SASL].  The authentication
-   sequence is described in Section 3.  Note that the described
-   authentication sequence has known limitations in particular it lacks
-   channel bindings and the number of round trips required to complete
+   This specification documents currently deployed Simple Authentication
+   and Security Layer (SASL [SASL]) mechanism supporting the Kerberos V5
+   [KERBEROS] Generic Security Service Application Program Interface
+   ([GSS-API]) mechanism [RFC4121].  The authentication sequence is
+   described in Section 3.  Note that the described authentication
+   sequence has known limitations in particular it lacks channel
+   bindings and the number of round trips required to complete
    authentication exchange is not minimal.  SASL WG is working on a
    separate document that should address these limitations.
 
-   The SASL mechanism name for the Kerberos V5 GSS-API mechanism
-   [RFC4121] is "GSSAPI".
+2.1.  Relationship to Other Documents
+
+   This document, together with RFC 4422, obsoletes RFC 2222 in its
+   entirety.  This document replaces Section 7.2 of RFC 2222.  The
+   remainder is obsoleted as detailed in Section 1.2 of RFC 4422.
 
 
 3.  Kerberos V5 GSS-API mechanism
+
+   The SASL mechanism name for the Kerberos V5 GSS-API mechanism
+   [RFC4121] is "GSSAPI".  Though known as the SASL GSSAPI mechanism,
+   the mechanism is specifically tied to Kerberos V5 and GSS-API's
+   Kerberos V5 mechanism.
 
    The GSSAPI SASL mechanism is a "client goes first" SASL mechanism,
    i.e. it starts with the client sending a "response" created as
@@ -151,28 +160,35 @@ Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
    input_context_handle of 0 (initially), mech_type of the Kerberos V5
    GSS-API mechanism [KRB5GSS], chan_binding of NULL, and targ_name
    equal to output_name from GSS_Import_Name called with input_name_type
-   of GSS_C_NT_HOSTBASED_SERVICE and input_name_string of
+   of GSS_C_NT_HOSTBASED_SERVICE (*) and input_name_string of
+
+
+
+Melnikov                Expires February 26, 2007               [Page 3]
+
+Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism    August 2006
+
+
    "service@hostname" where "service" is the service name specified in
    the protocol's profile, and "hostname" is the fully qualified host
-   name of the server.  If the client will be requesting a security
-   layer, it MUST also supply to the GSS_Init_sec_context a
-   mutual_req_flag of TRUE, a sequence_req_flag of TRUE, and an
-   integ_req_flag of TRUE.  If the client will be requesting a security
-   layer providing confidentiality protection, it MUST also supply to
-   the GSS_Init_sec_context a conf_req_flag of TRUE.  The client then
-   responds with the resulting output_token.  If GSS_Init_sec_context
-   returns GSS_S_CONTINUE_NEEDED, then the client should expect the
+   name of the server.  When calling the GSS_Init_sec_context the client
+   MUST pass the integ_req_flag of TRUE.  If the client will be
+   requesting a security layer, it MUST also supply to the
+   GSS_Init_sec_context a mutual_req_flag of TRUE, and a
+   sequence_req_flag of TRUE.  If the client will be requesting a
+   security layer providing confidentiality protection, it MUST also
+   supply to the GSS_Init_sec_context a conf_req_flag of TRUE.  The
+   client then responds with the resulting output_token.  If
+   GSS_Init_sec_context returns GSS_S_CONTINUE_NEEDED, then the client
+   should expect the server to issue a token in a subsequent challenge.
+   The client must pass the token to another call to
+   GSS_Init_sec_context, repeating the actions in this paragraph.
 
-
-
-Melnikov                Expires December 1, 2006                [Page 3]
-
-Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
-
-
-   server to issue a token in a subsequent challenge.  The client must
-   pass the token to another call to GSS_Init_sec_context, repeating the
-   actions in this paragraph.
+   (*) - Clients MAY use name types other than
+   GSS_C_NT_HOSTBASED_SERVICE to import servers' acceptor names, but
+   only when they have a priori knowledge that the servers support
+   alternate name types.  Otherwise clients MUST use
+   GSS_C_NT_HOSTBASED_SERVICE for importing acceptor names.
 
    When GSS_Init_sec_context returns GSS_S_COMPLETE, the client examines
    the context to ensure that it provides a level of protection
@@ -196,10 +212,18 @@ Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
    client doesn't support any security layer), and the remaining octets
    containing the UTF-8 [UTF8] encoded authorization identity.
    (Implementation note: the authorization identity is not terminated
-   with the NUL (%x00) character).  The client passes the data to
-   GSS_Wrap with conf_flag set to FALSE, and responds with the generated
+   with the zero-valued (%x00) octet (e.g., the UTF-8 encoding of the
+   NUL (U+0000) character)).  The client passes the data to GSS_Wrap
+   with conf_flag set to FALSE, and responds with the generated
    output_message.  The client can then consider the server
    authenticated.
+
+
+
+Melnikov                Expires February 26, 2007               [Page 4]
+
+Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism    August 2006
+
 
 3.2.  Server side of authentication protocol exchange
 
@@ -218,14 +242,6 @@ Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
 
    Servers SHOULD use a credential obtained by calling GSS_Acquire_cred
    or GSS_Add_cred for the GSS_C_NO_NAME desired_name and the OID of the
-
-
-
-Melnikov                Expires December 1, 2006                [Page 4]
-
-Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
-
-
    Kerberos V5 GSS-API mechanism [KRB5GSS](*).  Servers MAY use
    GSS_C_NO_CREDENTIAL as an acceptor credential handle.  Servers MAY
    use a credential obtained by calling GSS_Acquire_cred or GSS_Add_cred
@@ -249,9 +265,21 @@ Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
    parameter returned from the GSS_Accept_sec_context call.  If the
    value differ SASL authentication MUST be aborted.
 
-   Upon successful establishment of the security context the server
-   SHOULD also check using the GSS_Inquire_context that the target_name
-   used by the client matches either:
+   Upon successful establishment of the security context and if the
+   server used GSS_C_NO_NAME/GSS_C_NO_CREDENTIAL to create acceptor
+   credential handle, the server SHOULD also check using the
+   GSS_Inquire_context that the target_name used by the client matches
+   either:
+
+
+
+
+
+
+Melnikov                Expires February 26, 2007               [Page 5]
+
+Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism    August 2006
+
 
    -  the GSS_C_NT_HOSTBASED_SERVICE "service@hostname" name syntax,
       where "service" is the service name specified in the application
@@ -274,14 +302,6 @@ Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
    output_token), the server then constructs 4 octets of data, with the
    first octet containing a bit-mask specifying the security layers
    supported by the server and the second through fourth octets
-
-
-
-Melnikov                Expires December 1, 2006                [Page 5]
-
-Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
-
-
    containing in network byte order the maximum size output_token the
    server is able to receive (which MUST be 0 if the server doesn't
    support any security layer).  The server must then pass the plaintext
@@ -296,7 +316,8 @@ Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
    offered, and that the client maximum buffer is 0 if no security layer
    was chosen.  The server must verify that the src_name is authorized
    to act as the authorization identity.  After these verifications, the
-   authentication process is complete.
+   authentication process is complete.  The server is not expected to
+   return any additional data with the success indicator.
 
 3.3.  Security layer
 
@@ -307,6 +328,14 @@ Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
            Sender calls GSS_Wrap with conf_flag set to FALSE
          4 Confidentiality protection.
            Sender calls GSS_Wrap with conf_flag set to TRUE
+
+
+
+
+Melnikov                Expires February 26, 2007               [Page 6]
+
+Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism    August 2006
+
 
    Other bit-masks may be defined in the future; bits which are not
    understood must be negotiated off.
@@ -321,33 +350,22 @@ Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
    The IANA is directed to modify the existing registration for "GSSAPI"
    as follows:
 
-   Family of SASL mechanisms: NO
+   Family of SASL mechanisms:  NO
 
-   SASL mechanism name: GSSAPI
+   SASL mechanism name:  GSSAPI
 
-   Security considerations: See Section 5 of RFC [THIS-DOC]
+   Security considerations:  See Section 5 of RFC [THIS-DOC]
 
+   Published Specification:  RFC [THIS-DOC]
 
-
-
-
-
-
-Melnikov                Expires December 1, 2006                [Page 6]
-
-Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
-
-
-   Published Specification: RFC [THIS-DOC]
-
-   Person & email address to contact for further information: Alexey
+   Person & email address to contact for further information:  Alexey
       Melnikov <Alexey.Melnikov@isode.com>
 
-   Intended usage: COMMON
+   Intended usage:  COMMON
 
-   Owner/Change controller: iesg@ietf.org
+   Owner/Change controller:  iesg@ietf.org
 
-   Additional Information: This mechanism is for the Kerberos V5
+   Additional Information:  This mechanism is for the Kerberos V5
       mechanism of GSS-API.
 
 
@@ -355,45 +373,38 @@ Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
 
    Security issues are discussed throughout this memo.
 
-   The integrity protection provided by the GSSAPI security layer is
-   useless to the client unless the client also requests mutual
-   authentication.  Therefore, a client wishing to benefit from the
-   integrity protection of a security layer MUST pass to the
-   GSS_Init_sec_context call a mutual_req_flag of TRUE.
-
    When constructing the input_name_string, the client SHOULD NOT
    canonicalize the server's fully qualified domain name using an
    insecure or untrusted directory service.
 
    For compatibility with deployed software this document requires that
    the chan_binding (channel bindings) parameter to GSS_Init_sec_context
-   and GSS_Accept_sec_context be NULL.  SASL WG has reached consensus
-   that this limitation is worth addressing and a future document will
-   define a new GSS-API SASL mechanism that will not have this
-   limitation.
+   and GSS_Accept_sec_context be NULL, hence disallowing use of GSS-API
+   support for channel bindings.  GSS-API channel bindings in SASL is
+   expected to be supported via a new GSS-API family of SASL mechanisms
+   (to be introduced in a future document).
 
    Additional security considerations are in the [SASL] and [GSS-API]
-   specifications.  Additional security considerations for the GSSAPI
-   mechanism can be found in [KRB5GSS].
+
+
+
+Melnikov                Expires February 26, 2007               [Page 7]
+
+Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism    August 2006
+
+
+   specifications.  Additional security considerations for the GSS-API
+   mechanism can be found in [KRB5GSS] and [KERBEROS].
 
 
 6.  Acknowledgements
 
-   This document replaces section 7.2 of RFC 2222 [SASL] by John G.
+   This document replaces section 7.2 of RFC 2222 [RFC2222] by John G.
    Myers.  He also contributed significantly to this revision.
 
-   Thank you to Lawrence Greenfield for converting text of this draft to
-   XML format.
+   Lawrence Greenfield converted text of this draft to the XML format.
 
    Contributions of many members of the SASL mailing list are gratefully
-
-
-
-Melnikov                Expires December 1, 2006                [Page 7]
-
-Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
-
-
    acknowledged, in particular comments from Chris Newman, Nicolas
    Williams and Jeffrey Hutzelman.
 
@@ -404,6 +415,11 @@ Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
 
    [GSS-API]  Linn, J., "Generic Security Service Application Program
               Interface Version 2, Update 1", RFC 2743, January 2000.
+
+   [KERBEROS]
+              Neuman, C., Yu, T., Hartman, S., and K. Raeburn, "The
+              Kerberos Network Authentication Service (V5)", RFC 4120,
+              July 2005.
 
    [KEYWORDS]
               Bradner, S., "Key words for use in RFCs to Indicate
@@ -417,42 +433,31 @@ Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
               Interface (GSS-API) Mechanism: Version 2", RFC 4121,
               July 2005.
 
-   [SASL]     Myers, J., "Simple Authentication and Security Layer
-              (SASL)", RFC 2222, October 1997.
-
-   [SASL[2]]  Melnikov, A., "Simple Authentication and Security Layer
-              (SASL)", draft-ietf-sasl-rfc2222bis (work in progress),
-              June 2004.
+   [SASL]     Melnikov, A. and K. Zeilenga, "Simple Authentication and
+              Security Layer (SASL)", RFC 4422, June 2006.
 
    [UTF8]     Yergeau, F., "UTF-8, a transformation format of ISO
               10646", RFC 3629, November 2003.
 
+
+
+
+
+
+Melnikov                Expires February 26, 2007               [Page 8]
+
+Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism    August 2006
+
+
 7.2.  Informative References
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Melnikov                Expires December 1, 2006                [Page 8]
-
-Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
+   [RFC2222]  Myers, J., "Simple Authentication and Security Layer
+              (SASL)", RFC 2222, October 1997.
 
 
 Author's Address
 
-   Alexey Melnikov (Ed.)
+   Alexey Melnikov (editor)
    Isode Limited
    5 Castle Business Village
    36 Station Road
@@ -495,18 +500,29 @@ Author's Address
 
 
 
-
-
-
-
-
-
-Melnikov                Expires December 1, 2006                [Page 9]
+Melnikov                Expires February 26, 2007               [Page 9]
 
-Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism       May 2006
+Internet-Draft  The Kerberos V5 ("GSSAPI") SASL mechanism    August 2006
 
 
-Intellectual Property Statement
+Full Copyright Statement
+
+   Copyright (C) The Internet Society (2006).
+
+   This document is subject to the rights, licenses and restrictions
+   contained in BCP 78, and except as set forth therein, the authors
+   retain all their rights.
+
+   This document and the information contained herein are provided on an
+   "AS IS" basis and THE CONTRIBUTOR, THE ORGANIZATION HE/SHE REPRESENTS
+   OR IS SPONSORED BY (IF ANY), THE INTERNET SOCIETY AND THE INTERNET
+   ENGINEERING TASK FORCE DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED,
+   INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE
+   INFORMATION HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED
+   WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+
+Intellectual Property
 
    The IETF takes no position regarding the validity or scope of any
    Intellectual Property Rights or other rights that might be claimed to
@@ -531,32 +547,15 @@ Intellectual Property Statement
    ietf-ipr@ietf.org.
 
 
-Disclaimer of Validity
-
-   This document and the information contained herein are provided on an
-   "AS IS" basis and THE CONTRIBUTOR, THE ORGANIZATION HE/SHE REPRESENTS
-   OR IS SPONSORED BY (IF ANY), THE INTERNET SOCIETY AND THE INTERNET
-   ENGINEERING TASK FORCE DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED,
-   INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE
-   INFORMATION HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED
-   WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
-
-
-Copyright Statement
-
-   Copyright (C) The Internet Society (2006).  This document is subject
-   to the rights, licenses and restrictions contained in BCP 78, and
-   except as set forth therein, the authors retain all their rights.
-
-
 Acknowledgment
 
-   Funding for the RFC Editor function is currently provided by the
-   Internet Society.
+   Funding for the RFC Editor function is provided by the IETF
+   Administrative Support Activity (IASA).
 
 
 
 
-Melnikov                Expires December 1, 2006               [Page 10]
+
+Melnikov                Expires February 26, 2007              [Page 10]
 
 
