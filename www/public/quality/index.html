@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../css/opends.css" type="text/css">
+<title>OpenDS Quality Assurance Page</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /></head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader"> Quality Assurance Page </div></td>
+      <td width="10%" style="vertical-align:bottom"><a href="https://opends.dev.java.net/"><img src="../images/opends_qa_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="bottom" /></a></td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+<div class="highlightsdiv">
+  <div class="highlightsheader">Featured Stuff </div>
+  <ul>
+    <li><a href="#overview">Overview - the spirit</a></li>
+    <li><a href="#contribute">Helping with testing</a></li>
+    <li><a href="#unit">Unit Tests</a></li>
+    <li><a href="integration">Integration Tests</a></li>
+    <li><a href="#functional">Functional Tests</a></li>
+  </ul>
+</div>
+<h3><a name="overview" id="overview"></a>Overview</h3>
+<p> The OpenDS project quality process involves -but is not exclusive to-:</p>
+<ul>
+  <li>Thorough code reviews by peer and fellow community members </li>
+  <li>Maximizing code coverage through unit tests and carefully wrapped integration tests</li>
+  <li>Continuous build and integration with <a href="https://hudson.dev.java.net/">Hudson</a></li>
+  <li>Advanced user oriented test with Staff/Stax </li>
+</ul>
+<p>The quality in the OpenDS project is not the result of a distinct team of &quot;Quality Assurance&quot; experts but it is the responsibilty of each individual contributor.</p>
+<h3><a name="contribute" id="contribute"></a>Contributing Tests </h3>
+<p>If you want to participate in the project by adding tests or fixing broken or deprecated tests, then you will first need to complete and submit the Sun Contributor Agreement as outlined in the <a href="../docs/dev-docs/OpenDS-Governance.html#sca_policy">OpenDS Governance Model</a>.  Once this agreement has been accepted, you can forward the confirmation to <a href="mailto:contribution-request@opends.dev.java.net">contribution-request@opends.dev.java.net</a> to request the Contributor role.  An OpenDS committer will be assigned to work with you.  Individuals who have been given the Contributor role will not initially be allowed to commit changes directly into the repository, but active Contributors may be granted the Committer role over time.</p>
+<h3><a name="unit" id="unit"></a>Unit Tests </h3>
+<p>The unit tests are available in the OpenDS repository in <em>{/path/to/workspace}/opends//tests/unit-tests-testng</em>. The repository contains all the libraries you need to build and run the tests. To run the unit tests, use the test target in the main build.xml file.</p>
+<p>To do so, change to <em>{/path/to/workspace}/opends</em> and :</p>
+<ul>
+  <li>on Unix, run: <em>build.sh test</em></li>
+  <li>on Windows, run: <em>build.bat test</em></li>
+</ul>
+<p>The build also comes with a very useful tool to drive your test writing: code coverage. Once you've written your set of tests and run them successfully, you may want to know how good those tests actually are in covering your code. Just use the <em>testwithcoverage</em> target. </p>
+<p>To do so, change to <em>{/path/to/workspace}/opends</em> and :</p>
+<ul>
+  <li>on Unix, run: <em>build.sh testwithcoverage</em></li>
+  <li>on Windows, run: <em>build.bat testwithcoverage</em></li>
+</ul>
+<p>At the end of the build, the code coverage tool will provide you with an html report that you will find in {/path/to/workspace}/opends/build/coverage/report/index.html. Use it to figure out what methods you've missed in your testing and improve your test suite. </p>
+<h3><a name="integration" id="integration"></a>Integration Tests</h3>
+<p>You can find this suite in <em>{/path/to/workspace}/opends/tests/integration-tests-testng</em>. This is still very much in flux and is a bit more difficult to use since these tests require to install the server and configure it in a certain way. We are currently working on making this set of tests more usable.</p>
+<h3><a name="functional" id="functional"></a>Functional Tests</h3>
+<p>This is not available in the repository as of today but we are working on a prototype that would let us test the features in more complex deployment schemes than the other suites permit.</p>
+</body>
+</html>
