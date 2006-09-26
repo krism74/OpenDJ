@@ -33,7 +33,8 @@ amount of time belong to the default test group. However, there are some more
 intensive test cases that require more time to run. These tests belong to the
 "slow" test group which are only run when necessary to make sure build times
 are not excessively long. These tests only run for the "testall", 
-"testallwithcoverage", and "all" build targets.
+"testallwithcoverage", and "all" build targets. By default, all test classes in the 
+<code>org.opends.server</code> package will be executed.
 To run the default test group from the command line, use the command:
 <blockquote> <code>./build.sh test</code> on UNIX<br> 
 <code>./build.bat test</code> on Windows </blockquote>
@@ -63,7 +64,62 @@ simply issue the command:
 <blockquote> <code>./build.sh testallwithcoverage</code> on UNIX<br>
 <code>./build.bat testallwithcoverage</code> on Windows </blockquote>
 The HTML based coverage reports can be found at 
-<code>build/coverage/report/index.html</code>.<br>
+<code>build/coverage/report/index.html</code>.<br><br>
+To run a custom set of tests instead, use the "testcustom" and "testcustomwithcoverage" targets. 
+You can specify the tests you wish to run in groups, packages, classes, and methods. Just use the following 
+command line arguments:<br>
+<table cellpadding="2" cellspacing="0" width="80%" border="1">
+<tr><td>
+<strong>Argument</strong>
+</td><td>
+<strong>Value Format</strong>
+</td><td>
+<strong>Description</strong>
+</td></tr>
+<tr><td>
+<code>-Dtest.groups</code>
+</td><td>
+<code>exclude/include=group_name, &lt;exclude/include=group_name, ...&gt;</code><br>
+</td><td>
+Use this to specify the group of test you wish to include or exclude from the suite. If this argument is not
+specified, all tests will run no matter what group they are in. 
+</td></tr>
+<tr><td>
+<code>-Dtest.packages</code>
+</td><td>
+<code>package_name, &lt;package_name, ...&gt;</code> Regular expressions can also be used.
+</td><td>
+This will run all the test classes in the package(s) specified.
+</td></tr>
+<tr><td>
+<code>-Dtest.classes</code>
+</td><td>
+<code>class_name, &lt;class name, ...&gt;</code> Regular expressions can also be used.
+</td><td>
+This will run all the test methods in the class(es) specified.
+</td></tr>
+<tr><td>
+<code>-Dtest.methods</code>
+</td><td>
+<code>class_name1.method_name1, &lt;method_name2, ... &lt;; class_name2.method_name1, method_name2, ...&gt;&gt;</code> Regular expressions can also be used.
+</td><td>
+This will run only the test methods specified from the test classes spcified.
+</td></tr>
+</table><br>
+Examples:
+<blockquote>
+<code>./build.sh testcustom -Dtest.packages=org.opends.server.core,org.opends.server.protocols.*</code>
+</blockquote>
+Run all tests classes in the org.opends.server.core packages as well as all the test classes in the packages that are under org.opends.server.protocols.
+<blockquote>
+<code>./build.sh testcustomwithcoverage -Dtest.packages=org.opends.server.tasks -Dtest.classes=org.opends.server.schema.GuideSyntaxTest</code>
+</blockquote>
+Run all tests classes in the package org.opends.server.tasks along with the org.opends.server.schema.GuideSyntaxTest test class. A coverage report will also be generated.
+<blockquote>
+<code>./build.sh testcustom -Dtest.methods=org.opends.server.protocols.ldap.TestModifyRequestProtocolOp.testEncodeDecode,testConstructors;org.opends.server.tasks.TestBackupAndRestore.testBackups</code>
+</blockquote>
+Only run the test method testEncodeDecode and testConstructors in the test class org.opends.server.protocols.ldap.TestModifyRequestProtocolOp along with the testBackups method in the org.opends.server.tasks.TestBackupAndRestore test class.
+<br><br>
 <h3>Writing Tests</h3>
 The unit test source directory is located in 
 <code>tests/unit-tests-testng</code> and follows the same structure as
