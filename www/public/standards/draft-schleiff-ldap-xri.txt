@@ -1,14 +1,14 @@
 
 
 
-
 Network Working Group                                        M. Schleiff
 Internet-Draft                                                       NAC
-Expires: January 19, 2007                                  July 18, 2006
+Intended status: Informational                        September 19, 2006
+Expires: March 23, 2007
 
 
           LDAP Schema for eXtensible Resource Identifier (XRI)
-                       draft-schleiff-ldap-xri-00
+                       draft-schleiff-ldap-xri-01
 
 Status of this Memo
 
@@ -33,11 +33,29 @@ Status of this Memo
    The list of Internet-Draft Shadow Directories can be accessed at
    http://www.ietf.org/shadow.html.
 
-   This Internet-Draft will expire on January 19, 2007.
+   This Internet-Draft will expire on March 23, 2007.
 
 Copyright Notice
 
    Copyright (C) The Internet Society (2006).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Schleiff                 Expires March 23, 2007                 [Page 1]
+
+Internet-Draft             LDAP Schema for XRI            September 2006
+
 
 Abstract
 
@@ -53,9 +71,46 @@ Abstract
 
 
 
-Schleiff                Expires January 19, 2007                [Page 1]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Schleiff                 Expires March 23, 2007                 [Page 2]
 
-Internet-Draft             LDAP Schema for XRI                 July 2006
+Internet-Draft             LDAP Schema for XRI            September 2006
 
 
 1.  Background and Intended Use
@@ -89,8 +144,9 @@ Internet-Draft             LDAP Schema for XRI                 July 2006
    Schema definitions are provided using LDAP description formats
    [RFC4512].  Definitions provided here are formatted (line wrapped)
    for readability.  The characters "IANA-ASSIGNED-OID" will appear in
-   the LDAP descriptions until OIDs (Object IDentifiers) are obtained
-   via procedures described in [RFC4520].
+   the LDAP definitions until an OID (Object IDentifier) is obtained via
+   procedures described in [RFC4520], under which OIDs will be assigned
+   for each schema object.
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
@@ -108,10 +164,9 @@ Internet-Draft             LDAP Schema for XRI                 July 2006
 
 
 
-
-Schleiff                Expires January 19, 2007                [Page 2]
+Schleiff                 Expires March 23, 2007                 [Page 3]
 
-Internet-Draft             LDAP Schema for XRI                 July 2006
+Internet-Draft             LDAP Schema for XRI            September 2006
 
 
 2.  Definition of the xRIObject Object Class
@@ -120,10 +175,10 @@ Internet-Draft             LDAP Schema for XRI                 July 2006
    directory entry for purposes of associating eXtensible Resource
    Identifiers with that object.
 
-     ( IANA-ASSIGNED-OID
+     ( IANA-ASSIGNED-OID.1
         NAME 'xRIObject'
         SUP top
-        AUXILLIARY
+        AUXILIARY
         DESC 'objectClass for XRI attribute types'
         MAY ( xRI $ altXRI ) )
 
@@ -165,9 +220,9 @@ Internet-Draft             LDAP Schema for XRI                 July 2006
 
 
 
-Schleiff                Expires January 19, 2007                [Page 3]
+Schleiff                 Expires March 23, 2007                 [Page 4]
 
-Internet-Draft             LDAP Schema for XRI                 July 2006
+Internet-Draft             LDAP Schema for XRI            September 2006
 
 
 3.  Definition of the xRI Attribute Type
@@ -183,7 +238,7 @@ Internet-Draft             LDAP Schema for XRI                 July 2006
    to find the XRI for a subject, this is the single value that should
    be returned.
 
-     ( IANA-ASSIGNED-OID
+     ( IANA-ASSIGNED-OID.2
         NAME ( 'xRI' 'extensibleResourceIdentifier' )
         DESC 'The preferred or primary XRI for the subject.'
         EQUALITY caseExactMatch
@@ -221,9 +276,9 @@ Internet-Draft             LDAP Schema for XRI                 July 2006
 
 
 
-Schleiff                Expires January 19, 2007                [Page 4]
+Schleiff                 Expires March 23, 2007                 [Page 5]
 
-Internet-Draft             LDAP Schema for XRI                 July 2006
+Internet-Draft             LDAP Schema for XRI            September 2006
 
 
 4.  Definition of the altXRI Attribute Type
@@ -234,7 +289,7 @@ Internet-Draft             LDAP Schema for XRI                 July 2006
    XRIs identifying a subject SHOULD be included in the altXRI Attribute
    Type of that subject's directory entry.
 
-     ( IANA-ASSIGNED-OID
+     ( IANA-ASSIGNED-OID.3
         NAME ( 'altXRI' 'alternateExtensibleResourceIdentifer' )
         DESC 'A list of XRIs that are synonymns for the same subject.'
         EQUALITY caseExactMatch
@@ -277,9 +332,9 @@ Internet-Draft             LDAP Schema for XRI                 July 2006
 
 
 
-Schleiff                Expires January 19, 2007                [Page 5]
+Schleiff                 Expires March 23, 2007                 [Page 6]
 
-Internet-Draft             LDAP Schema for XRI                 July 2006
+Internet-Draft             LDAP Schema for XRI            September 2006
 
 
 5.  Matching Rule Considerations
@@ -289,9 +344,18 @@ Internet-Draft             LDAP Schema for XRI                 July 2006
    sensitive string, numeric, and others.  Because these identifiers
    have differing matching rules, XRI values being stored into directory
    attributes, and those being compared against values in a directory,
-   SHOULD be normalized to a point that caseExactMatch will yield
-   desired results.  The xRI and altXRI attribute types are defined with
-   caseExactMatch equality matching.
+   SHOULD be normalized by the LDAP client to a point that
+   caseExactMatch will yield desired results.  The xRI and altXRI
+   attribute types are defined with caseExactMatch equality matching.
+   In contexts where identifiers are known to be XRIs, the "xri:" scheme
+   name and following slashes is sometimes omitted; however, successful
+   matching will be more achievable with consistent treatment of the
+   "xri:" scheme name and following slashes as follows:
+
+   o  When an XRI appears within an XRI cross reference (i.e., within
+      parentheses) the "xri://" SHOULD be ommitted.
+
+   o  Otherwise the "xri://" SHOULD be explicitly included.
 
 
 
@@ -324,18 +388,9 @@ Internet-Draft             LDAP Schema for XRI                 July 2006
 
 
 
-
-
-
-
-
-
-
-
-
-Schleiff                Expires January 19, 2007                [Page 6]
+Schleiff                 Expires March 23, 2007                 [Page 7]
 
-Internet-Draft             LDAP Schema for XRI                 July 2006
+Internet-Draft             LDAP Schema for XRI            September 2006
 
 
 6.  Security Considerations
@@ -389,17 +444,17 @@ Internet-Draft             LDAP Schema for XRI                 July 2006
 
 
 
-Schleiff                Expires January 19, 2007                [Page 7]
+Schleiff                 Expires March 23, 2007                 [Page 8]
 
-Internet-Draft             LDAP Schema for XRI                 July 2006
+Internet-Draft             LDAP Schema for XRI            September 2006
 
 
 7.  IANA Considerations
 
 7.1.  Object Identifier Registration
 
-   It is requested that IANA register upon Expert Review three LDAP
-   Object Identifiers [RFC4520] under "Internet Directory Numbers"
+   It is requested that IANA register upon Expert Review an LDAP Object
+   Identifier [RFC4520] under "Internet Directory Numbers"
    (1.3.6.1.1.x).
 
      Subject: Request for LDAP OID Registration
@@ -409,9 +464,9 @@ Internet-Draft             LDAP Schema for XRI                 July 2006
      Author/Change Controller: NAC (Network Applications Consortium -
                                see http://www.netapps.org)
      Comments:
-         Identifier for the 'xRIObject' object class
-         Identifier for the 'xRI' attribute type
-         Identifier for the 'altXRI' attribute type
+         Please register an OID for definition of eXtensible Resource
+         Identifier (XRI) schema objects. Schema objects pertaining
+         to XRIs may be assigned OIDs under the IANA-ASSIGNED-OID.
 
 7.2.  'xRIObject' Descriptor Registration
 
@@ -420,7 +475,7 @@ Internet-Draft             LDAP Schema for XRI                 July 2006
 
      Subject: Request for LDAP Descriptor Registration
      Descriptor (short name): xRIObject
-     Object Identifier: IANA-ASSIGNED-OID
+     Object Identifier: IANA-ASSIGNED-OID.1
      Person & email address to contact for further information:
          Marty Schleiff <marty.schleiff@boeing.com>
      Usage: Object Class
@@ -432,7 +487,7 @@ Internet-Draft             LDAP Schema for XRI                 July 2006
 
      Subject: Request for LDAP Descriptor Registration
      Descriptor (short name): xRI
-     Object Identifier: IANA-ASSIGNED-OID
+     Object Identifier: IANA-ASSIGNED-OID.2
      Person & email address to contact for further information:
          Marty Schleiff <marty.schleiff@boeing.com>
      Usage: Attribute Type
@@ -445,14 +500,14 @@ Internet-Draft             LDAP Schema for XRI                 July 2006
 
 
 
-Schleiff                Expires January 19, 2007                [Page 8]
+Schleiff                 Expires March 23, 2007                 [Page 9]
 
-Internet-Draft             LDAP Schema for XRI                 July 2006
+Internet-Draft             LDAP Schema for XRI            September 2006
 
 
      Subject: Request for LDAP Descriptor Registration
      Descriptor (short name): altXRI
-     Object Identifier: IANA-ASSIGNED-OID
+     Object Identifier: IANA-ASSIGNED-OID.3
      Person & email address to contact for further information:
          Marty Schleiff <marty.schleiff@boeing.com>
      Usage: Attribute Type
@@ -501,9 +556,9 @@ Internet-Draft             LDAP Schema for XRI                 July 2006
 
 
 
-Schleiff                Expires January 19, 2007                [Page 9]
+Schleiff                 Expires March 23, 2007                [Page 10]
 
-Internet-Draft             LDAP Schema for XRI                 July 2006
+Internet-Draft             LDAP Schema for XRI            September 2006
 
 
 8.  References
@@ -557,9 +612,9 @@ Internet-Draft             LDAP Schema for XRI                 July 2006
 
 
 
-Schleiff                Expires January 19, 2007               [Page 10]
+Schleiff                 Expires March 23, 2007                [Page 11]
 
-Internet-Draft             LDAP Schema for XRI                 July 2006
+Internet-Draft             LDAP Schema for XRI            September 2006
 
 
 Author's Address
@@ -613,12 +668,29 @@ Author's Address
 
 
 
-Schleiff                Expires January 19, 2007               [Page 11]
+Schleiff                 Expires March 23, 2007                [Page 12]
 
-Internet-Draft             LDAP Schema for XRI                 July 2006
+Internet-Draft             LDAP Schema for XRI            September 2006
 
 
-Intellectual Property Statement
+Full Copyright Statement
+
+   Copyright (C) The Internet Society (2006).
+
+   This document is subject to the rights, licenses and restrictions
+   contained in BCP 78, and except as set forth therein, the authors
+   retain all their rights.
+
+   This document and the information contained herein are provided on an
+   "AS IS" basis and THE CONTRIBUTOR, THE ORGANIZATION HE/SHE REPRESENTS
+   OR IS SPONSORED BY (IF ANY), THE INTERNET SOCIETY AND THE INTERNET
+   ENGINEERING TASK FORCE DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED,
+   INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE
+   INFORMATION HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED
+   WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+
+Intellectual Property
 
    The IETF takes no position regarding the validity or scope of any
    Intellectual Property Rights or other rights that might be claimed to
@@ -643,32 +715,15 @@ Intellectual Property Statement
    ietf-ipr@ietf.org.
 
 
-Disclaimer of Validity
-
-   This document and the information contained herein are provided on an
-   "AS IS" basis and THE CONTRIBUTOR, THE ORGANIZATION HE/SHE REPRESENTS
-   OR IS SPONSORED BY (IF ANY), THE INTERNET SOCIETY AND THE INTERNET
-   ENGINEERING TASK FORCE DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED,
-   INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE
-   INFORMATION HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED
-   WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
-
-
-Copyright Statement
-
-   Copyright (C) The Internet Society (2006).  This document is subject
-   to the rights, licenses and restrictions contained in BCP 78, and
-   except as set forth therein, the authors retain all their rights.
-
-
 Acknowledgment
 
-   Funding for the RFC Editor function is currently provided by the
-   Internet Society.
+   Funding for the RFC Editor function is provided by the IETF
+   Administrative Support Activity (IASA).
 
 
 
 
-Schleiff                Expires January 19, 2007               [Page 12]
+
+Schleiff                 Expires March 23, 2007                [Page 13]
 
 
