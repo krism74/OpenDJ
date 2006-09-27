@@ -3,12 +3,12 @@
 
 Network Working Group                                            M. Wahl
 Internet-Draft                                     Informed Control Inc.
-Intended status: Standards Track                         August 30, 2006
-Expires: March 3, 2007
+Intended status: Standards Track                      September 26, 2006
+Expires: March 30, 2007
 
 
                   LDAP Administrator Address Attribute
-                      draft-wahl-ldap-adminaddr-02
+                      draft-wahl-ldap-adminaddr-03
 
 Status of this Memo
 
@@ -33,7 +33,7 @@ Status of this Memo
    The list of Internet-Draft Shadow Directories can be accessed at
    http://www.ietf.org/shadow.html.
 
-   This Internet-Draft will expire on March 3, 2007.
+   This Internet-Draft will expire on March 30, 2007.
 
 Copyright Notice
 
@@ -52,18 +52,20 @@ Copyright Notice
 
 
 
-Wahl                      Expires March 3, 2007                 [Page 1]
+Wahl                     Expires March 30, 2007                 [Page 1]
 
-Internet-Draft    LDAP Administrator Address Attribute       August 2006
+Internet-Draft    LDAP Administrator Address Attribute    September 2006
 
 
 Abstract
 
-   Organizations running multiple directory servers need an ability for
-   administrators to determine who is responsible for a particular
-   server.  An attribute, conceptually similar to the 'sysContact'
-   object of SNMP, is defined which can retrieved from the directory
-   server using the Lightweight Directory Access Protocol.
+   Organizations with multiple or outsourced directory servers need the
+   ability for administrators to determine who is responsible for a
+   particular directory server.  This document defines an attribute with
+   contact information for a directory server's responsible party,
+   conceptually similar to the 'sysContact' object of SNMP, which can be
+   retrieved from the directory server using the Lightweight Directory
+   Access Protocol.
 
 
 
@@ -106,21 +108,30 @@ Abstract
 
 
 
-
-
-Wahl                      Expires March 3, 2007                 [Page 2]
+Wahl                     Expires March 30, 2007                 [Page 2]
 
-Internet-Draft    LDAP Administrator Address Attribute       August 2006
+Internet-Draft    LDAP Administrator Address Attribute    September 2006
 
 
 1.  Introduction
 
-   This document defines an optional attribute for use in LDAP [1].
+   This document defines an attribute type, administratorsAddress, for
+   use in LDAP [1] directory deployments.
 
-   This attribute was originally defined in the mid-1990s for inclusion
-   in the LDAPv3 data model, but was omitted from the LDAPv3 root DSE
-   specification as there was only one implementation of a server
-   supporting that attribute at that time.
+   The values of this this attribute are used to provide contact
+   information of the responsible party for an LDAP server, or of the
+   responsible party for a naming context within a LDAP server.
+
+   This attribute is intended to be used by management tools that are
+   LDAP clients.  For example, a management tool for checking the state
+   of a replication or referral topology might use this attribute to
+   send email to the manager of a particular server when it detects an
+   error.
+
+   (This attribute type was originally defined in the mid-1990s for
+   inclusion in the LDAPv3 data model, but was omitted from the LDAPv3
+   root DSE specification as there was only one implementation of a
+   server supporting that attribute at that time.)
 
    The words "MUST", "SHOULD" and "MAY" are used as defined in RFC 2119
    [2].
@@ -153,64 +164,46 @@ Internet-Draft    LDAP Administrator Address Attribute       August 2006
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-Wahl                      Expires March 3, 2007                 [Page 3]
+Wahl                     Expires March 30, 2007                 [Page 3]
 
-Internet-Draft    LDAP Administrator Address Attribute       August 2006
+Internet-Draft    LDAP Administrator Address Attribute    September 2006
 
 
 2.  The administratorsAddress attribute
 
-   This attribute allows a server administrator to provide the contact
-   information of the responsible party for an LDAP server or naming
-   context.  This can be used by management clients which are, for
-   example, checking the state of a replication or referral topology, to
-   provide a way for the user of the management client to send email to
-   manager of a particular server.
-
-   The attribute is defined as follows (with lines wrapped for
+   The attribute type is defined as follows (with lines wrapped for
    readability):
 
      ( 1.3.6.1.4.1.1466.101.120.1 NAME 'administratorsAddress'
       SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
       USAGE directoryOperation )
 
-   This attribute can contain one or more values, and each value is a
-   URI [3].  Each URI is encoded using the IA5 string syntax [5].
+   Attributes of this type can contain one or more values, and each
+   value is a URI [3].  Each URI is encoded using the IA5 string syntax
+   [4].
 
    Unlike the labeledURI attribute [6], these values do not have a
    label.
 
-   This document only specifies how a client can read this attribute.
-   Some servers MAY support updating this attribute over protocol,
-   subject to access control, however for many servers it is anticipated
-   that the values of this attribute would be configured through the
-   server's out-of-band management interface, such as in a configuration
-   file.
-
    In existing practice, this URI is commonly of the 'mailto:' form
-   identifying a role mail address, such as
+   identifying a personal or role email address, such as
    "mailto:helpdesk@example.com".
 
    To obtain the responsible party for a directory server, the attribute
-   is read from the root DSE, using a baseObject search as described in
-   RFC 4512 [4].
+   is read from the root DSE, using a baseObject search requesting this
+   attribute by returned, as described in RFC 4512 [5].
 
    To obtain the responsible party for a naming context, the attribute
-   is read from the entry at the base of the naming context.  Note that
+   is read from the entry at the base of the naming context, using a
+   baseObject search requesting this attribute be returned.  Note that
    these addresses need not be the same as that of the directory server
    administrator, or of a data administrator.
 
+   This document only specifies how a client can read this attribute.
+   Some servers MAY support updating this attribute over protocol,
+   subject to access control.  Other srvers might instead provide this
+   value read only, if it is configured through the server's out-of-band
+   management interface, such as in a configuration file.
 
 
 
@@ -220,22 +213,30 @@ Internet-Draft    LDAP Administrator Address Attribute       August 2006
 
 
 
-Wahl                      Expires March 3, 2007                 [Page 4]
+
+
+
+
+
+
+
+Wahl                     Expires March 30, 2007                 [Page 4]
 
-Internet-Draft    LDAP Administrator Address Attribute       August 2006
+Internet-Draft    LDAP Administrator Address Attribute    September 2006
 
 
 3.  Security Considerations
 
    The server's access control policy SHOULD allow this information to
-   be visible to any suitable administrator in the same organization.
+   be visible to a suitable administrator in the same organization.
    Since one use of this attribute is to find who is responsible if the
-   server is not making authentication decisions properly, it MAY be
-   visible to all users who are permitted to access the directory
-   server.  The administrator SHOULD choose addresses for use in this
-   attribute that are already publically known within the organization,
-   and SHOULD NOT encode passwords or other secret information within
-   the URIs.
+   server is not making authentication decisions properly, a directory
+   server configuration SHOULD cause the attribute in the root DSE, if
+   present, to be able to be returned in a search response to all users
+   who are permitted to access the directory server.  The administrator
+   SHOULD choose addresses for use in this attribute that are already
+   publically known within the organization, and SHOULD NOT encode
+   passwords or other secret information within the URIs.
 
 
 
@@ -275,10 +276,9 @@ Internet-Draft    LDAP Administrator Address Attribute       August 2006
 
 
 
-
-Wahl                      Expires March 3, 2007                 [Page 5]
+Wahl                     Expires March 30, 2007                 [Page 5]
 
-Internet-Draft    LDAP Administrator Address Attribute       August 2006
+Internet-Draft    LDAP Administrator Address Attribute    September 2006
 
 
 4.  IANA Considerations
@@ -332,9 +332,9 @@ Internet-Draft    LDAP Administrator Address Attribute       August 2006
 
 
 
-Wahl                      Expires March 3, 2007                 [Page 6]
+Wahl                     Expires March 30, 2007                 [Page 6]
 
-Internet-Draft    LDAP Administrator Address Attribute       August 2006
+Internet-Draft    LDAP Administrator Address Attribute    September 2006
 
 
 5.  Acknowledgments
@@ -388,9 +388,9 @@ Internet-Draft    LDAP Administrator Address Attribute       August 2006
 
 
 
-Wahl                      Expires March 3, 2007                 [Page 7]
+Wahl                     Expires March 30, 2007                 [Page 7]
 
-Internet-Draft    LDAP Administrator Address Attribute       August 2006
+Internet-Draft    LDAP Administrator Address Attribute    September 2006
 
 
 6.  References
@@ -406,11 +406,11 @@ Internet-Draft    LDAP Administrator Address Attribute       August 2006
    [3]  Berners-Lee, T., "Uniform Resource Identifier (URI): Generic
         Syntax", RFC 1738, STD 66, January 2005.
 
-   [4]  Zeilenga, K., "Lightweight Directory Access Protocol (LDAP):
-        Directory Information Models", RFC 4512, June 2006.
-
-   [5]  Legg, S., "Lightweight Directory Access Protocol (LDAP):
+   [4]  Legg, S., "Lightweight Directory Access Protocol (LDAP):
         Syntaxes and Matching Rules", RFC 4517, June 2006.
+
+   [5]  Zeilenga, K., "Lightweight Directory Access Protocol (LDAP):
+        Directory Information Models", RFC 4512, June 2006.
 
 6.2.  Informative References
 
@@ -444,9 +444,9 @@ Internet-Draft    LDAP Administrator Address Attribute       August 2006
 
 
 
-Wahl                      Expires March 3, 2007                 [Page 8]
+Wahl                     Expires March 30, 2007                 [Page 8]
 
-Internet-Draft    LDAP Administrator Address Attribute       August 2006
+Internet-Draft    LDAP Administrator Address Attribute    September 2006
 
 
 Appendix A.  Copyright
@@ -500,9 +500,9 @@ Appendix A.  Copyright
 
 
 
-Wahl                      Expires March 3, 2007                 [Page 9]
+Wahl                     Expires March 30, 2007                 [Page 9]
 
-Internet-Draft    LDAP Administrator Address Attribute       August 2006
+Internet-Draft    LDAP Administrator Address Attribute    September 2006
 
 
 Author's Address
@@ -556,9 +556,9 @@ Author's Address
 
 
 
-Wahl                      Expires March 3, 2007                [Page 10]
+Wahl                     Expires March 30, 2007                [Page 10]
 
-Internet-Draft    LDAP Administrator Address Attribute       August 2006
+Internet-Draft    LDAP Administrator Address Attribute    September 2006
 
 
 Full Copyright Statement
@@ -612,5 +612,5 @@ Acknowledgment
 
 
 
-Wahl                      Expires March 3, 2007                [Page 11]
+Wahl                     Expires March 30, 2007                [Page 11]
 
