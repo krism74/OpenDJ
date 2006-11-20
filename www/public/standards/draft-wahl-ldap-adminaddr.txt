@@ -3,12 +3,12 @@
 
 Network Working Group                                            M. Wahl
 Internet-Draft                                     Informed Control Inc.
-Intended status: Standards Track                      September 26, 2006
-Expires: March 30, 2007
+Intended status: Standards Track                       November 17, 2006
+Expires: May 21, 2007
 
 
                   LDAP Administrator Address Attribute
-                      draft-wahl-ldap-adminaddr-03
+                      draft-wahl-ldap-adminaddr-04
 
 Status of this Memo
 
@@ -33,7 +33,7 @@ Status of this Memo
    The list of Internet-Draft Shadow Directories can be accessed at
    http://www.ietf.org/shadow.html.
 
-   This Internet-Draft will expire on March 30, 2007.
+   This Internet-Draft will expire on May 21, 2007.
 
 Copyright Notice
 
@@ -52,9 +52,9 @@ Copyright Notice
 
 
 
-Wahl                     Expires March 30, 2007                 [Page 1]
+Wahl                      Expires May 21, 2007                  [Page 1]
 
-Internet-Draft    LDAP Administrator Address Attribute    September 2006
+Internet-Draft    LDAP Administrator Address Attribute     November 2006
 
 
 Abstract
@@ -108,9 +108,9 @@ Abstract
 
 
 
-Wahl                     Expires March 30, 2007                 [Page 2]
+Wahl                      Expires May 21, 2007                  [Page 2]
 
-Internet-Draft    LDAP Administrator Address Attribute    September 2006
+Internet-Draft    LDAP Administrator Address Attribute     November 2006
 
 
 1.  Introduction
@@ -164,9 +164,9 @@ Internet-Draft    LDAP Administrator Address Attribute    September 2006
 
 
 
-Wahl                     Expires March 30, 2007                 [Page 3]
+Wahl                      Expires May 21, 2007                  [Page 3]
 
-Internet-Draft    LDAP Administrator Address Attribute    September 2006
+Internet-Draft    LDAP Administrator Address Attribute     November 2006
 
 
 2.  The administratorsAddress attribute
@@ -185,7 +185,7 @@ Internet-Draft    LDAP Administrator Address Attribute    September 2006
    Unlike the labeledURI attribute [6], these values do not have a
    label.
 
-   In existing practice, this URI is commonly of the 'mailto:' form
+   In existing practice, this URI can be of the 'mailto:' form
    identifying a personal or role email address, such as
    "mailto:helpdesk@example.com".
 
@@ -201,7 +201,7 @@ Internet-Draft    LDAP Administrator Address Attribute    September 2006
 
    This document only specifies how a client can read this attribute.
    Some servers MAY support updating this attribute over protocol,
-   subject to access control.  Other srvers might instead provide this
+   subject to access control.  Other servers might instead provide this
    value read only, if it is configured through the server's out-of-band
    management interface, such as in a configuration file.
 
@@ -220,9 +220,9 @@ Internet-Draft    LDAP Administrator Address Attribute    September 2006
 
 
 
-Wahl                     Expires March 30, 2007                 [Page 4]
+Wahl                      Expires May 21, 2007                  [Page 4]
 
-Internet-Draft    LDAP Administrator Address Attribute    September 2006
+Internet-Draft    LDAP Administrator Address Attribute     November 2006
 
 
 3.  Security Considerations
@@ -235,7 +235,7 @@ Internet-Draft    LDAP Administrator Address Attribute    September 2006
    present, to be able to be returned in a search response to all users
    who are permitted to access the directory server.  The administrator
    SHOULD choose addresses for use in this attribute that are already
-   publically known within the organization, and SHOULD NOT encode
+   publicly known within the organization, and SHOULD NOT encode
    passwords or other secret information within the URIs.
 
 
@@ -276,16 +276,17 @@ Internet-Draft    LDAP Administrator Address Attribute    September 2006
 
 
 
-Wahl                     Expires March 30, 2007                 [Page 5]
+Wahl                      Expires May 21, 2007                  [Page 5]
 
-Internet-Draft    LDAP Administrator Address Attribute    September 2006
+Internet-Draft    LDAP Administrator Address Attribute     November 2006
 
 
 4.  IANA Considerations
 
-   This attribute will be registered as follows:
+   The LDAP Parameter registration for this attribute has already been
+   reviewed by the Directorate and processed by IANA.  This attribute
+   object identifier is registered as follows:
 
-      Subject: Request for LDAP Descriptor Registration
 
       Descriptor: administratorsAddress
 
@@ -295,8 +296,6 @@ Internet-Draft    LDAP Administrator Address Attribute    September 2006
       Mark Wahl <Mark.Wahl@informed-control.com>
 
       Usage: attribute type
-
-      Specification: (I-D) RFC XXXX
 
       Author/Change Controller: Mark Wahl
 
@@ -332,9 +331,10 @@ Internet-Draft    LDAP Administrator Address Attribute    September 2006
 
 
 
-Wahl                     Expires March 30, 2007                 [Page 6]
+
+Wahl                      Expires May 21, 2007                  [Page 6]
 
-Internet-Draft    LDAP Administrator Address Attribute    September 2006
+Internet-Draft    LDAP Administrator Address Attribute     November 2006
 
 
 5.  Acknowledgments
@@ -388,9 +388,9 @@ Internet-Draft    LDAP Administrator Address Attribute    September 2006
 
 
 
-Wahl                     Expires March 30, 2007                 [Page 7]
+Wahl                      Expires May 21, 2007                  [Page 7]
 
-Internet-Draft    LDAP Administrator Address Attribute    September 2006
+Internet-Draft    LDAP Administrator Address Attribute     November 2006
 
 
 6.  References
@@ -444,9 +444,9 @@ Internet-Draft    LDAP Administrator Address Attribute    September 2006
 
 
 
-Wahl                     Expires March 30, 2007                 [Page 8]
+Wahl                      Expires May 21, 2007                  [Page 8]
 
-Internet-Draft    LDAP Administrator Address Attribute    September 2006
+Internet-Draft    LDAP Administrator Address Attribute     November 2006
 
 
 Appendix A.  Copyright
@@ -500,9 +500,9 @@ Appendix A.  Copyright
 
 
 
-Wahl                     Expires March 30, 2007                 [Page 9]
+Wahl                      Expires May 21, 2007                  [Page 9]
 
-Internet-Draft    LDAP Administrator Address Attribute    September 2006
+Internet-Draft    LDAP Administrator Address Attribute     November 2006
 
 
 Author's Address
@@ -556,9 +556,9 @@ Author's Address
 
 
 
-Wahl                     Expires March 30, 2007                [Page 10]
+Wahl                      Expires May 21, 2007                 [Page 10]
 
-Internet-Draft    LDAP Administrator Address Attribute    September 2006
+Internet-Draft    LDAP Administrator Address Attribute     November 2006
 
 
 Full Copyright Statement
@@ -612,5 +612,5 @@ Acknowledgment
 
 
 
-Wahl                     Expires March 30, 2007                [Page 11]
+Wahl                      Expires May 21, 2007                 [Page 11]
 
