@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Quick Reference Guide</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Command Line Usage Guide</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Command List</a></div>
+    <div class="secpageheader">The export-ldif Utility</div>
+
+    <br>
+    The <code>export-ldif</code> utility may be used to export the contents of
+    a Directory Server backend in LDIF format.
+
+    <br><br>
+    In order to use this tool, both the <code>--backendID</code> and the
+    <code>--ldifFile</code> arguments must be provided.  The complete set of
+    arguments that may be used is as follows:
+
+    <ul>
+      <li>
+        <code>-n</code> <i>{backendID}</i>
+        <br>
+        <code>--backendID</code> <i>{backendID}</i>
+        <br><br>
+        This argument specifies the backend ID of the backend containing the
+        data to be exported.  The available backends in the server may be
+        determined using the <a href="list-backends.html">list-backends</a>
+        tool.  This is a required argument.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-l</code> <i>{path}</i>
+        <br>
+        <code>--ldifFile</code> <i>{path}</i>
+        <br><br>
+        This argument specifies the path to the LDIF file to which the export
+        data should be written.  This is a required argument.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-a</code>
+        <br>
+        <code>--appendToLDIF</code>
+        <br><br>
+        This argument indicates that the server should append to an existing
+        LDIF file rather than overwriting it.  If this argument is not
+        provided, then the server will overwrite the specified LDIF file if it
+        already exists.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-b</code> <i>{baseDN}</i>
+        <br>
+        <code>--includeBranch</code> <i>{baseDN}</i>
+        <br><br>
+        This argument specifies the base DN for a branch of the data that
+        should be included in the export.  This argument may be used multiple
+        times to specify multiple exclude base DNs.  If this argument is
+        provided, then entries contained in the backend that are not at or
+        below one of the provided include base DNs will be skipped.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-B</code> <i>{baseDN}</i>
+        <br>
+        <code>--excludeBranch</code> <i>{baseDN}</i>
+        <br><br>
+        This argument specifies the base DN for a branch of the data that
+        should be excluded from the export.  This argument may be used multiple
+        times to specify multiple exclude base DNs.  If this argument is
+        provided, then any entries contained in the backend that are at or
+        below one of the provided exclude base DNs will be skipped.
+        <br><br>
+        Note that the use of the <code>--excludeBranch</code> option takes
+        precedence over the <code>--includeBranch</code> option, so if an entry
+        is at or below a DN contained in both the include and exclude lists, it
+        will not be included.  This capability makes it possible to include
+        data for only part of a branch (e.g., all entries below
+        "dc=example,dc=com" except those below "ou=People,dc=example,dc=com").
+      </li>
+
+      <li>
+        <code>-i</code> <i>{attribute}</i>
+        <br>
+        <code>--includeAttribute</code> <i>{attribute}</i>
+        <br><br>
+        This argument specifies the name of an attribute that should be
+        included in the export.  This argument may be used multiple times to
+        specify multiple include attributes.  If this argument is provided,
+        then any attributes not listed in this set will be omitted from the
+        entries that are exported.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-e</code> <i>{attribute}</i>
+        <br>
+        <code>--excludeAttribute</code> <i>{attribute}</i>
+        <br><br>
+        This argument specifies the name of an attribute that should be
+        excluded from the export.  This argument may be used multiple times to
+        specify multiple exclude attributes.  If this argument is provided,
+        then any attributes listed in this set will be omitted from the entries
+        that are exported.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-I</code> <i>{filter}</i>
+        <br>
+        <code>--includeFilter</code> <i>{filter}</i>
+        <br><br>
+        This argument specifies a search filter that may be used to identify
+        entries that should be included in the export.  This argument may be
+        used multiple times to specify multiple include filters.  If this
+        argument is provided, then any entry in the backend that does not
+        match an include filter will be skipped.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-E</code> <i>{filter}</i>
+        <br>
+        <code>--excludeFilter</code> <i>{filter}</i>
+        <br><br>
+        This argument specifies a search filter that may be used to identify
+        entries that should be excluded from the export.  This argument may be
+        used multiple times to specify multiple exclude filters.  If this
+        argument is provided, then any entry in the backend that matches an
+        exclude filter will be skipped.
+        <br><br>
+        Note that the use of the <code>--excludeFilter</code> argument takes
+        precedence over the <code>--includeFilter</code> option, so if an entry
+        matches filters in the include and exclude lists, then the entry will
+        be skipped.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-w</code> <i>{column}</i>
+        <br>
+        <code>--wrapColumn</code> <i>{column}</i>
+        <br><br>
+        This argument specifies the column at which the server should wrap long
+        lines when writing to the LDIF file.  A value of zero indicates that
+        the data should not be wrapped.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-c</code>
+        <br>
+        <code>--compressLDIF</code>
+        <br><br>
+        This argument indicates that the server should compress the LDIF data
+        as it is written.  The data will be compressed using the GZIP format,
+        which is the format used by the <code>--isCompressed</code> option of
+        the <code>import-ldif</code> tool.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-y</code>
+        <br>
+        <code>--encryptLDIF</code>
+        <br><br>
+        This argument indicates that the server should encrypt the LDIF data as
+        it is written.  The data will be encrypted in a format that may be read
+        by the <code>--isEncrypted</code> argument of the
+        <code>import-ldif</code> tool.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-s</code>
+        <br>
+        <code>--signHash</code>
+        <br><br>
+        This argument indicates that the server should generate a signed hash
+        based on the contents of the exported LDIF data.  This may be used when
+        importing the data to ensure that the content has not been altered
+        since it was exported.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-H</code>
+        <br>
+        <code>--help</code>
+        <br><br>
+        This argument will display usage information for the
+        <code>export-ldif</code> utility and will exit without attempting to
+        export any data.
+        <br><br>
+      </li>
+    </ul>
+  </body>
+</html>
+

@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Quick Reference Guide</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Command Line Usage Guide</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Command List</a></div>
+    <div class="secpageheader">The ldifsearch Utility</div>
+
+    <br>
+    The <code>ldifsearch</code> utility may be used to perform searches in an
+    LDIF file.  It is very similar to the
+    <a href="ldapsearch.html"><code>ldapsearch</code></a> tool, with the
+    exception that it does not perform any LDAP communication but rather
+    operates on a local LDIF file.
+
+    <br><br>
+    The command-line usage for this tool is as follows:
+    <blockquote>
+      <code>ldifsearch {options} [filter] [attributes...]</code>
+    </blockquote>
+
+    <br>
+    The complete set of named arguments that may be used with the
+    <code>ldifsearch</code> tool is as follows:
+
+    <ul>
+      <li>
+        <code>-l</code> <i>{path}</i>
+        <br>
+        <code>--ldifFile</code> <i>{path}</i>
+        <br><br>
+        This argument specifies the path to the LDIF file containing the data
+        to be searched.  Multiple LDIF files may be specified by providing this
+        option multiple times.  This argument is required.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-b</code> <i>{dn}</i>
+        <br>
+        <code>--baseDN</code> <i>{dn}</i>
+        <br><br>
+        This argument specifies the base DN to use for the search operation.
+        Multiple base DNs may be provided by using this option multiple times,
+        and if multiple values are provided then an entry will be examined if
+        it is within the scope of any of the search bases.  If no search base
+        is provided, then any entry contained in the LDIF file(s) will be
+        considered in the scope of the search.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-s</code> <i>{scope}</i>
+        <br>
+        <code>--searchScope</code> <i>{scope}</i>
+        <br><br>
+        This argument specifies the scope to use for the search operation.  Its
+        value must be one of "base", "one", "sub", or "subordinate".  If this
+        argument is not provided, then a default value of "sub" will be used.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-f</code> <i>{path}</i>
+        <br>
+        <code>--filterFile</code> <i>{path}</i>
+        <br><br>
+        This argument specifies the path to a file containing one or more
+        filters to use when processing the search operation.  If there are to
+        be multiple filters, then the file should be structured with one filter
+        per line.  If this option is used, then any trailing arguments will be
+        treated as separate attributes; otherwise the first trailing argument
+        must be the search filter.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-o</code> <i>{path}</i>
+        <br>
+        <code>--outputFile</code> <i>{path}</i>
+        <br><br>
+        This argument specifies the path to the output file that should be
+        written containing the entries matching the provided search criteria.
+        If this argument is not provided, then matching entries will be written
+        to standard output.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-O</code>
+        <br>
+        <code>--overwriteExisting</code>
+        <br><br>
+        This argument indicates that if the specified output file already
+        exists that it should be overwritten rather than appended to.  This is
+        only applicable if the <code>--outputFile</code> argument is used.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-z</code> <i>{numEntries}</i>
+        <br>
+        <code>--sizeLimit</code> <i>{numEntries}</i>
+        <br><br>
+        This argument specifies the maximum number of matching entries that
+        should be allowed.  Once this number of matching entries have been
+        identified, then the search will end.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-t</code> <i>{numSeconds}</i>
+        <br>
+        <code>--timeLimit</code> <i>{numSeconds}</i>
+        <br><br>
+        This argument specifies the maximum length of time in seconds that
+        should be spent performing the searches.  Once this length of time has
+        elapsed, then the search will end.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-T</code>
+        <br>
+        <code>--dontWrap</code>
+        <br><br>
+        This argument indicates that long lines should not be wrapped when
+        displaying matching entries.  If this is not provided, then long lines
+        will be wrapped (in a manner compatible with the LDIF specification) to
+        fit on an 80-column terminal.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-H</code>
+        <br>
+        <code>--help</code>
+        <br><br>
+        This argument will display usage information for the
+        <code>ldifsearch</code> utility and will exit without attempting to
+        perform any additional processing.
+        <br><br>
+      </li>
+    </ul>
+  </body>
+</html>
+

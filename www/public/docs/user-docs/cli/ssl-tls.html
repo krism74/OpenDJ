@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Quick Reference Guide</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Command Line Usage Guide</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Command List</a></div>
+    <div class="secpageheader">Using SSL and StartTLS in OpenDS Clients</div>
+
+    <br>
+    All of the utilities provided with OpenDS that can communicate with the
+    server over LDAP also support the ability to secure that communication with
+    either SSL or StartTLS.
+
+    <br><br>
+    SSL (secure sockets layer) is a very common technology that is used to
+    encrypt all communication that a client has with the server, from the time
+    the connection is established until the time that it is closed.  If SSL is
+    to be used, then the Directory Server must be configured with a connection
+    handler that communicates only in SSL.  Recent versions of SSL (i.e., SSLv3
+    and later) are now called TLS (transport-layer security), but it is
+    important to understand that the use of TLS is not the same as the use of
+    the StartTLS extended operation.
+
+    <br><br>
+    The StartTLS extended operation is a mechanism described in
+    <a href="../../standards/rfc4513.txt">RFC 4513</a> that may also be used
+    to secure the communication between LDAP clients and the Directory Server.
+    The underlying method of protection is similar to SSL/TLS, but there is one
+    notable difference:  the connection used to communicate with the server is
+    not always secure.  Rather, the client will establish a connection to the
+    Directory Server on the port used to perform unsecured LDAP communication
+    and will then send an extended request to use the StartTLS operation.  This
+    will cause the server to secure the communication, and what was once a
+    clear-text communication channel is now encrypted.  This provides the
+    ability to secure only a portion of the communication over an existing
+    connection.  It also has the benefit of offering both secure and insecure
+    communication over the same port, which can be used to ensure that clients
+    do not need to be configured with a separate port for secure communication
+    like they would need with SSL, and if a firewall is in place between the
+    client and the server it is only necessary to allow communication on a
+    single port.
+
+    <br><br>
+    <b>Blindly Trusting Any Server Certificate</b>
+    <br>
+    The easiest way to communicate securely with the Directory Server is to
+    configure the client to automatically trust any certificate that the server
+    presents to it.  However, this is also the least secure method of
+    communication because this introduces the possibility of a
+    man-in-the-middle attack, or for an untrusted third party to impersonate
+    the server.  Therefore, it is recommended that this capability be used only
+    for testing purposes, or when there is a relative degree of confidence that
+    the target server may be trusted.
+
+    <br><br>
+    This "blind trust" capability may be enabled using either the
+    <code>-X</code> or the <code>--trustAll</code> argument.  For example, the
+    following command will retrieve the root DSE from a Directory Server over
+    SSL:
+
+    <blockquote>
+      <code>ldapsearch --host server.example.com --port 636 --useSSL --trustAll
+            --baseDN "" --searchScope base "(objectClass=*)"</code>
+    </blockquote>
+
+    <br>
+    <b>Using a Certificate Trust Store</b>
+    <br>
+    A more secure way to perform secure communication with the Directory Server
+    is to configure the client to use a certificate trust store, which contains
+    information about the certificate(s) that it will trust.  This may be done
+    using the <code>--trustStorepath</code> argument.  Whenever a server
+    presents a certificate to the client, that client will check its trust
+    store to see if it contains either the certificate presented by the server
+    or any of the issuer certificates for that certificate.  If a match is
+    found, then it will be possible to communicate securely with that server.
+    If no match is found, then the server cannot be trusted and you should
+    check to make sure that the presented certificate is legitimate.  If it is,
+    then you can add it to the trust store and secure communication will be
+    allowed.
+
+    <br><br>
+    The following command will retrieve the root DSE from a Directory Server
+    using security provided with the StartTLS extended operation and a
+    certificate trust store:
+
+    <blockquote>
+      <code>ldapsearch --host server.example.com --port 389 --useStartTLS
+            --trustStorePath /path/to/trust.store --baseDN ""
+            --searchScope base "(objectClass=*)"</code>
+    </blockquote>
+
+    Note that in some rare cases, the certificate trust store may require that
+    a PIN be provided in order to access its contents.  If this is necessary,
+    then that PIN may be provided directly using the
+    <code>--trustStorePassword</code> argument, or you may specify a path to
+    the file containing that PIN with the
+    <code>--trustStorePasswordFile</code> option.
+
+    <br><br>
+    <b>Providing a Client Certificate</b>
+    <br>
+    In some cases, it may be necessary for the client to present its own
+    certificate to the Directory Server.  This will be needed if the client
+    wishes to perform SASL EXTERNAL authentication, or if the server is
+    configured to always require clients to present their own certificates.  In
+    this case, it will be necessary to provide information to the client about
+    which certificate key store should be used.  This should be done with
+    the <code>--keyStorePath</code> argument to specify the path to the file
+    to use as the certificate key store.  It will almost always be the case
+    that it will also be necessary to provide the PIN needed to access the
+    keystore contents, which may be done by either providing the PIN directly
+    with the <code>--keyStorePassword</code> argument, or by providing the path
+    to a file containing the PIN with the <code>--keyStorePasswordFile</code>
+    argument.
+
+    <br><br>
+    The following command will perform SASL EXTERNAL authentication over an
+    SSL-based client connection to retrieve the root DSE from the server:
+
+    <blockquote>
+      <code>ldapsearch --host server.example.com --port 636 --useSSL
+            --keyStorePath /path/to/key.store
+            --keyStorePasswordFile /path/to/key.store.pin
+            --trustStorePath /path/to/trust/store --useSASLExternal
+            --baseDN "" --searchScope base "(objectClass=*)"</code>
+    </blockquote>
+  </body>
+</html>
+

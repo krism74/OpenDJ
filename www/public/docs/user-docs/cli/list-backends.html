@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Quick Reference Guide</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Command Line Usage Guide</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Command List</a></div>
+    <div class="secpageheader">The list-backends Utility</div>
+
+    <br>
+    The <code>list-backends</code> utility may be used to obtain information
+    about the backends defined in an OpenDS instance.  It has three modes of
+    operation:
+
+    <ul>
+      <li>When invoked with no arguments, it will display the bakcend IDs for
+          all backends configured in the server, along with the base DNs for
+          those backends.</li>
+      <li>When used with the <code>--backendID</code> argument, it will list
+          all of the base DNs for the backend with the specified backend
+          ID.</li>
+      <li>When used with the <code>--baseDN</code> argument, it will list the
+          backend ID of the backend that should be used to hold the entry with
+          the given DN and will also indicate whether that DN is one of the
+          configured base DNs for that backend.</li>
+    </ul>
+
+    <br>
+    As mentioned above, this utility does not require any command-line
+    arguments.  However, the following arguments are available for use:
+
+    <ul>
+      <li>
+        <code>-n</code>
+        <br>
+        <code>--backendID</code>
+        <br><br>
+        This argument may be used to specify the backend ID of a backend for
+        which the tool should display the associated base DN(s).  This argument
+        may be used multiple times to display the base DNs for multiple
+        backends.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-b</code> <i>{dn}</i>
+        <br>
+        <code>--baseDN</code> <i>{dn}</i>
+        <br><br>
+        This argument may be used to specify a DN for which the tool should
+        determine which (if any) backend should hold an entry with that DN.  It
+        will also indicate whether the specified DN is a base DN for that
+        backend.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-H</code>
+        <br>
+        <code>--help</code>
+        <br><br>
+        This argument will cause the tool to display its usage information and
+        exit immediately without taking any other action.
+        <br><br>
+      </li>
+    </ul>
+  </body>
+</html>
+

@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Quick Reference Guide</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Command Line Usage Guide</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Command List</a></div>
+    <div class="secpageheader">The ldif-diff Utility</div>
+
+    <br>
+    The <code>ldif-diff</code> utility may be used to identify the differences
+    between two LDIF files and output the result in LDIF change form.  The
+    resulting output may be applied to the source LDIF to result in the
+    contents of the target LDIF file.  Also note that the change information
+    will be written so that it will contain all information necessary for
+    someone to reverse the changes if necessary.  For modify operations, this
+    means that the <code>replace</code> operation will not be used, but rather
+    only sets of value <code>add</code> and <code>delete</code> changes.
+    Further, for delete operations, the contents of the entry that has been
+    removed will be included in the changes output in the form of comments.
+
+    <br><br>
+    Note that this utility was only designed to work on small data sets, and
+    therefore is only suitable for use in cases in which both the source and
+    target data sets may fit entirely in memory at the same time.  It is not
+    intended for use on large data sets that cannot fit in available memory.
+
+    The complete set of arguments that may be used with the
+    <code>ldif-diff</code> tool is:
+
+    <ul>
+      <li>
+        <code>-s</code> <i>{path}</i>
+        <br>
+        <code>--sourceLDIF</code> <i>{path}</i>
+        <br><br>
+        This argument specifies the path to the source LDIF file, which
+        contains the original data with no changes applied.  This argument is
+        required.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-t</code> <i>{path}</i>
+        <br>
+        <code>--targetLDIF</code> <i>{path}</i>
+        <br><br>
+        This argument specifies the path to the target LDIF file, for which the
+        differences from the source LDIF should be identified.  This argument
+        is required.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-o</code> <i>{path}</i>
+        <br>
+        <code>--outputLDIF</code> <i>{path}</i>
+        <br><br>
+        This argument specifies the path to the file that should be written
+        with information about the changes between the source and target LDIF
+        data.  If this is not provided, then the change information will be
+        written to standard output.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-O</code>
+        <br>
+        <code>--overwriteExisting</code>
+        <br><br>
+        This argument indicates that if the specified output file already
+        exists that it should be overwritten rather than appending to it.  It
+        is only applicable if the <code>--outputLDIF</code> option is used.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-H</code>
+        <br>
+        <code>--help</code>
+        <br><br>
+        This argument will display usage information for the
+        <code>ldif-diff</code> utility and will exit without attempting to
+        perform any additional processing.
+        <br><br>
+      </li>
+    </ul>
+  </body>
+</html>
+

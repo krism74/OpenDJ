@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Quick Reference Guide</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Command Line Usage Guide</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Command List</a></div>
+    <div class="secpageheader">The backup Utility</div>
+
+    <br>
+    The <code>backup</code> utility may be used to archive the contents of one
+    or more Directory Server backends.
+
+    <br><br>
+    In order to use this tool, the <code>--backupDirectory</code> option must
+    be used to specify the location to which the backup files should be
+    written.  It is also necessary to provide either one or more instances of
+    the <code>--backendID</code> argument or the <code>--backUpAll</code>
+    argument to specify which backend(s) to include in the archive.  The
+    complete set of arguments that may be used is as follows:
+
+    <ul>
+      <li>
+        <code>-d</code> <i>{path}</i>
+        <br>
+        <code>--backupDirectory</code> <i>{path}</i>
+        <br><br>
+        This argument specifies the path to a directory into which the backup
+        files should be placed.  If multiple backends are to be archived, then
+        a subdirectory will be created below this path for each backend,
+        otherwise the backup files will be placed directly in this directory.
+        Note that multiple backups for the same backend may be placed in the
+        same directory, and if an incremental backup is to be performed, then
+        the backup directory must already contain at least one full backup.
+        This is a required argument.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-n</code> <i>{backendID}</i>
+        <br>
+        <code>--backendID</code> <i>{backendID}</i>
+        <br><br>
+        This argument specifies the backend ID of the backend to be archived.
+        This argument may be provided multiple times to indicate that multiple
+        backends should be archived.  The available backends in the server may
+        be determined using the <a href="list-backends.html">list-backends</a>
+        tool.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-a</code>
+        <br>
+        <code>--backUpAll</code>
+        <br><br>
+        This argument indicates that the server should back up all configured
+        backends.  This option must no be used in conjunction with the
+        <code>--backendID</code> argument.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-I</code> <i>{backupID}</i>
+        <br>
+        <code>--backupID</code> <i>{backupID}</i>
+        <br><br>
+        This argument may be used to specify an identifier to use for the
+        backup.  If this is not provided, then a backup ID will be generated
+        based on the current time.  The backup ID must be unique among all
+        backups in the provided backup directory.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-i</code>
+        <br>
+        <code>--incremental</code>
+        <br><br>
+        This argument indicates that the server should perform an incremental
+        backup rather than a full backup.  An incremental backup should include
+        only that data that has changed since a previous incremental or full
+        backup, and therefore taking an incremental backup may be notably
+        faster than a full backup.  When restoring an incremental backup, it is
+        first necessary to restore the original full backup and then any
+        intermediate incremental backups, which may make the restore process
+        somewhat slower than restoring just a full backup.
+        <br><br>
+        Note that some types of backends may not support performing incremental
+        backups, and in that case this option will be ignored and a full backup
+        will be performed.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-B</code> <i>{backupID}</i>
+        <br>
+        <code>--incrementalBaseID</code> <i>{backupID}</i>
+        <br><br>
+        This argument may be used to specify the backup ID for the existing
+        backup against which to take an incremental backup.  If this is not
+        provided, then the incremental backup will be based on the latest
+        incremental or full backup contained in the backup directory.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-c</code>
+        <br>
+        <code>--compress</code>
+        <br><br>
+        This argument indicates that the server should compress the contents of
+        the backup archive.  The compression algorithm used may vary based on
+        the backend type.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-y</code>
+        <br>
+        <code>--encrypt</code>
+        <br><br>
+        This argument indicates that the server should encrypt the contents of
+        the backup archive.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-h</code>
+        <br>
+        <code>--hash</code>
+        <br><br>
+        This argument indicates that the server should generate a message
+        digest of the contents of the backup archive, which may be used as a
+        checksum during the restore process to ensure that the backup has not
+        been altered.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-s</code>
+        <br>
+        <code>--signHash</code>
+        <br><br>
+        This argument indicates that the server should cryptographically sign
+        the hash generated with the <code>--hash</code> argument, which
+        provides even stronger assurance that neither the backup archive nor
+        the hash of its contents have been altered.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-H</code>
+        <br>
+        <code>--help</code>
+        <br><br>
+        This argument will display usage information for the
+        <code>backup</code> utility and will exit without attempting to perform
+        a backup.
+        <br><br>
+      </li>
+    </ul>
+  </body>
+</html>
+

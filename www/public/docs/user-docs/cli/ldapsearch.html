@@ -1,0 +1,659 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Quick Reference Guide</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Command Line Usage Guide</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Command List</a></div>
+    <div class="secpageheader">The ldapsearch Utility</div>
+
+    <br>
+    The <code>ldapsearch</code> utility may be used to issue LDAP search
+    requests to the Directory Server.  It may also be used to test other
+    components of the server like authentication mechanisms, various controls,
+    and secure communication mechanisms.
+
+    <br><br>
+    The command-line usage for this tool is as follows:
+    <blockquote>
+      <code>ldapsearch {options} [filter] [attributes...]</code>
+    </blockquote>
+
+    The named arguments are listed below.  After all of the named arguments
+    have been provided, the next argument should be the search filter, and any
+    remaining arguments will signify the set of attributes that should be
+    included in the matching entries.  If the <code>--filename</code> option is
+    used to specify a file containing one or more search filters, then the
+    search filter should not be included as an argument, and all trailing
+    arguments will be interpreted as requested attributes.
+
+    <br><br>
+    If no specific attributes are requested, then all user attributes (that is,
+    all non-operational attributes will be returned).  If one or more attribute
+    names are listed, then only those attributes will be included in the
+    entries that are returned.  There are also a number of special values that
+    can be included in this list for various purposes, including:
+    <ul>
+      <li>
+        <code>1.1</code> -- This indicates that no attributes are to be
+        included in the entries returned by the server (i.e., only the entry
+        DN will be returned).
+        <br><br>
+      </li>
+      <li>
+        <code>*</code> -- This indicates that all user attributes are to be
+        included in the entries returned by the server.  This is the default
+        behavior if no attributes are list, but it may be required for cases in
+        which the user wants to see all user attributes in addition to one or
+        more operational attributes.  Note that it may be necessary to enquote
+        or escape the asterisk character when used on the command line to
+        prevent it from being interpreted by the shell.
+        <br><br>
+      </li>
+      <li>
+        <code>+</code> -- This indicates that all operational attributes are to
+        be included in the entries returned by the server.  By default, no
+        operational attributes will be returned.  Note that even if this is
+        specified there may be some operational attributes that are not
+        automatically for some reason (e.g., if an expensive computation is
+        required to construct the value).
+        <br><br>
+      </li>
+      <li>
+        <code>@</code><i>objectclass</i> -- This indicates that all attributes
+        associated with the specified objectclass should be included in the
+        entries returned by the server.  For example, "<code>@person</code>"
+        indicates that the server should include all attributes associated with
+        the "person" objectclass.
+        <br><br>
+      </li>
+    </ul>
+
+    <br>
+    The complete set of named arguments that may be used with the
+    <code>ldapsearch</code> tool is as follows:
+
+    <ul>
+      <li>
+        <code>-h</code> <i>{address}</i>
+        <br>
+        <code>--host</code> <i>{address}</i>
+        <br><br>
+        This argument specifies the address to use to communicate with the
+        Directory Server.  It may be an IP address or a resolvable name.  If
+        this is not provided, then a default value of "localhost" will be used.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-p</code> <i>{port}</i>
+        <br>
+        <code>--port</code> <i>{port}</i>
+        <br><br>
+        This argument specifies the port to use to communicate with the
+        Directory Server.  It should be an integer value between 1 and 65535,
+        inclusive.  If this is not provided, then a default port of 389 will be
+        used.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-Z</code>
+        <br>
+        <code>--useSSL</code>
+        <br><br>
+        This argument indicates that the communication with the Directory
+        Server should be protected using SSL.  If this option is provided, then
+        the <code>--port</code> option should be used to specify the secure
+        port for the server.  This argument must not be used in conjunction
+        with the <code>--useStartTLS</code> option.  For more information about
+        using SSL, see <a href="ssl-tls.html">this page</a>.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-q</code>
+        <br>
+        <code>--useStartTLS</code>
+        <br><br>
+        This argument indicates that the communication with the Directory
+        Server should be protected using the StartTLS extended operation.  This
+        argument must not be used in conjunction with the <code>--useSSL</code>
+        option.  For more information about using StartTLS, see
+        <a href="ssl-tls.html">this page</a>.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-D</code> <i>{dn}</i>
+        <br>
+        <code>--bindDN</code> <i>{dn}</i>
+        <br><br>
+        This argument specifies the DN to use when binding to the Directory
+        Server through simple authentication.  It is not required when using
+        SASL authentication or if no authentication is to be performed.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-w</code> <i>{password}</i>
+        <br>
+        <code>--bindPassword</code> <i>{password}</i>
+        <br><br>
+        This argument specifies the password to use when authenticating to the
+        Directory Server.  It is used for simple authentication, as well as for
+        password-based SASL mechanisms like CRAM-MD5, DIGEST-MD5, and PLAIN.
+        It is not required if no authentication is to be performed.  This
+        option must not be used in conjunction with the
+        <code>--bindPasswordFile</code> argument.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-j</code> <i>{path}</i>
+        <br>
+        <code>--bindPasswordFile</code> <i>{path}</i>
+        <br><br>
+        This argument specifies the path to a file containing the password to
+        use when authenticating to the Directory Server.  It is used for simple
+        authentication, as well as for password-based SASL mechanisms like
+        CRAM-MD5, DIGEST-MD5, and PLAIN.  It is not required if no
+        authentication is to be performed.  This option must not be used in
+        conjunction with the <code>--bindPassword</code> argument.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-b</code> <i>{dn}</i>
+        <br>
+        <code>--baseDN</code> <i>{dn}</i>
+        <br><br>
+        This argument specifies the base DN to use for the search operation.
+        If a file containing multiple filters is provided using the
+        <code>--filename</code> option, then this base DN will be used for all
+        of the searches.  This is a required argument.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-s</code> <i>{scope}</i>
+        <br>
+        <code>--searchScope</code> <i>{scope}</i>
+        <br><br>
+        This argument specifies the scope to use for the search operation.  Its
+        value must be one of "base", "one", "sub", or "subordinate".  If this
+        argument is not provided, then a default value of "sub" will be used.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-f</code> <i>{path}</i>
+        <br>
+        <code>--filename</code> <i>{path}</i>
+        <br><br>
+        This argument specifies the path to a file containing one or more
+        filters to use when processing the search operation.  If there are to
+        be multiple filters, then the file should be structured with one filter
+        per line, and all of those searches will be performed using the same
+        connection to the server in the order they appear in the filter file.
+        If this option is used, then any trailing arguments will be treated as
+        separate attributes; otherwise the first trailing argument must be the
+        search filter.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-r</code>
+        <br>
+        <code>--useSASLExternal</code>
+        <br><br>
+        This argument specifies that the client should authenticate using the
+        SASL EXTERNAL mechanism, which will attempt to identify the client
+        using an SSL certificate that it presents to the Directory Server.  If
+        this option is used, then the <code>--keyStorePath</code> argument must
+        also be provided to specify the path to the client keystore, and either
+        the <code>--useSSL</code> or the <code>--useStartTLS</code> option must
+        be used to establish a secure communication channel with the server.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-o</code> <i>{option}</i>
+        <br>
+        <code>--saslOption</code> <i>{option}</i>
+        <br><br>
+        This argument may be used to specify an option for use when performing
+        SASL authentication.  Multiple SASL options may be provided by using
+        this argument multiple times, once for each option.  See
+        <a href="sasl-auth.html">this page</a> for more information on using
+        SASL authentication in OpenDS clients.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-X</code>
+        <br>
+        <code>--trustAll</code>
+        <br><br>
+        This argument indicates that the client should trust any SSL
+        certificate that the server may present when performing secure
+        communication with either SSL or the StartTLS extended operation.  This
+        is convenient for testing purposes, but it is generally not recommended
+        for use in a production environment because it could make the client
+        susceptible to a man-in-the-middle attack.  If this option is not
+        provided, then the <code>--trustStorePath</code> option should be used
+        to specify the path to a trust store to consult in order to determine
+        whether to trust a server certificate.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-K</code> <i>{path}</i>
+        <br>
+        <code>--keyStorePath</code> <i>{option}</i>
+        <br><br>
+        This argument specifies the path to a client key store file that should
+        be used for secure communication via SSL or the StartTLS extended
+        operation.  This option is generally only required if the client needs
+        to present its own certificate to the server, such as when performing
+        SASL external authentication.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-W</code> <i>{password}</i>
+        <br>
+        <code>--keyStorePassword</code> <i>{password}</i>
+        <br><br>
+        This argument specifies the password needed to access the contents of
+        the client key store.  This is only required if the
+        <code>--keyStorePath</code> option is used.  This option must not be
+        used in conjunction with the <code>--keyStorePasswordFile</code>
+        argument.
+        <br><br>
+      </li>
+
+      <li>
+        <code>--keyStorePasswordFile</code> <i>{path}</i>
+        <br><br>
+        This argument specifies the path to a file containing the password
+        needed to access the contents of the client key store.  This is only
+        required if the <code>--keyStorePath</code> option is used.  This
+        option must not be used in conjunction with the
+        <code>--keyStorePassword</code> argument.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-P</code> <i>{path}</i>
+        <br>
+        <code>--trustStorePath</code> <i>{option}</i>
+        <br><br>
+        This argument specifies the path to a clien trust store file that
+        should be used for secure communication via SSL or the StartTLS
+        extended operation.  This argument is not needed if the
+        <code>--trustAll</code> option is not used, although it is recommended
+        that a trust store be used when working in a production environment.
+        <br><br>
+      </li>
+
+      <li>
+        <code>--trustStorePassword</code> <i>{password}</i>
+        <br><br>
+        This argument specifies the password needed to access the contents of
+        the client trust store.  This is only required if the
+        <code>--trustStorePath</code> option is used and the specified trust
+        store requires a password in order to access its contents (most trust
+        stores do not require this).  This option must not be used in
+        conjunction with the <code>--trustStorePasswordFile</code>
+        argument.
+        <br><br>
+      </li>
+
+      <li>
+        <code>--trustStorePasswordFile</code> <i>{path}</i>
+        <br><br>
+        This argument specifies the path to a file containing the password
+        needed to access the contents of the client trust store.  This is only
+        required if the <code>--trustStorePath</code> option is used and the
+        specified trust store requires a password in order to access its
+        contents (most trust stores do not require this).  This option must not
+        be used in conjunction with the <code>--trustStorePassword</code>
+        argument.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-Y</code> <i>{authzID}</i>
+        <br>
+        <code>--proxyAs</code> <i>{authzID}</i>
+        <br><br>
+        This argument specifies that the client should use the proxied
+        authorization control to specify the identity of the user as whom the
+        operations should be performed.  This will use version 2 of the proxied
+        authorization control as defined in
+        <a href="../../../standards/rfc4370.txt">RFC 4370</a>.  The value of
+        the argument should be an authorization ID in the form "dn:" followed
+        by the DN of the target user (e.g.,
+        "dn:uid=john.doe,ou=People,dc=example,dc=com"), or "u:" followed by the
+        username (e.g., "u:john.doe").  If this argument is not provided, then
+        proxied authorization will not be used.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-E</code>
+        <br>
+        <code>--reportAuthzID</code>
+        <br><br>
+        This argument indicates that the client should include the
+        authorization identity request control (as defined in
+        <a href="../../../standards/rfc3829.txt">RFC 3829</a>) in the bind
+        request so that the server will return the corresponding authorization
+        ID when authentication has completed.  The authorization ID returned by
+        the server will be displayed to the client as soon as authentication
+        has completed (the line containing the authorization ID will be
+        prefixed with a "<code>#</code>" character, making it a comment if the
+        output is to be interpreted as LDIF).
+        <br><br>
+      </li>
+
+      <li>
+        <code>--usePasswordPolicyControl</code>
+        <br><br>
+        This argument indicates that the client should include the password
+        policy request control in the bind request so that the server will
+        return the corresponding result control in the bind response.  This may
+        be used to obtain information about any warnings or errors with regard
+        to the state of the client's account.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-C</code> <i>{psearchSpec}</i>
+        <br>
+        <code>--persistentSearch</code> <i>{psearchSpec}</i>
+        <br><br>
+        This argument specifies that the client should include the persistent
+        search control (as defined in
+        <a href="../../../standards/draft-ietf-ldapext-psearch.txt">draft-ietf-ldapext-psearch</a>)
+        in the search request in order to obtain information about changes that
+        are made to entries matching the provided search criteria.  The value
+        for this argument must be in the form
+        <blockquote>
+          ps[:<i>{changetype}</i>[:<i>{changesonly}</i>[:<i>{entrychangecontrols}</i>]]]
+        </blockquote>
+        The elements of this value include:
+        <ul>
+          <li>"<code>ps</code>" -- This is static text and must always be
+              present.</li>
+          <li>"<i>{changetype}</i>" -- This indicates the type(s) of changes for
+              which the client wishes to receive notification.  It may be any
+              of "add", "del", "mod", or "moddn", or it may be "all" to
+              register for all change types, or it may be a comma-separated
+              list to register for multiple specific change types.  If this
+              element is not provided, then it will default to including all
+              change types.</li>
+          <li>"<i>{changesonly}</i>" -- This should be "<code>true</code>" if
+              the client should only be notified of changes that occur to
+              matching entries once the search is registered, or
+              "<code>false</code>" if the server should also send all existing
+              entries in the server that match the provided search criteria.
+              If this element is not provided, then it will default to only
+              returning entries for updates that occurred since the search was
+              registered.</li>
+          <li>"<i>{entrychangecontrols}</i>" -- This should be
+              "<code>true</code>" if the server should include the entry change
+              notification control in entries sent to the client as a result of
+              changes, or "<code>false</code>" if the entry change notification
+              control should not be included.  If this element is not provided,
+              then it will default to including the entry change notification
+              controls.</li>
+        </ul>
+        For example, the value "<code>ps:add,del:true:true</code>" will return
+        only entries matching the search criteria that have been added or
+        deleted since the time that the persistent search was registered, and
+        those entries will include entry change notification controls.
+        <br><br>
+      </li>
+
+      <li>
+        <code>--assertionFilter</code> <i>{filter}</i>
+        <br><br>
+        This argument specifies that the client should use the LDAP assertion
+        control (as defined in 
+        <a href="../../../standards/rfc4528.txt">RFC 4528</a>) to indicate that
+        the operation should only be processed if the assertion contained in
+        the provided filter is true.
+        <br><br>
+      </li>
+
+      <li>
+        <code>--matchedValuesFilter</code> <i>{filter}</i>
+        <br><br>
+        This argument specifies that the client should use the LDAP matched
+        values control (as defined in
+        <a href="../../../standards/rfc3876.txt">RFC 3876</a>) in order to
+        indicate that only attribute values matching the specified filter
+        should be included in the search results.  This argument may be
+        provided multiple times in order to specify multiple matched values
+        filters.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-J</code> <i>{controlSpec}</i>
+        <br>
+        <code>--control</code> <i>{controlSpec}</i>
+        <br><br>
+        This argument specifies that the client should include the specified
+        control in search request(s) sent to the server.  This makes it
+        possible to include arbitrary request controls that the client may not
+        directly support.  The value for this argument must be in the form:
+        <blockquote>
+          <i>{oid}</i>[:<i>{criticality}</i>[:</i>{value}</i>|::<i>{b64value}</i>|:&lt;<i>{fileurl}</i>]]
+        </blockquote>
+        The elements of this value include:
+        <ul>
+          <li>"<i>{oid}</i>" -- This specifies the OID for the control.  For
+              certain types of controls, a text name may be used instead of the
+              numeric OID (for search operations, this includes "subentries"
+              to use the LDAP subentries control and "managedsait" for the
+              manage DSA IT control).  This element must be provided.</li>
+          <li>"<i>{criticality}</i>" -- This should be either
+              "<code>true</code>" if the control should be marked critical
+              (meaning that the server should not process the operation unless
+              it can meet the requirements of this control) or
+              "<code>false</code>" if the control should not be marked
+              critical.  If this is not provided, then the control will not be
+              marked critical.</li>
+          <li>"<i>{value}</i>" -- This specifies the value for the control.
+              This form should only be used if the value can be expressed as a
+              string.  It must not be used in conjunction with either the
+              "::<i>{b64value}</i>" or ":&lt;<i>{fileurl}</i>" forms.  If none
+              of these options is present, then the control will not have a
+              value.</li>
+          <li>"<i>{b64value}</i>" -- This specifies the value for the control
+              in base64-encoded form.  It must not be used in conjunction with
+              either the ":<i>{value}</i>" or ":&lt;<i>{fileurl}</i>" forms.
+              If none of these options is present, then the control will not
+              have a value.</li>
+          <li>"<i>{fileurl}</i>" -- This specifies a URL that references a file
+              from which the value of the control should be taken.  It must not
+              be used in conjunction with either the ":<i>{value}</i>" or
+              "::<i>{b64value}</i>" forms.  If none of these options is
+              present, then the control will not have a value.</li>
+        </ul>
+        For example, the value "<code>1.2.3.4:true:foo</code>" will include a
+        critical control with an OID of "1.2.3.4" and a string value of "foo".
+        <br><br>
+      </li>
+
+      <li>
+        <code>-V</code> <i>{version}</i>
+        <br>
+        <code>--version</code> <i>{version}</i>
+        <br><br>
+        This argument specifies the LDAP protocol version that the client
+        should use when communicating with the Directory Server.  The value
+        must be either "2" (for LDAPv2 communication) or "3" (for LDAPv3).  If
+        this argument is not provided, then the client will use LDAPv3.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-i</code> <i>{charset}</i>
+        <br>
+        <code>--encoding</code> <i>{charset}</i>
+        <br><br>
+        This argument specifies the character set that the client will use to
+        interpret the information that should be used to generate the search
+        request.  If this is not provided, then a default of "UTF-8" will be
+        used.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-a</code> <i>{policy}</i>
+        <br>
+        <code>--dereferencePolicy</code> <i>{policy}</i>
+        <br><br>
+        This argument specifies the policy that should be requested when
+        attempting to dereference aliases.  The value must be one of "never",
+        "always", "search", or "find".  If this argument is not provided, then
+        a default of "never" will be used.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-A</code>
+        <br>
+        <code>--typesOnly</code>
+        <br><br>
+        This argument indicates that the server should only include attribute
+        type names in matching entries but should not include the attribute
+        values.  If this argument is not provided, then both attribute names
+        and values will be included in the matching entries.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-z</code> <i>{numEntries}</i>
+        <br>
+        <code>--sizeLimit</code> <i>{numEntries}</i>
+        <br><br>
+        This argument specifies the maximum number of matching entries that the
+        server should return to the client.  If this is not provided, then
+        there will be no maximum requested by the client.  Note that the server
+        may enforce a lower size limit than the one requested by the client.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-l</code> <i>{numSeconds}</i>
+        <br>
+        <code>--timeLimit</code> <i>{numSeconds}</i>
+        <br><br>
+        This argument specifies the maximum length of time in seconds that
+        the server should spend processing any search request.  If this is not
+        provided, then there will be no time limit requested by the client.
+        Note that the server may enforce a lower time limit than the one
+        requested by the client.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-T</code>
+        <br>
+        <code>--dontWrap</code>
+        <br><br>
+        This argument indicates that the client should not wrap long lines when
+        displaying matching entries.  If this is not provided, then long lines
+        will be wrapped (in a manner compatible with the LDIF specification) to
+        fit on an 80-column terminal.
+        <br><br>
+      </li>
+
+      <li>
+        <code>--countEntries</code>
+        <br><br>
+        This argument indicates that the client should count the number of
+        entries returned by the server and display it as a comment when the
+        search has completed, and that the number of matching entries should
+        also be used as the exit code for the tool.  If the
+        <code>--filename</option> is used to specify the path to a file
+        containing multiple search filters, then the total number of matching
+        entries for all searches will be displayed and used as the exit code.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-c</code>
+        <br>
+        <code>--continueOnError</code>
+        <br><br>
+        This argument indicates that the client should continue processing even
+        if an error occurs.  This applies primarily in the case in which the
+        <code>--filename</code> option is used to specify the path to a file
+        containing multiple search filters and an error occurs while processing
+        one of the searches defined in that file.  If the
+        <code>--continueOnError</code> option is provided, then processing will
+        continue with the next search filter; otherwise the tool will exit
+        before all searches have been completed.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-n</code>
+        <br>
+        <code>--noop</code>
+        <br><br>
+        This argument indicates that the client should report what it would do
+        but should not actually perform any searches or communicate with the
+        server in any way.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-v</code>
+        <br>
+        <code>--verbose</code>
+        <br><br>
+        This argument indicates that the client should provide verbose
+        information about the processing that it is performing and the
+        interaction that it has with the server.
+        <br><br>
+      </li>
+
+      <li>
+        <code>-H</code>
+        <br>
+        <code>--help</code>
+        <br><br>
+        This argument will display usage information for the
+        <code>ldapsearch</code> utility and will exit without attempting to
+        perform any additional processing.
+        <br><br>
+      </li>
+    </ul>
+  </body>
+</html>
+
