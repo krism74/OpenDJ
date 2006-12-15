@@ -3,12 +3,12 @@
 
 Network Working Group                                            M. Wahl
 Internet-Draft                                     Informed Control Inc.
-Intended status: Informational                           August 29, 2006
-Expires: March 2, 2007
+Intended status: Standards Track                       December 12, 2006
+Expires: June 15, 2007
 
 
                  LDAP Subtree Data Source URI Attribute
-                   draft-wahl-ldap-subtree-source-00
+                   draft-wahl-ldap-subtree-source-01
 
 Status of this Memo
 
@@ -33,7 +33,7 @@ Status of this Memo
    The list of Internet-Draft Shadow Directories can be accessed at
    http://www.ietf.org/shadow.html.
 
-   This Internet-Draft will expire on March 2, 2007.
+   This Internet-Draft will expire on June 15, 2007.
 
 Copyright Notice
 
@@ -52,9 +52,9 @@ Copyright Notice
 
 
 
-Wahl                      Expires March 2, 2007                 [Page 1]
+Wahl                      Expires June 15, 2007                 [Page 1]
 
-Internet-Draft   LDAP Subtree Data Source URI Attribute      August 2006
+Internet-Draft   LDAP Subtree Data Source URI Attribute    December 2006
 
 
 Abstract
@@ -108,9 +108,9 @@ Abstract
 
 
 
-Wahl                      Expires March 2, 2007                 [Page 2]
+Wahl                      Expires June 15, 2007                 [Page 2]
 
-Internet-Draft   LDAP Subtree Data Source URI Attribute      August 2006
+Internet-Draft   LDAP Subtree Data Source URI Attribute    December 2006
 
 
 1.  Introduction
@@ -164,9 +164,9 @@ Internet-Draft   LDAP Subtree Data Source URI Attribute      August 2006
 
 
 
-Wahl                      Expires March 2, 2007                 [Page 3]
+Wahl                      Expires June 15, 2007                 [Page 3]
 
-Internet-Draft   LDAP Subtree Data Source URI Attribute      August 2006
+Internet-Draft   LDAP Subtree Data Source URI Attribute    December 2006
 
 
 2.  Subtree data source attribute
@@ -180,11 +180,14 @@ Internet-Draft   LDAP Subtree Data Source URI Attribute      August 2006
    readability):
 
      ( 1.3.6.1.4.1.21008.97.74.2.1 NAME 'subtreeDataSourceURI'
-      SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      EQUALITY caseExactMatch
       USAGE directoryOperation )
 
    This attribute can contain one or more values, and each value is a
-   URI [4].  Each URI is encoded using the IA5 string syntax [5].
+   URI [4].  Each URI is encoded using the Directory string syntax.  The
+   caseExactMatch and Directory String syntax are defined in RFC 4517
+   [5].
 
    Unlike the labeledURI attribute [6], these values do not have a
    label.
@@ -217,12 +220,9 @@ Internet-Draft   LDAP Subtree Data Source URI Attribute      August 2006
 
 
 
-
-
-
-Wahl                      Expires March 2, 2007                 [Page 4]
+Wahl                      Expires June 15, 2007                 [Page 4]
 
-Internet-Draft   LDAP Subtree Data Source URI Attribute      August 2006
+Internet-Draft   LDAP Subtree Data Source URI Attribute    December 2006
 
 
 3.  Security Considerations
@@ -276,9 +276,9 @@ Internet-Draft   LDAP Subtree Data Source URI Attribute      August 2006
 
 
 
-Wahl                      Expires March 2, 2007                 [Page 5]
+Wahl                      Expires June 15, 2007                 [Page 5]
 
-Internet-Draft   LDAP Subtree Data Source URI Attribute      August 2006
+Internet-Draft   LDAP Subtree Data Source URI Attribute    December 2006
 
 
 4.  IANA Considerations
@@ -332,9 +332,9 @@ Internet-Draft   LDAP Subtree Data Source URI Attribute      August 2006
 
 
 
-Wahl                      Expires March 2, 2007                 [Page 6]
+Wahl                      Expires June 15, 2007                 [Page 6]
 
-Internet-Draft   LDAP Subtree Data Source URI Attribute      August 2006
+Internet-Draft   LDAP Subtree Data Source URI Attribute    December 2006
 
 
 5.  References
@@ -388,9 +388,9 @@ Internet-Draft   LDAP Subtree Data Source URI Attribute      August 2006
 
 
 
-Wahl                      Expires March 2, 2007                 [Page 7]
+Wahl                      Expires June 15, 2007                 [Page 7]
 
-Internet-Draft   LDAP Subtree Data Source URI Attribute      August 2006
+Internet-Draft   LDAP Subtree Data Source URI Attribute    December 2006
 
 
 Appendix A.  Copyright
@@ -444,9 +444,9 @@ Appendix A.  Copyright
 
 
 
-Wahl                      Expires March 2, 2007                 [Page 8]
+Wahl                      Expires June 15, 2007                 [Page 8]
 
-Internet-Draft   LDAP Subtree Data Source URI Attribute      August 2006
+Internet-Draft   LDAP Subtree Data Source URI Attribute    December 2006
 
 
 Author's Address
@@ -500,9 +500,9 @@ Author's Address
 
 
 
-Wahl                      Expires March 2, 2007                 [Page 9]
+Wahl                      Expires June 15, 2007                 [Page 9]
 
-Internet-Draft   LDAP Subtree Data Source URI Attribute      August 2006
+Internet-Draft   LDAP Subtree Data Source URI Attribute    December 2006
 
 
 Full Copyright Statement
@@ -556,5 +556,5 @@ Acknowledgment
 
 
 
-Wahl                      Expires March 2, 2007                [Page 10]
+Wahl                      Expires June 15, 2007                [Page 10]
 

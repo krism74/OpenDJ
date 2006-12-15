@@ -3,12 +3,12 @@
 
 Network Working Group                                            M. Wahl
 Internet-Draft                                     Informed Control Inc.
-Intended status: Standards Track                      September 26, 2006
-Expires: March 30, 2007
+Intended status: Standards Track                       December 12, 2006
+Expires: June 15, 2007
 
 
                      P3P Policy Attributes for LDAP
-                         draft-wahl-ldap-p3p-02
+                         draft-wahl-ldap-p3p-03
 
 Status of this Memo
 
@@ -33,7 +33,7 @@ Status of this Memo
    The list of Internet-Draft Shadow Directories can be accessed at
    http://www.ietf.org/shadow.html.
 
-   This Internet-Draft will expire on March 30, 2007.
+   This Internet-Draft will expire on June 15, 2007.
 
 Copyright Notice
 
@@ -52,9 +52,9 @@ Copyright Notice
 
 
 
-Wahl                     Expires March 30, 2007                 [Page 1]
+Wahl                      Expires June 15, 2007                 [Page 1]
 
-Internet-Draft       P3P Policy Attributes for LDAP       September 2006
+Internet-Draft       P3P Policy Attributes for LDAP        December 2006
 
 
 Abstract
@@ -108,9 +108,9 @@ Abstract
 
 
 
-Wahl                     Expires March 30, 2007                 [Page 2]
+Wahl                      Expires June 15, 2007                 [Page 2]
 
-Internet-Draft       P3P Policy Attributes for LDAP       September 2006
+Internet-Draft       P3P Policy Attributes for LDAP        December 2006
 
 
 1.  Introduction
@@ -164,16 +164,16 @@ Internet-Draft       P3P Policy Attributes for LDAP       September 2006
 
 
 
-Wahl                     Expires March 30, 2007                 [Page 3]
+Wahl                      Expires June 15, 2007                 [Page 3]
 
-Internet-Draft       P3P Policy Attributes for LDAP       September 2006
+Internet-Draft       P3P Policy Attributes for LDAP        December 2006
 
 
 2.  Policy documents
 
    The attributes defined in this document contain Uniform Resource
    Identifiers (URIs) [4].  The URIs are anticipated to be of a scheme,
-   such as http [6], which has a protocol for the retrieval of an XML
+   such as http [7], which has a protocol for the retrieval of an XML
    document.  This document does not define how to retrieve XML content
    from the directory server itself; it is expected that an LDAP client
    that wishes to parse P3P-formatted XML documents would also be
@@ -220,9 +220,9 @@ Internet-Draft       P3P Policy Attributes for LDAP       September 2006
 
 
 
-Wahl                     Expires March 30, 2007                 [Page 4]
+Wahl                      Expires June 15, 2007                 [Page 4]
 
-Internet-Draft       P3P Policy Attributes for LDAP       September 2006
+Internet-Draft       P3P Policy Attributes for LDAP        December 2006
 
 
    A policy file might resemble (contents simplified for readability):
@@ -276,9 +276,9 @@ Internet-Draft       P3P Policy Attributes for LDAP       September 2006
 
 
 
-Wahl                     Expires March 30, 2007                 [Page 5]
+Wahl                      Expires June 15, 2007                 [Page 5]
 
-Internet-Draft       P3P Policy Attributes for LDAP       September 2006
+Internet-Draft       P3P Policy Attributes for LDAP        December 2006
 
 
 3.  Attribute for Directory Server Privacy Policy
@@ -303,12 +303,14 @@ Internet-Draft       P3P Policy Attributes for LDAP       September 2006
 
        attributeTypes: ( 1.3.6.1.4.1.21008.97.74.1.1
                         NAME 'serverP3PrivacyPolicy'
-                        EQUALITY caseIgnoreMatch
+                        EQUALITY caseExactMatch
                         SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
                         SINGLE-VALUE USAGE directoryOperation )
 
    The value is a single URI, which is encoded as a string in the UTF-8
-   charset.  The form of URI is specified in section 2 above.
+   charset.  The form of URI is specified in section 2 above.  The
+   caseExactMatch and Directory String syntax are defined in RFC 4517
+   [6].
 
    This attribute MAY be present in the directory server's root DSE.
    The attribute is retrievable if a client performs a base object
@@ -330,11 +332,9 @@ Internet-Draft       P3P Policy Attributes for LDAP       September 2006
 
 
 
-
-
-Wahl                     Expires March 30, 2007                 [Page 6]
+Wahl                      Expires June 15, 2007                 [Page 6]
 
-Internet-Draft       P3P Policy Attributes for LDAP       September 2006
+Internet-Draft       P3P Policy Attributes for LDAP        December 2006
 
 
 4.  Attribute for Directory Subtree Privacy Policy
@@ -358,12 +358,14 @@ Internet-Draft       P3P Policy Attributes for LDAP       September 2006
 
        attributeTypes: ( 1.3.6.1.4.1.21008.97.74.1.2
                         NAME 'subtreeP3PrivacyPolicy'
-                        EQUALITY caseIgnoreMatch
+                        EQUALITY caseExactMatch
                         SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
                         SINGLE-VALUE )
 
    The value is a single URI, which is encoded as a string in the UTF-8
-   charset.  The form of URI is specified in section 2 above.
+   charset.  The form of URI is specified in section 2 above.  The
+   caseExactMatch and Directory String syntax are defined in RFC 4517
+   [6].
 
    This attribute MAY be present in any entry.
 
@@ -384,15 +386,14 @@ Internet-Draft       P3P Policy Attributes for LDAP       September 2006
    defined schema object class, or be provided through collective
    attributes.
 
-   A client SHOULD locate this attribute in entries which are typically
 
 
-
-Wahl                     Expires March 30, 2007                 [Page 7]
+Wahl                      Expires June 15, 2007                 [Page 7]
 
-Internet-Draft       P3P Policy Attributes for LDAP       September 2006
+Internet-Draft       P3P Policy Attributes for LDAP        December 2006
 
 
+   A client SHOULD locate this attribute in entries which are typically
    used for the base object of subtrees of entries representing people,
    before searching to extract data from those entries.  For example,
    the attribute may be stored in the base organization entry, or in an
@@ -443,10 +444,9 @@ Internet-Draft       P3P Policy Attributes for LDAP       September 2006
 
 
 
-
-Wahl                     Expires March 30, 2007                 [Page 8]
+Wahl                      Expires June 15, 2007                 [Page 8]
 
-Internet-Draft       P3P Policy Attributes for LDAP       September 2006
+Internet-Draft       P3P Policy Attributes for LDAP        December 2006
 
 
 5.  Data Schema
@@ -500,9 +500,9 @@ Internet-Draft       P3P Policy Attributes for LDAP       September 2006
 
 
 
-Wahl                     Expires March 30, 2007                 [Page 9]
+Wahl                      Expires June 15, 2007                 [Page 9]
 
-Internet-Draft       P3P Policy Attributes for LDAP       September 2006
+Internet-Draft       P3P Policy Attributes for LDAP        December 2006
 
 
 6.  Security Considerations
@@ -556,9 +556,9 @@ Internet-Draft       P3P Policy Attributes for LDAP       September 2006
 
 
 
-Wahl                     Expires March 30, 2007                [Page 10]
+Wahl                      Expires June 15, 2007                [Page 10]
 
-Internet-Draft       P3P Policy Attributes for LDAP       September 2006
+Internet-Draft       P3P Policy Attributes for LDAP        December 2006
 
 
 7.  IANA Considerations
@@ -612,9 +612,9 @@ Internet-Draft       P3P Policy Attributes for LDAP       September 2006
 
 
 
-Wahl                     Expires March 30, 2007                [Page 11]
+Wahl                      Expires June 15, 2007                [Page 11]
 
-Internet-Draft       P3P Policy Attributes for LDAP       September 2006
+Internet-Draft       P3P Policy Attributes for LDAP        December 2006
 
 
 8.  References
@@ -640,9 +640,12 @@ Internet-Draft       P3P Policy Attributes for LDAP       September 2006
    [5]  Zeilenga, K., "Lightweight Directory Access Protocol (LDAP):
         Directory Information Models", RFC 4512, June 2006.
 
+   [6]  Legg, S., "LDAP: Syntaxes and Matching Rules", RFC 4517,
+        June 2006.
+
 8.2.  Informative References
 
-   [6]  "Hypertext Transfer Protocol -- HTTP/1.1", RFC 2616, June 1999.
+   [7]  "Hypertext Transfer Protocol -- HTTP/1.1", RFC 2616, June 1999.
 
 
 
@@ -665,12 +668,9 @@ Internet-Draft       P3P Policy Attributes for LDAP       September 2006
 
 
 
-
-
-
-Wahl                     Expires March 30, 2007                [Page 12]
+Wahl                      Expires June 15, 2007                [Page 12]
 
-Internet-Draft       P3P Policy Attributes for LDAP       September 2006
+Internet-Draft       P3P Policy Attributes for LDAP        December 2006
 
 
 Appendix A.  Copyright
@@ -724,9 +724,9 @@ Appendix A.  Copyright
 
 
 
-Wahl                     Expires March 30, 2007                [Page 13]
+Wahl                      Expires June 15, 2007                [Page 13]
 
-Internet-Draft       P3P Policy Attributes for LDAP       September 2006
+Internet-Draft       P3P Policy Attributes for LDAP        December 2006
 
 
 Author's Address
@@ -780,9 +780,9 @@ Author's Address
 
 
 
-Wahl                     Expires March 30, 2007                [Page 14]
+Wahl                      Expires June 15, 2007                [Page 14]
 
-Internet-Draft       P3P Policy Attributes for LDAP       September 2006
+Internet-Draft       P3P Policy Attributes for LDAP        December 2006
 
 
 Full Copyright Statement
@@ -836,5 +836,5 @@ Acknowledgment
 
 
 
-Wahl                     Expires March 30, 2007                [Page 15]
+Wahl                      Expires June 15, 2007                [Page 15]
 
