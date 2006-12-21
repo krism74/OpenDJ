@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="https://opends.dev.java.net/public/css/opends.css" type="text/css">
+<title>OpenDS Directory Server - QuickSetup UI Spec</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">OpenDS QuickSetup UI Spec </div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="https://opends.dev.java.net/public/images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+<h3> Goals</h3>
+<ul>
+  <li>Make it easy for users to download, configure, and run the latest build of OpenDS</li>
+  <li>Make a good first impression, from both a functional and visual perspective</li>
+</ul>
+<hr noshade size="1" >
+<h3>Scope </h3>
+<ul>
+  <li>Configuration-wise, provide  equivalent of the  setup.sh/setup.bat command:
+    <ul>
+      <li>Configure LDAP port</li>
+      <li>Set administrative user and password </li>
+      <li>Set Base DN for server </li>
+      <li>Support importing data into database</li>
+      <li>Option to start the server when configuration complete</li>
+    </ul>
+  </li>
+  <li>Installation-wise, provide a Webstart version of the tool that will download  latest weekly build from project website and unzip it in the location of user's choosing (in addition to supporting configuration)</li>
+  <li>Two Versions:
+    <ul>
+      <li> Webstart version launched from Downloads page on project site that supports installation as well as configuration </li>
+      <li>Command-launched version of the tool, that only supports configuration (assumes user has already downloaded latest build as a zip) </li>
+    </ul>
+  </li>
+  <li>There will be no &quot;update&quot; capability, the tool will only support fresh, new installations</li>
+  <li>The tool is not intended to be used as a configuration tool -- it is only intended to be run once per server instance</li>
+  <li>Only supports running OpenDS as an LDAP directory server </li>
+</ul>
+<hr noshade size="1" >
+<h3>Usage Options </h3>
+<h4>  Download zip and run locally </h4>
+<ol>
+  <li>User downloads latest build from <a href="https://opends.dev.java.net/servlets/ProjectDocumentList?folderID=5700&expandFolder=5700&folderID=0">builds page</a> on project site </li>
+  <li>Unzips file in the location in which they want to run the server</li>
+  <li>cd to the directory containing the server files </li>
+  <li>Launch QuickSetup tool via 'quicksetup' command in terminal window</li>
+</ol>
+<h4>Webstart </h4>
+<ol>
+  <li>User clicks link on Downloads page to launch QuickSetup tool</li>
+</ol>
+<hr noshade size="1" >
+<h3>Task Flow</h3>
+<ol>
+  <li>Peruse welcome screen</li>
+  <li>Click Next  </li>
+  <li>Enter server location (webstart) or confirm server location (local) </li>
+  <li> Accept or override default LDAP port</li>
+  <li>Accept or override default Administrative User</li>
+  <li>Enter password for Administrative User</li>
+  <li>Re-enter password for Administrative User</li>
+  <li>Click Next</li>
+  <li>Accept or override default Base DN</li>
+  <li>Choose a data option:<br/>
+  &nbsp;&bull; Only create base entry<br/>
+ &nbsp;&bull; Leave suffix empty<br/>
+ &nbsp;&bull; Import LDIF file - requires entering or browsing for ldif file<br/>
+  &nbsp;&bull; Import automatically-generated entries -  requires accepting default  or entering/browsing  new template and selecting the number of entries to generate</li>
+  <li>Click Next</li>
+  <li>Verify configuration settings on Review page</li>
+  <li>Choose whether or not to start server when config complete </li>
+  <li>If OK, click Finish</li>
+  <li>Monitor server configuration progress</li>
+  <li>Click Close when finished </li>
+</ol>
+<hr noshade size="1" >
+<h3>Design Wireframes</h3>
+<p><img src="quicksetup.png" alt="QuickSetup Design Spec" width="657" height="2328" /></p>
+<hr noshade size="1" >
+<h3>Revision History</h3>
+<table border="0" cellspacing="10" cellpadding="0">
+  <tr>
+    <td>25-Aug 2006 </td>
+    <td>Brian Ehret</td>
+    <td>First draft of document</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+</body>
+</html>

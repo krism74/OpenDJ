@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+li {padding-bottom:5px}
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="https://opends.dev.java.net/public/css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Status Panel UI Spec</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">OpenDS Status Panel UI Spec </div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="https://opends.dev.java.net/public/images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+<h3> Goals</h3>
+<ul>
+  <li>Continue the positive first impression we give QuickSetup users by providing a graphical means to view run status, verify that the server was indeed configured as specified, and quickly start or stop the server. </li>
+  <li>Provide a single-panel, graphical tool that presents minimal, core configuration and monitoring information.<br />
+  </li>
+  <li>Make it easy to monitor and change the run status of the server. </li>
+</ul>
+<hr noshade size="1" >
+<h3>Scope </h3>
+<ul>
+  <li>This tool is intended as an interim solution to fill in a gap in the &quot;0-60&quot; user experience. Using QuickSetup, users will end up with a configured and possibly running server and we give them a nice GUI to get to that point. But once QuickSetup has finished, users are sort of left in a &quot;now what?&quot; situation. In order to go any further, they'll have to do some reading on the website, poke around the directories, and issue some commands; even for something as basic as start/stop. This is not to imply that users who will explore OpenDS in any degree of depth won't need to do these things (as they most certainly will), or that doing this things is especially onerous, but I think it would be nice to provide a nice smooth transition from the install/setup phase to a verification and running-the-server phase. I believe we can make this nice transition by providing a simple sister GUI to QuickSetup. We can tie these two together by allowing the user to launch the Status Panel from the last page of QuickSetup. </li>
+  <li>This is NOT the foundation for our long term administration GUI.<br />
+  </li>
+  <li>The scope should be limited to relatively high-level, general purpose monitoring information and only core management functionality (i.e., start/stop), and we should resist the temptation to pile on additional functionality. In part, this is to set appropriate expectations about the scope of the tool (which is implied by the name &quot;Status Panel&quot;) and also to prevent us from spending too many cycles on the short term as the expense of the long term. </li>
+</ul>
+<hr noshade size="1" >
+<h3>Design Notes </h3>
+<ul>
+  <li> Status Panel only operates on its local server<br />
+  </li>
+  <li>Status Panel should be able to automatically refresh to show status changes (i.e., so there is no need for a Refresh button)<br />
+  </li>
+  <li>Since OpenDS works out of the box with the default configuration, the Status Panel simply displays the default configuration if the user runs this before running QuickSetup<br />
+  </li>
+  <li> Status Panel provides the following:
+    <ul>
+      <li>Run status</li>
+      <li>Ability to start, stop and restart server -- show Stop and Restart if started and Start if stopped </li>
+      <li>Current number of connections -- display &quot;--&quot; if server is stopped </li>
+      <li>Administrative user DNs -- display each on a new line </li>
+      <li>Installation path </li>
+      <li>OpenDS version</li>
+      <li>Java version -- display &quot;&lt;not available&gt;&quot; for Entries if server is stopped</li>
+      <li>Configured Listeners
+        <ul>
+          <li>LDAP address:ports and state (enabled | disabled | not configured) </li>
+          <li>LDAPS address:ports and state (enabled | disabled | not configured)</li>
+          <li>JMX address:ports and state (enabled | disabled | not configured)</li>
+          <li>If a particular protocol is not configured, display &quot;--&quot; for address:port</li>
+        </ul>
+      </li>
+      <li>Listing of user-created backends (called LDAP Databases here) including Backend ID, Base DN, and Number of Entries -- display &quot;&lt;not available&gt;&quot; for Entries if server is stopped </li>
+    </ul>
+  </li>
+  <li>Clicking on OpenDS logo should take user to opends.dev.java.net home page. </li>
+  <li>Window should be completely resizeable. When resized, table widths grow proportionally, section headers stay centered in window, OpenDS logo stays bottom and left-aligned and Quit stays bottom and right-aligned. </li>
+  <li>Scrollbars should sprout 10px above Quit button so that Quit and OpenDS Logo are always visible. Default window size should accomodate default post-QuickSetup configuration + 80px of extra space assuming the addition of a couple more ldap databases. </li>
+</ul>
+<hr noshade size="1" >
+<h3>Task Flows </h3>
+<h4>Launch from QuickSetup </h4>
+<ol>
+  <li>User clicks link on &quot;Launch Status Panel&quot; button on final page of QuickSetup</li>
+  <li>Status Panel window appears </li>
+</ol>
+<h4> Launch from installed server</h4>
+<ol>
+  <li>cd to the directory containing the server files </li>
+  <li>Launch Setup Panel tool via 'bin/statuspanel' command in terminal window</li>
+  <li>Status Panel window appears</li>
+</ol>
+<h4>Starting or stopping the server</h4>
+<ol>
+  <li>User clicks Start Server or Stop Server button in panel</li>
+  <li>Progress dialog window launches and shows detailed output of operation</li>
+  <li>User closes progress dialog </li>
+  <li>Current run status shown in Status Panel </li>
+</ol>
+<hr noshade size="1" >
+<h3>System Flows </h3>
+<p><img src="statuspanel-flows.png" alt="Flows" width="702" height="622" /></p>
+<hr noshade size="1" >
+<h3>Design Wireframes</h3>
+<p>If server is not running: </p>
+<p><img src="statuspanel-stopped.png" alt="Status Panel - server stopped" width="577" height="615" /></p>
+<p>If server is running and user has not authenticated as an administrative user: </p>
+<p><img src="statuspanel-notauth.png" alt="Status Panel, user not authorized" width="577" height="615" /></p>
+<p>If server is running and user is authenticated as administrative user: </p>
+<p><img src="statuspanel.png" alt="Status Panel" width="463" height="615" /></p>
+<p><img src="statuspanelprogress.png" width="523" height="367" /></p>
+<p><img src="statuspanelfromqs.png" alt="QuickSetup Panel Modifications" width="779" height="433" /></p>
+<hr noshade size="1" >
+<h3>Revision History</h3>
+<table border="0" cellspacing="10" cellpadding="0">
+  <tr>
+    <td nowrap="nowrap">5-Dec 2006 </td>
+    <td nowrap="nowrap">Brian Ehret</td>
+    <td>First draft of document</td>
+  </tr>
+  <tr>
+    <td nowrap="nowrap">6-Dec 2006 </td>
+    <td nowrap="nowrap">Brian Ehret </td>
+    <td>Added information to panel design including number of connections, memory usage, and java version </td>
+  </tr>
+  <tr>
+    <td nowrap="nowrap">7-Dec 2006 </td>
+    <td nowrap="nowrap">Brian Ehret </td>
+    <td>Removed memory usage statistics, created listener ports section and table, handled multiple administrative users, added detail to Design Notes section </td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+</body>
+</html>
