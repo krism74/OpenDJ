@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Introduction to OpenDS Development</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Introduction to OpenDS Development</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="build.html">Previous:  Building and Testing OpenDS</a></div>
+    <div align="right"><a href="policies.html">Next:  OpenDS Development Policies and Conventions</a></div>
+    <div class="secpageheader">The OpenDS Repository Layout</div>
+
+    <br>
+    As noted earlier, the OpenDS source repository has a base URL of
+    https://opends.dev.java.net/svn/opends, but in most cases you will want to
+    check it out using a URL of
+    https://opends.dev.java.net/svn/opends/trunk/opends.  The repository
+    contains more than just raw source code, and it will often be necessary to
+    make changes in files other than Java source files.  Some of the notable
+    files and directories in the OpenDS source repository include: 
+    <ul>
+      <li><code>PRODUCT</code> -- This file contains product and version
+          information that will be used when building OpenDS.<br><br></li>
+      <li><code>build.xml</code> -- This is the primary ant build script that
+          is used to compile and package the server.<br><br></li>
+      <li><code>build.bat</code> -- This is the batch file that should be used
+          to invoke the build process on Windows systems.<br><br></li>
+      <li><code>build.sh</code> -- This is the shell script that should be used
+          to invoke the build process on UNIX-based systems.<br><br></li>
+      <li><code>src/server</code> -- This is the parent directory containing
+          all of the source code for the Directory Server itself.<br><br></li>
+      <li><code>src/dsml</code> -- This is the parent directory containing the
+          source code for the DSML gateway.<br><br></li>
+      <li><code>src/quicksetup</code> -- This is the parent directory
+          containing the source code for the QuickSetup utility.<br><br></li>
+      <li><code>src/statuspanel</code> -- This is the parent directory
+          containing the source code for the Status Panel utility.<br><br></li>
+      <li><code>tests/unit-tests-testng/src</code> -- This is the parent
+          directory for all of the Directory Server unit test source
+          code.<br><br></li>
+      <li><code>tests/unit-tests-testng/resource/config-changes.ldif</code>
+          -- This file contains a set of changes (in LDIF change form) that
+          will be applied to the default server configuration when running the
+          unit tests.<br><br></li>
+      <li><code>tests/integration-tests-testng</code> -- This is the parent
+          directory containing the integration tests for the
+          server.<br><br></li>
+      <li><code>tests/functional-tests</code> -- This is the parent
+          directory containing the functional tests for the server.<br><br></li>
+      <li><code>lib</code> -- This directory contains JAR files that may be
+          needed to build OpenDS and should be included with the Directory
+          Server itself (e.g., the Berkeley DB Java Edition JAR
+          file).<br><br></li>
+      <li><code>ext</code> -- This directory structure contains a number of
+          utilities and libraries that may be needed during the build process
+          but that should not be included with the server itself (e.g., the
+          libraries needed to run ant to build the server, checkstyle to
+          examine the source code, and emma to perform code coverage
+          analysis).<br><br></li>
+      <li><code>resource</code> -- This directory structure contains a number
+          of miscellaneous files that are needed in different ways by different
+          components of the server.<br><br></li>
+      <li><code>resource/bin</code> -- This directory contains a number of
+          shell scripts and batch files that should be provided with the
+          server for use as administrative tools or client
+          utilities.<br><br></li>
+      <li><code>resource/config/config.ldif</code> -- This is the default
+          configuration file that will be used for the server.<br><br></li>
+      <li><code>resource/schema</code> -- This directory contains a number of
+          schema configuration files that will be provided with the
+          server.<br><br></li>
+    </ul>
+
+    <br><br>
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="build.html">Previous:  Building and Testing OpenDS</a></div>
+    <div align="right"><a href="policies.html">Next:  OpenDS Development Policies and Conventions</a></div>
+  </body>
+</html>
+

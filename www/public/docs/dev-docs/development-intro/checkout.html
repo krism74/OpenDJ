@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Introduction to OpenDS Development</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Introduction to OpenDS Development</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="otherresources.html">Previous:  Other Public OpenDS Resources</a></div>
+    <div align="right"><a href="build.html">Next:  Building and Testing OpenDS</a></div>
+    <div class="secpageheader">Checking Out the OpenDS Source Tree</div>
+
+    <br>
+    As mentioned earlier, the OpenDS source code is stored in a Subversion
+    repository hosted on java.net.  Subversion is a version control system that
+    is similar to (but meant to be better than) CVS.  For more details about
+    Subversion, see the website at
+    <a href="http://subversion.tigris.org/">http://subversion.tigris.org/</a>,
+    where you will find a fairly comprehensive
+    <a href="http://subversion.tigris.org/faq.html">FAQ</a> as well as a
+    pointer to a <a href="http://svnbook.red-bean.com/">book</a> with detailed
+    information about how to use it.
+
+    <br><br>
+    <b>Subversion Clients</b>
+    <br><br>
+    In order to check out the code from the repository, you will first need a
+    Subversion client.  There are subversion clients available for virtually
+    every platform you might want to use, in various flavors, including:
+
+    <ul>
+      <li>
+        The <a href="http://subversion.tigris.org/project_packages.html">Subversion packages</a>
+        page on the main Subversion site includes information about how to get
+        clients for many different platforms, including Solaris, Linux, BSD, 
+        Windows, and Mac OS X.
+        <br><br>
+      </li>
+      <li>
+        On Solaris, the command-line Subversion client is also available
+        through <a href="http://www.blastwave.org/">Blastwave.org</a>.  The GUI
+        RapidSVN client is also available for Solaris through Blastwave.org.
+        <br><br>
+      </li>
+      <li>
+        On Windows, <a href="http://tortoisesvn.tigris.org/">TortoiseSVN</a>
+        provides integration with the Windows explorer shell.
+        <br><br>
+      </li>
+      <li>
+        Recent versions of many Java IDEs include Subversion support,
+        including <a href="http://subversion.netbeans.org/">NetBeans</a>,
+        <a href="http://subclipse.tigris.org/">Eclipse</a>,
+        <a href="http://www.jetbrains.com/idea/features/version_control.html#Subversion">IDEA</a>,
+        and <a href="http://www.omnicore.com/en/xdevelop_features.htm">X-Develop</a>.
+        <br><br>
+      </li>
+    </ul>
+
+    <br>
+    <b>Setting Up Proxy Support</b>
+    <br><br>
+    If you need to go through a proxy server in order to access the Internet,
+    then you will need to configure the Subversion client to do so as well.
+    With most Subversion clients, this can be done by editing the Subversion
+    "<code>servers</code>" configuration file.  On UNIX-based systems, the path
+    to this file will generally be "<code>~/.subversion/servers</code>", and
+    on Windows systems it will be "<code>%APPDATA%\Subversion\servers</code>".
+    Open this file with a text editor and make the following changes:
+
+    <ul>
+      <li>
+        In the "<code>[groups]</code>" section, add a line that looks like:
+       <blockquote><code>javadotnet = *.java.net</code></blockquote>
+      </li>
+      <li>
+        Create a new section below the "<code>[groups]</code>" section with the
+        following contents:
+        <blockquote>   
+          <code>[javadotnet]</code><br>
+          <code>http-proxy-host = proxy.example.com</code><br>
+          <code>http-proxy-port = 8080</code><br>
+        </blockquote>   
+      </li>
+    </ul>
+
+    Obviously you should substitute the correct address and port for your proxy
+    server.  If you need additional configuration (e.g., your proxy server
+    requires authentication), then comments in the "<code>servers</code>" file
+    should provide enough information to get things set up properly.
+
+    <br><br>
+    <b>Configuring Correct End-of-Line Behavior</b>
+    <br><br>
+    One of the most common sources of frustration when working with text files
+    on both UNIX-based and Windows-based systems is the fact that they use
+    different end-of-line character sequences.  This can be annoying at best
+    (e.g., not handling line breaks properly when looking at the file in a text
+    editor), and at worst has the potential to break things (e.g., if a UNIX
+    shell script has Windows line separators, then the interpreter might not be
+    able to run it).
+    <br><br>
+    Subversion provides a solution to this problem by tagging the file at the
+    time it is added to the repository to specify how end-of-line characters
+    should be treated.  In OpenDS, we want to use the "native" style, which
+    means that text files will have Windows-style CRLF line terminators when
+    the code is checked out on a Windows system, or UNIX-style CR line
+    terminators when the code is checked out on a UNIX system.  In order to
+    configure your Subversion client to automatically tag text files in this
+    way when adding them to the repository, edit the
+    "<code>~/.subversion/config</code>" file (or
+    "<code>%APPDATA%\Subversion\config</code>" on Windows) to make the
+    following changes:
+
+    <ul>
+      <li>
+        In the "<code>[miscellany]</code>" section, uncomment the line:
+        <blockquote><code>enable-auto-props = yes</code></blockquote>
+      </li>
+      <li>
+        Add the following lines to the "<code>[auto-props]</code>" section:
+        <blockquote>
+          <code>*.java = svn:eol-style=native</code><br>
+          <code>*.sh = svn:eol-style=native</code><br>
+          <code>*.bat = svn:eol-style=native</code><br>
+          <code>*.ldif = svn:eol-style=native</code><br>
+          <code>*.txt = svn:eol-style=native</code><br>
+          <code>*.xml = svn:eol-style=native</code><br>
+          <code>*.html = svn:eol-style=native</code><br>
+        </blockquote>
+      </li>
+    </ul>
+
+    <br>
+    <b>Checking Out the Source Code</b>
+    <br><br>
+    Once the Subversion client is installed and configured, the only thing
+    that you should need to be able to check out the source code is the URL of
+    the repository.  The base URL for the OpenDS repository is
+    "https://opends.dev.java.net/svn/opends", so the following command will
+    check out the entire repository:
+
+    <blockquote>
+      <code>svn checkout --username yourusername https://opends.dev.java.net/svn/opends OpenDS</code>
+    </blockquote>
+
+    Where you would substitute your actual java.net username (or if you'd like
+    you can use a username of "guest" with an empty password if you just want
+    to check out the code and will never want to check anything in).
+
+    While the above URL will work, in most cases you will want to pare it
+    down somewhat to save time and disk space by only including the main OpenDS
+    source.  You can do that by changing the URL to be
+    "https://opends.dev.java.net/svn/opends/trunk/opends".  This will exclude
+    all tags and branches that we have created, and will also skip the
+    content for the OpenDS Website on java.net.  Over time, there will almost
+    certainly be more content created outside of the trunk/opends portion of
+    the tree that will likely not be needed in the majority of cases, so
+    providing the URL to only retrieve the information below trunk/opends will
+    be an even bigger savings in the future than it is today.
+
+    <br><br>
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="otherresources.html">Previous:  Other Public OpenDS Resources</a></div>
+    <div align="right"><a href="build.html">Next:  Building and Testing OpenDS</a></div>
+  </body>
+</html>
+

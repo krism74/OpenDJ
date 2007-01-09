@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Introduction to OpenDS Development</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Introduction to OpenDS Development</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="javadotnet.html">Previous:  The OpenDS Project on java.net</a></div>
+    <div align="right"><a href="checkout.html">Next:  Checking Out the OpenDS Source Tree</a></div>
+    <div class="secpageheader">Other Public OpenDS Resources</div>
+
+    <br>
+    Although much of the OpenDS content is hosted on the java.net site, there
+    is some content which is hosted elsewhere for some reason.  In most cases,
+    this content requires additional server-side processing for features that
+    are not offered by java.net in a manner that meets our needs.
+
+    <br><br>
+    <b>Daily Builds</b>
+    <br><br>
+    Every night at about 11:30 pm US Central time, we have an automated process
+    which checks out the latest version of the OpenDS source code, builds it,
+    and runs a full set of tests on the server.  This provides a number of
+    benefits, including:
+
+    <ul>
+      <li>It ensures that the code actually builds properly and that no one
+          inadvertently committed code that failed to compile.<br><br></li>
+      <li>It provides a means of running a full set of tests against the server
+          (potentially, including tests which are too time consuming to expect
+          developers to run before each commit) to identify any failures that
+          may require investigation.<br><br></li>
+      <li>It provides a way for users to obtain a recent build of the server
+          without having to check out and build the code for themselves, and
+          without the need to wait for the next weekly build.<br><br></li>
+    </ul>
+
+    Whenever the daily build process completes, it will send an e-mail message
+    to the <a href="mailto:daily-builds@opends.dev.java.net">daily-builds@opends.dev.java.net</a>
+    mailing list with information about the success or failure of the build and
+    information about where to obtain it.  Our daily builds are located at
+    <a href="http://builds.opends.org/daily-builds/">http://builds.opends.org/daily-builds/</a>
+    and are arranged by date.  The latest daily build is always available at
+    <a href="http://builds.opends.org/daily-builds/latest/">http://builds.opends.org/daily-builds/latest/</a>.  When viewing information about the latest
+    daily build, you will be able to easily download the build, view the unit
+    test and code coverage reports, access Javadoc documentation, and launch
+    the Java Web Start installer for that build.
+
+    <br><br>
+    <b>Source Browser</b>
+    <br><br>
+    We provide a source browser which provides a convenient way to access the
+    contents of the OpenDS Subversion repository at
+    <a href="http://builds.opends.org/source/">http://builds.opends.org/source/</a>.
+    This source browser is powered by
+    <a href="http://www.opensolaris.org/os/project/opengrok/">OpenGrok</a>,
+    which is also used by the OpenSolaris project.  It provides a convenient
+    way for individuals to search and browse the OpenDS repository content
+    without having to check it out for themselves.  It also provides formatted
+    views of the source code which are cross-referenced so that it is easy to
+    find the definition and usages for various objects.
+
+    <br><br>
+    This source browser is a very convenient way for someone to look at and get
+    familiar with the OpenDS source code and understand how the components tie
+    together without the need to actually check out the complete set of code
+    for themselves.  This could be useful, for example, by someone wishing to
+    write a plugin or some other type of extension for the server in order to
+    get clarification on how to use a particular method or find examples of
+    other cases where it may be used in the server.
+
+    <br><br>
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="javadotnet.html">Previous:  The OpenDS Project on java.net</a></div>
+    <div align="right"><a href="checkout.html">Next:  Checking Out the OpenDS Source Tree</a></div>
+  </body>
+</html>
+

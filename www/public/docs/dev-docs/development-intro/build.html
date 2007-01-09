@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Introduction to OpenDS Development</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Introduction to OpenDS Development</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="checkout.html">Previous:  Checking Out the OpenDS Source Tree</a></div>
+    <div align="right"><a href="layout.html">Next:  The OpenDS Repository Layout</a></div>
+    <div class="secpageheader">Building and Testing OpenDS</div>
+
+    <br>
+    The OpenDS source repository should have virtually everything that you need
+    in order to perform the build and run the tests, so once you have checked
+    the code out of the repository you are ready to build it.  The only other
+    thing that you need is a Java development kit installation for Java SE 5
+    or higher (it should always work with Java SE 5 and Java SE 6 releases, and
+    it also appears to work properly with Java SE 7 builds, although given that
+    it is still very early in the development process Java SE 7 builds may not
+    always work seamlessly).
+
+    <br><br>
+    To perform a basic build of OpenDS, simply run the <code>build.sh</code>
+    shell script on UNIX-based systems or <code>build.bat</code> on Windows.
+    If you don't provide any arguments, then it will simply compile the source
+    code and create a build of the server.  Note that in some cases, the build
+    script may be able to automatically detect the location of your Java
+    environment (particularly on UNIX-based systems when a Java 5 or higher
+    executable is in your PATH), but if you get an error message indicating
+    that a suitable Java environment could not be found, or if you would like
+    to use a different Java environment than the one that is selected by
+    default, then you will need to set the <code>JAVA_HOME</code> environment
+    variable to the path to the appropriate Java installation.
+
+    <br><br>
+    Running the build script with no arguments will default to using the
+    "<code>package</code>" target.  Other targets of interest include:
+    <ul>
+      <li><code>clean</code> -- Removes any files that had been created during
+          a previous build.<br><br></li>
+      <li><code>compile</code> -- Performs a minimal compilation of the Java
+          source files, but do not build a usable server.<br><br></li>
+      <li><code>dsml</code> -- Build a WAR file containing the DSML
+          gateway.<br><br></li>
+      <li><code>checkstyle</code> -- Perform basic style validation on the
+          Java source files.<br><br></li>
+      <li><code>javadoc</code> -- Generates Javadoc documentation from the
+          Java source files.<br><br></li>
+      <li><code>test</code> -- Run the default set of unit tests (all but the
+          "slow" tests) against the server.<br><br></li>
+      <li><code>testwithcoverage</code> -- Run the default set of unit tests
+          against the server and generate a code coverage report.<br><br></li>
+      <li><code>testall</code> -- Run the complete set of unit tests against
+          the server.<br><br></li>
+      <li><code>testallwithcoverage</code> -- Run the complete set of unit
+          tests against the server and generate a code coverage
+          report.<br><br></li>
+      <li><code>testcustom</code> -- Run a custom (user-defined) set of unit
+          tests against the server.<br><br></li>
+      <li><code>testcustomwithcoverage</code> -- Run a custom set of unit tests
+          against the server and generate a code coverage report.<br><br></li>
+      <li><code>precommit</code> -- Combines a number of build targets,
+          including clean, compile, package, dsml, checkstyle, javadoc, and
+          test, which must all pass cleanly before code is suitable for
+          being committed.<br><br></li>
+      <li><code>all</code> -- Combines virtually all build targets, including
+          clean, compile, package, dsml, checkstyle, javadoc, and
+          testallwithcoverage.<br><br></li>
+    </ul>
+
+    <br>
+    <b>Java Properties to Use in the Build Process</b>
+    <br><br>
+    The build script recognizes a number of Java properties that may be used to
+    alter the way that the build is performed.  They may be provided to the
+    build process using the "<code>-D</code>" argument.  This argument must be
+    immediately followed by the name of the property, an equal sign, and the
+    property value (optionally enclosed in quotation marks).  There should not
+    be any spaces at all in the property string, either between the
+    "<code>-D</code>" identifier and the property name, or between the property
+    name and property value, like "<code>-DTESTASSERT=true</code>".
+
+    <br><br>
+    The supported properties that may be used include:
+    <ul>
+      <li><code>DEBUG_BUILD</code> -- This may be used to indicate whether to
+          generate a debug build.  A debug build may contain code that is not
+          included in a non-debug build.  The value of this property should be
+          either "<code>true</code>" or "<code>false</code>".<br><br></li>
+      <li><code>MEM</code> -- This may be used to specify the amount of memory
+          that each JVM instance should use during the build process (if test
+          cases are to be included, then a second JVM instance will be used to
+          run those tests).  The value of this parameter should be an integer
+          followed by a unit of either "M" for megabytes or "G" for gigabytes.
+          The default value is "<code>128M</code>".  Increasing the amount of
+          memory available to the JVM may allow the build to go faster.  In
+          some low-memory conditions it may be possible to use a smaller value,
+          but if the value is set too low, then it may result in out-of-memory
+          errors.<br><br></li>
+      <li><code>TESTASSERT</code> -- This is used to indicate that assertions
+          should be enabled while running the test cases.  Assertions are
+          automatically enabled when running all test cases, but not when
+          running the default set of test cases.<br><br></li>
+      <li><code>test.packages</code> -- When used in conjunction with the
+          <code>testcustom</code> or <code>testcustomwithcoverage</code>
+          target, this is used to specify the packages whose test cases should
+          be run.  If multiple packages are to be specified, then they should
+          be separated by commas.<br><br></li>
+      <li><code>test.classes</code> -- When used in conjunction with the
+          <code>testcustom</code> or <code>testcustomwithcoverage</code>
+          target, this is used to specify the classes whose test cases should
+          be run.  If multiple classes are to be specified, then they should
+          be separated by commas.<br><br></li>
+      <li><code>test.methods</code> -- When used in conjunction with the
+          <code>testcustom</code> or <code>testcustomwithcoverage</code>
+          target, this is used to specify the individual test methods that
+          should be run.  Each method should be specified as the
+          fully-qualified class name followed by a period and the method name.
+          If multiple methods are to be specified, then they should be
+          separated by commas.<br><br></li>
+      <li><code>org.opends.test.suppressOutput</code> -- This indicates whether
+          the build process should produce a minimal set of output when running
+          the unit tests.  The value should be either "<code>true</code>" or 
+          "<code>false</code>".<br><br></li>
+    </ul>
+
+    <br>
+    <b>Components Generated During the Build Process</b>
+    <br><br>
+    When the Directory Server build process is running, it generates files
+    below the <code>build</code> subdirectory.  Notable files and directories
+    generated during the build process include:
+    <ul>
+      <li><code>build/classes</code> -- Compiled server classes<br><br></li>
+      <li><code>build/package/OpenDS-0.1</code> -- A directory containing a
+          usable server package (i.e., you can run the server from this
+          directory)<br><br></li>
+      <li><code>build/package/OpenDS-0.1.zip</code> -- A zipped version of the
+          <code>build/package/OpenDS-0.1</code> directory)<br><br></li>
+      <li><code>build/package/OpenDS-0.1-DSML.war</code> -- A WAR file
+          containing the built DSML gateway<br><br></li>
+      <li><code>build/javadoc/index.html</code> -- Javadoc documentation for
+          the compiled server and DSML gateway<br><br></li>
+      <li><code>build/unit-tests/report/OpenDS/default.html</code> -- An
+          HTML-formatted report with information about the unit test
+          processing<br><br></li>
+      <li><code>build/unit-tests/package</code> -- An directory containing the
+          server deployment used to run the unit tests<br><br></li>
+      <li><code>build/coverage/reports/unit/index.html</code> -- An
+          HTML-formatted report of the code coverage obtained while running
+          the unit tests<br><br></li>
+    </ul>
+
+
+    <br>
+    <b>Building the Java Web Start Installer</b>
+    <br><br>
+    The QuickSetup utility is a graphical tool that may be used to perform the
+    initial configuration for the Directory Server when run from a server
+    installation, but it may also be used to install and configure the server
+    using Java Web Start.  In order to do that, it is necessary to package the
+    server in a special manner (using signed JAR files with specific names),
+    and it is also necessary to generate a JNLP file that is used to provide
+    the client with all the information needed to download and run the tool,
+    including specific information about the web server that will be used to
+    host the files.
+
+    <br><br>
+    The repository does contain a script that may be used to generate a package
+    suitable for deploying to a web server.  Note, however, that this is a
+    shell script and is not integrated into the ant build process.  The reason
+    for this is that it has dependencies on the Sun Java SDK installation and
+    must execute native utilities.  It is also not available for use on Windows
+    systems because the batch file syntax is not as rich as the shell
+    scripting framework available on UNIX systems.
+
+    <br><br>
+    The shell script to use when generating the Java Web Start archive is
+    <code>resource/webstart/create-webstart-standalone.sh</code>, and it should
+    be run without any arguments.  By default, it will create an archive
+    suitable the default deployment at
+    <a href="http://builds.opends.org/install/QuickSetup.jnlp">http://builds.opends.org/install/QuickSetup.jnlp</a>.
+    A number of environment variables may be used to customize its behavior,
+    including:
+    <ul>
+      <li><code>JAVA_HOME</code> -- This should be set to the root of the JDK
+          5.0 or higher installation to use (a JRE installation will not be
+          sufficient).<br><br></li>
+      <li><code>PROTOCOL</code> -- This should be used to specify the protocol
+          that clients should use to access the JNLP file.  The default is
+          "<code>http</code>", but it may also be set to
+          "<code>https</code>".<br><br></li>
+      <li><code>ADDRESS</code> -- This specifies the address of the server that
+          will host the Java Web Start archive.  The default value is
+          "builds.opends.org".<br><br></li>
+      <li><code>PORT</code> -- This specifies the port number of the web server
+          that will host the Java Web Start archive.  The default value is
+          an empty string, which will mean that clients should use the default
+          of "80" for the HTTP protocol, or "443" for HTTPS.<br><br></li>
+      <li><code>BASE_PATH</code> -- This specifies the path (relative to the
+          web document root) of the directory containing the JNLP file.  The
+          default value is "<code>/install</code>".<br><br></li>
+      <li><code>JNLP_FILENAME</code> -- This specifies the name of the JNLP
+          file that may be requested by clients to launch the QuickSetup
+          utility.  The default value is
+          "<code>QuickSetup.jnlp</code>".<br><br></li>
+    </ul>
+
+    When this script completes, all files needed for the Java Web Start archive
+    may be found in the <code>build/webstart/install</code> directory.  The
+    contents of this directory (including its subdirectories) may be copied
+    into the appropriate directory on the target web server.
+
+    <br><br>
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="checkout.html">Previous:  Checking Out the OpenDS Source Tree</a></div>
+    <div align="right"><a href="layout.html">Next:  The OpenDS Repository Layout</a></div>
+  </body>
+</html>
+

@@ -1,0 +1,285 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Introduction to OpenDS Development</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Introduction to OpenDS Development</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="layout.html">Previous:  The OpenDS Repository Layout</a></div>
+    <div class="secpageheader">OpenDS Development Policies and Conventions</div>
+
+    <br>
+    There are a number of individuals already contributing to the development
+    of OpenDS, and each one has their own coding style.  In general, we want to
+    allow that so that developers can be comfortable and therefore as
+    productive as possible.  However, there do need to be a number of
+    guidelines and requirements in place to make it easier for everyone to be
+    able to work together and particularly to avoid the need for commits to
+    include large amounts of reformatting simply because one developer's IDE
+    uses different settings than another's.
+
+    <br><br>
+    <b>General Server Source Requirements Enforced by Checkstyle</b>
+    <br><br>
+    All source code that is part of the OpenDS server and related components
+    (i.e., that code which is located below the "<code>src</code>" directory)
+    will be required to pass the following tests:
+    <ul>
+      <li>
+        All source files must begin with the following header:
+        <blockquote><pre>/*
+ * CDDL HEADER START
+ *
+ * The contents of this file are subject to the terms of the
+ * Common Development and Distribution License, Version 1.0 only
+ * (the "License").  You may not use this file except in compliance
+ * with the License.
+ *
+ * You can obtain a copy of the license at
+ * trunk/opends/resource/legal-notices/OpenDS.LICENSE
+ * or https://OpenDS.dev.java.net/OpenDS.LICENSE.
+ * See the License for the specific language governing permissions
+ * and limitations under the License.
+ *
+ * When distributing Covered Code, include this CDDL HEADER in each
+ * file and include the License file at
+ * trunk/opends/resource/legal-notices/OpenDS.LICENSE.  If applicable,
+ * add the following below this CDDL HEADER, with the fields enclosed
+ * by brackets "[]" replaced with your own identifying * information:
+ *      Portions Copyright [yyyy] [name of copyright owner]
+ *
+ * CDDL HEADER END</pre>
+        </blockquote>
+        For any code that has been developed at least in part by Sun
+        employees, this header must also include (below the "<code>CDDL HEADER
+        END</code>" line) a line containing the text (with an updated year as
+        appropriate):
+        <blockquote><pre> *      Portions Copyright 2007 Sun Microsystems, Inc.</pre></blockquote>
+        <br><br>
+      </li>
+      <li>All classes and interfaces must have class-level Javadoc
+          headers, regardless of their visibility.<br><br></li>
+      <li>All non-private methods must have Javadoc headers including a general
+          description of the method, descriptions for all method parameters,
+          a description of the return value, and descriptions for all declared
+          exceptions (including runtime exceptions).  Although checkstyle does
+          not enforce this requirement for private methods in the general case,
+          it is strongly encouraged that they be documented in this way as
+          well.<br><br></li>
+      <li>All public and protected fields must have Javadoc headers that
+          describe the purpose of that field.<br><br></li>
+      <li>All Javadoc headers must have a period at the end of their first
+          sentence.  Javadoc headers will not be allowed to be empty.  Any HTML
+          used in the headers must be well-formed.<br><br></li>
+      <li>No line may exceed 80 characters in length.<br><br></li>
+      <li>No tab characters may be used to indent the source code.<br><br></li>
+      <li>No lines will be allowed to contain trailing whitespace.<br><br></li>
+      <li>Strings equality determinations must be performed using
+          "<code>String.equals(Object)</code>" and must not use
+          "<code>==</code>".<br><br></li>
+      <li>Any class that implements an "<code>equals(Object)</code>" method
+          must also implement a "<code>hashCode()</code>" method.<br><br></li>
+      <li>All classes must contain a <code>package</code>
+          declaration.<br><br></li>
+      <li>Switch statements will not be allowed to have non-empty cases that
+          fall-through to subsequent cases.<br><br></li>
+      <li>Any literal <code>long</code> values which appear in the code must be
+          followed by an uppercase "<code>L</code>" character rather than by a
+          lowercase "<code>l</code>" in order to make it easier to distinguish
+          it from the digit "<code>1</code>".<br><br></li>
+      <li>Classes must not contain any unused or redundant imports.  They also
+          must not import any classes in the "<code>sun.*</code>" package
+          structure.<br><br></li>
+      <li>Empty statements (i.e., those containing only a semicolon) will not
+          be allowed.<br><br></li>
+    </ul>
+
+    <br><br>
+    <b>"Documentation Target" Server Source Requirements Enforced by
+       Checkstyle</b>
+    <br><br>
+    Any source code which is considered a likely candidate for being included
+    in documentation must meet all of the general sever source requirements as
+    listed above, but will also be subject to the additional requirements
+    listed below.  Source code that is considered a documentation target
+    includes all code in the <code>org.opends.server.api</code>,
+    <code>org.opends.server.protocols.internal</code>, and
+    <code>org.opends.server.types</code> packages and their descendants.  The
+    additional constraints that will be enforced for these classes include:
+    <ul>
+      <li>All methods, including private methods, must have full Javadoc
+          headers (i.e., private methods are not exempt from the Javadoc
+          requirement in these classes).<br><br></li>
+      <li>No line may exceed 70 characters in length.<br><br></li>
+    </ul>
+
+    <br><br>
+    <b>Unit Test Source Requirements Enforced by Checkstyle</b>
+    <br><br>
+    In general, unit tests are exempt from most of the checkstyle requirements
+    enforced for the server source code, although it is still strongly
+    recommended that developers follow good development practices when writing
+    such code.  However, only the following requirements will be enforced by
+    Checkstyle:
+    <ul>
+      <li>All unit test source classes must begin with the same CDDL header
+          described above for general source code.<br><br></li>
+    </ul>
+
+    <br><br>
+    <b>General Source Requirements and Guidelines Not Enforced by
+       Checkstyle</b>
+    <br><br>
+    OpenDS developers should keep all of the following in mind when writing
+    code, although there are currently no checks implemented to enforce this
+    behavior:
+    <ul>
+      <li>Source code should be formatted using two-space indents.<br><br></li>
+      <li>Source files must end with an end-of-line character.  Some IDEs have
+          a tendency to not automatically include an end-of-line sequence
+          (e.g., the last byte of the file is the closing brace at the end of
+          the class).  This can cause problems in some cases, particularly
+          when attempting to use standard text-processing tools like the UNIX
+          <code>sed</code> command on those files.<br><br></li>
+      <li>All comments must include proper spelling, grammar, and punctuation.
+          Only American English may be used.  No profanity or offensive or
+          derisive content will be allowed.<br><br></li>
+      <li>The use of string literals should be carefully monitored to ensure
+          that all messages may be internationalized/localized.<br><br></li>
+      <li>Any code that is not completely implemented, or that is implemented
+          in a sub-optimal manner that needs to be re-written must be marked
+          with special identifiers that can be used to help find that code
+          later.  Any code that is not completely implemented must include a
+          comment with the string "<code>NYI</code>" (for "not yet
+          implemented") or "<code>TODO</code>".  Any code that needs to be
+          re-implemented must be marked with a comment containing the string
+          "<code>FIXME</code>".
+      <li>When overriding a method defined in a superclass, the
+          "<code>{@inheritDoc}</code>" Javadoc statement may be used instead of
+          repeating the Javadoc header from the superclass, unless there is a
+          need for the content of that header to be different.  This tag must
+          not be used when overriding a method that is not defined in the
+          OpenDS codebase.<br><br></li>
+      <li>The "<code>@author</code>" Javadoc tag should not be used, as it is
+          difficult to maintain over time and this information is already
+          recorded in the source repository.<br><br></li>
+      <li>All source filenames, class names, method names, and field names
+          should be sufficiently descriptive so that it is relatively easy to
+          understand their purpose.  All non-trivial variables used within
+          methods should also follow this convention.<br><br></li>
+      <li>Class names should start with a capital letter and should use
+          camel-casing to capitalize the first letter of each subsequent word.
+          Method, non-final field, and variable names should start with a
+          lowercase letter and use camel-casing to capitalize the first letter
+          of each subsequent word.  Constant fields should be named with all
+          capital letters, and should use underscores to separate individual
+          words.<br><br</li>
+      <li>The use of inner classes should be avoided, as it can make it more
+          difficult to map the class name to a corresponding source file.  In
+          general, each class should be implemented in a separate source file
+          for ease of use by other developers and to help keep the code layout
+          more simple.<br><br></li>
+      <li>If you are defining custom schema elements, controls, extended
+          operations, or anything else which requires an OID, you must request
+          that OID from Neil.  Do not simply take what appears to be the next
+          available OID.  Do not commit schema elements without a valid numeric
+          OID.<br><br></li>
+      <li>Virtually all constructors (other than those contained in the
+          logging code and perhaps a few other critical exceptions) for classes
+          that are part of the server should include a
+          <code>debugConstructor</code> call at the beginning of the
+          constructor, protected by an <code>assert</code> statement so that it
+          has no impact when the JVM is run with assertions
+          disabled.<br><br></li>
+      <li>Virtually all methods (other than those contained in the logging code
+          and perhaps a few other critical exceptions) for classes that are
+          part of the server should include a <code>debugEnter</code> call at
+          the beginning of the method, protected by an <code>assert</code>
+          statement so that it has no impact when the JVM is run with
+          assertions disabled.<br><br></li>
+      <li>Virtually all <code>catch</code> blocks (other than those contained
+          in the logging code and perhaps a few other cases) for classes that
+          are part of the server should include a <code>debugException</code>
+          call at the beginning of the <code>catch</code> block, protected by
+          an <code>assert</code> statement so that it has no impact when the
+          JVM is run with assertions disabled.<br><br></li>
+    </ul>
+
+    <br><br>
+    <b>OpenDS Commit Requirements</b>
+    <br><br>
+    The following requirements and guidelines should be met when committing
+    any changes to the OpenDS source repository:
+    <ul>
+      <li>The server must build cleanly with no warnings or errors of any kind
+          (including warnings generated by the Java and Javadoc compilers) when
+          built using the <code>precommit</code> target.<br><br></li>
+      <li>When committing code, commit messages must have a clear description
+          of the associated change so that someone who is only looking at the
+          "<code>svn log</code>" output can have a basic understanding of the
+          purpose of that commit.  Commit messages must not be
+          empty.<br><br></li>
+      <li>Commit messages must use proper spelling, punctuation, and grammar.
+          Only American English will be allowed.<br><br></li>
+      <li>In all but the most trivial cases, commits should be associated with
+          an issue in the issue tracker.  The commit message must include the
+          corresponding issue number, and the issue tracker must be updated
+          with the revision number of the commit(s) associated with that
+          issue.  Note, however, that it is not acceptable for commit messages
+          to only reference an issue number (e.g., "Fix for issue 1234")
+          because that fails the requirement of being able to understand the
+          purpose of that change when looking only at the commit
+          log.<br><br></li>
+      <li>Whenever possible, code changes should be accompanied by unit tests
+          that cover the corresponding code.<br><br></li>
+      <li>Trivial commits (sometimes called "one-line commits", although this
+          may cover changes impacting more than just one line) generally do not
+          require any review (unless the source tree is frozen or we are in a
+          critical stage of development in which changes should be restricted).
+          However, developers are certainly free to request reviews for any
+          code changes.<br><br></li>
+      <li>Small code changes that are not overly complex but nevertheless do
+          not qualify as a "trivial commit" should at least be sent out for
+          review to the
+          "<a href="mailto:opends-precommit-ext@sun.com">opends-precommit-ext@sun.com</a>
+          mailing list for other developers to see and/or comment on.  However,
+          if there are no comments after a sufficient period of time has passed
+          (which should allow at least a reasonable period of time for
+          developers both in the United States and Europe to see the changes
+          and have a chance to comment on them), then the changes may be
+          committed without further requests for review.<br><br></li>
+      <li>Large and/or complex code changes must be available for public review
+          and should be approved by at least one person.<br><br></li>
+      <li>Any code change which may have a potential impact on standards
+          compliance, protocol encoding/decoding, etc. must be reviewed and
+          approved before committing.<br><br></li>
+      <li>For any change that is reviewed and approved by one or more
+          individuals, the name(s) of the reviewer(s) must be included in the
+          issue tracker.  They may also appear in the commit
+          message.<br><br></li>
+    </ul>
+
+    <br><br>
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="layout.html">Previous:  The OpenDS Repository Layout</a></div>
+  </body>
+</html>
+

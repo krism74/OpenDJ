@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Introduction to OpenDS Development</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Introduction to OpenDS Development</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="otherresources.html">Next:  Other Public OpenDS Resources</a></div>
+    <div class="secpageheader">The OpenDS Project on java.net</div>
+
+    <br>
+    The majority of the OpenDS project is hosted at
+    <a href="http://www.java.net/">java.net</a>, which provides a framework for
+    Java-based open source applications that makes it possible for developers
+    to spend more of their time and resources in development and less time in
+    maintaining the project infrastructure.  In particular, OpenDS currently
+    takes advantage of the following java.net offerings:
+
+    <ul>
+      <li>The <a href="https://opends.dev.java.net/">general website</a>
+          provides a place for us to make project information available,
+          including our documentation, FAQ, and other resources</li>
+      <li>The <a href="https://opends.dev.java.net/source/browse/opends/">Subversion repository</a>
+          hosts all of the project source</li>
+      <li>The <a href="https://opends.dev.java.net/servlets/ProjectMailingListList">mailing lists</a>
+          provide a mechanism for communicating between developers and
+          users</li>
+      <li>The <a href="https://opends.dev.java.net/servlets/ProjectIssues">issue tracker</a> holds information about all of the features, tasks, and defects
+          associated with the project</li>
+      <li>The <a href="https://opends.dev.java.net/servlets/ProjectDocumentList">downloads area</a>
+          provides a mechanism for making files available for download (e.g.,
+          our weekly builds)</li>
+    </ul>
+
+    <br>
+    <b>Joining the OpenDS Project</b>
+    <br><br>
+    Much of the project content is available anonymously, but if you wish to
+    participate on the mailing lists, file bugs or feature requests in the
+    issue tracker, or take part in the development of the server, then you will
+    need to join the project.  To do this:
+
+    <ol>
+      <li>
+        If you don't already have one, get an account on java.net.  It's free
+        and the only personal information you need to provide is an e-mail
+        address.  To create an account, complete the form at
+        <a href="https://www.dev.java.net/servlets/Join">https://www.dev.java.net/servlets/Join</a>.
+        <br><br>
+      </li>
+
+      <li>
+        Request a role in the OpenDS project at
+        <a href="https://opends.dev.java.net/servlets/ProjectMembershipRequest">https://opends.dev.java.net/servlets/ProjectMembershipRequest</a>.
+        You should initially request the "java-enterprise&gt;opends.User" role,
+        which is available for anyone and will give you the ability to
+        participate on OpenDS mailing lists and create issues in the issue
+        tracker.
+        <br><br>
+      </li>
+
+      <li>
+        If you wish to contribute to the project in other ways (e.g., by
+        writing code, documentation, or test cases), then you will need to
+        complete and submit the
+        <a href="https://opends.dev.java.net/public/docs/dev-docs/OpenDS-Governance.html#sca_policy">Sun Contributor Agreement</a>.
+        You may then send an e-mail message to
+        <a href="mailto:contribution-request@opends.dev.java.net">contribution-request@opends.dev.java.net"</a>
+        in order to request the Contributor role.
+        <br><br>
+      </li>
+    </ol>
+
+    <br>
+    <b>Important OpenDS Mailing Lists</b>
+    <br><br>
+    Once you have joined the project, you will probably also want to subscribe
+    to one or more of our e-mail mailing lists to keep up with what's
+    happening.  You can see the full set of mailing lists available at
+    <a href="https://opends.dev.java.net/servlets/ProjectMailingListList">https://opends.dev.java.net/servlets/ProjectMailingListList</a>,
+    where you can also subscribe to any or all of these lists on either a
+    message-by-message basis (in which you'll get each individual e-mail
+    message sent to the list) or in digest mode (in which you'll get one
+    message a day that contains all of that day's traffic on that list).
+
+    <br><br>
+    The mailing list page provides information about all lists in the project,
+    but the most useful lists for someone who wants to participate in the
+    project development include:
+
+    <ul>
+      <li>
+        <a href="mailto:announce@opends.dev.java.net">announce@opends.dev.java.net</a>
+        -- This is an extremely low-traffic list that we will use to provide
+        important announcements related to the OpenDS project.
+        <br><br>
+      </li>
+      <li>
+        <a href="mailto:commits@opends.dev.java.net">commits@opends.dev.java.net</a>
+        -- This list will automatically be sent an e-mail message whenever
+        someone commits something into the OpenDS Subversion repository.  That
+        message will include information about the files that were changed, as
+        well as a diff of those changes.
+        <br><br>
+      </li>
+      <li>
+        <a href="mailto:daily-builds@opends.dev.java.net">daily-builds@opends.dev.java.net</a>
+        -- This list will automatically be sent an e-mail message whenever the
+        daily build completes, indicating whether the build was successful or
+        failed for some reason.
+        <br><br>
+      </li>
+      <li>
+        <a href="mailto:design-discuss@opends.dev.java.net">design-discuss@opends.dev.java.net</a>
+        -- This list is intended for use by individuals discussing the design
+        of components in the server before and during their development.
+        <br><br>
+      </li>
+      <li>
+        <a href="mailto:dev@opends.dev.java.net">dev@opends.dev.java.net</a>
+        -- This list is intended for use by OpenDS developers communicating
+        with each other.
+        <br><br>
+      </li>
+      <li>
+        <a href="mailto:issues@opends.dev.java.net">issues@opends.dev.java.net</a>
+        -- This list will automatically be sent an e-mail message whenever
+        someone creates or updates an issue in the issue tracker.  Note that in
+        most cases, it will not be necessary to join this list because you will
+        automatically be sent a message for updates to issues that you have
+        created, issues assigned to you, or issues in which you are on the
+        interest list.
+        <br><br>
+      </li>
+      <li>
+        <a href="mailto:precommit-notification@opends.dev.java.net">precommit-notification@opends.dev.java.net</a>
+        -- This list is intended for use by individuals for reviewing and
+        commenting on code changes that have been proposed for committing to
+        the repository.
+        <br><br>
+      </li>
+      <li>
+        <a href="mailto:technical-questions@opends.dev.java.net">technical-questions@opends.dev.java.net</a>
+        -- This list is intended for use by users who wish to ask technical
+        questions of the OpenDS developers.
+        <br><br>
+      </li>
+      <li>
+        <a href="mailto:users@opends.dev.java.net">users@opends.dev.java.net</a>
+        -- This list is intended for use by users who wish to ask general
+        questions, provide feedback or comments, or other general messages
+        about OpenDS.
+        <br><br>
+      </li>
+    </ul>
+
+    Note that most of the OpenDS mailing lists are configured to automatically
+    allow posts by members subscribed to the list, but to require moderation
+    (explicit approval from a project owner) for any message sent by someone
+    who is not subscribed to that list.  This means that if you send a message
+    to a list to which you are not subscribed, then it may take some time for
+    the message to be delivered while it is waiting for moderation, and you may
+    not see any replies because they will generally be delivered only to list
+    members.  Therefore, it is strongly recommended that you only send
+    messages to a list if you are subscribed to it.
+
+    <br><br>
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="otherresources.html">Next:  Other Public OpenDS Resources</a></div>
+  </body>
+</html>
+
