@@ -81,81 +81,7 @@ run
 along with their results. The reports are located at
 <code>build/unit-tests/report/OpenDS/index.html</code><br>
 <br>
-Code coverage information is also available with EMMA, the open source
-code
-coverage toolkit. To generate code coverage reports for the default
-test group,
-simply issue the command:
-<blockquote><code>./build.sh testwithcoverage</code> on UNIX<br>
-  <code>./build.bat testwithcoverage</code> on Windows
-</blockquote>
-To generate code coverage reports for the all tests,
-simply issue the command:
-<blockquote><code>./build.sh testallwithcoverage</code> on UNIX<br>
-  <code>./build.bat testallwithcoverage</code> on Windows
-</blockquote>
-The HTML based coverage reports can be found at
-<code>build/coverage/report/index.html</code>.
-<br>
-<br>
-Coverage information is also viewable alongside the unified diff output
-from
-the "svn diff" command. This will only show coverage for the lines that
-are add
-or changed locally. To view the diff output with coverage information,
-pipe the
-output from "svn diff" to the coverage diff tool:
-<blockquote>NOTE: Make sure that coverage information is available
-before using the coverage diff tool by running the "testwithcoverage"
-ant target as shown above.
-</blockquote>
-<blockquote><code>svn diff | build-tools/bin/coveragediff</code></blockquote>
-Coverage status will be displayed next to the "+" character for each
-added or
-edited line:
-<ul>
-  <li>
-    <p
- style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
- align="left"><span style="font-family: monospace;">C </span>--
-Covered </p>
-    <p
- style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
- align="left"></p>
-  </li>
-  <li>
-    <p
- style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
- align="left"><span style="font-family: monospace;">P </span>--
-Partially Covered</p>
-    <p
- style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
- align="left"></p>
-  </li>
-  <li>
-    <p
- style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
- align="left"><span style="font-family: monospace;">N </span>-- Not
-Covered</p>
-    <p
- style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
- align="left"></p>
-  </li>
-  <li>
-    <p
- style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
- align="left"><span style="font-family: monospace;">U </span>--
-Coverage Unknown</p>
-    <p
- style="background: transparent none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; margin-bottom: 0in;"
- align="left"></p>
-  </li>
-</ul>
-<br>
-<br>
-To run a custom set of tests instead, use the "testcustom" and
-"testcustomwithcoverage" targets.
-You can specify the tests you wish to run in groups, packages, classes,
+You can also specify the tests you wish to run in groups, packages, classes,
 and
 methods. Just use the following
 command line arguments:<br>
@@ -201,14 +127,14 @@ classes spcified. </td>
 </table>
 <br>
 Examples:
-<blockquote> <code>./build.sh testcustom
+<blockquote> <code>./build.sh test
 -Dtest.packages=org.opends.server.core,org.opends.server.protocols.*</code>
 </blockquote>
 Run all tests classes in the org.opends.server.core packages as well as
 all the
 test classes in the packages that are under
 org.opends.server.protocols.
-<blockquote> <code>./build.sh testcustomwithcoverage
+<blockquote> <code>./build.sh testwithcoverage
 -Dtest.packages=org.opends.server.tasks
 -Dtest.classes=org.opends.server.schema.GuideSyntaxTest</code>
 </blockquote>
@@ -217,7 +143,7 @@ the
 org.opends.server.schema.GuideSyntaxTest test class. A coverage report
 will also
 be generated.
-<blockquote> <code>./build.sh testcustom
+<blockquote> <code>./build.sh test
 -Dtest.methods=org.opends.server.protocols.ldap.TestModifyRequestProtocolOp.testEncodeDecode,testConstructors;org.opends.server.tasks.TestBackupAndRestore.testBackups</code>
 </blockquote>
 Only run the test method testEncodeDecode and testConstructors in the
@@ -228,7 +154,41 @@ testBackups method in the org.opends.server.tasks.TestBackupAndRestore
 test
 class.
 <br>
+<h3>Code Coverage</h3>
+Code coverage information is also available with EMMA, the open source
+code
+coverage toolkit. To generate code coverage reports for the default
+test group,
+simply issue the command:
+<blockquote><code>./build.sh testwithcoverage</code> on UNIX<br>
+  <code>./build.bat testwithcoverage</code> on Windows
+</blockquote>
+To generate code coverage reports for the all tests,
+simply issue the command:
+<blockquote><code>./build.sh testallwithcoverage</code> on UNIX<br>
+  <code>./build.bat testallwithcoverage</code> on Windows
+</blockquote>
+The HTML based coverage reports can be found at
+<code>build/coverage/report/index.html</code>.
 <br>
+<br>
+A coverage report is also generated that shows coverage just for the lines of
+code that are added or changed locally. This report merges the coverage
+information (if any) with the results from a diff of the local changes from
+the latest revision in the repository. With this report, you can quickly find
+out how much of the local code modifications are covered by unit tests. The
+HTML based coveragediff report can be found at
+<code>build/diff/report/index.html</code>
+<br><br>
+By default, the coveragediff report is generated for all files under the build
+root. To change the default diff path, use the command line argument
+<code>-Dtest.diff.srcpath=path_to_diff</code>.
+<br><br>
+To disable generating the coveragediff report include the command line argument
+<code>-Dtest.diff.diable=</code> with the test*withcoverage targets.
+<blockquote>NOTE: The coveragediff utiity depends on having the SVN executable
+to be in your path. To manually specify the path to the svn executable, use
+the command line argument <code>-Dtest.diff.svnpath=path_to_svn</code></blockquote>
 <h3>Writing Tests</h3>
 The unit test source directory is located in
 <code>tests/unit-tests-testng</code> and follows the same structure as
