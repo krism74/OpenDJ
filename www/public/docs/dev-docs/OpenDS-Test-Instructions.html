@@ -76,10 +76,12 @@ directory where OpenDS was checked out from SVN.
 </blockquote>
 TestNG will print out the test results when the tests are finished. It
 also
-provides detailed HTML based reports listing all test cases that were
+provides a detailed text-based report listing all test cases that were
 run
 along with their results. The reports are located at
-<code>build/unit-tests/report/OpenDS/index.html</code><br>
+<code>build/unit-tests/report/results.txt</code><br><br>
+If any of the tests failed, you can rerun only those tests by specifying
+the <code>-Dtest.failures=true</code> on the <code>ant</code> command line.<br>
 <br>
 You can also specify the tests you wish to run in groups, packages, classes,
 and

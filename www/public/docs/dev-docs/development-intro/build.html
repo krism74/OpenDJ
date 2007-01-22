@@ -136,10 +136,13 @@
           fully-qualified class name followed by a period and the method name.
           If multiple methods are to be specified, then they should be
           separated by commas.<br><br></li>
+      <li><code>test.failures</code> -- When used in conjunction with a test
+          target, set it to "<code>true</code>" to re-run only the tests that 
+          failed in a previous test run.  It defaults to false.<br><br></li>
       <li><code>org.opends.test.suppressOutput</code> -- This indicates whether
           the build process should produce a minimal set of output when running
           the unit tests.  The value should be either "<code>true</code>" or 
-          "<code>false</code>".<br><br></li>
+          "<code>false</code>".  By default, the output is suppressed.<br><br></li>
     </ul>
 
     <br>
@@ -159,10 +162,11 @@
           containing the built DSML gateway<br><br></li>
       <li><code>build/javadoc/index.html</code> -- Javadoc documentation for
           the compiled server and DSML gateway<br><br></li>
-      <li><code>build/unit-tests/report/OpenDS/default.html</code> -- An
-          HTML-formatted report with information about the unit test
-          processing<br><br></li>
-      <li><code>build/unit-tests/package</code> -- An directory containing the
+      <li><code>build/unit-tests/report/results.txt</code> -- A
+          plain text report with information about the unit test
+          processing.  This includes which tests failed and which 
+          tests took the longest to execute.<br><br></li>
+      <li><code>build/unit-tests/package</code> -- A directory containing the
           server deployment used to run the unit tests<br><br></li>
       <li><code>build/coverage/reports/unit/index.html</code> -- An
           HTML-formatted report of the code coverage obtained while running
