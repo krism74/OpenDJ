@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Understanding Schema in OpenDS</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Understanding Schema in OpenDS</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="entrychecking.html">Previous:  The Entry Schema Checking Process</a></div>
+    <div class="secpageheader">A Possible Design for Multiple Schemas in OpenDS</div>
+
+    <br>
+    At the present time, OpenDS only contains a single set of schema elements
+    that apply throughout the entire server.  The same is true for the Sun Java
+    System Directory Server.  The LDAP specifications, however, do allow for
+    servers to have different schemas associated with different portions of the
+    DIT, and this may provide certain benefits in some cases.  Some of these
+    benefits include:
+    <ul>
+      <li>It provides a very basic means of controlling which types of entries
+          are allowed in various portions of the tree.  Although this can also
+          be done with DIT content rules and DIT structure rules, these types
+          of elements are not well known among users and may not be suitable
+          in all environments.<br><br></li>
+      <li>In some cases, the server schema may contain sensitive information
+          (e.g., in a directory that serves as a hosting environment, schema
+          elements specific to one organization may include the name of that
+          organization, and those elements should not be visible to other
+          organizations that may be sharing the same server).<br><br></li>
+      <li>DIT structure rules may be most useful and effective when used in an
+          environment in which each portion of the hierarchy may contain its
+          own schema.<br><br></li>
+      <li>In environments containing data from multiple sources (e.g., a
+          virtual directory environment) the different data sources may have
+          different constraints on the kind of data that may be stored
+          there.<br><br></li>
+    </ul>
+
+    If OpenDS does need to provide support for multiple schemas, then it will
+    likely be done in the following manner:
+    <ul>
+      <li>There will still need to be a single global schema that contains all
+          of the matching rule, attribute syntax, attribute type, and object
+          class definitions.  The individual subschemas may only expose a
+          subset of the attribute types and object classes, but there may not
+          be any conflicting attribute type or object class definitions in
+          different subschemas.<br><br></li>
+      <li>The global schema may also contain other schema elements like name
+          forms, DIT content rules, DIT structure rules, and matching rule
+          uses, but it will be acceptable for such elements to only be defined
+          in a subschema and not in the global schema.<br><br></li>
+      <li>The unit of coverage for a subschema will be a backend (or possibly a
+          workflow from the latest proxy/distribution/virtual discussions).  An
+          individual backend may either inherit the entire global schema (which
+          will be the default behavior), or it may specify a subset of the
+          global schema to inherit, and only those elements will be available
+          for operations in that backend, along with any backend-specific name
+          forms, DIT content rules, DIT structure rules, and matching rule
+          uses.<br><br></li>
+      <li>Inheritance of global schema elements into a subschema will likley be
+          achieved on a per-file basis for the greatest degree of simplicity.
+          If a backend is to use its own subschema, then it will specify which
+          global schema configuration files contain the elements that should be
+          exposed in that subschema.  Each subschema may also have its own set
+          of files for custom name forms, DIT content rules, DIT structure
+          rules, and matching rule uses defined only within the context of that
+          backend.<br><br></li>
+    </ul>
+
+    <br><br>
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="entrychecking.html">Previous:  The Entry Schema Checking Process</a></div>
+  </body>
+</html>
+

@@ -1,0 +1,285 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Understanding Schema in OpenDS</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Understanding Schema in OpenDS</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="attributesyntaxes.html">Next:  Attribute Syntaxes</a></div>
+    <div class="secpageheader">Matching Rules</div>
+
+    <br>
+    Matching rules are used by the Directory Server to compare two values for
+    the same attribute (i.e., to perform matching operations on them).  There
+    are several different types of matching rules, including:
+    <ul>
+      <li>Equality Matching Rules -- these matching rules are used to determine
+          whether two values are logically equal to each other.  Different
+          implementations of equality matching rules may use different criteria
+          for making this determination (e.g., whether to ignore differences in
+          capitalization, deciding which spaces are significant,
+          etc.).<br><br></li>
+      <li>Ordering Matching Rules -- these matching rules are used to determine
+          the relative order for two values, for example when evaluating
+          greater-or-equal or less-or-equal searches, or when the results need
+          to be sorted.<br><br></li>
+      <li>Substring Matching Rules -- these matching rules are used to
+          determine whether a given substring assertion should match a
+          particular value.  A substring assertion is comprised of at least one
+          element from the following sets:  at most one subInitial element,
+          zero or more subAny elements, and at most one subFinal
+          element.<br><br></li>
+      <li>Approximate Matching Rules -- these matching rules are used to
+          determine whether two values are approximately equal to each other.
+          This is frequently based on "sounds like" or some other kind of fuzzy
+          algorithm.  Approximate matching rules are not part of the official
+          LDAP specification, but we do include them in OpenDS for added
+          flexibility.<br><br></li>
+    </ul>
+
+    <br>
+    <b>The Matching Rule Description Format</b>
+    <br><br>
+    The matching rule description format is described in
+    <a href="https://opends.dev.java.net/public/standards/rfc4512.txt">RFC 4512</a>,
+    section 4.1.3.  This is the format that is used to display matching rules
+    in the matchingRules attribute of the schema subentry, and it shows the
+    properties that may be associated with a matching rule.  The definition of
+    the matching rule description format is as follows:
+
+    <blockquote><pre>     MatchingRuleDescription = LPAREN WSP
+         numericoid                 ; object identifier
+         [ SP "NAME" SP qdescrs ]   ; short names (descriptors)
+         [ SP "DESC" SP qdstring ]  ; description
+         [ SP "OBSOLETE" ]          ; not active
+         SP "SYNTAX" SP numericoid  ; assertion syntax
+         extensions WSP RPAREN      ; extensions</pre></blockquote>
+
+    <br>
+    The elements of the matching rule description include:
+    <ul>
+      <li>The numeric OID is used to uniquely identify the matching rule in
+          the server.  Every matching rule must have a unique OID.<br><br></li>
+      <li>The name elements are human-readable names assigned to the matching
+          rule that may be used to refer to it in place of the OID.  A matching
+          rule is not required to have any human-readable names.  If it has
+          only a single name, then it will simply be enclosed in single quotes.
+          If there are multiple names for a matching rule, each will be
+          enclosed in single quotes with spaces between the names, and
+          parentheses around the entire set of names.<br><br></li>
+      <li>The description element is a human-readable description for the
+          matching rule.  There may be at most one description, and if it is
+          present then it should be enclosed in single quotation
+          marks.<br><br></li>
+      <li>The "<code>OBSOLETE</code>" flag indicates whether this matching rule
+          should be considered available for use.  If a matching rule is marked
+          "<code>OBSOLETE</code>", then it should not be possible to create any
+          new attribute types or matching rule uses which reference this
+          matching rule.<br><br></li>
+      <li>The syntax element identifies the attribute syntax with which the
+          matching rule is associated.  This is used to indicate the acceptable
+          format for values on which the matching rule will operate.  More
+          information about attribute syntaxes may be found in a
+          <a href="attributesyntaxes.html">subsequent section</a> of this
+          document.  The syntax OID must be included in all matching rule
+          descriptions.<br><br></li>
+      <li>The extensions for a matching rule may be used to identify other
+          properties for that matching rule that may not be included in the
+          standard definition.  OpenDS does not currently support any
+          extensions for use in matching rules.<br><br></li>
+    </ul>
+
+    For example, the following is the matching rule description for the
+    standard <code>caseIgnoreMatch</code> matching rule:
+
+    <blockquote>
+      <code>( 2.5.13.2 NAME 'caseIgnoreMatch' SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )</code>
+    </blockquote>
+
+    <br>
+    In this case, the OID is "2.5.13.2".  There is one name, which is
+    "caseIgnoreMatch".  There is no description.  The OID of the associated
+    syntax is 1.3.6.1.4.1.1466.115.121.1.15 (which is the Directory String
+    syntax).  There are no extensions.
+
+    <br><br><br>
+    <b>Commonly-Used Matching Rules</b>
+    <br><br>
+    There are a number of matching rules defined in LDAP, both in the core
+    protocol specification, as well as other related RFCs and Internet Drafts.
+    Many of these matching rules are defined in
+    <a href="https://opends.dev.java.net/public/standards/rfc4517.txt">RFC 4517</a>
+    (LDAP Syntaxes and Matching Rules), in section 4.2.  Some of the most
+    commonly-used matching rules include:
+    <ul>
+      <li><code>caseIgnoreMatch</code>, <code>caseIgnoreOrderingMatch</code>,
+          <code>caseIgnoreSubstringsMatch</code> -- these are equality,
+          ordering, and substring matching rules, respectively, which ignore
+          differences in capitalization and also treat multiple consecutive
+          spaces as a single space.<br><br></li>
+      <li><code>caseExactMatch</code>, <code>caseExactOrderingMatch</code>,
+          <code>caseExactSubstringsMatch</code> -- these are equality,
+          ordering, and substring matching rules, respectively, which treat
+          values in a case-sensitive manner but do treat multiple consecutive
+          spaces as a single space.<br><br></li>
+      <li><code>octetStringMatch</code>, <code>octetStringOrderingMatch</code>,
+          <code>octetStringSubstringsMatch</code> -- these are equality,
+          ordering, and substring matching rules, respectively, which perform
+          byte-for-byte comparisons of the values, treating them as binary data
+          rather than strings.<br><br></li>
+      <li><code>numericStringMatch</code>,
+          <code>numericStringOrderingMatch</code>,
+          <code>numericStringSubstringsMatch</code> -- these are equality,
+          ordering, and substring matching rules, respectively, which operate
+          on values that start with a numeric digit, and contain only numeric
+          digits and spaces.  Spaces are ignored when performing matching with
+          these matching rules.<br><br></li>
+      <li><code>distinguishedNameMatch</code> -- this is an equality matching
+          rule that operates on distinguished name (DN) values.  It ignores
+          spaces around the commas or semicolons that separate DN components,
+          spaces around plus signs that separate RDN components, and spaces
+          around equal signs that separate RDN attribute type names from their
+          corresponding values.  Differences in capitalization are ignored for
+          attribute type names.  Equality matching for attribute values is
+          performed using the equality matching rule for the corresponding
+          attribute type.<br><br></li>
+      <li><code>doubleMetaphoneApproximateMatch</code> -- this is an
+          approximate matching rule that uses the double metaphone algorithm to
+          perform a "sounds like" comparison.  Note that this matching rule is
+          not part of any official LDAP specification, but we do include it in
+          OpenDS for added flexibility.<br><br></li>
+    </ul>
+
+    <br>
+    <b>Value Normalization</b>
+    <br><br>
+    One of the tasks that most matching rules need to perform is value
+    normalization.  This is the process of transforming a given value to a form
+    that can be used to compare values efficiently.  In most cases, the
+    normalization process should reduce all logically equivalent values to the
+    same string so that a very simple string comparison can be performed to
+    determine whether the strings are equal.  For example, the
+    <code>caseIgnoreMatch</code> matching rule will typically normalize values
+    by converting all characters to lowercase and replacing occurrences of
+    multiple consecutive spaces with a single space.  A more complicated
+    example is the <code>distinguishedNameMatch</code> matching rule, which
+    removes all unnecessary spaces (e.g., around commas, equal signs, and plus
+    signs), converts all attribute types to lowercase, and then uses the
+    appropriate matching rules to normalize the attribute values for each RDN
+    component.
+
+    <br><br>
+    Note that in some cases, normalization alone is not sufficient for
+    determining whether two values are logically equivalent.  This is
+    particularly true for cases in which the value is transformed, and there
+    can be multiple different transformations for the same value.  For example,
+    this is often done for the <code>userPassword</code> attribute type, where
+    values may be encoded using a one-way message digest algorithm, and if that
+    algorithm includes a salt then each time a given value is encoded it may
+    result in a different string (in fact, this is the intended behavior, which
+    helps prevent dictionary attacks).  In cases like this, the matching rule
+    simply needs to use different logic to determine equality, rather than
+    relying solely on normalization.
+
+    <br><br><br>
+    <b>The OpenDS Matching Rule Implementation</b>
+    <br><br>
+    Because matching rules require logic to perform the appropriate kinds of
+    matching operations, they must be implemented in code.  All matching rules
+    in OpenDS must be subclasses of the
+    <code>org.opends.server.api.MatchingRule</code> class, and most of them
+    should be subclasses of one of the following classes (each of which is a
+    subclass of <code>org.opends.server.api.MatchingRule</code>):
+    <ul>
+      <li><code>org.opends.server.api.EqualityMatchingRule</code>
+      <li><code>org.opends.server.api.OrderingMatchingRule</code>
+      <li><code>org.opends.server.api.SubstringMatchingRule</code>
+      <li><code>org.opends.server.api.ApproximateMatchingRule</code>
+    </ul>
+
+    All of the matching rule implementations that are provided as part of
+    OpenDS are included in the <code>org.opends.server.schema</code> package.
+    When a new matching rule class is implemented, a corresponding
+    configuration entry should be added below the
+    "<code>cn=Matching Rules,cn=config</code>" entry.  For example, the
+    configuration entry that defines the <code>caseIgnoreMatch</code> equality
+    matching rule is as follows:
+
+    <blockquote><pre>dn: cn=Case Ignore Equality Matching Rule,cn=Matching Rules,cn=config
+objectClass: top
+objectClass: ds-cfg-matching-rule
+objectClass: ds-cfg-equality-matching-rule
+cn: Case Ignore Equality Matching Rule
+ds-cfg-matching-rule-class: org.opends.server.schema.CaseIgnoreEqualityMatchingRule
+ds-cfg-matching-rule-enabled: true</pre></blockquote>
+
+    <br>
+    The most important methods from the
+    <code>org.opends.server.api.MatchingRule</code> class that matching rules
+    need to implement are:
+
+    <blockquote><pre>public ByteString normalizeValue(ByteString value)
+       throws DirectoryException
+
+public ConditionResult valuesMatch(ByteString attributeValue,
+                                   ByteString assertionValue)</pre></blockquote>
+
+    <br>
+    Equality matching rules need to implement the following method from the
+    <code>org.opends.server.api.EqualityMatchingRule</code> class:
+
+    <blockquote><pre>public boolean areEqual(ByteString value1, ByteString value2)</pre></blockquote>
+
+    <br>
+    Ordering matching rules need to implement the following method from the
+    <code>org.opends.server.api.OrderingMatchingRule</code> class:
+
+    <blockquote><pre>public int compareValues(ByteString value1, ByteString value2)</pre></blockquote>
+
+    <br>
+    Substring matching rules need to implement the following two methods from
+    the <code>org.opends.server.api.SubstringMatchingRule</code> class:
+
+    <blockquote><pre>public ByteString normalizeSubstring(ByteString substring)
+       throws DirectoryException
+
+public boolean valueMatchesSubstring(ByteString value,
+                                     ByteString subInitial,
+                                     List<ByteString> subAnyElements,
+                                     ByteString subFinal)</pre></blockquote>
+
+    <br>
+    Approximate matching rules need to implement the following method from the
+    <code>org.opends.server.api.ApproximateMatchingRule</code> class:
+
+    <blockquote><pre>public boolean approximatelyMatch(ByteString value1,
+                                  ByteString value2)</pre></blockquote>
+
+    <br>
+    Matching rule objects may be retrieved from the server schema using their
+    OIDs or any of their human-readable names.
+
+    <br><br>
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="attributesyntaxes.html">Next:  Attribute Syntaxes</a></div>
+  </body>
+</html>
+

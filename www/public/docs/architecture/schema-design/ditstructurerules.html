@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Understanding Schema in OpenDS</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Understanding Schema in OpenDS</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="ditcontentrules.html">Previous:  DIT Content Rules</a></div>
+    <div align="right"><a href="matchingruleuses.html">Next:  Matching Rule Uses</a></div>
+    <div class="secpageheader">DIT Structure Rules</div>
+
+    <br>
+    DIT structure rules may be used to define the allowed hierarchical
+    structure of the directory data.  In particular, they make it possible to
+    specify what types of entries will be allowed to exist as immediate
+    children of entries with a specified structural object class (e.g., only
+    entries with the <code>inetOrgPerson</code> structural class may be
+    immediate children of entries with an <code>organizationalUnit</code>
+    structural object class).
+
+    <br><br>
+    DIT structure rules are themselves hierarchical.  Each DIT structure rule
+    is assigned a rule ID, which is an integer value, and is also associated
+    with a name form (which in turn links it to a structural object class).
+    DIT structure rules may also reference one or more superior DIT structure
+    rules, and this provides the mechanism for controlling the data hierarchy.
+    If a DIT structure rule does not specify any superior rules, then entries
+    containing its associated structural object class are allowed to exist at
+    the root of the associated schema.  If it does specify one or more superior
+    rules, then entries with its associated structural object class will only
+    be allowed to exist below entries containing the structural object class
+    of one of those superior rules.
+
+    <br><br>
+    <b>The DIT Structure Rule Description Format</b>
+    <br><br>
+    The DIT structure rule description format is described in
+    <a href="https://opends.dev.java.net/public/standards/rfc4512.txt">RFC 4512</a>,
+    section 4.1.7.1.  The defintion is as follows:
+
+    <blockquote><pre>     DITStructureRuleDescription = LPAREN WSP
+         ruleid                     ; rule identifier
+         [ SP "NAME" SP qdescrs ]   ; short names (descriptors)
+         [ SP "DESC" SP qdstring ]  ; description
+         [ SP "OBSOLETE" ]          ; not active
+         SP "FORM" SP oid           ; NameForm
+         [ SP "SUP" ruleids ]       ; superior rules
+         extensions WSP RPAREN      ; extensions
+
+     ruleids = ruleid / ( LPAREN WSP ruleidlist WSP RPAREN )
+     ruleidlist = ruleid *( SP ruleid )
+     ruleid = number</pre></blockquote>
+
+    The elements of the DIT structure rule description include:
+    <ul>
+      <li>The integer rule ID assigned to the DIT structure rule.  It must be
+          unique among all other DIT structure rules in the
+          schema.<br><br></li>
+      <li>An optional set of human-readable names that may be used to refer to
+          the DIT structure rule.  If there is a single name, then it should be
+          enclosed in single quotes.  If there are multiple names, then they
+          should each be enclosed in single quotes separated by spaces, and the
+          entire set of names should be enclosed in parentheses.<br><br></li>
+      <li>An optional human-readable description.  If a description is
+          provided, then it should be enclosed in single quotes.<br><br></li>
+      <li>An optional "OBSOLETE" flag that may be used to indicate whether the
+          DIT structure rule is active.  If it is marked "OBSOLETE", then it
+          should not be taken into account when entries are created or
+          moved.<br><br></li>
+      <li>The name or OID of the name form with which the DIT structure rule is
+          associated.  As mentioned above, the name form associates the DIT
+          structure rule with a structural object class.<br><br></li>
+      <li>An optional set of superior rule IDs for the DIT structure rule.  If
+          there are multiple superior rule IDs, then they should be separated
+          by spaces and the entire set of superior rule IDs should be enclosed
+          in parentheses.  It is permissible for multiple DIT structure rules
+          to use overlapping sets of superior rule IDs.<br><br></li>
+      <li>An optional set of extensions for the DIT structure rule.  OpenDS
+          currently uses the following extensions for DIT structure rules:
+          <ul>
+            <li>X-ORIGIN -- Provides information about where the DIT structure
+                rule is defined (e.g., whether it came from a particular RFC or
+                Internet Draft, is defined within the OpenDS project,
+                etc.).</li>
+            <li>X-SCHEMA-FILE -- Indicates which schema file contains the DIT
+                structure rule definition (this is generally used for internal
+                purposes only and does not get exposed to clients).</li>
+          </ul>
+          <br></li>
+    </ul>
+
+    For example, the following is the DIT structure rule definition for the
+    <code>uddiContactStructureRule</code> DIT structure rule:
+
+    <blockquote>
+      <code>
+        ( 2 NAME 'uddiContactStructureRule' FORM uddiContactNameForm SUP ( 1 )
+          X-ORIGIN 'RFC 4403' )</code>
+    </blockquote>
+
+    In this case, the rule ID is "2", and the human-readable name is
+    "uddiContactStructureRule".  It is associated with the uddiContactNameForm
+    name form (which in turn links it to the uddiContact object class), and it
+    has a superior rule ID of "1".  It was defined in RFC 4403.  It does not
+    have a description, nor is it marked "OBSOLETE".
+
+    <br><br>
+    <b>DIT Structure Rules and Multiple Schemas</b>
+    <br><br>
+    DIT structure rules may provide a mechanism for placing constraints on the
+    server hierarchy, but in order to maximize their utility it may be
+    necessary to use them in conjunction with support for multiple schemas.
+    For example, consider a directory with a naming context of
+    "dc=example,dc=com", below which are two branches:
+    "ou=People,dc=example,dc=com" and "ou=Groups,dc=example,dc=com".  If you
+    wish to only allow <code>inetOrgPerson</code> entries below the
+    "ou=People" branch, and only <code>groupOfNames</code> entries below the
+    "ou=Groups" branch, then that can only be fully accomplished if there are
+    different schemas that govern the "ou=People" and "ou=Groups" branches.
+
+    <br><br>
+    If there were a single schema governing the entire server, then you can
+    imagine that it would have four DIT structure rules:
+    <ul>
+      <li><code>( 1 NAME 'domainStructureRule' FORM 'domainNameForm' )</code></li>
+      <li><code>( 2 NAME 'organizationalUnitStructureRule' FORM 'organizationalUnitNameForm' SUP 1 )</code></li>
+      <li><code>( 3 NAME 'inetOrgPersonStructureRule' FORM 'inetOrgPersonNameForm' SUP 2 )</code></li>
+      <li><code>( 4 NAME 'groupOfNamesStructureRule' FORM 'groupOfNamesNameForm' SUP 2 )</code></li>
+    </ul>
+
+    This set of DIT structure rules would allow the structure described above,
+    but it would also allow the creation of group entries below the "ou=People"
+    branch and the creation of user entries below the "ou=Gropus" branch.  The
+    only way to prevent that using DIT structure rules would be to define
+    separate schemas for the "ou=People" and "ou=Groups" branches and only
+    define the "inetOrgPersonStructureRule" rule in the schema for the
+    "ou=People" branch, and only define the "groupOfNamesStructureRule" rule in
+    the schema for the "ou=Groups" branch.
+
+    <br><br>
+    More information about the potential use for multiple schemas in OpenDS
+    will be described in a <a href="multipleschemas.html">later section</a>.
+
+    <br><br>
+    <b>The OpenDS DIT Structure Rule Implementation</b>
+    <br><br>
+    DIT structure rules may be defined purely from the information contained in
+    the schema configuration files using the DIT structure rule description
+    syntax provided above.  All DIT structure rule objects are instances of the
+    <code>org.opends.server.types.DITStructureRule</code> class.  DIT structure
+    rules may be retrieved from the server schema using either the integer rule
+    ID or their associated name form.
+
+    <br><br>
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="ditcontentrules.html">Previous:  DIT Content Rules</a></div>
+    <div align="right"><a href="matchingruleuses.html">Next:  Matching Rule Uses</a></div>
+  </body>
+</html>
+

@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Understanding Schema in OpenDS</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Understanding Schema in OpenDS</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="schemainitialization.html">Previous:  The OpenDS Schema Initialization Process</a></div>
+    <div align="right"><a href="entrychecking.html">Next:  The Entry Schema Checking Process</a></div>
+    <div class="secpageheader">The OpenDS Schema Backend</div>
+
+    <br>
+    The schema backend is the mechanism that OpenDS uses to make schema
+    information available to external clients.  Clients may query this backend
+    to retrieve information about the matching rules, attribute syntaxes,
+    attribute types, object classes, name forms, DIT content rules, DIT
+    structure rules, and matching rule uses defined in the server.  It also
+    provides support for modify operations which can be used to update the
+    server schema.
+
+    <br><br>
+    The behavior of the OpenDS schema backend is largely governed by
+    <a href="https://opends.dev.java.net/public/standards/rfc2251.txt">RFC 2251</a>,
+    section 3.2.2 and
+    <a href="https://opends.dev.java.net/public/standards/rfc4512.txt">RFC 4512</a>,
+    section 4.2, particuarly for read operations.  The schema backend presents
+    a single entry (by default it is "<code>cn=schema</code>", which matches
+    the value used by the Sun Java System Directory Server, although this can
+    be customized if necessary).  This entry contains the
+    <code>subschemaSubentry</code> object class, and makes the server schema
+    elements available through the following attribute types:
+    <ul>
+      <li><code>matchingRules</code>
+      <li><code>ldapSyntaxes</code>
+      <li><code>attributeTypes</code>
+      <li><code>objectClasses</code>
+      <li><code>nameForms</code>
+      <li><code>dITContentRules</code>
+      <li><code>dITStructureRules</code>
+      <li><code>matchingRuleUse</code>
+    </ul>
+
+    All of these attribute types have <code>directoryOperation</code> usage,
+    which means that they will be treated as operational by the server, and
+    will not be returned unless the client explicitly requests them.  This is
+    the correct standards-compliant behavior, but it is different from the
+    behavior exhibited by the Sun Java System Directory Server, which will
+    always treat the <code>matchingRules</code>, <code>attributeTypes</code>, 
+    and <code>objectClasses</code> attributes as user attributes.  Because it
+    is possible that some developers have written code to depend on the fact
+    that the server will always return these attributes by default, then OpenDS
+    includes a configuration option (<code>ds-cfg-show-all-attributes</code> in
+    the <code>ds-cfg-backend-id=schema,cn=Backends,cn=config</code> entry).
+
+    <br><br>
+    As noted above, the schema backend also provides a mechanism for clients to
+    alter the server schema through modify operations.  This interface can be
+    used to add new schema elements, remove existing schema elements, or
+    replace existing elements with a new definition.  These operations can be
+    done using a combination of the <code>ADD</code> and <CODE>DELETE</code>
+    modification types (the <code>REPLACE</code> modification type is not
+    supported for updating the schema, and the <code>INCREMENT</code> type
+    doesn't doesn't make any sense in this context):
+    <ul>
+      <li>In order to add a new schema element that does not exist, use the
+          <code>ADD</code> modification type to add it.<br><br></li>
+      <li>In order to complete remove a schema element from the server, use the
+          <code>DELETE</code> modification type to remove it.<br><br></li>
+      <li>In order to replace an existing schema element, use the
+          <code>DELETE</code> modification type to remove the existing element
+          and the <code>ADD</code> modification type to add the new version in
+          the same modification.  If the <code>DELETE</code> and
+          <code>ADD</code> operations are included in the same modification,
+          then the server will not enforce all of the restrictions that would
+          otherwise be in place when removing a schema element.<br><br></li>
+    </ul>
+
+    In any case, the format used for the value should be based on the
+    description syntax associated with that type of schema element (e.g., in
+    order to alter the attribute type definitions, the attribute type
+    description syntax should be used).
+
+    <br><br>
+    When adding a new schema element to the server, the primary requirements
+    are that it should be a valid definition according to the corresponding
+    syntax, and that it does not reference any other schema elements that do
+    not exist or that are marked as <code>OBSOLETE</code>.  The dependencies
+    that must be satisfied when adding schema elements include:
+    <ul>
+      <li>For attribute types, the attribute syntax, matching rules, and
+          superior attribute type</li>
+      <li>For object classes, the required and optional attribute types and the
+          superior object class</li>
+      <li>For name forms, the required and optional attribute types and the
+          structural object class</li>
+      <li>For DIT content rules, the required, optional, and prohibited
+          attribute types and the structural and auxiliary object classes</li>
+      <li>For DIT structure rules, the name form and superior DIT structure
+          rules</li>
+      <li>For matching rule uses, the matching rule and referenced attribute
+          types</li>
+    </ul>
+
+    When removing an existing schema element in the server (and not re-adding
+    it in the same modification), the primary requirements are that it should
+    be a valid definition according to the corresponding syntax, and that
+    there are no other schema elements that reference it.  The dependencies
+    that must be satisfied when removing schema elements include:
+    <ul>
+      <li>For an attribute type, no other attribute type may reference it as a
+          superior type, it must not be required or allowed by any object
+          class or name form, it must not be required, allowed, or prohibited
+          by any DIT content rule, and it must not be referenced by any
+          matching rule</li>
+      <li>For an object class, no other object class may reference it as a
+          superior class, it must not be the structural class for any name
+          form, and it must not be referenced as a structural or auxiliary
+          class for any DIT content rule</li>
+      <li>For a name form, it must not be referenced by any DIT structure
+          rule</li>
+      <li>For a DIT structure rule, it must not be referenced as a superior
+          rule for any other DIT structure rule</li>
+    </ul>
+
+    When replacing an existing schema element, it is treated with essentially
+    the same requirements as an add.  The restrictions on removing the element
+    are not enforced if it is re-added in the same operation.
+
+    <br><br>
+    When adding a new schema element, it will be placed in the
+    <code>99-user.ldif</code> schema file by default, unless the definition for
+    the element explicitly specifies a different file using the
+    <code>X-SCHEMA-FILE</code> extension.  When removing or replacing an
+    existing schema element, the file containing the existing definition will
+    be updated.
+
+    <br><br>
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="schemainitialization.html">Previous:  The OpenDS Schema Initialization Process</a></div>
+    <div align="right"><a href="entrychecking.html">Next:  The Entry Schema Checking Process</a></div>
+  </body>
+</html>
+

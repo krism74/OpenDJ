@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Understanding Schema in OpenDS</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Understanding Schema in OpenDS</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="objectclasses.html">Previous:  Object Classes</a></div>
+    <div align="right"><a href="ditcontentrules.html">Next:  DIT Content Rules</a></div>
+    <div class="secpageheader">Name Forms</div>
+
+    <br>
+    Name forms may be used to define a mechanism for naming entries in the
+    server.  In particular, a name form specifies one or more attribute types
+    which must be present in the RDN of an entry with a given structural object
+    class, as well as zero or more attribute types which may optionally be
+    present in the RDN.
+
+    <br><br>
+    Each structural object class defined in the server schema may be associated
+    with at most one name form.  If a name form is defined for a given
+    structural object class, then the associated name form will be enforced for
+    any add or modify DN operations for entries containing that object class.
+    If a structural object class is not associated with a name form, then any
+    attribute type which is allowed to exist in the target entry may be used as
+    a naming attribute type.
+
+    <br><br>
+    Name forms are not supported in the Sun Java System Directory Server, but
+    are a new feature that is available in OpenDS.
+
+    <br><br>
+    <b>The Name Form Description Format</b>
+    <br><br>
+    The name form description format is described in
+    <a href="https://opends.dev.java.net/public/standards/rfc4512.txt">RFC 4512</a>,
+    section 4.1.7.2.  The definition is as follows:
+
+    <blockquote><pre>     NameFormDescription = LPAREN WSP
+         numericoid                 ; object identifier
+         [ SP "NAME" SP qdescrs ]   ; short names (descriptors)
+         [ SP "DESC" SP qdstring ]  ; description
+         [ SP "OBSOLETE" ]          ; not active
+         SP "OC" SP oid             ; structural object class
+         SP "MUST" SP oids          ; attribute types
+         [ SP "MAY" SP oids ]       ; attribute types
+         extensions WSP RPAREN      ; extensions</pre></blockquote>
+
+    The elements of the name form description include:
+    <ul>
+      <li>The numeric OID used to uniquely identify the name form in the
+          server.  Although the specification requires a numeric OID, OpenDS
+          also allows a non-numeric OID for the purpose of convenience.  In
+          this case, the non-numeric OID should be the same as the name of the
+          name form followed by the string "-oid".<br><br></li>
+      <li>An optional set of human-readable names that may be used to refer to
+          the name form.  If there is a single name, then it should be enclosed
+          in single quotes.  If there are multiple names, then they should each
+          be enclosed in single quotes separated by spaces and the entire set
+          of names should be enclosed in parentheses.<br><br></li>
+      <li>An optional human-readable description.  If a description is present,
+          then it should be enclosed in single quotation marks.<br><br></li>
+      <li>An optional "OBSOLETE" flag that may be used to indicate whether the
+          name form is active.  If a name form is marked as "OBSOLETE", then it
+          should not be in effect within the server, nor should it be possible
+          to create any other elements that depend upon it.<br><br></li>
+      <li>The name or OID of the structural object class with which the name
+          form is associated.<br><br></li>
+      <li>The name(s) or OID(s) of one or more attribute types that must be
+          present in the RDN for any entry with the specified structural class.
+          If there is only a single required attribute type, then only its name
+          or OID needs to be given.  If there are multiple required attribute
+          types, then they should be separated by spaces and dollar signs, and
+          the entire set of required attribute types should be enclosed in
+          parentheses.<br><br></li>
+      <li>The name(s) or OID(s) of zero or more attribute types that may
+          optionally be present in the RDN for any entry with the specified
+          structural class.  If there is only a single optional attribute type,
+          then only its name or OID needs to be given.  If there are multiple
+          optional attribute types, then they should be separated by spaces and
+          dollar signs, and the entire set of optional attribute types should
+          be enclosed in parentheses.<br><br></li>
+      <li>An optional set of extensions for the name form.  OpenDS currently
+          uses the following extensions for name forms:
+          <ul>
+            <li>X-ORIGIN -- Provides information about where the name form is
+                defined (e.g., whether it came from a particular RFC or
+                Internet Draft, is defined within the OpenDS project,
+                etc.).</li>
+            <li>X-SCHEMA-FILE -- Indicates which schema file contains the name
+                form definition (this is generally used for internal purposes
+                only and does not get exposed to clients).</li>
+          </ul>
+          <br></li>
+    </ul>
+
+    For example, the following is the name form description for the
+    uddiBusinessEntityNameForm name form defined in
+    <a href="https://opends.dev.java.net/public/standards/rfc4403.txt">RFC 4403</a>:
+
+    <blockquote>
+      <code>
+        ( 1.3.6.1.1.10.15.1 NAME 'uddiBusinessEntityNameForm'
+          OC uddiBusinessEntity MUST ( uddiBusinessKey ) X-ORIGIN 'RFC 4403' )
+      </code>
+    </blockquote>
+
+    In this case, the numeric OID is "1.3.6.1.1.10.15.1" and the human-readable
+    name is "uddiBusinessEntityNameForm".  Entries with the
+    <code>uddiBusinessEntity</code> structural object class are required to use
+    <code>uddiBusinessKey</code> as their only RDN attribute type.  There is no
+    description, nor are there any other attribute types that may optionally be
+    included in the associated entries, and the name form is not marked
+    "OBSOLETE".
+
+    <br><br>
+    <b>The OpenDS Name Form Implementation</b>
+    <br><br>
+    As for attribute types and object classes, name forms can be defined purely
+    from the schema configuration files, in this case using the name form
+    description syntax detailed above.  All name form instances in OpenDS are
+    instances of the <code>org.opends.server.types.NameForm</code> class.  Name
+    form objects may be retrieved by the server schema using their OID, any of
+    their human-readable names, or by the structural object class with which
+    they are associated.
+
+    <br><br>
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="objectclasses.html">Previous:  Object Classes</a></div>
+    <div align="right"><a href="ditcontentrules.html">Next:  DIT Content Rules</a></div>
+  </body>
+</html>
+

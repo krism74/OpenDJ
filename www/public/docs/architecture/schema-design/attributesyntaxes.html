@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Understanding Schema in OpenDS</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Understanding Schema in OpenDS</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="matchingrules.html">Previous:  Matching Rules</a></div>
+    <div align="right"><a href="attributetypes.html">Next:  Attribute Types</a></div>
+    <div class="secpageheader">Attribute Syntaxes</div>
+
+    <br>
+    Attribute syntaxes are essentially data type definitions.  The syntax for
+    an attribute type indicates the type of data meant to be held by the
+    corresponding values.  This can be used to determine whether a particular
+    value is acceptable for a given attribute, as well as to provide
+    information about how the server should interact with existing values.
+
+    <br><br>
+    The Sun Java System Directory Server 5.x does not support the ability to
+    reject values that violates the constraints of the associated attribute
+    syntax.  This capability has been added in the Sun Java System Directory
+    Server 6.0, although it is off by default for compatibility reasons (in
+    order to support existing deployments where there may be attribute values
+    that violate the associated syntax).  OpenDS also supports the ability to
+    reject values that violate the associated attribute syntax, and this is the
+    default behavior for the purposes of standards compliance.  For
+    compatibility reasons, it is possible to completely disable this attribute
+    syntax checking if necessary, but it is also possible to accept values that
+    violate the associated syntax but log a warning message to the server's
+    error log every time this occurs.  Note, however, that because OpenDS is
+    much more standards compliant in its use of schema elements than the Sun
+    Java System Directory Server, if attributes are allowed to have values that
+    violate their associated syntax then matching operations may not behave as
+    expected with such values.
+
+    <br><br>
+    <b>The Attribute Syntax Description Format</b>
+    <br><br>
+    The attribute syntax description format is described in
+    <a href="https://opends.dev.java.net/public/standards/rfc4512.txt">RFC 4512</a>,
+    section 4.1.5.  The definition is as follows:
+
+    <blockquote><pre>     SyntaxDescription = LPAREN WSP
+         numericoid                 ; object identifier
+         [ SP "DESC" SP qdstring ]  ; description
+         extensions WSP RPAREN      ; extensions</pre></blockquote>
+
+    <br>
+    The elements of the attribute syntax description include:
+    <ul>
+      <li>The numeric OID used to uniquely identify the attribute syntax in the
+          server.<br><br></li>
+      <li>An optional description for the syntax.  If it is provided, then it
+          must be enclosed in single quotation marks.<br><br></li>
+      <li>An optional set of extensions for the attribute syntax.  OpenDS does
+          not currently support any extensions for use in attribute
+          syntaxes.<br><br></li>
+    </ul>
+
+    For example, the following is the attribute syntax description for the
+    standard directory string syntax:
+
+    <blockquote>
+      <code>( 1.3.6.1.4.1.1466.115.121.1.15 DESC 'Directory String' )</code>
+    </blockquote>
+
+    <br>
+    In this case, the OID is "1.3.6.1.4.1.1466.115.121.1.15" and the
+    description is "Directory String".  There are no extensions.
+
+    <br><br><br>
+    <b>Commonly-Used Attribute Syntaxes</b>
+    <br><br>
+    There are a number of attribute syntaxes defined in LDAP, both in the core
+    protocol specification, as well as other related RFCs and Internet Drafts.
+    Many of these attribute syntaxes are defined in
+    <a href="https://opends.dev.java.net/public/standards/rfc4517.txt">RFC 4517</a>,
+    (LDAP Syntaxes and Matching Rules) in section 3.3.  Some of the most
+    commonly-used attribute syntaxes include:
+
+    <ul>
+      <li>Directory String -- The Directory String syntax is used to hold
+          general-purpose string values containing one or more UTF-8
+          characters.  Technically, empty values (i.e., those with zero
+          characters) are not allowed, although the Sun Java System Directory
+          Server has historically allowed this, so OpenDS offers a
+          configuration option that may be used to allow it as
+          well although it is disabled by default for standards
+          compliance.<br><br></li>
+      <li>IA5 String -- The IA5 String syntax is used to hold string values
+          based on the IA5 character set, which is also known as the ASCII
+          character set.<br><br></li>
+      <li>Printable String -- The Printable String syntax is used to hold
+          string values contain one or more characters from the set of
+          uppercase and lowercase letters, numeric digits, single quotes,
+          left and right parentheses, plus sign, comma, hyphen, period, and
+          equals sign.<br><br></li>
+      <li>Boolean -- The Boolean syntax is used to hold values of either
+          "<code>TRUE</code>" or "<code>FALSE</code>".  No other values are
+          allowed for attributes with this syntax.<br><br></li>
+      <li>Integer -- The Integer syntax is used to hold integer values, which
+          must contain at least one digit, may start with a hyphen to indicate
+          a negative value, and zero may be used as the first digit only when
+          the value is zero.<br><br></li>
+      <li>Octet String -- The Octet String syntax is used to hold a set of zero
+          or more bytes.  It has been used to replace the former Binary
+          syntax.<br><br></li>
+      <li>DN -- The DN syntax is used to hold distinguished name values,
+          comprised of zero or more RDN components.  Values should be in the
+          format specified in
+          <a href="https://opends.dev.java.net/public/standards/rfc4514.txt">RFC 4514</a>
+          (LDAP String Representation of Distinguished Names).<br><br></li>
+    </ul>
+
+    <br><br>
+    <b>The OpenDS Attribute Syntax Implementation</b>
+    <br><br>
+    Like matching rules, attribute syntaxes require logic to determine whether
+    a given value is appropriate and therefore they are be implemented as Java
+    classes.  These classes must be subclasses of
+    <code>org.opends.server.api.AttributeSyntax</code>.  The most important
+    method in this class is:
+
+    <blockquote><pre>public boolean valueIsAcceptable(ByteString value,
+                                 StringBuilder invalidReason)</pre></blockquote>
+
+    This method is used to determine whether a given value is acceptable
+    according to the constraints for that syntax.
+
+    <br><br>
+    The OpenDS implementation also contains four additional methods that may
+    be used to specify default matching rules for use in conjunction with that
+    attribute syntax:
+
+    <blockquote><pre>public EqualityMatchingRule getEqualityMatchingRule()
+
+public OrderingMatchingRule getOrderingMatchingRule();
+
+public SubstringMatchingRule getSubstringMatchingRule();
+
+public ApproximateMatchingRule getApproximateMatchingRule()</pre></blockquote>
+
+    These methods will be used to provide the default matching rules for an
+    attribute type if no explicit rules are specified.  Attribute types will
+    be discussed in greater detail in the <a href="attributetypes.html">next
+    section</a>.
+
+    <br><br>
+    Attribute syntax objects may be retrieved from the server schema using
+    their OIDs.
+
+    <br><br>
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="matchingrules.html">Previous:  Matching Rules</a></div>
+    <div align="right"><a href="attributetypes.html">Next:  Attribute Types</a></div>
+  </body>
+</html>
+

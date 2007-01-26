@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Understanding Schema in OpenDS</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Understanding Schema in OpenDS</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="schemabackend.html">Previous:  The OpenDS Schema Backend</a></div>
+    <div align="right"><a href="multipleschemas.html">Next:  A Possible Design for Multiple Schemas in OpenDS</a></div>
+    <div class="secpageheader">The Entry Schema Checking Process</div>
+
+    <br>
+    During the course of processing add, modify, and modify DN operations, the
+    server needs to check the resulting entry to ensure that it meets the
+    requirements defined in the server schema (no such processing is necessary
+    for delete operations, nor for read-only operations like bind, search, and
+    compare).  The schema validation process is performed for the entry in the
+    <code>org.opends.server.types.Entry</code> class using the method with the
+    following signature:
+
+    <blockquote><pre>public boolean conformsToSchema(Entry parentEntry,
+                                boolean parentProvided,
+                                boolean validateNameForms,
+                                boolean validateStructureRules,
+                                StringBuilder invalidReason)</pre></blockquote>
+
+    This method indicates whether the current entry is in conformance with the
+    server schema, and if not will append the reason to the provided
+    <code>StringBuilder</code> buffer.  Although this method does contain a
+    core set of validation that will always be performed, the arguments that
+    the caller may provide can allow it to skip some processing if it is not
+    required.  In particular, modify operations will neither impact the DN of
+    an entry nor its position in the server hierarchy, so there is no need to
+    perform name form or DIT structure rule validation for such operations.
+    Further, DIT structure rule validation will also be skipped during LDIF
+    imports because it requires access to the parent entry which will generally
+    not be available while the import is in progress.
+
+    <br><br>
+    The processing performed by this method to determine whether an entry is
+    in compliance with the server schema configuration is as follows:
+    <ol>
+      <li>Determine the structural object class for the entry.  As previously
+          noted, each entry must have exactly one structural object class.  If
+          the entry is found to contain multiple independent structural object
+          classes, or if the entry does not have a structural class, then it
+          will consult the server's single structural object class policy and
+          either reject the entry (which is the default behavior) or ignore
+          this error and continue processing (optionally sending a warning
+          message to the error log).  If processing should continue and the
+          entry was found to have multiple structural classes, then the first
+          one found will be considered the structural class for that entry for
+          the remainder of the validation process.<br><br></li>
+      <li>If the entry does have a structural object class, then the server
+          will retrieve any DIT content rule from the server schema that is
+          associated with that structural class.  Further, if name form
+          validation is to be performed, then the server will retrieve any name
+          form associated with that structural class.  Finally, if there was an
+          associated name form and DIT structure rule validation is to be
+          performed, then the server will retrieve any DIT structure rule
+          associated with that name form.  If any of these elements is declared
+          OBSOLETE in the server schema, then the server will treat them as if
+          they did not exist.<br><br></li>
+      <li>All of the object classes in the entry will be examined to ensure
+          that they are defined in the server schema and that all of the
+          required attribute types associated with those object classes are
+          present in the entry.  Further, if there is an applicable DIT content
+          rule, then it will be used to determine whether all of the auxiliary
+          classes contained in the entry are allowed.<br><br></li>
+      <li>All of the user attributes in the entry will be examined to ensure
+          that they are allowed by at least one of the entry's object classes
+          or the associated DIT content rule.  Also, each user attribute type
+          defined with a SINGLE-VALUE constraint will be checked to ensure that
+          it does only contain one value.<br><br></li>
+      <li>All of the operational attributes in the entry will be examined to
+          ensure that if it is defined with a SINGLE-VALUE constraint that it
+          does contain only one value.<br><br></li>
+      <li>If name form validation is to be performed and there is an associated
+          name form for the entry's structural object class, then the server
+          will verify that all of its required attribute types are included in
+          the entry's RDN, and that the RDN does not contain any attribute
+          types which are not allowed.<br><br></li>
+      <li>If the entry has an associated DIT content rule, then the server will
+          ensure that all of its required attribute types and none of its
+          prohibited attribute types are present in the entry.<br><br></li>
+      <li>If DIT structure rule validation is to be performed and there is a
+          DIT structure rule that applies to the entry which contains one or
+          more superior rules, then the server will ensure that an entry with
+          the associated structural class is allowed to exist below an entry
+          with the parent's structural class.<br><br></li>
+      <li>If DIT structure rule validation is to be performed but there is no
+          associated DIT structure rule for the entry or there is such a rule
+          but it does not have any superior rules, then the server will
+          retrieve the parent entry and determine whether there is any DIT
+          structure rule that may apply to it.  If there is an applicable DIT
+          structure rule for the parent entry, then the server will not allow
+          any children for that entry unless they are covered by a DIT
+          structure rule that contains the parent's DIT structure rule as one
+          of its superior rules.<br><br></li>
+    </ol>
+
+    <br><br>
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="schemabackend.html">Previous:  The OpenDS Schema Backend</a></div>
+    <div align="right"><a href="multipleschemas.html">Next:  A Possible Design for Multiple Schemas in OpenDS</a></div>
+  </body>
+</html>
+

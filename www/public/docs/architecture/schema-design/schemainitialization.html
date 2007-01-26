@@ -1,0 +1,308 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Understanding Schema in OpenDS</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Understanding Schema in OpenDS</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="matchingruleuses.html">Previous:  Matching Rule Uses</a></div>
+    <div align="right"><a href="schemabackend.html">Next:  The OpenDS Schema Backend</a></div>
+    <div class="secpageheader">The OpenDS Schema Initialization Process</div>
+
+    <br>
+    The schema subsystem is an absolutely critical component of OpenDS.  This
+    is especially true for matching rules, attribute syntaxes, and attribute
+    types, because they are heavily used throughout the server.  Virtually
+    everything that the server does needs to interact with the schema in some
+    way, even reading the server configuration.  However, this presents a bit
+    of a catch-22 because the server needs to use matching rules and
+    attribute syntaxes in order to read the configuration, but the set of
+    matching rules and attribute syntaxes that are available for use in the
+    server are defined in that same configuration.
+
+    <br><br>
+    To address this problem, OpenDS uses a phased startup process that allows
+    it to use a minimal, hard-coded set of matching rules and attribute
+    syntaxes to use in order to read the configuration, then it can figure out
+    what matching rules and syntaxes are really available.
+
+    <br><br>
+    The actual process that the server uses to initialize and load the server
+    schema and perform other necessary startup processing is detailed below.
+    Unless otherwise noted, all methods called are in the
+    <code>org.opends.server.core.DirectoryServer</code> class.
+
+    <ol>
+      <li>The <code>main(String[]&nbsp;args)</code> method parses the provided
+          set of command-line arguments and verifies that the user actually
+          wants to start the server (as opposed to some other task, like
+          printing the version number, that doesn't actually require starting
+          the server).<br><br></li>
+      <li>The <code>main(String[]&nbsp;args)</code> method gets the singleton
+          <code>DirectoryServer</code> instance and uses it to invoke the
+          <code>bootstrapServer()</code> method.<br><br></li>
+      <li>The <code>bootstrapServer()</code> method performs some basic
+          initialization, including creating a thread group for the server,
+          creating and registering a shutdown hook, and registering an
+          uncaught exception handler.  It also creates special error and debug
+          logger instances that will print any messages logged (that meet
+          the category and severity requirements) will be written to standard
+          error until the real loggers are in place, and will initialize the
+          JMX subsystem.<br><br></li>
+      <li>The <code>bootstrapServer()</code> method will call
+          <code>bootstrapClient()</code>.  The <code>bootstrapClient()</code>
+          method will then configure the server to reject any attribute values
+          that are not valid according to their associated attribute
+          syntax and will create a new, empty schema.<br><br></li>
+      <li>The <code>bootstrapClient()</code> method will then call
+          <code>bootstrapMatchingRules()</code>, which will instantiate and
+          register the following matching rule instances (all of which are in
+          the <code>org.opends.server.schema</code> package):
+          <ul>
+            <li><code>DoubleMetaphoneApproximateMatchingRule</code></li>
+            <li><code>BooleanEqualityMatchingRule</code></li>
+            <li><code>CaseExactEqualityMatchingRule</code></li>
+            <li><code>CaseExactIA5EqualityMatchingRule</code></li>
+            <li><code>CaseIgnoreEqualityMatchingRule</code></li>
+            <li><code>CaseIgnoreIA5EqualityMatchingRule</code></li>
+            <li><code>DistinguishedNameEqualityMatchingRule</code></li>
+            <li><code>GeneralizedTimeEqualityMatchingRule</code></li>
+            <li><code>IntegerEqualityMatchingRule</code></li>
+            <li><code>OctetStringEqualityMatchingRule</code></li>
+            <li><code>ObjectIdentifierEqualityMatchingRule</code></li>
+            <li><code>TelephoneNumberEqualityMatchingRule</code></li>
+            <li><code>CaseExactOrderingMatchingRule</code></li>
+            <li><code>CaseIgnoreOrderingMatchingRule</code></li>
+            <li><code>GeneralizedTimeOrderingMatchingRule</code></li>
+            <li><code>IntegerOrderingMatchingRule</code></li>
+            <li><code>OctetStringOrderingMatchingRule</code></li>
+            <li><code>CaseExactSubstringMatchingRule</code></li>
+            <li><code>CaseExactIA5SubstringMatchingRule</code></li>
+            <li><code>CaseIgnoreSubstringMatchingRule</code></li>
+            <li><code>CaseIgnoreIA5SubstringMatchingRule</code></li>
+            <li><code>OctetStringSubstringMatchingRule</code></li>
+            <li><code>TelephoneNumberSubstringMatchingRule</code></li>
+          </ul>
+          <br></li>
+      <li>The <code>bootstrapClient()</code> method will then call
+          <code>bootstrapAttributeSyntaxes()</code>, which will instantiate and
+          register the following attribute syntax instances (all of which are
+          in the <code>org.opends.server.schema</code> package):
+          <ul>
+            <li><code>AttributeTypeSyntax</code></li>
+            <li><code>BinarySyntax</code></li>
+            <li><code>BooleanSyntax</code></li>
+            <li><code>DirectoryStringSyntax</code></li>
+            <li><code>DistinguishedNameSyntax</code></li>
+            <li><code>IA5StringSyntax</code></li>
+            <li><code>IntegerSyntax</code></li>
+            <li><code>GeneralizedTimeSyntax</code></li>
+            <li><code>ObjectClassSyntax</code></li>
+            <li><code>OIDSyntax</code></li>
+            <li><code>TelephoneNumberSyntax</code></li>
+          </ul>
+          <br></li>
+      <li>The <code>bootstrapClient()</code> method will then create empty
+          data structures for holding information about various server
+          components that will be registered as they are read from the
+          configuration (pretty much any kind of extensible element available
+          in the server other than plugins).<br><br></li>
+      <li>The <code>bootstrapClient()</code> method will then return back to
+          the <code>bootstrapServer()</code> method, which will initialize
+          a few more instance variables (primarily those that will be used for
+          keeping track of established client connections).<br><br></li>
+      <li>The <code>bootstrapServer()</code> method will then return back to
+          <code>main(String[]&nbsp;args)</code>, which will immediately call the
+          <code>initializeConfiguration(String&nbsp;configClass,&nbsp;String&nbsp;configFile)</code>
+          method.<br><br></li>
+      <li>The <code>initializeConfiguration(String&nbsp;configClass,&nbsp;String&nbsp;configFile)</code>
+          method will load the config handler class, instantiate it, and
+          perform any appropriate initialization (via the config handler's
+          implementation of the <code>initializeConfigHandler</code>
+          method).  In the case of the
+          <code>org.opends.server.extensions.ConfigFileHandler</code>, it will
+          read the configuration from the <code>config.ldif</code> file.  No
+          schema checking will be done at this time, and all attribute types
+          will be assumed to have the Directory String attribute
+          syntax.<br><br></li>
+      <li>The <code>initializeConfiguration(String&nbsp;configClass,&nbsp;String&nbsp;configFile)</code>
+          method will return back to the <code>main(String[]&nbsp;args)</code>
+          method, which will then call the <code>startServer()</code> method.
+          This will first ensure that the server has been bootstrapped and that
+          it is not already running.  It will then log a message to the error
+          log indicating that the server is starting up.<br><br></li>
+      <li>The <code>startServer()</code> method will then acquire an exclusive
+          lock on the server lock file to ensure that at most one copy of that
+          instance can be running at any given time.<br><br></li>
+      <li>The <code>startServer()</code> method will then call the
+          <code>initializeSchema()</code> method, which will create a new
+          instance of the
+          <code>org.opends.server.core.SchemaConfigManager</code> class and
+          will use its <code>getSchema()</code> method to obtain a reference to
+          the (currently empty) schema that will be loaded.<br><br></li>
+      <li>The <code>initializeSchema()</code> method will then call the
+          <code>SchemaConfigManager.initializeMatchingRules()</code> method.
+          This method will read the server configuration and identify all
+          entries below the <code>cn=Matching Rules,cn=config</code> entry.
+          If the <code>ds-cfg-matching-rule-enabled</code> attribute exists
+          with a value of <code>true</code>, then the server will load and
+          instantiate the class specified in the
+          <code>ds-cfg-matching-rule-class</code> method.  It will call the
+          <code>initializeMatchingRule(ConfigEntry&nbsp;configEntry)</code>
+          method on that instance to perform any necessary initialization, and
+          will then call the
+          <code>Schema.registerMatchingRule(MatchingRule&nbsp;matchingRule,&nbsp;boolean&nbsp;overwriteExisting)</code>
+          method to register that matching rule in the server schema.  Once
+          all matching rules have been initialized, then control will be
+          returned to the <code>DirectoryServer.initializeSchema()</code>
+          method.<br><br></li>
+      <li>The <code>initializeSchema()</code> method will then call the
+          <code>SchemaConfigManager.initializeAttributeSyntaxes()</code>
+          method.  This method will read the server configuration and identify
+          all entries below the <code>cn=Syntaxes,cn=config</code> entry.  If
+          the <code>ds-cfg-syntax-enabled</code> attribute exists with a value
+          of <code>true</code>, then the server will load and instantiate the
+          class specified in the <code>ds-cfg-syntax-class</code> method.  It
+          will call the
+          <code>initializeSyntax(ConfigEntry&nbsp;configEntry)</code>
+          method on that instance to perform any necessary initialization, and
+          will then call the
+          <code>Schema.registerSyntax(AttributeSyntax&nbsp;syntax,&nbsp;boolean&nbsp;overwriteExisting)</code>
+          method to register that attribute syntax in the server schema.  Once
+          all attribute syntaxes have been initialized, then control will be
+          returned to the <code>DirectoryServer.initializeSchema()</code>
+          method.<br><br></li>
+      <li>The <code>initializeSchema()</code> method will then call the
+          <code>SchemaConfigManager.initializeSchemaFromFiles()</code> method.
+          This method will determine the path to the directory containing the
+          schema configuration files (by default, this is
+          <code>config/schema</code> below the server root), and will obtain a
+          list of all the files contained in that directory, sorted by
+          filename (so that the files will be loaded in ascending numeric
+          order, as long as all of the files follow the convention of starting
+          with a two-digit number).<br><br></li>
+      <li>For each file in the schema directory, the
+          <code>initializeSchemaFromFiles()</code> method will read the
+          contents of that file as an entry in LDIF form, and will extract the
+          <code>attributeTypes</code>, <code>objectClasses</code>,
+          <code>nameForms</code>, <code>dITContentRules</code>,
+          <code>dITStructureRules</code>, and <code>matchingRuleUse</code>
+          attributes from the entry.<br><br></li>
+      <li>The <code>initializeSchemaFromFiles()</code> method will then
+          iterate through all values (if any) of the
+          <code>attributeTypes</code> attribute.  Each value will be parsed and
+          used to create an <code>org.opends.server.types.AttributeType</code>
+          object using the
+          <code>org.opends.server.schema.AttributeTypeSyntax</code> attribute
+          syntax.  It will then call the
+          <code>Schema.registerAttributeType(AttributeType&nbsp;attributeType,&nbsp;boolean&nbsp;overwriteExisting)</code>
+          method to register the attribute type with the schema.  If that
+          attribute type was already defined in the schema, then the server
+          will log a warning and will override the earlier definition with the
+          new one.<br><br></li>
+      <li>The <code>initializeSchemaFromFiles()</code> method will then
+          iterate through all values (if any) of the
+          <code>objectClasses</code> attribute.  Each value will be parsed and
+          used to create an <code>org.opends.server.types.ObjectClass</code>
+          object using the
+          <code>org.opends.server.schema.ObjectClassSyntax</code> attribute
+          syntax.  It will then call the
+          <code>Schema.registerObjectClass(ObjectClass&nbsp;objectClass,&nbsp;boolean&nbsp;overwriteExisting)</code>
+          method to register the object class with the schema.  If that object
+          class was already defined in the schema, then the server will log a
+          warning and will override the earlier definition with the new
+          one.<br><br></li>
+      <li>The <code>initializeSchemaFromFiles()</code> method will then
+          iterate through all values (if any) of the
+          <code>nameForms</code> attribute.  Each value will be parsed and
+          used to create an <code>org.opends.server.types.NameForm</code>
+          object using the
+          <code>org.opends.server.schema.NameFormSyntax</code> attribute
+          syntax.  It will then call the
+          <code>Schema.registerNameForm(NameForm&nbsp;nameForm,&nbsp;boolean&nbsp;overwriteExisting)</code>
+          method to register the name form with the schema.  If that name form
+          was already defined in the schema, then the server will log a warning
+          and will override the earlier definition with the new
+          one.<br><br></li>
+      <li>The <code>initializeSchemaFromFiles()</code> method will then
+          iterate through all values (if any) of the
+          <code>dITContentRules</code> attribute.  Each value will be parsed
+          and used to create an
+          <code>org.opends.server.types.DITContentRule</code> object using the
+          <code>org.opends.server.schema.DITContentRuleSyntax</code> attribute
+          syntax.  It will then call the
+          <code>Schema.registerDITContentRule(DITContentRule&nbsp;ditContentRule,&nbsp;boolean&nbsp;overwriteExisting)</code>
+          method to register the DIT content rule with the schema.  If that DIT
+          content rule was already defined in the schema, then the server will
+          log a warning and will override the earlier definition with the new
+          one.<br><br></li>
+      <li>The <code>initializeSchemaFromFiles()</code> method will then
+          iterate through all values (if any) of the
+          <code>dITStructureRules</code> attribute.  Each value will be parsed
+          and used to create an
+          <code>org.opends.server.types.DITStructureRule</code> object using
+          the <code>org.opends.server.schema.DITStructureRuleSyntax</code>
+          attribute syntax.  It will then call the
+          <code>Schema.registerDITStructureRule(DITStructureRule&nbsp;ditStructureRule,&nbsp;boolean&nbsp;overwriteExisting)</code>
+          method to register the DIT structure rule with the schema.  If that
+          DIT structure rule was already defined in the schema, then the server
+          will log a warning and will override the earlier definition with the
+          new one.<br><br></li>
+      <li>The <code>initializeSchemaFromFiles()</code> method will then
+          iterate through all values (if any) of the
+          <code>matchingRuleUse</code> attribute.  Each value will be parsed
+          and used to create an
+          <code>org.opends.server.types.MatchingRuleUse</code> object using
+          the <code>org.opends.server.schema.MatchingRuleUseSyntax</code>
+          attribute syntax.  It will then call the
+          <code>Schema.registerMatchingRuleUse(MatchingRuleUse&nbsp;matchingRuleUse,&nbsp;boolean&nbsp;overwriteExisting)</code>
+          method to register the matching rule use with the schema.  If that
+          matching rule use was already defined in the schema, then the server
+          will log a warning and will override the earlier definition with the
+          new one.<br><br></li>
+      <li>The <code>initializeSchemaFromFiles()</code> method will then return
+          back to the <code>DirectoryServer.initializeSchema()</code> method.
+          At this point, all of the schema elements will have been loaded and
+          should be active in the server schema.<br><br></li>
+      <li>The <code>initializeSchema()</code> method will then invoke the
+          <code>ConfigHandler.finalizeConfigHandler()</code> method to finalize
+          the existing configuration handler instance, and will then call the
+          <code>ConfigHandler.initializeConfigHandler(String&nbsp;configFile,&nbsp;boolean&nbsp;checkSchema)</code>
+          method to re-load the server configuration, this time using the
+          correct matching rule, attribute syntax, and attribute type
+          definitions from the server schema.<br><br></li>
+      <li>The <code>initializeSchema()</code> method will return control to the
+          <code>startServer()</code> method, which will continue the startup
+          process.  At this point, the schema initialization process is
+          complete, with the exception of creating the schema backend which
+          isn't as much about initializing the schema as it is about making it
+          publicly accessible to clients.  At any rate, the schema backend will
+          be described in greater detail in
+          <a href="schemabackend.html">the next section</a>.<br><br></li>
+    </ol>
+
+    <br><br>
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="matchingruleuses.html">Previous:  Matching Rule Uses</a></div>
+    <div align="right"><a href="schemabackend.html">Next:  The OpenDS Schema Backend</a></div>
+  </body>
+</html>
+

@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Understanding Schema in OpenDS</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Understanding Schema in OpenDS</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="nameforms.html">Previous:  Name Forms</a></div>
+    <div align="right"><a href="ditstructurerules.html">Next:  DIT Structure Rules</a></div>
+    <div class="secpageheader">DIT Content Rules</div>
+
+    <br>
+    DIT content rules provide a mechanism for defining the content that may
+    appear in an entry.  Like with name forms, at most one DIT content rule may
+    be associated with an entry based on its structural object class.  If such
+    a rule exists for an entry, then it will work in conjunction with the
+    object classes contained in that entry to define which attribute types
+    must, may, and must not be present in the entry, as well as which auxiliary
+    classes that it may include.
+
+    <br><br>
+    DIT content rules are not supported in the Sun Java System Directory
+    Server, but are a new feature that is available in OpenDS.
+
+    <br><br>
+    <b>The DIT Content Rule Description Format</b>
+    <br><br>
+    The DIT content rule description format is described in
+    <a href="https://opends.dev.java.net/public/standards/rfc4512.txt">RFC 4512</a>,
+    section 4.1.6.  The definition is as follows:
+
+    <blockquote><pre>     DITContentRuleDescription = LPAREN WSP
+         numericoid                 ; object identifier
+         [ SP "NAME" SP qdescrs ]   ; short names (descriptors)
+         [ SP "DESC" SP qdstring ]  ; description
+         [ SP "OBSOLETE" ]          ; not active
+         [ SP "AUX" SP oids ]       ; auxiliary object classes
+         [ SP "MUST" SP oids ]      ; attribute types
+         [ SP "MAY" SP oids ]       ; attribute types
+         [ SP "NOT" SP oids ]       ; attribute types
+         extensions WSP RPAREN      ; extensions</pre></blockquote>
+
+    The elements of the DIT content rule description include:
+    <ul>
+      <li>The numeric OID of the structural object class with which the DIT
+          content rule is associated.  Although the specification requires a
+          numeric OID, this should match the OID specified for the associated
+          object class, so if the object class OID was non-numeric, then this
+          OID should be as well.<br><br></li>
+      <li>An optional set of human-readable names that may be used to refer to
+          the DIT content rule.  If there is a single name, then it should be
+          enclosed in single quotes.  If there are multiple names, then they
+          should each be enclosed in single quotes separated by spaces and the
+          entire set of names should be enclosed in parentheses.<br><br></li>
+      <li>An optional human-readable description.  If a description is
+          provided, then it should be enclosed in single quotation
+          marks.<br><br></li>
+      <li>An optional "OBSOLETE" flag that may be used to indicate whether the
+          DIT content rule is active.  If a DIT content rule is marked as
+          "OBSOLETE", then it should not be in effect within the
+          server.<br><br></li>
+      <li>An optional list of auxiliary object classes that may be present in
+          entries with the associated structural class.  If no values are
+          provided, then such entries will not be allowed to have any auxiliary
+          object classes.  Values should be specified as the name(s) or OID(s)
+          of the allowed auxiliary classes, and if there are multiple allowed
+          auxiliary classes then they should be separated by spaces and dollar
+          signs and the entire set of names should be enclosed in
+          parentheses.<br><br></li>
+      <li>An optional list of attribute types that are required to be present
+          in entries with the associated structural class.  This is in addition
+          to the attribute types required by the object classes included in the
+          entry, and these additional attribute types do not need to be allowed
+          by any of those object classes.  Values should be specified as the
+          name(s) or OID(s) of the required attribute types, and if there are
+          multiple required attribute types then they should be separated by
+          spaces and dollar signs and the entire set of required attribute
+          types should be enclosed in parentheses.<br><br></li>
+      <li>An optional list of attribute types that may optionally be present in
+          entries with the associated structural class.  This is in addition to
+          the attribute types allowed by the object classes included in the
+          entry.  Values should be specified as the name(s) or OID(s) of the
+          optional attribute types, and if there are multiple optional
+          attribute types then they should be separated by spaces and dollar
+          signs and the entire set of optional attribute types should be
+          enclosed in parentheses.<br><br></li>
+      <li>An optional list of attribute types that are prohibited from being
+          present in entries with the associated structural class.  This list
+          may not include any attribute types that are required by the
+          structural class or any of the allowed auxiliary classes, but it may
+          be used to prevent the inclusion of attribute types which would
+          otherwise be allowed by one of those object classes.  Values should
+          be specified as the name(s) or OID(s) of the prohibited attribute
+          types, and if there are multiple prohibited types then they should be
+          separated by spaces and dollar signs and the entire set of prohibited
+          attribute types should be enclosed in parentheses.<br><br></li>
+      <li>An optional set of extensions for the DIT content rule.  OpenDS
+          currently uses the following extensions for DIT content rules:
+          <ul>
+            <li>X-ORIGIN -- Provides information about where the DIT content
+                rule is defined (e.g., whether it came from a particular RFC or
+                Internet Draft, is defined within the OpenDS project,
+                etc.)</li>
+            <li>X-SCHEMA-FILE -- Indicates which schema file contains the DIT
+                content rule definition (this is generally used for internal
+                purposes only and does not get exposed to clients).
+          </ul>
+          <br></li>
+    </ul>
+
+    The following provides an example of a DIT content rule description:
+
+    <blockquote>
+      <code>
+        ( 2.16.840.1.113730.3.2.2 NAME 'inetOrgPersonContentRule'
+          AUX ( posixAccount $ shadowAccount $ authPasswordObject )
+          MUST uid )</code>
+    </blockquote>
+
+    In this case, the numeric OID is "2.16.840.1.113730.3.2.2", which is the
+    OID for the inetOrgPerson structural object class.  It has a human-readable
+    name of "inetOrgPersonContentRule" and no description.  It allows entries
+    containing the inetOrgPerson object class to also contain the posixAccount,
+    shadowAccount, and authPasswordObject auxiliary classes, and those entries
+    must contain the uid attribute type.  It is not marked "OBSOLETE", and it
+    does not define any additional optional or prohibited attribute types, nor
+    does it include any extensions.
+
+    <br><br>
+    <b>The OpenDS DIT Content Rule Implementation</b>
+    <br><br>
+    DIT content rules may be defined purely from the schema configuration files
+    using the DIT content rule description syntax provided above.  All DIT
+    content rule objects are instances of the
+    <code>org.opends.server.types.DITContentRule</code> class.  DIT content
+    rule objects may be retrieved from the server schema using the structural
+    object class with which they are associated.
+
+    <br><br>
+    At the present time, the OpenDS mechanism used to handle DIT content rules
+    varies from the LDAPv3 specification in the following ways:
+    <ul>
+      <li>The LDAPv3 specification states that if the structural object class
+          used in an entry does not have a corresponding DIT content rule, then
+          that entry is not allowed to contain any auxiliary object classes.
+          Because the Sun Java System Directory Server does not support DIT
+          content rules, OpenDS will not prevent the use of auxiliary object
+          classes in entries for which there is no corresponding DIT content
+          rule.  If it is desirable to prevent the inclusion of auxiliary
+          classes in a given type of entry, then a DIT content rule should be
+          created with no allowed auxiliary classes to cover entries with the
+          appropriate structural object class.<br><br></li>
+    </ul>
+
+    <br><br>
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="nameforms.html">Previous:  Name Forms</a></div>
+    <div align="right"><a href="ditstructurerules.html">Next:  DIT Structure Rules</a></div>
+  </body>
+</html>
+

@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+<head>
+<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+<style type="text/css"> 
+/* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */
+</style>
+<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+<title>OpenDS Directory Server - Understanding Schema in OpenDS</title>
+</head>
+<body>
+<table class="tertmasttable" width="100%" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><div class="collectionheader">Understanding Schema in OpenDS</div></td>
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade size="1" >
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="attributetypes.html">Previous:  Attribute Types</a></div>
+    <div align="right"><a href="nameforms.html">Next:  Name Forms</a></div>
+    <div class="secpageheader">Object Classes</div>
+
+    <br>
+    Object classes are essentially named sets of attribute types that may be
+    used to control the type of data that may be stored in entries.  Note that
+    the terms "object class" and "objectclass" (i.e., with and without a space
+    between the words) are generally used interchangably.
+
+    <br><br>
+    <b>The Object Class Description Format</b>
+    <br><br>
+    The object class description format is described in
+    <a href="https://opends.dev.java.net/public/standards/rfc4512.txt">RFC 4512</a>,
+    section 4.1.1.  The definition is as follows:
+
+    <blockquote><pre>     ObjectClassDescription = LPAREN WSP
+         numericoid                 ; object identifier
+         [ SP "NAME" SP qdescrs ]   ; short names (descriptors)
+         [ SP "DESC" SP qdstring ]  ; description
+         [ SP "OBSOLETE" ]          ; not active
+         [ SP "SUP" SP oids ]       ; superior object classes
+         [ SP kind ]                ; kind of class
+         [ SP "MUST" SP oids ]      ; attribute types
+         [ SP "MAY" SP oids ]       ; attribute types
+         extensions WSP RPAREN
+
+     kind = "ABSTRACT" / "STRUCTURAL" / "AUXILIARY"</pre></blockquote>
+
+    <br>
+    The elements of the object class description include:
+    <ul>
+      <li>The numeric OID used to uniquely identify the object class in the
+          server.  Although the specification requires a numeric OID, OpenDS
+          also allows a non-numeric OID for the purpose of convenience and
+          better compatibility with the Sun Java System Directory Server.  In
+          this case, the non-numeric OID should be the same as the name of the
+          object class followed by the string "-oid".<br><br></li>
+      <li>An optional set of human-readable names that may be used to refer to
+          the object class.  If there is a single name, then it should be
+          enclosed in single quotes.  If there are multiple names, then they
+          should each be enclosed in single quotes separated by spaces and the
+          entire set of names should be enclosed in parentheses.<br><br></li>
+      <li>An optional human-readable description.  If there is a description,
+          then it should be enclosed in single quotation marks.<br><br></li>
+      <li>An optional "OBSOLETE" flag that may be used to indicate whether the
+          object class is active.  If an object class is marked as "OBSOLETE",
+          then it should not be referenced by any new elements created in the
+          server.<br><br></li>
+      <li>An optional set of superior class(es) for the object class.  Note
+          that although technically the specification allows an object class to
+          have multiple superior classes, OpenDS currently only supports a
+          single superior class.  In this case, the "SUP" keyword should be
+          followed by a space and the name or OID of the superior class.  If
+          there are multiple superior classes, then they should be separated by
+          dollar signs and the entire set of superior classes should be
+          enclosed in parentheses.<br><br></li>
+      <li>An optional keyword that specifies the kind of object class that is
+          being defined.  If this is specified, then it must be one of
+          "ABSTRACT", "STRUCTURAL", or "AUXILIARY".  If no value is specified,
+          then the object class will be considered "STRUCTURAL".<br><br></li>
+      <li>An optional set of attribute types for attributes that are required
+          to be present (i.e., have at least one value) in entries with that
+          object class.  If there is only a single required attribute, then the
+          "MUST" keyword should be followed by the name or OID of that
+          attribute type.  If there are multiple required attribute types, then
+          they should be separated by dollar signs and the entire set of
+          required attribute types should be enclosed in
+          parentheses.<br><br></li>
+      <li>An optional set of optional attribute types for attributes that are
+          allowed (but not required) to be present in entries with that object
+          class.  If there is only a single optional attribute, then  the "MAY"
+          keyword should be followed by the name or OID of that attribute type.
+          If there are multiple optional attribute types, then they should be
+          separated by dollar signs and the entire set of optional attribute
+          types should be enclosed in parentheses.<br><br></li>
+      <li>An optional set of extensions for the object class.  OpenDS currently
+          uses the following extensions for object classes:
+          <ul>
+            <li><code>X-ORIGIN</code> -- Provides information about where the
+                object class is defined (e.g., whether it came from a
+                particular RFC or Internet Draft, is defined within the OpenDS
+                project, etc.).</li>
+            <li><code>X-SCHEMA-FILE</code> -- Indicates which schema file
+                contains the object class definition (this is generally used
+                for internal purposes only and does not get exposed to
+                clients).</li>
+          </ul>
+          <br></li>
+    </ul>
+
+    For example, the following is the object class description for the standard
+    <code>person</code> object class:
+
+    <blockquote>
+      <code>( 2.5.6.6 NAME 'person' SUP top STRUCTURAL MUST ( sn $ cn )
+              MAY ( userPassword $ telephoneNumber $ seeAlso $ description )
+              X-ORIGIN 'RFC 2256' )</code>
+    </blockquote>
+
+    In this case, the OID is "2.5.6.6".  There is a single human-readable name
+    of "person".  The superior class is "top".  The kind is "STRUCTURAL".  Any
+    entry containing the person object class will be required to include the sn
+    and cn attributes, and will be allowed to include the userPassword,
+    telephoneNumber, seeAlso, and description attributes.  The object class
+    definition was taken from RFC 2256.  There is no description, and the
+    object class is not considered "OBSOLETE".
+
+    <br><br>
+    <b>Object Class Kinds</b>
+    <br><br>
+    As described above, all object classes must have a kind of either
+    "ABSTRACT", "STRUCTURAL", or "AUXILIARY".  These object class kinds may be
+    described as follows:
+
+    <ul>
+      <li>Abstract object classes are only intended to be extended by other
+          object classes.  An entry must not contain any abstract class unless
+          it also contains a structural or auxiliary class that dervies from
+          that abstract class (i.e., includes a non-abstract object class which
+          has the abstract class in its inheritance chain).  All entries must
+          contain at least the "top" abstract object class, in the inheritance
+          chain for their structural class.  They may or may not contain other
+          abstract classes in the inheritance chains for their structural class
+          or any of their auxiliary classes.<br><br></li>
+      <li>Structural object classes are intended to define the crux of what an
+          entry represents.  Every entry must include exactly one structural
+          object class chain, and the root of that chain must ultimately be the
+          "top" abstract object class.  The structural object class for an
+          entry is not allowed to be changed.<br><br></li>
+      <li>Auxiliary object classes are intended to define additional qualities
+          of entries.  An entry may contain zero or more auxiliary classes, and
+          the set of auxiliary classes associated with an entry may change
+          over time.<br><br></li>
+    </ul>
+
+    The model represented by object class kinds translates very neatly to the
+    model used by the Java programming language.  Abstract LDAP object classes
+    map directly to Java abstract classes, auxiliary LDAP object classes map
+    directly to Java interfaces, and structural LDAP object classes map
+    directly to Java concrete (non-abstact) classes.  Just as Java classes must
+    extend exactly one superclass but can implement any number of interfaces,
+    so must LDAP entries contain exactly one structural class chain but can
+    include any number of auxiliary class chains.  Similarly, just as it is not
+    possible to directly instantiate an abstract Java class, it is also not
+    possible to create an LDAP entry containing only abstract object classes.
+
+    <br><br>
+    Note that the Sun Java System Directory Server has never enforced many of
+    the restrictions noted here around object class kinds.  In particular, it
+    would allow the creation of entries that did not contain any structural
+    object class chain, and would also allow the creation of entries containing
+    multiple structural object class chains.  This means that some deployments
+    using the Sun Java System Directory Server may contain entries that violate
+    this constraint.  OpenDS will not allow this behavior by default, but for
+    the sake of compatibility with existing Sun Java System Directory Server
+    deployments, it will be possible to configure OpenDS to allow entries to
+    violate this constraint, optionally writing a message to the server's error
+    log each time this condition is detected.  Note, however, that if there are
+    entries that do not contain exactly one structural object class, then some
+    schema elements like name forms and DIT content rules which depend on this
+    constraint may not work as expected in all cases.
+
+    <br><br>
+    <b>Object Class Inheritance</b>
+    <br><br>
+    As specified in the above description, object classes can have zero or more
+    superior classes (although at the present time, OpenDS supports at most one
+    superior class).  If an object class references a superior class, then all
+    of the required and optional attributes associated with that superior class
+    are also associated with the subordinate class.
+
+    <br><br>
+    The following restrictions exist for object class inheritance:
+    <ul>
+      <li>Abstract object classes may only inherit from other abstract classes.
+          They may not be subordinate to structural or auxiliary
+          classes.<br><br></li>
+      <li>Structural object classes may only inherit from abstract classes or
+          other structural classes.  They may not be subordinate to auxiliary
+          object classes.<br><br></li>
+      <li>Auxiliary object classes may only inherit from abstract classes or
+          other auxiliary classes.  They may not be subordinate to structural
+          object classes.<br><br></li>
+      <li>All structural object classes must ultimately inherit from the top
+          abstract object class.  The net effect of this is that every entry in
+          the server must include the top object class, and as a result must
+          also include the objectClass attribute type which is required by the
+          top object class).<br><br></li>
+    </ul>
+
+    <br><br>
+    <b>The OpenDS Object Class Implementation</b>
+    <br><br>
+    Object classes in OpenDS do not require any custom logic and therefore they
+    can be implemented as data structures which get populated from information
+    contained in the schema configuration files, much in the same way as for
+    attribute type definitions.  All object class instances in OpenDS are
+    instances of the <code>org.opends.server.types.ObjectClass</code> class.
+    Object class objects may be retrieved from the server schema using their
+    OIDs or any of their human-readable names.
+
+    <br><br>
+    At the present time, the OpenDS mechanism used to handle object classes
+    varies from the LDAPv3 specification in the following ways:
+    <ul>
+      <li>Object classes are allowed to have at most one superior class,
+          whereas the specification allows multiple superior classes in some
+          cases.<br><br></li>
+    </ul>
+
+    <br><br>
+    <div align="right"><a href="index.html">Return to Contents</a></div>
+    <div align="right"><a href="attributetypes.html">Previous:  Attribute Types</a></div>
+    <div align="right"><a href="nameforms.html">Next:  Name Forms</a></div>
+  </body>
+</html>
+
