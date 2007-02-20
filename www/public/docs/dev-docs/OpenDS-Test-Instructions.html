@@ -79,7 +79,7 @@ also
 provides a detailed text-based report listing all test cases that were
 run
 along with their results. The reports are located at
-<code>build/unit-tests/report/results.txt</code><br><br>
+<code>build/unit-tests/report/results.txt</code><br><br>  
 If any of the tests failed, you can rerun only those tests by specifying
 the <code>-Dtest.failures=true</code> on the <code>ant</code> command line.<br>
 <br>
@@ -155,6 +155,13 @@ the
 testBackups method in the org.opends.server.tasks.TestBackupAndRestore
 test
 class.
+<br>
+<br>
+The output of System.out and System.err is suppressed by default.  
+This output is only shown for tests that failed.  To see this output
+for all tests in the command line window, run the tests with the
+<code>-Dorg.opends.test.suppressOutput=false</code> option 
+on the <code>ant</code> command line.
 <br>
 <h3>Code Coverage</h3>
 Code coverage information is also available with EMMA, the open source
