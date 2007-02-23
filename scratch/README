@@ -1,0 +1,29 @@
+This directory structure provides space for OpenDS developers to store files
+related to the project that are not appropriate for the trunk/opends branch,
+including prototype code, code diffs, mock-ups, and other files.
+
+Any individual with the Committer role in the OpenDS project may use this
+space.  Simply create a subdirectory named with your java.net username and
+place all content below that directory.
+
+Content placed below this scratch space will be accessible below.
+"http://builds.opends.org/scratch/".  For example, the URL
+"http://builds.opends.org/scratch/README" may be used to access this file.
+
+Guidelines for using this scratch space are as follows:
+
+- Individuals will be responsible for managing their own content.  Please try
+  to keep the amount of space consumed to a minimum, and please try to clean up
+  on a regular basis to remove files that are no longer needed.
+
+- Individuals should use common sense when deciding whether something is
+  appropriate.  This space should only be used to hold content related to the
+  project.  No offensive content will be allowed, nor any content that you do
+  not have the legal right to publish or should not be made public.
+
+- Any third-party code or libraries you wish to place here must be approved
+  ahead of time, just like anywhere else in the project.
+
+- Individuals should only update files in someone else's scratch space with the
+  owner's approval.
+
