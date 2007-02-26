@@ -1,0 +1,350 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+  <title>Schema Synchronization Feature Requirements</title>
+</head>
+<body bgcolor="#ffffff" text="#000000">
+<center>
+<div class="title"><img alt="OpenDS" title="OpenDs"
+ src="https://opends.dev.java.net/public/images/opends_logo_welcome.png"
+ style="width: 197px; height: 57px;"><br>
+<br>
+</div>
+<div class="subtitle">Schema Synchronization<br>
+<br>
+</div>
+<div class="subtitle">Feature Requirements<br>
+<br>
+</div>
+</center>
+<hr noshade="noshade" size="1">
+<div class="section">Revision History</div>
+<table border="0" cellpadding="0" cellspacing="0">
+  <tbody>
+    <tr>
+      <td bgcolor="#666699">
+      <table border="0" cellpadding="2" cellspacing="1">
+        <tbody>
+          <tr>
+            <th><font color="#ffffff">Version</font></th>
+            <th><font color="#ffffff">Author</font></th>
+            <th><font color="#ffffff">Date</font></th>
+            <th><font color="#ffffff">Comments</font></th>
+          </tr>
+          <tr>
+            <td align="center" bgcolor="#ffffff">0.1<br>
+            </td>
+            <td bgcolor="white">Gilles.Bellaton</td>
+            <td bgcolor="white">2007-02-23</td>
+            <td bgcolor="white">Initial Draft<br>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade="noshade" size="1">
+<div class="section">Table of Contents</div>
+<a href="#Introduction">1. Introduction</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#Purpose">1.1 Purposes</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#Terminology">1.2 Terminology</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#Glossary">1.3 Glossary</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#References">1.4 References</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#Overview">1.5 Overview</a>
+&nbsp;<br>
+<a href="#General%20Description">
+2. General Description</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#Feature%20Perspective">2.1 Feature
+Perspective</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#User%20Characteristics">2.2 User
+Characteristics</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#Constraints">2.3 Constraints</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#Assumptions%20and%20Dependencies">2.4
+Assumptions and
+Dependencies</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#Future%20Requirements">2.5 Future
+requirements</a><br>
+<a href="#Specific%20Requirements">
+3. Specific Requirements</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#Administration%20Requirements">3.1
+Administration
+Requirements</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#Performance%20Requirements">3.2
+Performance Requirements</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#Scalability%20Requirements">3.3
+Scalability Requirements</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#Internationalization%20Requirements">3.4
+Internationalization Requirements</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#Help%20Requirements">3.5 Help Requirements</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#Security%20Requirements">3.6 Security
+Requirements</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#3.7_Tests_and_Maintenance_Requirements">3.7
+Tests and Maintenance Requirements</a><a
+ href="http://opends.central/process/FeatureRequirements.html#3.9_Integration_with_other_subsystems"></a><br>
+&nbsp;&nbsp;&nbsp; <a href="#3.8_Conformance_to_Standards_">3.8
+Conformance to Standards</a><br>
+&nbsp;&nbsp;&nbsp; <a
+ href="http://opends.central/process/FeatureRequirements.html#3.9_Integration_with_other_subsystems">3.9
+Integration with other subsystems</a><br>
+<a href="#Open%20Issues">
+4. Open Issues</a><br>
+<a href="#Appendix">
+5. Appendix</a><br>
+<hr noshade="noshade" size="1">
+<h2><a name="Introduction">
+<div class="section">1. Introduction</div>
+</a></h2>
+<p><a name="Introduction"></a></p>
+<h3><a name="Purpose">
+<div class="subsection">1.1 Purpose</div>
+</a></h3>
+<p><a name="Purpose"></a><a>This document serves as a feature
+requirement specification for Schema
+Synchronization.&nbsp;<br>
+</a></p>
+<p><a>The intended audience for this document includes anyone who would
+like to understand the functionality
+of the product and would like to evaluate its features to suit their
+needs.</a></p>
+<p>
+</p>
+<h3><a name="Terminology">
+</a>
+<div class="subsection"><a name="Terminology">1.2 Terminology</a></div>
+</h3>
+<p><a name="Terminology">The priorities of requirements that will be
+used in this document include:</a>
+</p>
+<ul>
+  <li> Must Have (MH) -- These requirements are those which are
+absolutely required for the implementation of this feature. An
+implementation that do not satisfy those requirements is not acceptable.<br>
+  </li>
+  <br>
+  <li> Highly Desirable (HD) -- These requirements are those which are
+very important to include in the implementation of this feature but are
+not so important as to be considered absolute requirements. It is
+likely that they will be included, but if necessary is is acceptable to
+have an implementation that do not satisfy those requirements. </li>
+  <br>
+  <li> Nice to Have (NTH) -- These requirements are those which may
+provide some level of benefit but are not critical to the
+implementation of this feature. They may be included in the
+implementation of this feature if time permits, but priority must be
+given to the "must have" and "highly desirable" requirements. </li>
+</ul>
+<p><br>
+The words <i>method </i>and <i>means </i>identify some kind of
+technique by which the feature will be supported. They do not
+specifically imply either an API (programming language method or
+procedure) or a command. </p>
+<p>
+</p>
+<h3><a name="Glossary">
+<div class="subsection">1.3 Glossary</div>
+</a></h3>
+<p><a name="Glossary"></a>
+<table border="0" cellpadding="0" cellspacing="0">
+  <tbody>
+    <tr>
+      <td bgcolor="#666699">
+      <table border="0" cellpadding="2" cellspacing="1">
+        <tbody>
+          <tr>
+            <th><font color="#ffffff">Term</font></th>
+            <th><font color="#ffffff">Description</font></th>
+          </tr>
+          <tr>
+            <td bgcolor="white">&lt;XXX&gt;</td>
+            <td bgcolor="white">&lt;XXX Description&gt;</td>
+          </tr>
+        </tbody>
+      </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</p>
+<h3><a name="References">
+<div class="subsection">1.4 References</div>
+</a></h3>
+<p><a
+ href="https://opends.dev.java.net/public/docs/architecture/OpenDS-Synchronization-Architecture.odt">Understanding
+Schema in OpenDS<br>
+Synchronization Design</a><br>
+<a
+ href="https://opends.dev.java.net/public/docs/user-docs/OpenDS-Synchronization-Deployments.odt">Synchronization
+Deployments</a><br>
+</p>
+<h3><a name="Overview">
+<div class="subsection">1.5 Overview</div>
+</a></h3>
+<p><a name="Overview"></a>The <a href="#General%20Description">General
+Description</a> section describes the general factors that affect the
+requirements which are
+defined in detail in the Specific Requirements section, and makes them
+easier to understand. The <a href="#Specific%20Requirements">Specific
+Requirements</a> contain the specific requirements for this release.
+</p>
+<p>&nbsp;</p>
+<hr noshade="noshade" size="1">
+<h2><a name="General Description">
+<div class="section">2. General Description</div>
+</a></h2>
+<p><a name="General Description"></a></p>
+<h3><a name="Feature Perspective">
+<div class="subsection">2.1 Feature Perspective</div>
+</a></h3>
+<p><a name="Feature Perspective"></a><br>
+Schema management is a core feature of the Directory Service. Schema
+describe the entries that can be stored in the Directory
+Servers.
+</p>
+<p>Synchronization is also a core feature of a Directory Service,
+essential to a scalable and highly available service.<br>
+</p>
+<p>It is therefore important that the changes made to the schema of an
+individual Directory Server are synchronized on all the Directory
+Servers contributing to the same Directory Service.
+</p>
+<p>Schema synchronization must currently be done when the schema is
+modified
+in any of three possible ways:<br>
+</p>
+<ul>
+  <li>By modifying the <span style="font-family: monospace;">cn=schema</span>
+suffix when the server is online.</li>
+  <li>By using the dedicated task to perform dynamic schema updates via
+file when the server is
+online.<br>
+  </li>
+  <li>By modifying the underlying backend files directly when the
+server is offline.</li>
+</ul>
+In some rare cases it is useful to have different schema on different
+Directory Servers even when the servers share all or part of their
+data. In
+those cases it must be possible to disable the schema synchronization
+or to specify a restricted list of servers that participate in schema
+synchronization.<br>
+The most common case is to share schema, however. Schema
+synchronization
+should therefore be enabled by default whenever synchronization is
+enabled.
+<h3><a name="User Characteristics">
+<div class="subsection">2.2 User Characteristics</div>
+</a></h3>
+<p><a name="User Characteristics"></a>Administrators are going to use
+this feature to control schema synchronization.<br>
+<br>
+</p>
+<h3><a name="Constraints">
+<div class="subsection">2.3 Constraints</div>
+</a></h3>
+<p><a name="Constraints"></a>Schema modifications happen only when
+deploying new applications or new types of data. The rate of change for
+schema is therefore expected to be low. The schema synchronization
+implementation should therefore favor simplicity over high scalability.<br>
+</p>
+<h3><a name="Assumptions and Dependencies">
+<div class="subsection">2.4 Assumptions and Dependencies</div>
+</a></h3>
+<p><a name="Assumptions and Dependencies"></a>N/A
+</p>
+<h3><a name="Future Requirements">
+<div class="subsection">2.5 Future Requirements</div>
+</a></h3>
+<p><a name="Future Requirements"></a>OpenDS will probably
+allow Multiple Schemas in the future. In this case different schema
+will be associated with different portions of the LDAP tree. Schema
+Synchronization may need to be extended when support for multiple
+schemas arrives. It is also
+possible, though, that support for multiple schemas will be provided by
+adding extra information to
+the schema to specify which part of the schema applies to each specific
+part of the tree. In this case schema
+synchronization may simply involve synchronizing the entire schema
+everywhere. If that happens, schema synchronization will continue to
+work without modification.<br>
+</p>
+<p>&nbsp;</p>
+<hr noshade="noshade" size="1">
+<h2><a name="Specific Requirements">
+<div class="section">3. Specific Requirements</div>
+</a></h2>
+<h3><a name="Administration Requirements">
+<div class="subsection">3.1 Administration Requirements</div>
+</a></h3>
+<p><a name="Administration Requirements"></a>(MH) Schema
+Synchronization must be configurable though a CLI, or through the GUI.<br>
+</p>
+<h3><a name="Performance Requirements">
+<div class="subsection">3.2 Performance Requirements</div>
+</a></h3>
+<p><a name="Performance Requirements"></a>Schema modifications occur
+at a very low rate. As a result, there are no performance requirements
+for
+Schema Synchronization.<br>
+</p>
+<h3><a name="Scalability Requirements">
+<div class="subsection">3.3 Scalability Requirements</div>
+</a></h3>
+<p><a name="Scalability Requirements"></a>Schema modifications occur
+at a very low rate. Therefore schema synchronization need not be highly
+scalable in terms of number of modifications it can handle.<br>
+(MH) There must not be any limit to the number of servers whose schema
+can be synchronized.
+</p>
+<h3><a name="Internationalization Requirements">
+<div class="subsection">3.4 Internationalization Requirements</div>
+</a></h3>
+<p><a name="Internationalization Requirements"></a>N/A
+</p>
+<h3><a name="Help Requirements">
+<div class="subsection">3.5 Help Requirements</div>
+</a></h3>
+<p><a name="Help Requirements"></a>N/A
+</p>
+<h3><a name="Security Requirements">
+<div class="subsection">3.6 Security Requirements</div>
+</a></h3>
+<p><a name="Security Requirements"></a>(MH) Non authenticated servers
+must not be able to push or pull schema changes.<br>
+(HD) It should be possible to encrypt schema changes.<br>
+</p>
+<h3><a name="3.7_Tests_and_Maintenance_Requirements"></a>3.7 Tests and
+Maintenance Requirements</h3>
+(MH) All synchronization tools must also work for schema
+synchronization including monitoring, full synchronization, entry diff,
+and so forth.<br>
+<br>
+<h3><a name="3.8_Conformance_to_Standards_"></a>3.8 Conformance to
+Standards Requirements <br>
+</h3>
+They are no specific requirements to follow an existing standard.<br>
+<br>
+<h3><a name="3.9_Integration_with_other_subsystems"></a>3.9 Integration
+with other subsystems Requirements</h3>
+(MH) This feature should have no impact on any other feature of OpenDS.<br>
+(MH) Schema Synchronization must be independent of the format of
+information stored in the schema. Should the storage format change, or
+new types of information such as ACIs be stored in the schema, Schema
+Synchronization must continue to work unchanged. <br>
+<br>
+<hr noshade="noshade" size="1">
+<h2><a name="Open Issues">
+<div class="section">4. Open Issues</div>
+</a></h2>
+<p><a name="Open Issues"></a>
+</p>
+<p>&nbsp;</p>
+<hr noshade="noshade" size="1">
+<h2><a name="Appendix"></a>
+<div class="section"><a name="Appendix">5. Appendix</a></div>
+</h2>
+<p><a name="Appendix"></a></p>
+</body>
+</html>

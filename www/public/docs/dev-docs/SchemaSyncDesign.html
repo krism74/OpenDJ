@@ -1,0 +1,347 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+  <title>Schema Synchronization Design</title>
+</head>
+<body bgcolor="#ffffff" text="#000000">
+<center>
+<div class="title"><big><sup><img
+ src="https://opends.dev.java.net/public/images/opends_logo_welcome.png"
+ title="OpenDS" alt="OpenDS" style="width: 197px; height: 57px;"><br>
+</sup></big><sup><br>
+</sup></div>
+<div class="subtitle">Schema Synchronization<br>
+</div>
+<div class="subtitle">Software Design Document</div>
+<p align="center"><br>
+</p>
+</center>
+<hr noshade="noshade" size="1">
+<div class="section">Revision History</div>
+<table border="0" cellpadding="0" cellspacing="0">
+  <tbody>
+    <tr>
+      <td bgcolor="#666699">
+      <table border="0" cellpadding="2" cellspacing="1">
+        <tbody>
+          <tr>
+            <th><font color="#ffffff">Version</font></th>
+            <th><font color="#ffffff">Author</font></th>
+            <th><font color="#ffffff">Date</font></th>
+            <th><font color="#ffffff">Comments</font></th>
+          </tr>
+          <tr>
+            <td align="center" bgcolor="#ffffff">0.1<br>
+            </td>
+            <td bgcolor="white">Gilles Bellaton<br>
+            </td>
+            <td bgcolor="white">2007-02-23</td>
+            <td bgcolor="white">Initial Draft</td>
+          </tr>
+        </tbody>
+      </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<hr noshade="noshade" size="1">
+<div class="section">Table of Contents<br>
+<ul id="mozToc">
+<!--mozToc h1 1 h2 2 h3 3 h4 4 h5 5 h6 6--><li><a href="#mozTocId82477">1.
+Introduction </a><br>
+    <a href="#mozTocId914741">2. Overview </a><br>
+    <a href="#mozTocId494211">3. Design Considerations </a>
+    <ul>
+      <li><a href="#mozTocId199133">3.1 Assumptions and Dependencies </a></li>
+      <li><a href="#mozTocId434391">3.2 Goals and Guideline </a></li>
+      <li><a href="#mozTocId104653">3.3 Development Method </a></li>
+    </ul>
+    <a href="#mozTocId32043">4. Architectural Strategies </a><br>
+    <a href="#mozTocId630274">5. System
+Architecture</a><br>
+    <a href="#mozTocId513572">6. Detailed System Architecture </a>
+    <ul>
+      <li><a href="#mozTocId719313">6.1 Entry Unique ID</a></li>
+      <li><a href="#mozTocId957316">6.2 Historical Information</a></li>
+      <li><a href="#mozTocId444932">6.3 Persistent Server State</a></li>
+      <li><a href="#mozTocId263528">6.4 Notification of changes</a></li>
+    </ul>
+    <a href="#mozTocId804021">7. Unit Tests</a><br>
+    <a href="#mozTocId679721">8. Feature's Configuration</a><br>
+    <a href="#mozTocId499393">9. External impacts</a>
+    <ul>
+      <li><a href="#mozTocId889147">9.1 Impact on
+Documentation</a></li>
+      <li><a href="#mozTocId952442">9.2 Impact on
+Configuration Interfaces </a></li>
+      <li><a href="#mozTocId519027">9.3 Impact on
+Other OpenDS subsystems</a></li>
+    </ul>
+  </li>
+</ul>
+</div>
+<br>
+<hr noshade="noshade" size="1">
+<h2><a class="mozTocH2" name="mozTocId82477"></a><a name="Introduction">
+<div class="section">1. Introduction</div>
+</a></h2>
+<p>The purpose of this document is to provide a design for the Schema
+synchronization feature.&nbsp; The
+intended audience is anyone interested in understanding how schema
+synchronization is implemented in OpenDS. Readers must be
+familiar
+with the following documents:<br>
+</p>
+<p><a
+ href="https://opends.dev.java.net/public/docs/architecture/OpenDS-Synchronization-Architecture.odt">Understanding
+Schema in OpenDS<br>
+Synchronization Design</a><br>
+<a
+ href="https://opends.dev.java.net/public/docs/user-docs/OpenDS-Synchronization-Deployments.odt">Synchronization
+Deployments</a><br>
+<a
+ href="https://opends.dev.java.net/public/docs/architecture/SchemaSyncFeatureRequirements.odt">Schema
+Synchronization Feature Requirements</a><br>
+<a
+ href="https://opends.dev.java.net/public/docs/architecture/OpenDS-Architecture.odt">OpenDS
+Architecture Guide</a><br>
+</p>
+<p>&nbsp;
+</p>
+<hr noshade="noshade" size="1">
+<h2><a class="mozTocH2" name="mozTocId914741"></a><a name="Overview">
+<div class="section">2. Overview</div>
+</a></h2>
+<p>Schema management is a core feature of the Directory Service. Schema
+describe the entries that can be stored in the Directory
+Servers.
+</p>
+<p>Synchronization is also a core feature of a Directory Service,
+essential to a scalable and highly available service.<br>
+</p>
+<p>It is therefore important that the changes made to the schema of an
+individual Directory Server are synchronized on all the Directory
+Servers contributing to the same Directory Service.
+</p>
+<p>Schema syncronization will be carried out using the same mechanism
+used for synchronization of Directory Server data. Yet, schema
+synchronization requires adaptations to the synchronization code due to
+the nature of the OpenDS schema backend
+and of the operations done on the schema.<br>
+</p>
+<p>&nbsp;
+</p>
+<hr noshade="noshade" size="1">
+<h2><a class="mozTocH2" name="mozTocId494211"></a><a
+ name="Design Considerations">
+<div class="section">3. Design Considerations</div>
+</a></h2>
+<h3><a class="mozTocH3" name="mozTocId199133"></a><a
+ name="Assumptions and Dependencies">
+<div class="subsection">3.1 Assumptions and Dependencies</div>
+</a></h3>
+<p><a name="Assumptions and Dependencies"></a>See the <a
+ href="https://opends.dev.java.net/public/docs/architecture/SchemaSyncFeatureRequirements.odt">Schema
+Synchronization Feature Requirements</a> document.
+</p>
+<h3><a class="mozTocH3" name="mozTocId434391"></a><a
+ name="Goals and Guideline">
+<div class="subsection">3.2 Goals and Guideline</div>
+</a></h3>
+<p><a name="Goals and Guideline"></a><br>
+Use the synchronization code as much as possible.<br>
+Limit use of hardware resources such as CPU and memory when schema
+synchronization is enabled.<br>
+Limit the impact synchronization has on the LDIF files used to store
+schema information.<br>
+<br>
+</p>
+<h3><a class="mozTocH3" name="mozTocId104653"></a><a
+ name="Development Method">
+<div class="subsection">3.3 Development Method</div>
+</a></h3>
+<p><a name="Development Method"></a>Unit tests must be provided as the
+same time as the code.<br>
+</p>
+<p>&nbsp;</p>
+<hr noshade="noshade" size="1">
+<h2><a class="mozTocH2" name="mozTocId32043"></a><a
+ name="Architectural Strategies">
+<div class="section">4. Architectural Strategies</div>
+</a></h2>
+<p><a name="Architectural Strategies"></a><br>
+</p>
+<p>Schema Synchronization uses the same code as data synchronization
+for Directory Server, but the data synchronization code needs to be
+adapted for schema syncronization, due
+to the nature of the schema backend.<br>
+<br>
+</p>
+<p></p>
+<p>&nbsp;</p>
+<hr noshade="noshade" size="1">
+<p><a name="System Architecture"><br>
+</a></p>
+<h2><a class="mozTocH2" name="mozTocId630274"></a><a
+ name="System Architecture">5. System
+Architecture</a></h2>
+<p></p>
+<div class="section">
+</div>
+Core servers notify the
+synchronization plugin about changes.<br>
+The Synchronization plugin uses the same design as for normal
+synchronization, see <a
+ href="https://opends.dev.java.net/public/docs/architecture/OpenDS-Synchronization-Architecture.odt">
+Synchronization Design</a>, to propagate changes to other
+Synchronization servers, and to replay the changes.<br>
+The nature of schema changes makes it necessary to do schema-specific
+handling for some synchronization work. Four areas in the
+synchronization code to be modified to work on schema.<br>
+<ul>
+  <li>Entry Unique ID</li>
+  <li>Historical information</li>
+  <li>Persistent Server State</li>
+  <li>Change notification<br>
+  </li>
+</ul>
+<p>&nbsp;</p>
+<hr noshade="noshade" size="1">
+<h2><a class="mozTocH2" name="mozTocId513572"></a><a
+ name="Detailed System Architecture">
+<div class="section">6. Detailed System Architecture</div>
+</a></h2>
+<p><a name="Detailed System Architecture"></a><br>
+</p>
+<h3><a class="mozTocH3" name="mozTocId719313"></a>6.1 Entry Unique ID</h3>
+<p>OpenDS synchronization uses the Unique ID plugin to assign a
+unique identifier to each entry. A unique ID is required for general
+purpose synchronization, because entries can be renamed or deleted.
+However, when dealing with schema, there is only one entry.
+Furthermore, the schema entry
+cannot be deleted or renamed. Also, the schema entry has no unique ID.
+The
+unique ID used for the schema entry will therefore be the DN of the
+schema entry.<br>
+</p>
+<h3><a class="mozTocH3" name="mozTocId957316"></a>6.2 Historical
+Information<br>
+</h3>
+<p>OpenDS uses historical information to save a history of
+relevant modifications that happened to the entry. The history makes it
+possible to solve modification conflicts. For
+schema synchronization, the only possible operations are adding values
+and deleting values.&nbsp; It is therefore not necessary to maintain
+the historical information.<br>
+In fact, keeping historical information in the schema would
+have a negative impact. Users would potentially see, in the schema
+files, old schema
+values associated with keywords that they do not understand.<br>
+Historical information will therefore not be kept when dealing with
+schema operations. This lack of historical information for the schema
+is not expected to have any negative impact.<br>
+</p>
+<h3><a class="mozTocH3" name="mozTocId444932"></a>6.3 Persistent Server
+State<br>
+</h3>
+<p>At startup time, the OpenDS synchronization plugin establishes a
+session with a synchronization server. The synchronization server must
+look for changes in its changelog and send changes that have not
+yet been applied to the current server. In order to know where to start
+in the changelog, the synchronization plugin must store some
+information that is persistent across server stop and start operations.<br>
+Currently the persistent information is stored in a specific entry
+having DN, <span style="font-family: monospace;">dc=ffffffff-ffffffff-ffffffff-ffffffff,</span><span
+ style="font-style: italic;">&lt;baseDn&gt;</span>.<br>
+Sorting the information in this way is not, however, convenient for the
+schema backend, as the schema backend can only hold one entry.<br>
+The synchronization code will therefore be changed to store the
+persistent information
+in the base synchronization entry. The schema backend code will
+therefore need to be changed to allow the specific
+operational attribute used to store the persistent state, <span
+ style="font-family: monospace;">ds-sync-state</span>, to be modified.<br>
+</p>
+<h3><a class="mozTocH3" name="mozTocId263528"></a>6.4 Change
+Notification<br>
+</h3>
+<p>The core server needs to provide change notification.<br>
+When changes are performed over the LDAP protocol, change notificatin
+is currently done
+by using the directory server plugin API. However, a new mechanism must
+be
+implemented to handle notification when changes are made by editing
+LDIF files when the server is down, or by updating the schema
+dynamically using files.<br>
+</p>
+<hr style="width: 100%; height: 2px;"><span style="font-weight: bold;"><a
+ name="7._Unit_Tests"></a></span>
+<h2><a class="mozTocH2" name="mozTocId804021"></a>7. Unit Tests</h2>
+<p>Unit tests must be written to test each part of the synchronization
+code
+to be modified.<br>
+The modifications make to the Entry Unique ID and Historical
+Information handling code are difficult to test in isolation. They will
+therefore be
+tested through global tests for the schema synchronization.<br>
+</p>
+<p>Persistent Server State modifications will be tested with an
+independent
+test.<br>
+</p>
+<p>Change notifications will also tested with an independent test.<br>
+</p>
+<hr size="2" width="100%">
+<h2><a class="mozTocH2" name="mozTocId679721"></a><a
+ name="7._Features_Configuration"></a>8. Configuring the Feature<br>
+</h2>
+Schema sycnhronization shares the same synchronization
+configuration used for any subtree:<br>
+<br>
+<span style="font-family: monospace;">dn: cn=example, cn=Multimaster
+Synchronization,cn=Synchronization Providers,cn=config</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">objectClass: top</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">objectClass:
+ds-cfg-synchronization-provider-config</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">cn: example</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">ds-cfg-synchronization-dn:
+cn=schema</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">ds-cfg-changelog-server:
+&lt;server1&gt;:&lt;port1&gt;</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">ds-cfg-changelog-server:
+&lt;server2&gt;:&lt;port2&gt;</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">ds-cfg-directory-server-id:
+&lt;unique-server-id&gt;</span><br>
+<br>
+<br>
+<hr style="width: 100%; height: 2px;">
+<p><a name="External_Impacts"></a><br>
+</p>
+<h2><a class="mozTocH2" name="mozTocId499393"></a>9. External Impact</h2>
+<h3><a class="mozTocH3" name="mozTocId889147"></a><a
+ name="9.1_Impact_on_Documentation"></a>9.1 Impact on
+Documentation</h3>
+Schema synchronization configuration must be documented.<br>
+<h3><a class="mozTocH3" name="mozTocId952442"></a><a
+ name="9.2_Impact_on_Configuration"></a>9.2 Impact on
+Configuration Interfaces<br>
+</h3>
+In both the GUI and the CLI, enabling synchronization for a
+subtree should also enable schema synchronization.<br>
+Specific GUI and CLI capabilities must also be implemented for advanced
+users who need to control schema
+synchronization themselves.<br>
+<span style="font-weight: bold;"></span>
+<h3><a class="mozTocH3" name="mozTocId519027"></a>9.3 Impact on
+Other OpenDS Subsystems</h3>
+This feature has no impact on any other part of OpenDS.<br>
+<br>
+<p>&nbsp;&nbsp;<br>
+</p>
+</body>
+</html>
