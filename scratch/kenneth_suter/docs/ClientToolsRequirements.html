@@ -1,0 +1,784 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html style="direction: ltr;">
+<head>
+
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+  <title>Client Tools Feature Requirements</title>
+
+
+  <meta name="GENERATOR" content="OpenOffice.org 2.0 (Linux)">
+
+  <meta name="CREATED" content="20061220;15252400">
+
+  <meta name="CHANGEDBY" content="daniel lutoff">
+
+  <meta name="CHANGED" content="20061220;15291200">
+
+  <style type="text/css">
+<!--
+TD P { color: #000000 }
+P { color: #000000 }
+TH P { color: #000000 }
+H2 { color: #000000 }
+H3 { color: #000000 }
+-->
+  </style>
+  <meta content="OpenDS" name="author">
+
+</head>
+
+
+<body style="direction: ltr; color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
+
+<p align="center"><img src="https://opends.dev.java.net/public/images/opends_logo_welcome.png" name="graphics1" alt="OpenDS" align="bottom" border="0" height="57" width="197"></p>
+
+<p align="center">Client Tools</p>
+
+<p align="center">Feature Requirements</p>
+
+<hr noshade="noshade" size="1">
+<p style="margin-bottom: 0cm;">Revision History</p>
+
+<table style="width: 827px; height: 237px;" border="0" cellpadding="2" cellspacing="0">
+
+  <col width="46*"> <col width="73*"> <col width="76*"> <col width="62*"> <tbody>
+
+    <tr bgcolor="#666699">
+
+      <th width="18%">
+      <p><font color="#ffffff">Version</font></p>
+
+      </th>
+
+      <th width="28%">
+      <p><font color="#ffffff">Author</font></p>
+
+      </th>
+
+      <th width="30%">
+      <p><font color="#ffffff">Date</font></p>
+
+      </th>
+
+      <th width="24%">
+      <p><font color="#ffffff">Comments</font></p>
+
+      </th>
+
+    </tr>
+
+    <tr bgcolor="#666699">
+
+      <td bgcolor="#ffffff" width="18%">
+      <p align="center">&lt;0.1&gt;</p>
+
+      </td>
+
+      <td bgcolor="#ffffff" width="28%">
+      <p>Daniel Lutoff<br>
+
+      </p>
+
+      </td>
+
+      <td bgcolor="#ffffff" width="30%">
+      <p>2007-01-24</p>
+
+      </td>
+
+      <td bgcolor="#ffffff" width="24%">
+      <p>Initial Draft</p>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td>&nbsp; &nbsp; &nbsp; &nbsp;
+&lt;0.2&gt;</td>
+
+      <td>Kenneth Suter</td>
+
+      <td>2007-02-14</td>
+
+      <td>
+      <ul>
+
+        <li>restricted scope of document to administrative client
+tools</li>
+
+        <li>added requirements for shell, GUI, IDE plug ins</li>
+
+        <li>clarified terminology</li>
+
+        <li>removed references to CLIP</li>
+
+      </ul>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="text-align: center;">&lt;0.3&gt;</td>
+
+      <td>Kenneth Suter</td>
+
+      <td>2007-02-15</td>
+
+      <td>
+      <ul>
+
+        <li>reverted focus to all client tools</li>
+
+      </ul>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="text-align: center;">&lt;0.4&gt;</td>
+
+      <td>Kenneth Suter</td>
+
+      <td>2007-02-15</td>
+
+      <td>incorporated feedback from Lutoff</td>
+
+    </tr>
+
+    <tr>
+
+      <td colspan="4" bgcolor="#666699" width="100%"></td>
+
+    </tr>
+
+  </tbody>
+</table>
+
+<hr noshade="noshade" size="1">
+<p style="margin-bottom: 0cm;">Table of Contents</p>
+
+<ul id="mozToc">
+
+<!--mozToc h1 1 h2 2 h3 3 h4 4 h5 5 h6 6--><li><a href="#mozTocId674533">1. Introduction</a>
+    <ul>
+
+      <li>
+        <ul>
+
+          <li><a href="#mozTocId341669">1.1
+Purpose</a></li>
+
+          <li><a href="#mozTocId11535">1.2
+Terminology</a></li>
+
+          <li><a href="#mozTocId951011">1.3 Glossary</a></li>
+
+          <li><a href="#mozTocId742129">1.4
+References</a></li>
+
+          <li><a href="#mozTocId681364">1.5 Overview</a></li>
+
+        </ul>
+
+      </li>
+
+      <li><a href="#mozTocId231405">2. General
+Description</a>
+        <ul>
+
+          <li><a href="#mozTocId613525">2.1 Feature
+Perspective</a></li>
+
+          <li><a href="#mozTocId791495">2.2 User
+Characteristics</a></li>
+
+          <li><a href="#mozTocId214391">2.3
+Constraints</a></li>
+
+          <li><a href="#mozTocId883478">2.4
+Assumptions and
+Dependencies</a></li>
+
+          <li><a href="#mozTocId248282">2.5 Future
+Requirements</a></li>
+
+        </ul>
+
+      </li>
+
+      <li><a href="#mozTocId810358">3. Specific
+Requirements</a>
+        <ul>
+
+          <li><a href="#mozTocId649185">3.1&nbsp;Administration
+Requirements</a></li>
+
+          <li><a href="#mozTocId260275">3.2
+Performance Requirements</a></li>
+
+          <li><a href="#mozTocId976439">3.3
+Scalability Requirements </a></li>
+
+          <li><a href="#mozTocId159123">3.4
+Internationalization
+Requirements </a></li>
+
+          <li><a href="#mozTocId643436">3.5 Help
+Requirements </a></li>
+
+          <li><a href="#mozTocId604463">3.6 Security
+Requirements </a></li>
+
+          <li><a href="#mozTocId541584">3.7
+Tests and
+Maintenance Requirements</a></li>
+
+          <li><a href="#mozTocId628288">3.8
+Conformance to
+Standards Requirements </a></li>
+
+          <li><a href="#mozTocId750441">3.9
+Integration
+with other subsystems Requirements</a></li>
+
+        </ul>
+
+      </li>
+
+      <li><a href="#mozTocId578022">4. Open Issues</a></li>
+
+      <li><a href="#mozTocId578304">5. Appendix </a></li>
+
+    </ul>
+
+  </li>
+
+</ul>
+
+<a href="#Introduction"><br>
+
+</a>
+<hr noshade="noshade" size="1">
+<h2><a class="mozTocH2" name="mozTocId674533"></a>1.
+Introduction</h2>
+
+<h3><a class="mozTocH3" name="mozTocId341669"></a>1.1
+Purpose</h3>
+
+<p>This document
+serves as a feature
+requirement specification for the OpenDS&nbsp;Client Tools.
+&nbsp;Such tools will facilitate configuration, management, and
+monitoring of both individual servers and the directory service as a
+whole as well as provide facilities to manage and query the data within
+the service itself. &nbsp; The scope of this document does not
+include&nbsp;include an installer
+program although it is conceivable that some level of administration
+could be performed via&nbsp;these tools. </p>
+
+<p>The intended audience for this document includes all who would
+like to understand the functionality of the product and would like to
+evaluate its features to suit their needs.</p>
+
+<h3><a class="mozTocH3" name="mozTocId11535"></a>1.2
+Terminology</h3>
+
+<p>The priorities of
+requirements that will be
+used in this document include:
+</p>
+
+<ul>
+
+  <li> Must Have (MH) -- These requirements are those which are
+absolutely required for the implementation of this feature. An
+implementation that do not satisfy those requirements is not acceptable.<br>
+
+  </li>
+
+  <br>
+
+  <li> Highly Desirable (HD) -- These requirements are those
+which are
+very important to include in the implementation of this feature but are
+not so important as to be considered absolute requirements. It is
+likely that they will be included, but if necessary is is acceptable to
+have an implementation that do not satisfy those requirements. </li>
+
+  <br>
+
+  <li> Nice to Have (NTH) -- These requirements are those which
+may
+provide some level of benefit but are not critical to the
+implementation of this feature. They may be included in the
+implementation of this feature if time permits, but priority must be
+given to the "must have" and "highly desirable" requirements. </li>
+
+</ul>
+
+<p><br>
+
+The words <i>method </i>and <i>means </i>identify
+some kind of
+technique by which the feature will be supported. They do not
+specifically imply either an API (programming language method or
+procedure) or a command. </p>
+
+<h3><a class="mozTocH3" name="mozTocId951011"></a>1.3
+Glossary</h3>
+
+<table border="0" cellpadding="2" cellspacing="0" width="80%">
+
+  <col width="77*"> <col width="179*"> <tbody>
+
+    <tr bgcolor="#666699">
+
+      <th width="30%">
+      <p><font color="#ffffff">Term</font></p>
+
+      </th>
+
+      <th width="70%">
+      <p><font color="#ffffff">Description</font></p>
+
+      </th>
+
+    </tr>
+
+    <tr bgcolor="#666699">
+
+      <td bgcolor="#ffffff" width="30%">
+      <p>Command Line Interface (CLI) &nbsp; <br>
+
+      </p>
+
+      </td>
+
+      <td bgcolor="#ffffff" width="70%">
+      <p>In this context, a program that allows the user to
+interact with the framework via a text terminal<br>
+
+      </p>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td>Shell</td>
+
+      <td>In this context, a CLI that contains an interpreter
+that allows the user to maintain state between invocations of commands</td>
+
+    </tr>
+
+    <tr>
+
+      <td colspan="2" bgcolor="#666699" width="100%"></td>
+
+    </tr>
+
+  </tbody>
+</table>
+
+<h3><a class="mozTocH3" name="mozTocId742129"></a>1.4
+References</h3>
+
+<br>
+
+<table border="0" cellpadding="2" cellspacing="0" width="80%">
+
+  <col width="65*"> <col width="88*"> <col width="103*"> <tbody>
+
+    <tr bgcolor="#666699">
+
+      <th style="width: 505px;">
+      <p><font color="#ffffff">Title</font></p>
+
+      </th>
+
+      <th style="width: 237px;">
+      <p><font color="#ffffff">Revision</font></p>
+
+      </th>
+
+      <th style="width: 182px;">
+      <p><font color="#ffffff">Author</font></p>
+
+      </th>
+
+    </tr>
+
+    <tr bgcolor="#666699">
+
+      <td style="width: 505px;" bgcolor="#ffffff">
+      <p><a href="https://opends.dev.java.net/public/docs/architecture/OpenDS-Admin-Architecture.pdf">Administration
+and Configuration Framework Architecture</a> </p>
+
+      </td>
+
+      <td style="width: 237px;" bgcolor="#ffffff">
+      <p style="text-align: left;">Version&nbsp;0.1<br>
+
+      </p>
+
+      </td>
+
+      <td style="width: 182px;" bgcolor="#ffffff">
+      <p><br>
+
+      </p>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="width: 182px;" colspan="3" bgcolor="#666699"></td>
+
+    </tr>
+
+  </tbody>
+</table>
+
+<h3><a class="mozTocH3" name="mozTocId681364"></a>1.5
+Overview</h3>
+
+<p>The <a href="#General%20Description">General
+Description</a> section describes the general factors that affect
+the
+requirements which are defined in detail in the Specific Requirements
+section, and makes them easier to understand. The <a href="#Specific%20Requirements">Specific
+Requirements</a> contain the specific requirements for this
+release. </p>
+
+<p>&nbsp;</p>
+
+<hr noshade="noshade" size="1">
+<h2><a class="mozTocH2" name="mozTocId231405"></a>2.
+General Description</h2>
+
+<h3><a class="mozTocH3" name="mozTocId613525"></a>2.1
+Feature Perspective</h3>
+
+<p style="margin-bottom: 0cm;">This document contains
+requirements and
+suggested functionality for the OpenDS client tools implementation. It
+describes the overall strategy for&nbsp;OpenDS&nbsp;client
+tools. In particular, this document addresses the following issues:</p>
+
+<ul>
+
+  <li>
+    <p style="margin-bottom: 0cm;">local access versus
+remote access </p>
+
+  </li>
+
+  <li>
+    <p style="margin-bottom: 0cm;">single server versus
+group of servers </p>
+
+  </li>
+
+  <li>
+    <p style="margin-bottom: 0cm;">single versus multiple
+command lines</p>
+
+  </li>
+
+  <li>
+    <p style="margin-bottom: 0cm;">single versus multiple
+server&nbsp;configuration and/or management</p>
+
+  </li>
+
+  <li>
+    <p style="margin-bottom: 0cm;">platform dependencies</p>
+
+  </li>
+
+</ul>
+
+<h3><a class="mozTocH3" name="mozTocId791495"></a>2.2
+User
+Characteristics</h3>
+
+<p>The
+following schema
+represents the overall administration and configuration framework
+architecture (extract from <a href="https://opends.dev.java.net/public/docs/architecture/OpenDS-Admin-Architecture.pdf">Administration
+and Configuration Framework Architecture</a> document):</p>
+
+<p style="text-align: center;"><img style="width: 486px; height: 294px;" alt="administration framework" src="adminframework1.jpg"></p>
+
+<p>User who wants to perform a management operation against a
+given server
+instance, or a group of servers, will use a client tool. Administrator
+credentials, central repository location, server or group of server
+identification should be consistent across the different management
+dimension (local versus remote,&nbsp; single server versus group of
+servers, ...) and the different client tools.</p>
+
+<h3><a class="mozTocH3" name="mozTocId214391"></a>2.3
+Constraints</h3>
+
+<p>In order to manage a server, a registration phase will be
+required. This registration procedure will be described in another
+document. </p>
+
+<h3><a class="mozTocH3" name="mozTocId883478"></a>2.4
+Assumptions and
+Dependencies</h3>
+
+<p>No specific assumptions nor dependencies are defined.
+</p>
+
+<h3><a class="mozTocH3" name="mozTocId248282"></a>2.5
+Future Requirements</h3>
+
+<p>No specific future requirements are defined.
+</p>
+
+<p>&nbsp;</p>
+
+<hr noshade="noshade" size="1">
+<h2><a class="mozTocH2" name="mozTocId810358"></a>3.
+Specific
+Requirements</h2>
+
+<h3><a class="mozTocH3" name="mozTocId649185"></a>3.1&nbsp;Administration
+Requirements</h3>
+
+The client tools as a whole must satisfy certain requirements however,
+all client tools may not necessarily satisfy every requirement.
+<ol>
+
+  <li>(MH)&nbsp;OpenDS&nbsp;client
+tools must expose the same user interface on all platforms.</li>
+
+  <br>
+
+  <li>(MH) OpenDS&nbsp;client tools must
+exhibit&nbsp;a uniform definition and consistent syntax (where
+applicable) and form.</li>
+
+  <br>
+
+  <li>(MH) OpenDS&nbsp;client
+tools&nbsp;must work either if the server instance is local (on the
+same host)
+or remote.</li>
+
+  <br>
+
+  <li>(MH) OpenDS administrative client tools must provide
+features for defining
+groups of
+administrative users.<br>
+
+    <br>
+
+  </li>
+
+  <li>(MH) OpenDS administrative client tools must provide
+features for assigning roles and
+capabilities to a group of administrative users.<br>
+
+    <br>
+
+  </li>
+
+  <li>(MH) OpenDS administrative client tools must provide
+features for&nbsp;assigning an
+administrative user to a group.<br>
+
+    <br>
+
+  </li>
+
+  <li>(MH) OpenDS administrative client tool user authentication
+must
+be based on administrative users and/or groups of administrative users.<br>
+
+    <br>
+
+  </li>
+
+  <li>(MH) OpenDS administrative client
+tools&nbsp;must provide a unified way to identify OpenDS server
+instance or groups of instances.<br>
+
+    <br>
+
+  </li>
+
+  <li>(MH) OpenDS administrative client tools must operate, if
+applicable, on a single instance as well as on a
+group of instances.<br>
+
+    <br>
+
+  </li>
+
+  <li>&nbsp;(MH) OpenDS administrative client
+tools&nbsp;must
+support&nbsp;local or remote management of&nbsp;server(s) life
+cycle (start stop, ...).<br>
+
+    <br>
+
+  </li>
+
+  <li>(MH) OpenDS administrative client tools&nbsp;must
+support&nbsp;local or remote modification of&nbsp;server(s)
+configuration.</li>
+
+  <br>
+
+  <li>(MH) OpenDS&nbsp;client tools must include an
+administrative
+command line interface capable of satisfying all client tool
+requirements.</li>
+
+  <br>
+
+  <li>(MH) OpenDS client tools must include a CLI for directory
+data queries</li>
+
+  <br>
+
+  <li>(HD) The OpenDS administrative client tools&nbsp;should
+support&nbsp;local
+or remote&nbsp;configuration of server(s) if the server(s) is/are
+off-line or not started.</li>
+
+  <br>
+
+  <li>(HD) OpenDS administrative client tools should
+include&nbsp;an HTML-based GUI.</li>
+
+  <br>
+
+  <li>(HD) OpenDS HTML-based GUI should satisfy all client tool
+requirements.</li>
+  <br>
+
+  <li>(HD) Client tools should provide a common configuration
+file for defaulting commonly specified options as required address/port
+of a server system and whether to use SSL or StartTLS</li>
+
+  <br>
+
+  <li>(NTH) OpenDS administrative client tools may include a
+configuration shell.</li>
+
+  <br>
+
+  <li>(NTH) OpenDS administrative client tools may include plug
+in modules for common integrated development environments (IDE).</li>
+
+  <br>
+
+  <li>(NTH) OpenDS administrative client tools may support the
+ability to present directory data in graphical form via a data browser.</li>
+
+</ol>
+
+<h3><a class="mozTocH3" name="mozTocId260275"></a>3.2
+Performance Requirements</h3>
+
+<p>No specific requirements are defined.
+</p>
+
+<h3><a class="mozTocH3" name="mozTocId976439"></a>3.3
+Scalability Requirements
+</h3>
+
+<p>The tools must be capable of handling arbitrary number of
+remote server instances.
+</p>
+
+<h3><a class="mozTocH3" name="mozTocId159123"></a>3.4
+Internationalization
+Requirements
+</h3>
+
+<ol>
+
+  <li>(MH) Client tools should be fully internationalized. </li>
+
+</ol>
+
+<h3><a class="mozTocH3" name="mozTocId643436"></a>3.5
+Help Requirements
+</h3>
+
+<ol>
+
+  <li>(MH) Administrative client tools be provide on-line help<br>
+
+    <br>
+
+  </li>
+
+  <li>(MH) Man pages should be provides for each administrative
+client tool</li>
+
+</ol>
+
+<h3><a class="mozTocH3" name="mozTocId604463"></a>3.6
+Security Requirements
+</h3>
+
+<ol>
+
+  <li>(MH) Administrative client tools be capable of encrypting
+all network traffic</li>
+
+</ol>
+
+<h3><a class="mozTocH3" name="mozTocId541584"></a>3.7
+Tests and
+Maintenance Requirements</h3>
+
+No specific requirements are defined.<br>
+
+<h3><a class="mozTocH3" name="mozTocId628288"></a>3.8
+Conformance to
+Standards Requirements&nbsp;</h3>
+
+No specific requirements are defined.<br>
+
+<h3><a class="mozTocH3" name="mozTocId750441"></a>3.9
+Integration
+with other subsystems Requirements</h3>
+
+No specific requirements are defined.
+<hr noshade="noshade" size="1">
+<h2><a class="mozTocH2" name="mozTocId578022"></a>4.
+Open Issues</h2>
+
+<p>&nbsp;</p>
+
+<hr noshade="noshade" size="1">
+<h2><a class="mozTocH2" name="mozTocId578304"></a>5.
+Appendix<br>
+
+</h2>
+
+<p>
+<br>
+
+</p>
+
+</body>
+</html>
