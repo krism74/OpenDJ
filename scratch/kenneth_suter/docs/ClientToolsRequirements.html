@@ -153,6 +153,18 @@ tools</li>
 
     <tr>
 
+      <td style="text-align: center;">&lt;0.5&gt;</td>
+
+      <td>Kenneth Suter</td>
+
+      <td>2007-02-28</td>
+
+      <td>incorporated feedback from review</td>
+
+    </tr>
+
+    <tr>
+
       <td colspan="4" bgcolor="#666699" width="100%"></td>
 
     </tr>
@@ -512,14 +524,6 @@ server&nbsp;configuration and/or management</p>
 User
 Characteristics</h3>
 
-<p>The
-following schema
-represents the overall administration and configuration framework
-architecture (extract from <a href="https://opends.dev.java.net/public/docs/architecture/OpenDS-Admin-Architecture.pdf">Administration
-and Configuration Framework Architecture</a> document):</p>
-
-<p style="text-align: center;"><img style="width: 486px; height: 294px;" alt="administration framework" src="adminframework1.jpg"></p>
-
 <p>User who wants to perform a management operation against a
 given server
 instance, or a group of servers, will use a client tool. Administrator
@@ -605,9 +609,12 @@ administrative user to a group.<br>
 
   </li>
 
-  <li>(MH) OpenDS administrative client tool user authentication
-must
-be based on administrative users and/or groups of administrative users.<br>
+  <li>(MH) OpenDS administrative client tools must include an
+authentication mechanism for operations that span nodes in the
+topology. &nbsp;The mechanism must include tools for specifying
+administrative users and the ability to form administrative groups. For
+operations targeted at a single server, it must be possible to
+authenticate using identity data stored within the single server.<br>
 
     <br>
 
@@ -651,8 +658,8 @@ requirements.</li>
 
   <br>
 
-  <li>(MH) OpenDS client tools must include a CLI for directory
-data queries</li>
+  <li>(MH) OpenDS client tools must include standard
+implementations of common LDAP data query/management tools (e.g. <span style="font-family: monospace;">ldapsearch</span>).</li>
 
   <br>
 
@@ -670,11 +677,17 @@ include&nbsp;an HTML-based GUI.</li>
 
   <li>(HD) OpenDS HTML-based GUI should satisfy all client tool
 requirements.</li>
+
   <br>
 
   <li>(HD) Client tools should provide a common configuration
 file for defaulting commonly specified options as required address/port
 of a server system and whether to use SSL or StartTLS</li>
+
+  <br>
+
+  <li>(HD) Client tools should be provide the ability to manage
+the configuration of all stock OpenDS components. </li>
 
   <br>
 
@@ -690,6 +703,10 @@ in modules for common integrated development environments (IDE).</li>
 
   <li>(NTH) OpenDS administrative client tools may support the
 ability to present directory data in graphical form via a data browser.</li>
+  <br>
+
+  <li>(NTH) OpenDS administrative client tools may support
+management of configuration for custom extensions to OpenDS</li>
 
 </ol>
 
@@ -724,13 +741,18 @@ Help Requirements
 
 <ol>
 
-  <li>(MH) Administrative client tools be provide on-line help<br>
+  <li>(MH) Administrative client tools be provide on-line help</li>
+
+  <br>
+
+  <li>(MH) Client tools must provide HTML and text file
+documentation<br>
 
     <br>
 
   </li>
 
-  <li>(MH) Man pages should be provides for each administrative
+  <li>(NTH) Man pages should be provides for each administrative
 client tool</li>
 
 </ol>
