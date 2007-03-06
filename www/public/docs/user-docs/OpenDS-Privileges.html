@@ -1,0 +1,264 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
+<html>
+  <head>
+    <link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+    <style type="text/css"> 
+    /* <![CDATA[ */
+     @import "/branding/css/tigris.css";
+     @import "/branding/css/inst.css";
+     /* ]]> */
+    </style>
+    <link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
+    <link rel="stylesheet" href="../../css/opends.css" type="text/css">
+    <title>OpenDS Directory Server - Root Users and the Privilege Subsystem</title>
+  </head>
+  <body>
+    <table class="tertmasttable" width="100%" cellspacing="0">
+      <tbody>
+        <tr>
+          <td><div class="collectionheader">Root Users and the Privilege Subsystem</div></td>
+          <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+        </tr>
+      </tbody>
+    </table>
+    <hr noshade size="1" >
+
+    Most LDAP directory servers typically have a single superuser (e.g.,
+    "cn=Directory Manager" in the Sun Java System Directory Server), which is
+    much like the root account in traditional UNIX systems.  This account can
+    bypass access controls and other restrictions that may be enforced for
+    other users.  In OpenDS, however, we have made two key changes to this
+    model:  we make it possible to define multiple root users, and we provide a
+    privilege subsystem that makes it possible to control capabilities on a
+    more fine-grained level.
+
+    <br><br><br>
+    <b>Root User Accounts</b>
+    <br><br>
+    Root user accounts in OpenDS are defined below the "cn=Root DNs,cn=config"
+    branch in the server configuration.  Each root account should be defined as
+    a normal user entry, with the exception that it should include the
+    "<code>ds-cfg-root-dn</code>" auxiliary object class.  It may also have one
+    or more values for the "<code>ds-cfg-alternate-bind-dn</code>" attribute
+    which specifies alternate DNs that may be used to authenticate as that
+    user (e.g., so you can bind as "cn=Directory Manager" instead of having to
+    use "cn=Directory Manager,cn=Root DNs,cn=config" which is the actual entry
+    DN).
+
+    <br><br>
+    Providing the ability to have multiple root users and breaking each of them
+    out into their own entries provides a number of advantages, including:
+    <ul>
+      <li>Each administrator that needs root access to the Directory Server can
+          have their own account with their own credentials.  This makes it
+          easier to keep an audit trail of who does what in the server than if
+          all of the administrators had to share a single root
+          account.<br><br></li>
+      <li>Since each root user account has its own set of credentials, the
+          credentials for one root user can be changed without impacting any of
+          the other root users.  It is not necessary to coordinate root
+          password changes among all of the administrators, since each of them
+          has their own account, and if an existing administrator leaves then
+          their account can simply be deactivated or removed.<br><br></li>
+      <li>Since each root user has its own entry, and you can put whatever
+          attributes and object classes you want in that entry (as long as it
+          also has the "<code>ds-cfg-root-dn</code>" auxiliary object class),
+          root users are capable of using strong authentication like the
+          EXTERNAL or GSSAPI SASL mechanisms.<br><br></li>
+      <li>Root users are subject to password policy enforcement, which means
+          that it will be possible to do things like force root users to change
+          their passwords on a regular basis, ensure that they are only allowed
+          to authenticate or change their passwords using secure mechanisms,
+          and ensure that they choose strong passwords.  It is possible to use
+          custom password policies for these users, so they are subject to
+          different sets of password policy requirements than other users in
+          the directory.<br><br></li>
+      <li>It is also possible to define different resource limits for root
+          users than for regular users.  Since each root account has its own
+          entry, operational attributes like "<code>ds-rlim-size-limit</code>",
+          "<code>ds-rlim-time-limit</code>" and
+          "<code>ds-rlimi-lookthrough-limit</code>" work for them just as they
+          do with normal user accounts.<br><br></li>
+    </ul>
+
+    <br>
+    <b>The Privilege Subsystem</b>
+    <br><br>
+    As mentioned above, root user accounts in traditional directories are
+    special because they have the ability to bypass access controls and other
+    restrictions, and there may be some kinds of operations that only root
+    users can perform.  This is much like the concept of root users in
+    traditional UNIX operating systems, and it often creates a bit of a
+    paradigm because there may be cases in which a user needs to do something
+    that only root can do.  If the user is given root access, then they will
+    be given far more power than they actually need to do their job, and
+    system administrators have to hope that they will use it responsibly and
+    won't intentionally or unintentionally impact some other part of the
+    system.  Alternately, the user may not be given root access and they will
+    either not be able to perform a vital function, or they will have to get
+    one of the system administrators to do it for them.
+
+    <br><br>
+    Solaris 10 has addressed this problem in UNIX systems by creating a
+    privilege subsystem (also called "process rights management").  The
+    engineers developing Solaris realized that it's dangerous and undesirable
+    to be forced to give someone root access just to perform one specific task
+    (e.g., just because a user may need to start a process that listens on a
+    port below 1024 doesn't mean that they should also be able to bypass
+    filesystem permissions, change network interface settings, or mount and
+    unmount filesystems).  With the privilege subsystem in Solaris 10, it is
+    possible to give a user just the specific capability that they need (e.g.,
+    the ability to bind to privileged ports) without giving them full root
+    access.  Similarly, it is possible to take away privileges that might
+    otherwise be available (e.g., an account that is only used to run a
+    specific daemon doesn't need to be able to see processes owned by other
+    users on the system).
+
+    <br><br>
+    OpenDS has embraced this concept, and it too has a privilege subsystem that
+    defines distinct capabilities that users might need and makes it possible
+    to give them just the level of access that they require.  Normal users may
+    be granted privileges that they would not otherwise have, and it is even
+    possible to take certain privileges away from root users.  The set of
+    privileges currently defined in OpenDS includes:
+    <ul>
+      <li><code>bypass-acl</code> -- Allows the user to bypass access control
+          evaluation</li>
+      <li><code>modify-acl</code> -- Allows the user to make changes to the
+          access controls defined in the server</li>
+      <li><code>config-read</code> -- Allows the user to have read access to
+          the server configuration</li>
+      <li><code>config-write</code> -- Allows the user to have write access to
+          the server configuration</li>
+      <li><code>jmx-read</code> * -- Allows the user to read JMX attribute
+          values</li>
+      <li><code>jmx-write</code> * -- Allows the user to update JMX attribute
+          values</li>
+      <li><code>jmx-notify</code> * -- Allows the user to subscribe to JMX
+          notifications</li>
+      <li><code>ldif-import</code> -- Allows the user to request the LDIF
+          import task</li>
+      <li><code>ldif-export</code> -- Allows the user to request the LDIF
+          export task</li>
+      <li><code>backend-backup</code> -- Allows the user to request the backend
+          backup task</li>
+      <li><code>backend-restore</code> -- Allows the user to request the
+          backend reestore task</li>
+      <li><code>server-shutdown</code> -- Allows the user to request the server
+          shutdown task</li>
+      <li><code>server-restart</code> -- Allows the user to request the server
+          restart task</li>
+      <li><code>proxied-auth</code> -- Allows the user to use the proxied
+          authorization control or request an alternate SASL authorization
+          ID</li>
+      <li><code>disconnect-client</code> * -- Allows the user to terminate
+          arbitrary client connections</li>
+      <li><code>cancel-request</code> * -- Allows the user to cancel arbitrary
+          client requests</li>
+      <li><code>search-unindexed</code> * -- Allows the user to request
+          unindexed search operations</li>
+      <li><code>password-reset</code> -- Allows the user to reset the passwords
+          for other users</li>
+      <li><code>data-sync</code> * -- Allows the user to participate in the
+          data synchronization environment</li>
+      <li><code>update-schema</code> -- Allows the user to update the server
+          schema</li>
+      <li><code>privilege-change</code> -- Allows the user to change the set of
+          privileges assigned to a user, or to change the set of default root
+          privileges</li>
+    </ul>
+
+    At the present time, the privileges marked with an asterisk (*) are not yet
+    implemented in the server and therefore will have no effect.
+
+    <br><br>
+    Note that the privilege subsystem is largely independent from the access
+    control subsystem.  Unless the user also has the <code>bypass-acl</code>
+    privilege, operations may still be subject to access control checking.  For
+    example, if a user has the <code>config-read</code> privilege, then that
+    user will only be able to see those parts of the configuration that are
+    allowed by access control.  As a rule, whenever an operation is covered by
+    both the privilege subsystem and access control, both mechanisms must allow
+    that operation.
+
+    <br><br><br>
+    <b>Assigning Privileges to Normal Users</b>
+    <br><br>
+    By default, normal users are not granted any of the privileges listed
+    above.  Therefore, if a user should be allowed to perform any of the
+    associated operations, they must be granted the appropriate privilege(s).
+    This can be done by adding the <code>ds-privilege-name</code> operational
+    attribute to the user's entry.  This is a multivalued attribute, and if a
+    user is to be given multiple privileges, then a separate value should be
+    used for each one.  When the OpenDS virtual attribute subsystem is in
+    place, it should also be possible to grant privileges to groups of users
+    automatically by making <code>ds-privilege-name</code> a virtual attribute
+    in those user entries.
+
+    <br><br>
+    As an example, the following modification can be used to add the
+    <code>proxied-auth</code> privilege to the user
+    "cn=Proxy User,dc=example,dc=com":
+    <blockquote><pre>dn: cn=Proxy User,dc=example,dc=com
+changetype: modify
+add: ds-privilege-name
+ds-privilege-name: proxied-auth</pre></blockquote>
+
+    <br>
+    <b>Assigning Privileges to Root Users</b>
+    <br><br>
+    With the introduction of the privilege subsystem, the primary
+    distinguishing characteristics of root users that separate them from other
+    accounts in the server are that they exist in the configuration rather than
+    in the user data, and that because they are root users they automatically
+    inherit a certain set of privileges.  The set of privileges automatically
+    granted to root users is defined in the
+    "<code>ds-cfg-default-root-privilege-name</code>" attribute of the
+    "cn=Root DNs,cn=config" entry.  By default, root users are automatically
+    granted the following privileges:
+    <ul>
+      <li><code>bypass-acl</code></li>
+      <li><code>modify-acl</code></li>
+      <li><code>config-read</code></li>
+      <li><code>config-write</code></li>
+      <li><code>ldif-import</code></li>
+      <li><code>ldif-export</code></li>
+      <li><code>backend-backup</code></li>
+      <li><code>backend-restore</code></li>
+      <li><code>server-shutdown</code></li>
+      <li><code>server-restart</code></li>
+      <li><code>disconnect-client</code></li>
+      <li><code>cancel-request</code></li>
+      <li><code>search-unindexed</code></li>
+      <li><code>password-reset</code></li>
+      <li><code>update-schema</code></li>
+      <li><code>privilege-change</code></li>
+    </ul>
+
+    If you want to alter the set of privileges that are automatically assigned
+    to root users, then you may do so by editing the
+    "<code>ds-cfg-default-root-privilege-name</code>" attribute.  Further, if
+    you wish to have a different set of privileges for a specific root user,
+    then you can accomplish that using the <code>ds-privilege-name</code>
+    attribute in that root user's entry, just like for a normal user.  For
+    example, the following modification may be used to give a specific root
+    user (in this case "cn=Test Root User,cn=Root DNs,cn=config") the ability
+    to use proxied authorization while removing the ability to change user
+    privileges or access the configuration (note the use of the minus sign
+    before the privilege to indicate that it is being removed rather than
+    granted):
+    <blockquote><pre>dn: cn=Test Root User,cn=Root DNs,cn=config
+changetype: modify
+add: ds-privilege-name
+ds-privilege-name: proxied-auth
+ds-privilege-name: -config-read
+ds-privilege-name: -config-write</pre></blockquote>
+
+    In this case, the "cn=Test Root User,cn=Root DNs,cn=config" user would
+    inherit all privileges automatically granted to root users with the
+    exception of the <code>config-read</code> and <code>config-write</code>
+    privileges, and would also be given the <code>proxied-auth</code>
+    privilege.
+  </body>
+</html>
+
