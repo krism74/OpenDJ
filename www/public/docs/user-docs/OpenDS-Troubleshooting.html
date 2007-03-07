@@ -49,16 +49,129 @@
     place to look.
     <br><br>
     If the problem is reproducible, then running the server in debug mode may
-    also be useful.  Most of the debug functionality of the OpenDS Directory
-    Server is tied into the assertions framework so that it will be completely
-    ignored (and therefore have no performance impact whatsoever) if assertions
-    are disabled.  To enable assertions, pass the "-ea" argument to the JVM
-    when the server is started (by setting the <code>JAVA_ARGS</code>
-    environment variable to have the value "-ea").  Note that enabling
-    assertions can have a significant impact on performance because of the
-    significantly greater amount of work that the server must do.
-
-    <br><br><br>
+    also be useful. The default build includes the debug logging facilities.
+    <br><br>
+    <a name="using_debug_facility"></a>
+    <b>Using the debugging facility</b>
+    <br>
+    <blockquote><strong>NOTE</strong>: The current build only accepts
+    configuration from the command line in the form of properties when starting
+    the server. In addition it only supports printing
+    debug logging messages to standard out. Later builds will
+    support configuring the debug logger over protocol as well as logging
+    debug messages to files.</blockquote>
+    All debug messages in OpenDS consists of a level and a category. The level
+    describes the severity of the message and range from VERBOSE, INFO, WARNING,
+    and ERROR with increasing severity. A category describes the event that
+    generated the message. Debug messages can have one of the following
+    categories:
+    <ul>
+      <li>
+        CAUGHT - Exception caught
+      </li>
+      <li>
+        CONSTRUCTOR - Constructor entry
+      </li>
+      <li>
+        DATA - Raw data dump
+      </li>
+      <li>
+        DATABASE_ACCESS - Access to a backend database
+      </li>
+      <li>
+        ENTER - Method entry
+      </li>
+      <li>
+        EXIT - Method return
+      </li>
+      <li>
+        MESSAGE - Arbitrary debug message
+      </li>
+      <li>
+        PROTOCOL - Protocol element dump
+      </li>
+      <li>
+        THROWN - Exception thrown from method
+      </li>
+    </ul>
+    By default, only messages with a level of ERROR or
+    higher severity will be logged on server startup. To turn off debug logging
+    completely, include the property value
+    "<code>-Dorg.opends.server.debug.enabled=false</code>" in the
+    <code>JAVA_ARGS</code> environment variable.
+    <br><br>
+    The debug logging framework allows for fine grained control of which
+    messages are logged. This is done by defining one or more debug target
+    that include a debug scope and options that operate on that scope. <br><br>
+    To define a debug target on server startup, set the
+    <code>org.opends.server.debug.target</code> property (by setting the
+    <code>JAVA_ARGS</code> environment variable to have the value
+    "<code>-Dorg.opends.server.debug.target=[TargetDefinition]</code>"). Additional targets
+    may be defined by suffixing a number (ie. ".1", ".2", ".3", etc...) to
+    then end of the property name. <br><br>
+    The debug target property value has the following syntax:
+    <blockquote>
+      <code>
+        TargetDefinition = Scope:Options
+      </code>
+    </blockquote>
+    The target scope can be a fully qualified package, class, or method name
+    from which debug messages are generated. When specifying method names,
+    separate the class and method names with a number sign character ("#").
+    When multiple targets are defined with overlapping scopes, the target
+    with the scope that most specifically matches the debug message will be
+    used.
+    <br><br>
+    The target options can include one or more of the following delimited by
+    a comma (","):
+    <ul>
+      <li>
+        level - The lowest level of messages to log. All messages with higher
+        severity will also be logged. The default is level is ERROR.
+      </li>
+      <li>
+        category - The categories of messages to log. Separate each category
+        with a pipe character ("|"). The default is to include all categories.
+      </li>
+      <li>
+        noargs - Do not include method parameters on method entry messages.
+      </li>
+      <li>
+        noretval - Do not include the return value from method exit messages.
+      </li>
+      <li>
+        stack - Include a stack trace on method entry and exception thrown
+        messages. By default all stack frames are included when this option is
+        used. This can be changed by specifying the number of stack frames to
+        include after an equal sign ("=").
+      </li>
+      <li>
+        cause - Include the cause exception on exception throw and caught
+        messages.
+      </li>
+    </ul>
+    Examples:
+    <blockquote>
+      <code>
+        JAVA_ARGS="-Dorg.opends.server.debug.target.0=org.opends.server:level=info,category=message|caught|enter,stack=5,cause
+        -Dorg.opends.server.debug.target.1=org.opends.server.backends.jeb.EntryContainer#shutdown:level=error,stack,noargs,noretval"
+      </code>
+    </blockquote>
+    Defining the above value for the <code>JAVA_ARGS</code> environment variable on server
+    start up will define two debug targets. The first one log all messages
+    from all classes and packages under the <code>org.opends.server</code> package with a
+    level of INFO or higher severity and with categories of either MESSAGE,
+    CAUGHT, or ENTER. Messages from within that scope will also include
+    a stack trace of 5 or less frames and the cause exception. However, these
+    settings will not apply to the <code>shutdown</code> method in the class
+    <code>org.opends.server.backends.jeb.EntryContainer</code> because the second
+    target definition uses a more specific scope. For debug messages from within
+    the <code>shutdown</code> method, only those with level or ERROR or higher
+    severity with any category will be logged. In addition, the entire stack
+    trace will be included on all method enter and exception thrown messages.
+    However, the method enter messages will not include the parameters to the
+    method and method exit messages will not include the return value.
+    <br><br>
 
     <a name="wont_start"></a>
     <b>The server won't start</b>
