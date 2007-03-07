@@ -56,7 +56,7 @@
     <br>
     <blockquote><strong>NOTE</strong>: The current build only accepts
     configuration from the command line in the form of properties when starting
-    the server. In addition it only supports printing
+    the server. In addition, it only supports printing
     debug logging messages to standard out. Later builds will
     support configuring the debug logger over protocol as well as logging
     debug messages to files.</blockquote>
@@ -94,11 +94,11 @@
         THROWN - Exception thrown from method
       </li>
     </ul>
-    By default, only messages with a level of ERROR or
-    higher severity will be logged on server startup. To turn off debug logging
-    completely, include the property value
-    "<code>-Dorg.opends.server.debug.enabled=false</code>" in the
-    <code>JAVA_ARGS</code> environment variable.
+    By default, the debug logging is disabled on server startup. To enable debug
+    logging include the property value
+    "<code>-Dorg.opends.server.debug.enabled=true</code>" in the
+    <code>JAVA_ARGS</code> environment variable. Once enabled, only messages with
+    a level of ERROR or higher severity will be logged on server startup. 
     <br><br>
     The debug logging framework allows for fine grained control of which
     messages are logged. This is done by defining one or more debug target
@@ -153,7 +153,8 @@
     Examples:
     <blockquote>
       <code>
-        JAVA_ARGS="-Dorg.opends.server.debug.target.0=org.opends.server:level=info,category=message|caught|enter,stack=5,cause
+        JAVA_ARGS="-Dorg.opends.server.debug.enabled=true
+        -Dorg.opends.server.debug.target.0=org.opends.server:level=info,category=message|caught|enter,stack=5,cause
         -Dorg.opends.server.debug.target.1=org.opends.server.backends.jeb.EntryContainer#shutdown:level=error,stack,noargs,noretval"
       </code>
     </blockquote>
