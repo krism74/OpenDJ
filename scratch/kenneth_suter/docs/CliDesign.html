@@ -2,184 +2,332 @@
 <html>
 <head>
 
+
+
+  
+  
   <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+
+
+  
+  
   <title>Administrative Command Line Interface</title>
-
-
 </head>
 
 
 <body style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
 
+
+
 <center>
 <div class="title"><big><sup><img style="width: 197px; height: 57px;" src="opends_logo_welcome.png" title="OpenDS" alt="OpenDS"><br>
 
+
+
 </sup></big><sup><br>
+
+
 
 </sup></div>
 
+
+
 <div class="subtitle">Administrative Command Line Interface</div>
+
+
 
 <div class="subtitle">Software Design Document</div>
 
+
+
 <p align="center"><br>
+
+
 
 </p>
 
+
+
 </center>
+
+
 
 <hr noshade="noshade" size="1">
 <div class="section">Revision History</div>
 
+
+
 <table border="0" cellpadding="0" cellspacing="0">
+
+
 
   <tbody>
 
+
+
     <tr>
 
+
+
       <td bgcolor="#666699">
+      
+      
       <table border="0" cellpadding="2" cellspacing="1">
+
+
 
         <tbody>
 
+
+
           <tr>
+
+
 
             <th><font color="#ffffff">Version</font></th>
 
+
+
             <th><font color="#ffffff">Author</font></th>
+
+
 
             <th><font color="#ffffff">Date</font></th>
 
+
+
             <th><font color="#ffffff">Comments</font></th>
+
+
 
           </tr>
 
+
+
           <tr>
+
+
 
             <td align="center" bgcolor="#ffffff">0.1</td>
 
+
+
             <td bgcolor="white">Kenneth Suter<br>
 
+
+
             </td>
+
+
 
             <td bgcolor="white">2007-02-14<br>
 
+
+
             </td>
+
+
 
             <td bgcolor="white">Initial Draft</td>
 
+
+
           </tr>
+
+
 
           <tr>
 
+
+
             <td style="background-color: rgb(255, 255, 255); text-align: center;">0.2</td>
+
+
 
             <td style="background-color: rgb(255, 255, 255);">Kenneth
 Suter</td>
 
+
+
             <td style="background-color: rgb(255, 255, 255);">2007-02-15</td>
+
+
 
             <td style="background-color: rgb(255, 255, 255);">Incorporated
 content from design discussions</td>
 
+
+
           </tr>
 
+
+
+        
+        
         </tbody>
+      
+      
       </table>
+
+
 
       </td>
 
+
+
     </tr>
 
+
+
+  
+  
   </tbody>
 </table>
+
+
 
 <hr noshade="noshade" size="1">
 <div class="section">Table of Contents</div>
 
+
+
 <a href="#Introduction">1.
 Introduction</a>&nbsp;&nbsp;&nbsp; <br>
+
+
 
 &nbsp;&nbsp;&nbsp; <a href="OpenDS-CLI-requirement.html#mozTocId951011">1.2
 Glossary</a><br>
 
+
+
 &nbsp;&nbsp;&nbsp; <a href="OpenDS-CLI-requirement.html#mozTocId742129">1.3
 References</a><br>
+
+
 
 <a href="#Overview">2.
 Overview</a><br>
 
+
+
 <a href="#Design%20Considerations">3.
 Design Considerations</a><br>
+
+
 
 &nbsp;&nbsp;&nbsp; <a href="#Assumptions%20and%20Dependencies">3.1
 Assumptions and Dependencies</a><br>
 
+
+
 &nbsp;&nbsp;&nbsp; <a href="#Goals%20and%20Guideline">3.2
 Goals and Guideline</a><br>
+
+
 
 &nbsp;&nbsp;&nbsp; <a href="#Development%20Method">3.3
 Development Method</a><br>
 
+
+
 <a href="#Architectural%20Strategies">4.
 Architectural Strategies</a><br>
+
+
 
 <a href="#System%20Architecture">5.
 System Architecture</a><br>
 
+
+
 <a href="#Detailed%20System%20Architecture">6.
 Detailed System Architecture</a><br>
+
+
 
 &nbsp;&nbsp;&nbsp; <a href="#Components">6.1
 Components</a><br>
 
+
+
 &nbsp;&nbsp;&nbsp; <a href="#Server_and_Group_IDs">6.2
 Server and Server Group IDs</a><br>
+
+
 
 &nbsp;&nbsp;&nbsp; <a href="#Specifying_Servers">6.3
 Specifying Servers</a><br>
 
+
+
 &nbsp;&nbsp;&nbsp; <a href="#Command_Forms">6.4
 Command Forms</a><br>
 
+
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <a href="#Task_Commands">6.4.1 Task Commands</a><br>
 
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <a href="#Configuration_Commands">6.4.2 Server Configuration
-Commands</a><br>
 
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <a href="#Service_Commands">6.4.3 Service Commands</a><br>
 
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <a href="#Script_Command">6.4.4 Script Command</a><br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <a href="#Configuration_Commands">6.4.2&nbsp;Configuration
+Command(s)</a><br>
+
+
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <a href="#Service_Commands">6.4.3 Administrative Domain Commands</a><br>
 
 <a href="#7._Unit_Tests">7. Unit tests</a><br>
+
+
 
 <a href="http://samsonite.central/process/DesignTemplate.html#7._Features_Configuration">8.
 Feature's
 configuration</a><br>
 
+
+
 <a href="#External_Impacts">9. External Impacts</a><br>
+
+
 
 &nbsp;&nbsp;&nbsp; <a href="#9.1_Impact_on_Documentation">9.1 Impact
 on Documentation</a><br>
 
+
+
 &nbsp;&nbsp;&nbsp; <a href="#9.2_Impact_on_Configuration">9.2 Impact
 on Configuration interfaces</a><br>
+
+
 
 &nbsp;&nbsp;&nbsp; <a href="#9.3_Impact_on_Other_OpenDS_subsystems">9.3
 Impact on other subsystems</a><br>
 
+
+
 &nbsp;&nbsp;&nbsp; <a href="#9.4_Other_external_Impacts_">9.4 Other
 external impacts</a><br>
 
-<br>
+
 
 <br>
+
+
+
+<br>
+
+
 
 <hr noshade="noshade" size="1">
 <h2><a name="Introduction">
 <div class="section">1. Introduction</div>
 
+
+
 </a></h2>
+
+
 
 <p>The purpose of this document is to provide a design for the
 OpenDS
@@ -188,154 +336,304 @@ this
 document covers the
 syntax form and function of the administrative tool but does not cover
 other command line interface tools shipped with OpenDS such&nbsp;as
-'ldapsearch'.&nbsp; The
+'ldapsearch'. &nbsp;The
 intended audience are those interested in the design and implementation
 of the tool. &nbsp;The audience should already be familiar with
-requirements pertaining to administrative client tools.<br>
+requirements pertaining to administrative client tools.</p>
 
-&nbsp;</p>
+<p>Hereafter unless specificly mentioned, the term CLI will refer
+specificly to the administrative CLI and not other tools shipped with
+OpenDS, specificly the data management tools such as ldapsearch. &nbsp;</p>
+
+
 
 <h3>1.2 Glossary</h3>
 
+
+
 <table border="0" cellpadding="2" cellspacing="0" width="80%">
+
+
 
   <col width="77*"> <col width="179*"> <tbody>
 
+
+
     <tr bgcolor="#666699">
 
+
+
       <th width="30%">
+      
+      
       <p><font color="#ffffff">Term</font></p>
 
+
+
       </th>
+
+
 
       <th width="70%">
+      
+      
       <p><font color="#ffffff">Description</font></p>
 
+
+
       </th>
+
+
 
     </tr>
 
+
+
     <tr bgcolor="#666699">
 
+
+
       <td bgcolor="#ffffff" width="30%">
+      
+      
       <p>Remote Administration Data (RAD)<br>
+
+
 
       </p>
 
+
+
       </td>
 
+
+
       <td bgcolor="#ffffff" width="70%">
+      
+      
       <p>Data that describes properties (host names, server and
 group
-IDs, software components) of an OpenDS topology used for remote
+IDs, software components) of an OpenDS administrative domain used for remote
 administration. &nbsp;This is similar in concept to the data that
 is
 stored in the ADS of SJS Directory Server 6.<br>
 
+
+
       </p>
+
+
 
       </td>
 
+
+
+    </tr>
+
+
+
+    
+
+    
+
+    <tr>
+
+      <td>Administrative domain</td>
+
+      <td>A set of server's that typically share common data and/or configuration on which client operations can be performed as a whole</td>
+
     </tr>
 
     <tr>
 
-      <td>Remote Administration Agent (RAA)</td>
+      <td>Managed object definitions</td>
 
-      <td>An server instance that acts upon software
-components&nbsp;on the local file system on behalf of remote
-clients.</td>
-
-    </tr>
-
-    <tr>
-
-      <td>Remote Administration Module (RAM)</td>
-
-      <td>Conceptual object containing RAD and RAA</td>
+      <td>An object model specification defining management objects
+used at runtime by both server and clients to represent configuration
+elements and relationships.</td>
 
     </tr>
 
     <tr>
+
+
 
       <td colspan="2" bgcolor="#666699" width="100%"></td>
 
+
+
     </tr>
 
+
+
+  
+  
   </tbody>
 </table>
 
+
+
 <h3><a name="References"></a><br>
+
+
 
 </h3>
 
+
+
 <h3><a name="1.3_References"></a>1.3 References</h3>
+
+
 
 <table border="0" cellpadding="2" cellspacing="0" width="80%">
 
+
+
   <tbody>
+
+
 
     <tr bgcolor="#666699">
 
+
+
       <th style="width: 505px;">
+      
+      
       <p><font color="#ffffff">Title</font></p>
 
+
+
       </th>
+
+
 
       <th style="width: 237px;">
+      
+      
       <p><font color="#ffffff">Revision</font></p>
 
+
+
       </th>
+
+
 
       <th style="width: 182px;">
+      
+      
       <p><font color="#ffffff">Author</font></p>
 
+
+
       </th>
+
+
 
     </tr>
 
+
+
     <tr bgcolor="#666699">
 
+
+
       <td style="width: 505px;" bgcolor="#ffffff">
+      
+      
       <p><a href="https://opends.dev.java.net/public/docs/architecture/OpenDS-Admin-Architecture.pdf">Administration
 and Configuration Framework Architecture</a> </p>
 
+
+
       </td>
+
+
 
       <td style="width: 237px;" bgcolor="#ffffff">
+      
+      
       <p style="text-align: left;">Version&nbsp;0.1<br>
 
+
+
       </p>
 
+
+
       </td>
+
+
 
       <td style="width: 182px;" bgcolor="#ffffff">
+      
+      
       <p><br>
+
+
 
       </p>
 
+
+
       </td>
+
+
 
     </tr>
 
+
+
     <tr>
+
+
 
       <td style="width: 505px;"><a href="http://www.opensolaris.org/os/community/arc/caselog/1999/645/spec-html/">CLIP
 specification</a></td>
 
+
+
       <td style="width: 237px;">Version 1.0 Approved<br>
+
+
 
 22 Jan 2003</td>
 
+
+
       <td style="width: 182px;"></td>
+
+
 
     </tr>
 
+
+
     <tr>
+
+
 
       <td><a href="https://opends.dev.java.net/public/docs/user-docs/cli/index.html">Command
 Line Usage Guide</a></td>
 
+
+
+      <td></td>
+
+
+
+      <td></td>
+
+
+
+    </tr>
+
+
+
+    <tr>
+
+      <td>Client Tools Requirements</td>
+
       <td></td>
 
       <td></td>
@@ -343,86 +641,141 @@ Line Usage Guide</a></td>
     </tr>
 
     <tr>
+      <td><a href="https://opends.dev.java.net/public/docs/user-docs/OpenDS-Config-Guide.pdf">Configuration Guide</a></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+
+
 
       <td style="width: 182px;" colspan="3" bgcolor="#666699"></td>
 
+
+
     </tr>
 
+
+
+  
+  
   </tbody>
 </table>
 
+
+
 <p>
 </p>
+
+
 
 <hr noshade="noshade" size="1">
 <h2><a name="Overview">
 <div class="section">2. Overview</div>
 
+
+
 </a></h2>
 
+
+
 <p>This document is intended to serve as specification of the
-form, syntax and capabilities of the CLI.
+form, syntax and capabilities of the&nbsp;CLI.
 </p>
+
+
 
 <hr noshade="noshade" size="1">
 <h2><a name="Design Considerations">
 <div class="section">3. Design Considerations</div>
 
+
+
 </a></h2>
+
+
 
 <h3><a name="Assumptions and Dependencies">
 <div class="subsection">3.1 Assumptions and Dependencies</div>
 
+
+
 </a></h3>
 
-<p>The CLI must satisfy requirements pertaining to administrative
-client tools. &nbsp;In particular, the CLI must support
-all&nbsp;functions related to administration of individual OpenDS
-servers both local and remote, as well as the directory service as a
-whole. &nbsp;Additionally the CLI must provide a consistent,
+
+
+<p>The&nbsp;CLI must satisfy requirements pertaining to administrative
+client tools (see Client Tools Requirements in <a href="CliDesign.html#1.3_References">References</a>). &nbsp;Furthermore, like all tools associated with OpenDS, the CLI must provide a consistent,
 intuitive
 user interface.</p>
+
+
 
 <h3><a name="Goals and Guideline">
 <div class="subsection">3.2 Goals and Guideline</div>
 
+
+
 </a></h3>
+
+
 
 <p><a name="Goals and Guideline"></a>In order
 to be an effective tool,
-the&nbsp;CLI exhibit consistency and predictability in both form
+the administrative CLI exhibit consistency and predictability in both form
 and
 function. &nbsp;Such goals are only achievable by specifying or
-adopting an existing paradigm for commands exposed by the CLI.
+adopting an existing paradigm for commands exposed by the administrative CLI.
 &nbsp;Rather than design such a specification the CLI will adopt
 the
 Command Line Interface Paradigm (CLIP) formalized by Sun Microsystems
 in January 2003 (see <a href="#1.3_References">References</a>).
 &nbsp;CLIP serves as a set of guidelines that specify the human
-interface for command line utilities.</p>
+interface for command line utilities. &nbsp;There
+may be cases where the OpenDS team may see fit to deviate from the CLIP
+specification although such&nbsp;cases must be given careful
+consideration.</p>
 
-<p>Given the similarity between the administration framework of
+
+
+<p>To some extent, OpenDS will also use other directory
+product&nbsp;offerings such as Sun's directory as a guide. &nbsp;Given
+the similarity between the administration framework of
 Sun
 Java System Directory Server 6 and that currently being proposed for
 OpenDS, we can use lessons learned from the former's CLI.<br>
 
+
+
 </p>
+
+
 
 <h3><a name="Development Method">
 <div class="subsection">3.3 Development Method</div>
 
+
+
 </a></h3>
+
+
 
 <p><a name="Development Method"></a>The CLI
 will be developed through&nbsp;analysis of the capabilities
 supported by the OpenDS administrative framework.
 </p>
 
+
+
 <hr noshade="noshade" size="1">
 <h2><a name="Architectural Strategies">
 <div class="section">4. Architectural Strategies</div>
 
+
+
 </a></h2>
+
+
 
 <p><a name="Architectural Strategies"></a>The
 CLI like other parts
@@ -433,45 +786,72 @@ Directory Server 6, Glassfish, etc) attempts will be made to reuse
 existing code libraries where feasible.
 </p>
 
+
+
 <hr noshade="noshade" size="1">
 <p><a name="System Architecture"><br>
 
+
+
 </a></p>
+
+
 
 <h2><a name="System Architecture">5. System
 Architecture</a></h2>
+
+
 
 <div class="section">
 </div>
 
 The administrative CLI will interact with&nbsp;the OpenDS Client
 API on behalf of
-administrators&nbsp;the OpenDS directory service. &nbsp;The
-following
-diagram represents the role the CLI, along with the GUI and shell play
-in the OpenDS Administration and Configuration Framework:<br>
+administrators&nbsp;the OpenDS directory service. &nbsp;Given that a
+service can consist of one or more servers, the CLI architecture will
+support the specification of an operation target to be a single server
+or a group of servers in an administrative domain. &nbsp;Also, the CLI
+will support specification of servers by a unique ID. &nbsp;As such a
+registry of administrative domain information will be made available to
+instances of the CLI and will be replicated across all hosts of the RAD for a particular administrative domain.<br>
+
+
 
 <br>
 
-<img style="width: 486px; height: 294px;" alt="Depiction of the CLI in the OpenDS Administration and Configuration Framework" title="OpenDS Administration and Configuration Framework" src="adminframework1.jpg"><br>
+
 
 <hr noshade="noshade" size="1">
 <h2><a name="Detailed System Architecture">
 <div class="section">6. Detailed System Architecture</div>
 
+
+
 </a></h2>
+
+
 
 <h3><a name="Components"></a>6.1
 &nbsp;Components</h3>
 
+
+
 <p>The CLI itself will be composed of the following components:</p>
 
+
+
 <ul>
+
+
 
   <li>One or more client libraries (JAR) files that depend on the
 Client API</li>
 
-  <li>[optional] Topology&nbsp;configuration (TC) file(s)</li>
+
+
+  <li>[optional] Administrative domain&nbsp;configuration (ADC) file(s)</li>
+
+
 
 </ul>
 
@@ -480,39 +860,57 @@ local
 file system. &nbsp;If the human installer has indicated that they
 would
 like remote management capabilities of the server being installed,
-topology configuration (TC) files&nbsp;are created in the file
+administrative domain configuration (ADC) files&nbsp;are created in the
+file
 system
 that point the CLI to one or more instances of remote administration
 data (RAD). &nbsp;The CLI will use the RAD to resolve server and
 group
 ID references and discover host and port information about server
-components within the topology.<br>
+components within the administrative domain.<br>
 
-<br>
+<span style="font-style: italic;"></span><br>
 
-The TC files will not be present for installations without
+
+
+The ADC files will not be present for installations without
 remote installation capabilities in which case all invocations of the
 CLI will require LDAP host/port specification either explicitly or by
 default values of the CLI (e.g. no host/port&nbsp;specified
-defaults to localhost port 389).
-<p>The contents of the TC file will consist or pointers to one or
+defaults to localhost port 389).<br>
+
+<br>
+
+<span style="font-style: italic;">Note: &nbsp;for initial release of the
+CLI the installation scenarios will be simplified such that all servers
+host the RAD data and as such all installations will include the RAD
+and ADC files.</span>
+<p>The contents of the ADC file will consist or pointers to one or
 more
 instances of RAD. &nbsp;The CLI may offer tools for updating the
-contents of an existing TC files or creating new TC files for users who
-might require access to multiple topologies. &nbsp;For instance a
+contents of an existing ADC files or creating new ADC files for users
+who
+might require access to multiple administrative domains. &nbsp;For
+instance a
 single human user may wish to use a single installation of the CLI to
-manage both a 'test' and 'production' deployment topologies.
+manage both a 'test' and 'production' deployment administrative
+domains.
 &nbsp;The
-CLI will update these pointers as remote administration modules (RAM)
-are added, changed or removed from the topology. &nbsp;The CLI will
+CLI will update these pointers as hosts of the RAD are&nbsp;added,
+changed or removed from the administrative domain. &nbsp;The CLI will
 discover this information through references in the CLI configuration
 files. &nbsp;If the CLI cannot access RAD through any of the
 pointers
-in the TC file(s), the command line invocation will fail with a message
+in the ADC file(s), the command line invocation will fail with a
+message
 explicitly indicating&nbsp;the scope of the problem to the user.</p>
+
+
 
 <h3><a name="Server_and_Group_IDs"></a>6.2
 &nbsp;Server and Server Group IDs</h3>
+
+
 
 The CLI will support the ability to allow the user to refer to a
 particular server by a user definable name called or server ID.
@@ -525,10 +923,16 @@ servers in the group. &nbsp;The CLI will provide tools for managing
 both server and group IDs as well as the set of servers that compose
 individual groups.<br>
 
+
+
 <br>
+
+
 
 <h3><a name="Specifying_Servers"></a>6.3
 &nbsp;Specifying&nbsp;Server(s)</h3>
+
+
 
 All CLI commands will require specification of an object (usually a
 server but perhaps something else like a certificate database) upon
@@ -538,11 +942,17 @@ more servers, the command line will&nbsp;support their
 specification in
 one of the following ways:<br>
 
+
+
 <ul>
+
+
 
   <li><span style="font-weight: bold;">LDAP host/port</span>
 - The CLI will use this information to send management operations to
 the server over&nbsp;LDAP</li>
+
+
 
   <li><span style="font-weight: bold;">Server ID</span>
 (<span style="font-style: italic;">remote administration
@@ -551,10 +961,14 @@ only</span>)
 administration data (RAD) to determine the server and appropriate
 interface (LDAP, JMX) through which operations will take place</li>
 
+
+
   <li><span style="font-weight: bold;">Group ID</span>
 (<span style="font-style: italic;">remote administration
 only</span>) - Same as with the Server ID except that the
 operation is performed for every server within the group</li>
+
+
 
   <li><span style="font-weight: bold;">implicit</span>
 - If none of the
@@ -564,20 +978,32 @@ server instance. &nbsp;This is especially true for <a href="#Task_Commands">task
 for
 someone to accidentally make a detremental configuration change.</li>
 
+
+
   <br>
 
+
+
 </ul>
+
+
 
 <h3><a name="Command_Forms"></a>6.4
 &nbsp;Command Forms</h3>
 
-<br>
+
+
+
 
 The CLI will have different forms of commands that may imply different
-interface requirements or implementation.<br>
+interface requirements or implementation. &nbsp;These forms are explained in the following sections.<br>
+
+
 
 <h4><a name="Task_Commands"></a>6.4.1
 &nbsp;Local&nbsp;Commands</h4>
+
+
 
 Task commands will support execution of a common user task.
 &nbsp;Examples of operations implemented as task commands are
@@ -588,9 +1014,13 @@ implicit specification of a target server. &nbsp;For instance
 invoking
 'start server' without option arguments would start the local server.
 &nbsp;Typically these commands would be found in the <span>/bin</span>
-directory of the file system root of the OpenDS instance.<br>
+or /bat directory of the file system root of the OpenDS instance.<br>
+
+
 
 <br>
+
+
 
 Local commands will operate soley on an associated instance of OpenDS
 and therefore will not support specification of a remote server or
@@ -599,522 +1029,225 @@ OpenDS server and cannot be installed standalone.<br>
 
 <br>
 
+<span style="font-style: italic;">Note: &nbsp;initial release of the
+CLI will not support a standalone installation of the CLI tools.</span><br>
+
+<br>
+
+Certficate management will for the most part be handled by tools
+packaged with the Java (namely keytool) although OpenDS may provide
+wrappers in order to make use of these tools more convenient.<br>
+
+<br>
+
+Examples of task commands may include but are not limited to the following:<br>
+
+<ul>
+
+  <li>Manage startup at system boot</li>
+
+  <li>Back up&nbsp;instance</li>
+
+  <li>Create LDIF representation of instance</li>
+
+  <li>Populate existing suffix with LDIF data</li>
+
+  <li>Display instance status and some configuration info</li>
+
+  <li>Regenerate existing indexes</li>
+
+  <li>Restart instance</li>
+
+  <li>Restore instance from backup archive</li>
+
+  <li>Start instance</li>
+
+  <li>Stop instance</li>
+
+</ul>
+
+
+
 <span style="color: rgb(51, 102, 255);"></span>See
 the <a href="https://opends.dev.java.net/public/docs/user-docs/cli/index.html">Command
 Line Usage Guide</a>&nbsp;Documentation Depot for information
 on the currently implemented set of local commands.<br>
 
-<br>
 
-<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
-
-  <tbody>
-
-    <tr>
-
-      <td><span style="font-weight: bold;">Object</span></td>
-
-      <td><span style="font-weight: bold;">Operations</span></td>
-
-      <td><span style="font-weight: bold;">Note</span></td>
-
-    </tr>
-
-    <tr>
-
-      <td>Certificates</td>
-
-      <td>
-      <ul>
-
-        <li>Add a certificate to the certificate database</li>
-
-        <li>Create and adds a selfsign certificate to the
-certificate database</li>
-
-        <li>Export a certificate and its keys from the database</li>
-
-        <li>Add a new certificate and its keys to the cert
-database</li>
-
-        <li>Add a new selfsign certificate and its keys to the
-cert database</li>
-
-        <li>List all certificates in the database</li>
-
-        <li>Remove a certificate from the database</li>
-
-        <li>Renew a certificate</li>
-
-        <li>Renew a selfsign certificate</li>
-
-        <li>Generate a certificate request</li>
-
-        <li>Display a certificate</li>
-
-      </ul>
-
-      </td>
-
-      <td></td>
-
-    </tr>
-
-    <tr>
-
-      <td>Server</td>
-
-      <td>
-      <ul>
-
-        <li>Manage startup at system boot</li>
-
-        <li>Backs up&nbsp;instance</li>
-
-        <li>Create instance</li>
-
-        <li>Delete instance</li>
-
-        <li>Unregister instance in a service</li>
-
-        <li>Register instance from a service</li>
-
-        <li>Create LDIF representation of instance</li>
-
-        <li>Display optional instance flag values</li>
-
-        <li>Generate legacy scripts in instance</li>
-
-        <li>Populate existing suffix with LDIF data</li>
-
-        <li>Display instance status and some configuration info</li>
-
-        <li>Regenerate existing indexes</li>
-
-        <li>Restart instance</li>
-
-        <li>Restore instance from backup archive</li>
-
-        <li>Set optional instance flags</li>
-
-        <li>Start instance</li>
-
-        <li>Stop instance</li>
-
-      </ul>
-
-      </td>
-
-      <td></td>
-
-    </tr>
-
-  </tbody>
-</table>
 
 <br>
+
+
 
 <h4><a name="Configuration_Commands"></a>6.4.2
-&nbsp;Server Configuration Commands</h4>
-
-Configuration commands will support the configuration of servers or
+&nbsp;Configuration Commands</h4>
+The configuration command and associated subcommands will support the configuration of servers or
 server modules. &nbsp;Examples of operations implemented as
-configuration commands are 'set port number' and 'configure
-directory server'. &nbsp;Configuration command should require the
+configuration commands are 'set port number' and 'enable connection handler'. &nbsp;Configuration command should require the
 user
 to explicitly identify a server instance in order to reduce the
 possibility of a user making an accidental configuration change to a
 server.<br>
 
-<br>
 
-The configuration commands will be specified as part of the Client API
-XML object specification. &nbsp;Individual component objects will
-support a group that allows a single command to handle configuration
+
+<br>
+The configuration subcommands will be specified as part
+of the manged object definitions. &nbsp;Individual component objects
+will
+support a group that allows a single command or subcommand to handle
+configuration
 for that object group. &nbsp;For instance there may be 3 objects
 that
 make up the configuration of synchronization in that are grouped and
-together support a single 'configure synchronization' command.<br>
+together support a single 'configure synchronization' command or
+subcommand. &nbsp;As the managed object definitions are expanded
+associated CLI commands or subcommands will be generated to support
+configuration of those components.<br>
+
+
 
 <br>
 
-Configuration Commands are capable of operating on any server in a
-topology and will support a full array of options for specifying a
+Configuration commands are capable of operating on any server in a
+administrative domain and will support a full array of options for
+specifying a
 server by ID, group, or host/port combination.<br>
 
+<br>
+
+Classes of server components configured through the configuration commands may include but are limited to:<br>
+
+<ul>
+
+  <li>Core server</li>
+
+  <li>Handlers</li>
+
+  <li>Backends</li>
+
+  <li>Entry cache</li>
+
+  <li>Identity mappers</li>
+
+  <li>Loggers</li>
+
+  <li>Matching rules</li>
+
+  <li>Providers</li>
+
+  <li>Password generators</li>
+
+  <li>Password policies</li>
+
+  <li>Password storage scheme</li>
+
+  <li>Plugins</li>
+
+  <li>The root DN&nbsp;</li>
+
+  <li>The root DSE&nbsp;</li>
+
+  <li>SASL mechanism handler</li>
+
+  <li>SSL</li>
+
+  <li>Virtual attributes</li>
+
+  <li>Work queue</li>
+
+</ul>
+
+See the OpenDS <a href="https://opends.dev.java.net/public/docs/user-docs/OpenDS-Config-Guide.pdf">Configuration Guide</a> (see References) for a complete set of managed components.<br>
+<br>
+According to the CLIP specification, configuration commands will be structured in the following way:<br>
+<br>
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; configure-ds SUBCOMMAND [GLOBAL_OPTIONS] [SUBCOMMAND_OPTIONS] [SUBCOMMAND_OPERANDS]<br>
+<br>
+</span>SUBCOMMAND is of the form:<br>
+<br>
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &lt;action&gt;-&lt;component&gt;-&lt;action-suffix&gt;</span><br>
+<br>
+and where:<br>
+<br>
 <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
-
   <tbody>
-
     <tr>
-
-      <td><span style="font-weight: bold;">Object</span></td>
-
-      <td><span style="font-weight: bold;">Operations</span></td>
-
-      <td><span style="font-weight: bold;">Note</span></td>
-
+      <td><span style="font-family: monospace;">&lt;action&gt;</span></td>
+      <td>is one of create, delete, list, get, set, or has (used for&nbsp;components where only zero or one to indicate presence)</td>
     </tr>
-
     <tr>
-
-      <td>Synchronization</td>
-
-      <td>
-      <ul>
-
-        <li>Ensure the authentication properties in accord</li>
-
-        <li>Create replication agreement</li>
-
-        <li>Create a prioritized replication rule</li>
-
-        <li>Delete replication agreement</li>
-
-        <li>Delete a prioritized replication rule</li>
-
-        <li>Demote an existing replicated suffix</li>
-
-        <li>Abandon replication for replicated suffix</li>
-
-        <li>Disable replication with another directory</li>
-
-        <li>Enable replication by assigning a role to an existing
-suffix</li>
-
-        <li>Enable replication with another directory</li>
-
-        <li>Display replication agreement property values</li>
-
-        <li>Launche total update of remote replica from local
-suffix</li>
-
-        <li>List replication agreements</li>
-
-        <li>List prioritized replication rules and displays their
-property values</li>
-
-        <li>Promote an existing replicated suffix</li>
-
-        <li>Set replication agreement property values</li>
-
-        <li>Display a comparison of a source and destination
-suffix configuration and the status of the replication agreement</li>
-
-        <li>Force updates of remote replica from local suffix</li>
-
-      </ul>
-
-      </td>
-
-      <td><span style="font-style: italic;">These
-operations come from
-DS 6 replication concepts and are listed here primarily as a
-placeholder. &nbsp;OpenDS synchronization will be different.</span></td>
-
+      <td><span style="font-family: monospace;">&lt;component&gt;</span></td>
+      <td>is one of the components defined in the managed object definition</td>
     </tr>
-
     <tr>
-
-      <td>Backup/Restore</td>
-
-      <td>
-      <ul>
-
-        <li>Backup</li>
-
-        <li>Restore</li>
-
-      </ul>
-
-      </td>
-
-      <td></td>
-
+      <td><span style="font-family: monospace;">&lt;action-suffix&gt;</span></td>
+      <td>is either empty or a value 'prop' in the case where action is set or get</td>
     </tr>
-
-    <tr>
-
-      <td>Encrypted Attributes</td>
-
-      <td>
-      <ul>
-
-        <li>Create</li>
-
-        <li>Delete</li>
-
-        <li>List</li>
-
-        <li>Display&nbsp;property values</li>
-
-      </ul>
-
-      </td>
-
-      <td></td>
-
-    </tr>
-
-    <tr>
-
-      <td>Index</td>
-
-      <td>
-      <ul>
-
-        <li>Create an indexed attribute</li>
-
-        <li>Delete an indexed attribute</li>
-
-        <li>Display index property values</li>
-
-        <li>List indexed attributes</li>
-
-        <li>Rebuild indexes of an existing suffix</li>
-
-        <li>Set index property values</li>
-
-      </ul>
-
-      </td>
-
-      <td></td>
-
-    </tr>
-
-    <tr>
-
-      <td>Plugin</td>
-
-      <td>
-      <ul>
-
-        <li>Create</li>
-
-        <li>Delete</li>
-
-        <li>Disable</li>
-
-        <li>Enable</li>
-
-        <li>Display plugin property values</li>
-
-        <li>List</li>
-
-        <li>Set property values</li>
-
-      </ul>
-
-      </td>
-
-      <td></td>
-
-    </tr>
-
-    <tr>
-
-      <td>Suffix</td>
-
-      <td>
-      <ul>
-
-        <li>Create suffix and empty data&nbsp;</li>
-
-        <li>Delete suffix configuration and data</li>
-
-        <li>Export to LDIF</li>
-
-        <li>Display suffix property values</li>
-
-        <li>Import from LDIF</li>
-
-        <li>List</li>
-
-        <li>Set&nbsp;property value</li>
-
-      </ul>
-
-      </td>
-
-      <td></td>
-
-    </tr>
-
-    <tr>
-
-      <td>Log</td>
-
-      <td>
-      <ul>
-
-        <li>Display server log property values</li>
-
-        <li>Rotate</li>
-
-        <li>Set server log property values</li>
-
-      </ul>
-
-      </td>
-
-      <td></td>
-
-    </tr>
-
-    <tr>
-
-      <td>Server</td>
-
-      <td>
-      <ul>
-
-        <li>Display server property values</li>
-
-        <li>Display information about server configuration</li>
-
-        <li>Change password compatability mode</li>
-
-        <li>Set server property values</li>
-
-        <li>Display a status&nbsp;active tasks</li>
-
-      </ul>
-
-      </td>
-
-      <td></td>
-
-    </tr>
-
   </tbody>
 </table>
-
-<p style="color: rgb(51, 102, 255);">&nbsp;&nbsp;&nbsp;</p>
-
+<span style="font-family: monospace;"></span><br>
+GLOBAL_OPTIONS specify options to all configuration commands including
+but not limited to the host, port, server or group ID of the server
+being configured and administrator identity information.<br>
+<br>
+SUBCOMMAND_OPTIONS specify options particular to a subcommand.
+&nbsp;For components where it is manditory to supply a subtype such as
+in the case of a connection handler (e.g. LDAP, JMX) a subcommand
+option (denoted by SUBCMD_OPTS) will be used to designate the subtype
+rather than have the subtype be part of the component name in SUBCMD.
+&nbsp;This approach will lend stability to the list of subcommands as
+well as making the list shorter and easier to describe in command help
+output.<br>
+<br>
+SUBCOMMAND_OPERANDS specify the target component being configured as
+well as any information required by the command. &nbsp;For commands
+where it is necessary to denote the name of a particular component
+instance, the name will be specified as the first subcommand operand.
+&nbsp;For 'set' actions, operands will specify property value
+information in the following form:<br>
+<br>
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &lt;property name&gt;<span style="font-family: monospace;">[+|-]:&lt;property value&gt;</span><br>
+</span><br>
+where:<br>
+<br>
 <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
-
   <tbody>
-
     <tr>
-
-      <td><span style="font-weight: bold;">Server
-Component</span></td>
-
-      <td><span style="font-weight: bold;">Operations</span></td>
-
-      <td><span style="font-weight: bold;">Note</span></td>
-
+      <td><span style="font-family: monospace;">&lt;property name&gt;</span></td>
+      <td>is the name of a component property as defined in the managed object definition and</td>
     </tr>
-
     <tr>
-
-      <td>Connection and Request Handlers</td>
-
-      <td>Configuration<br>
-
-      <br>
-
-      <ul>
-
-        <li>Add</li>
-
-        <li>Remove</li>
-
-        <li>List</li>
-
-        <li>Enable</li>
-
-        <li>Disable</li>
-
-        <li>Display properties values</li>
-
-        <li>Set property values</li>
-
-      </ul>
-
-      <br>
-
-Administration<br>
-
-      <ul>
-
-        <li>List current connections</li>
-
-        <li>Force client disconnect</li>
-
-      </ul>
-
-      </td>
-
-      <td></td>
-
+      <td><span style="font-family: monospace;"><span style="font-family: monospace;">[+|-]:</span></span></td>
+      <td>is used as the separator between the property and value.
+&nbsp;For multi-valued properties, the separator may optionally include
+a plus (+) or minus (-) symbol to indicate addition or removal of the
+named property value from/to the set of current values</td>
     </tr>
-
     <tr>
-
-      <td>Backend</td>
-
-      <td>
-      <ul>
-
-        <li>List</li>
-
-        <li></li>
-
-      </ul>
-
-      </td>
-
-      <td></td>
-
+      <td><span style="font-family: monospace;">&lt;property value&gt;</span></td>
+      <td>is a string representation of the property value to be assigned to the property specified by <span style="font-family: monospace;">&lt;property name&gt;</span></td>
     </tr>
-
-    <tr>
-
-      <td>Synchronization</td>
-
-      <td></td>
-
-      <td></td>
-
-    </tr>
-
-    <tr>
-
-      <td></td>
-
-      <td></td>
-
-      <td></td>
-
-    </tr>
-
   </tbody>
 </table>
+<br>
+<span style="font-family: monospace;"></span><br>
 
-<p style="color: rgb(51, 102, 255);"> </p>
+
+
 
 <h4><a name="Service_Commands"></a>6.4.3
-&nbsp;Service Commands</h4>
-
-Service commands are those that support operations that span OpenDS
-servers. &nbsp;For instance 'start remote server(s)', 'list remote
-administrators', and 'synchronize' might be examples of operations that
-would potentially operate on multiple servers.<br>
-
-<br>
-
-Like server configuration commands, service commands that require
-specification of a particular server will support the ability to
-identity servers by ID, group, <br>
-
-<br>
-
-<span style="color: rgb(51, 102, 255);">&lt;TODO:
-&nbsp;list service commands&gt;</span>
+&nbsp;Administrative Domain&nbsp;Commands</h4>
+OpenDS will support the concept of an administrative domain which helps
+simplify the management of a set of service that together implement a
+directory service. &nbsp;An administrative domain consists of a set of
+uniquely identifiable servers and administrators capable of invoking
+operations on that set of servers. &nbsp;This information will be
+expressed as RAD and hosted by the servers themselves.<br>
 <h4><a name="Script_Command"></a>6.4.4
 &nbsp;Script Command</h4>
+
+
 
 For purposes of scriptability, it would&nbsp;be convenient to
 support a
@@ -1126,81 +1259,137 @@ a confirmation from the user since its primary purpose is to be invoked
 without human interaction. &nbsp;Such a command would also support
 facilities for executing a set of commands stored in a file.<br>
 
+
+
 <br>
+
+
 
 <span style="color: rgb(51, 102, 255);">&lt;TODO:
 &nbsp;script commands&gt;</span><br>
+
+
 
 <p>&lt;Discuss the software entities/object in these
 components, use UML
 Class
 Diagram to present the Java objects and their relationship&gt;<br>
 
+
+
 </p>
+
+
 
 <hr style="width: 100%; height: 2px;"><span style="font-weight: bold;"><a name="7._Unit_Tests"></a></span>
 <h2>7. Unit Tests</h2>
 
+
+
 <p>To be determined.<br>
 
+
+
 </p>
+
+
 
 <hr size="2" width="100%">
 <h2><a name="7._Features_Configuration"></a>8.
 Feature's Configuration</h2>
 
+
+
 <p>&lt;What configuration attributes will we expose&gt;<br>
+
+
 
 &lt;what type and valid valuewill they have&gt;</p>
 
+
+
 <p>&lt;How will the configuration attributes be used&gt;<br>
 
+
+
 </p>
+
+
 
 <hr style="width: 100%; height: 2px;">
 <p><a name="External_Impacts"></a><br>
 
+
+
 </p>
 
+
+
 <h2>9. External impacts</h2>
+
+
 
 <h3><a name="9.1_Impact_on_Documentation"></a>9.1
 Impact on
 Documentation</h3>
 
+
+
 In addition to general documentation&nbsp;about how the CLI's form
-(use
-of commands, subcommands, operands, operators etc) the user
+(e.g. use
+of commands, subcommands, operands, operators) the user
 documentation must provide complete descriptions of each CLI command
 and its input parameters.<br>
+
+
 
 <h3><a name="9.2_Impact_on_Configuration"></a>9.2
 Impact on
 Configuration Interfaces<br>
 
+
+
 </h3>
 
+
+
 The CLI itself will be a configuration interface.<br>
+
+
 
 <h3><a name="9.3_Impact_on_Other_OpenDS_subsystems"></a>9.3
 Impact on
 Other OpenDS subsystems</h3>
 
+
+
 The CLI is a client of the administration framework's Client API and
 may impose its own set of requirements on this interface into the
 system.<br>
+
+
 
 <h3><a name="9.4_Other_external_Impacts_"></a>9.4
 Other external
 Impacts </h3>
 
+
+
 None<br>
+
+
 
 <br>
 
+
+
 <p>&nbsp;&nbsp;<br>
 
+
+
 </p>
+
+
 
 </body>
 </html>
