@@ -3,9 +3,13 @@
 <head>
 
 
+
+  
   
   <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
 
+
+  
   
   <title>Administrative Command Line Interface</title>
 </head>
@@ -14,274 +18,373 @@
 <body style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
 
 
+
 <center>
 <div class="title"><big><sup><img style="width: 197px; height: 57px;" src="opends_logo_welcome.png" title="OpenDS" alt="OpenDS"><br>
+
 
 
 </sup></big><sup><br>
 
 
+
 </sup></div>
+
 
 
 <div class="subtitle">Administrative Command Line Interface<br>
 
 
+
 for server group management</div>
+
 
 
 <div class="subtitle">Software Design Document</div>
 
 
+
 <p align="center"><br>
+
 
 
 </p>
 
 
+
 </center>
+
 
 
 <hr noshade="noshade" size="1">
 <div class="section">Revision History</div>
 
 
+
 <table border="0" cellpadding="0" cellspacing="0">
+
 
 
   <tbody>
 
 
+
     <tr>
+
 
 
       <td bgcolor="#666699">
       
+      
       <table border="0" cellpadding="2" cellspacing="1">
+
 
 
         <tbody>
 
 
+
           <tr>
+
 
 
             <th><font color="#ffffff">Version</font></th>
 
 
+
             <th><font color="#ffffff">Author</font></th>
+
 
 
             <th><font color="#ffffff">Date</font></th>
 
 
+
             <th><font color="#ffffff">Comments</font></th>
+
 
 
           </tr>
 
 
+
           <tr>
+
 
 
             <td align="center" bgcolor="#ffffff">0.1</td>
 
 
+
             <td bgcolor="white">Daniel Lutoff<br>
 
 
+
             </td>
+
 
 
             <td bgcolor="white">2007-03-14<br>
 
 
+
             </td>
+
 
 
             <td bgcolor="white">Initial Draft</td>
 
 
+
           </tr>
+
 
 
           <tr>
 
 
+
             <td align="center" bgcolor="#ffffff">0.2</td>
+
 
 
             <td bgcolor="white">Daniel Lutoff</td>
 
 
+
             <td bgcolor="white">2007-03-20</td>
+
 
 
             <td bgcolor="white">Incorporated&nbsp;comment from
 Brian, Kenneth and Josu</td>
 
 
+
           </tr>
+
 
 
           <tr>
 
 
+
             <td align="center" bgcolor="#ffffff">0.3</td>
+
 
 
             <td bgcolor="white">Daniel Lutoff</td>
 
 
+
             <td bgcolor="white">2007-03-21</td>
+
 
 
             <td bgcolor="white">Incorporated&nbsp;comment from
 Brian</td>
 
 
+
           </tr>
 
 
+
+        
         
         </tbody>
       
+      
       </table>
+
 
 
       </td>
 
 
+
     </tr>
 
 
+
+  
   
   </tbody>
 </table>
+
 
 
 <hr noshade="noshade" size="1">
 <div class="section">Table of Contents</div>
 
 
+
 <ul id="mozToc">
+
 
 <!--mozToc h1 1 h2 2 h3 3 h4 4 h5 5 h6 6--><li><a href="#mozTocId740849">1. Introduction
     </a>
     
+    
     <ul>
+
 
       <li><a href="#mozTocId864997">1.2
 Glossary</a></li>
 
+
       <li><a href="#mozTocId977850">1.3 References</a></li>
 
+
+    
     
     </ul>
 
+
   </li>
 
+
   <li><a href="#mozTocId884359">2. Overview</a></li>
+
 
   <li><a href="#mozTocId412820">3. Design Considerations
     </a>
     
+    
     <ul>
+
 
       <li><a href="#mozTocId458377">
 3.1 Assumptions and Dependencies
         </a></li>
 
+
       <li><a href="#mozTocId157636">3.2 Goals and Guideline</a></li>
+
 
       <li><a href="#mozTocId911691">3.3 Development Method</a></li>
 
+
+    
     
     </ul>
 
+
   </li>
 
+
   <li><a href="#mozTocId599254">4. Architectural Strategies</a></li>
+
 
   <li><a href="#mozTocId269617">5. System
 Architecture</a></li>
 
+
   <li><a href="#mozTocId604200">6. Detailed System Architecture</a>
     
+    
     <ul>
+
 
       <li><a href="#mozTocId257709">6.1
 &nbsp;Components</a></li>
 
+
       <li><a href="#mozTocId612716">6.2
 &nbsp;Specifying the Centralizaed repository service</a></li>
+
 
       <li><a href="#mozTocId47086">6.3
 &nbsp;Command Forms</a>
         
+        
         <ul>
+
 
           <li><a href="#mozTocId767457">6.3.1&nbsp;Command
 description</a></li>
 
+
           <li><a href="#mozTocId453781">6.3.2&nbsp;&nbsp;Command
 help</a></li>
 
+
+        
         
         </ul>
 
+
       </li>
 
+
+    
     
     </ul>
 
+
   </li>
+
 
   <li><a href="#mozTocId150173">7.
 Unit Tests</a></li>
 
+
   <li><a href="#mozTocId755944">8.
 Feature's Configuration</a></li>
+
 
   <li><a href="#mozTocId131784">9.
 External impacts</a>
     
+    
     <ul>
+
 
       <li><a href="#mozTocId19699">9.1
 Impact on
 Documentation</a></li>
+
 
       <li><a href="#mozTocId441722">9.2
 Impact on
 Configuration Interfaces
         </a></li>
 
+
       <li><a href="#mozTocId152245">9.3
 Impact on
 Other OpenDS subsystems</a></li>
+
 
       <li><a href="#mozTocId887139">9.4
 Other external
 Impacts </a></li>
 
+
+    
     
     </ul>
 
+
   </li>
+
 
 </ul>
 
 
+
 <br>
 
 
+
 <br>
+
 
 
 <hr noshade="noshade" size="1">
 <h1><a class="mozTocH2" name="mozTocId740849"></a>1. Introduction
 </h1>
+
 
 
 <p>The purpose of this document is to provide a design for the
@@ -293,196 +396,264 @@ of this tool. &nbsp;The audience should already be familiar with
 requirements pertaining to administrative client tools.<br>
 
 
+
 &nbsp;</p>
+
 
 
 <h2><a class="mozTocH3" name="mozTocId864997"></a>1.2
 Glossary</h2>
 
 
+
 <table border="0" cellpadding="2" cellspacing="0" width="80%">
+
 
 
   <col width="77*"> <col width="179*"> <tbody>
 
 
+
     <tr bgcolor="#666699">
+
 
 
       <th width="30%">
       
+      
       <p><font color="#ffffff">Term</font></p>
 
 
+
       </th>
+
 
 
       <th width="70%">
       
+      
       <p><font color="#ffffff">Description</font></p>
+
 
 
       </th>
 
 
+
     </tr>
+
 
 
     <tr>
 
 
+
       <td><br>
+
 
 
       </td>
 
 
+
       <td><br>
 
 
+
       </td>
+
 
 
     </tr>
 
 
+
     <tr>
+
 
 
       <td colspan="2" bgcolor="#666699" width="100%"></td>
 
 
+
     </tr>
 
 
+
+  
   
   </tbody>
 </table>
 
 
+
 <h2><a class="mozTocH3" name="mozTocId977850"></a>1.3 References</h2>
+
 
 
 <table border="0" cellpadding="2" cellspacing="0" width="80%">
 
 
+
   <tbody>
+
 
 
     <tr bgcolor="#666699">
 
 
+
       <th style="width: 505px;">
+      
       
       <p><font color="#ffffff">Title</font></p>
 
 
+
       </th>
+
 
 
       <th style="width: 237px;">
       
+      
       <p><font color="#ffffff">Revision</font></p>
 
 
+
       </th>
+
 
 
       <th style="width: 182px;">
       
+      
       <p><font color="#ffffff">Author</font></p>
 
 
+
       </th>
+
 
 
     </tr>
 
 
+
     <tr bgcolor="#666699">
 
 
+
       <td style="width: 505px;" bgcolor="#ffffff">
+      
       
       <div class="subtitle">Administrative Command Line
 Interface</div>
 
 
+
+      
       
       <div class="subtitle">Software Design Document</div>
 
 
+
+      
       
       <p> </p>
 
 
+
       </td>
+
 
 
       <td style="width: 237px;" bgcolor="#ffffff">
       
+      
       <p style="text-align: left;">Version&nbsp;0.2<br>
+
 
 
       </p>
 
 
+
       </td>
+
 
 
       <td style="width: 182px;" bgcolor="#ffffff">
       
+      
       <p><br>
+
 
 
       </p>
 
 
+
       </td>
+
 
 
     </tr>
 
 
+
     <tr>
+
 
 
       <td style="width: 505px;"><a href="http://www.opensolaris.org/os/community/arc/caselog/1999/645/spec-html/">CLIP
 specification</a></td>
 
 
+
       <td style="width: 237px;">Version 1.0 Approved<br>
+
 
 
 22 Jan 2003</td>
 
 
+
       <td style="width: 182px;"></td>
 
 
+
     </tr>
+
 
 
     <tr>
 
 
+
       <td style="width: 182px;" colspan="3" bgcolor="#666699"></td>
+
 
 
     </tr>
 
 
+
+  
   
   </tbody>
 </table>
+
 
 
 <p>
 </p>
 
 
+
 <hr noshade="noshade" size="1">
 <h1><a class="mozTocH2" name="mozTocId884359"></a>2. Overview</h1>
+
 
 
 <p>This document is intended to serve as specification of the
@@ -491,11 +662,14 @@ managing groups of servers.
 </p>
 
 
+
 <hr noshade="noshade" size="1">
 <h1><a class="mozTocH2" name="mozTocId412820"></a>3. Design Considerations<br>
 
 
+
 </h1>
+
 
 
 <h2><a class="mozTocH3" name="mozTocId458377"></a>
@@ -503,12 +677,15 @@ managing groups of servers.
 </h2>
 
 
+
 <p>The CLI must satisfy requirements and designs consideration
 defined in "Administrative Command Line Interface Software Design"
 document.&nbsp;</p>
 
 
+
 <h2><a class="mozTocH3" name="mozTocId157636"></a>3.2 Goals and Guideline</h2>
+
 
 
 OpenDS configuration CLI will support the ability to allow the user to
@@ -527,14 +704,17 @@ the set of servers that compose individual groups.
 <h2><a class="mozTocH3" name="mozTocId911691"></a>3.3 Development Method</h2>
 
 
+
 <p>The CLI
 will be developed through&nbsp;analysis of the capabilities
 supported by the OpenDS administrative framework.
 </p>
 
 
+
 <hr noshade="noshade" size="1">
 <h1><a class="mozTocH2" name="mozTocId599254"></a>4. Architectural Strategies</h1>
+
 
 
 <p>The
@@ -547,9 +727,11 @@ existing code libraries where feasible.
 </p>
 
 
+
 <hr noshade="noshade" size="1">
 <h1><a class="mozTocH2" name="mozTocId269617"></a>5. System
 Architecture</h1>
+
 
 
 The administrative CLI will interact with&nbsp;the centralized
@@ -560,33 +742,43 @@ the&nbsp;centralized configuration repository
 will be LDAP based.<br>
 
 
+
 <br>
 
 
+
 <br>
+
 
 
 <hr noshade="noshade" size="1">
 <h1><a class="mozTocH2" name="mozTocId604200"></a>6. Detailed System Architecture</h1>
 
 
+
 <h2><a class="mozTocH3" name="mozTocId257709"></a>6.1
 &nbsp;Components</h2>
+
 
 
 <p>The CLI itself will be composed of the following components:</p>
 
 
+
 <ul>
+
 
 
   <li>One or more client libraries (JAR) files</li>
 
 
+
   <li>Topology&nbsp;configuration (TC) file(s)</li>
 
 
+
 </ul>
+
 
 
 At installation time, the software&nbsp;will be installed on the
@@ -596,6 +788,7 @@ topology configuration (TC) files&nbsp;are created in the file
 system
 that point the CLI to one or more instances of centralized
 configuration service. <br>
+
 
 
 <p>The contents of the TC file will consist or pointers to one or
@@ -613,8 +806,10 @@ in the TC file(s), the command line invocation will fail with a message
 explicitly indicating&nbsp;the scope of the problem to the user.</p>
 
 
+
 <h2><a class="mozTocH3" name="mozTocId612716"></a>6.2
 &nbsp;Specifying the Centralizaed repository service</h2>
+
 
 
 The CLI commands will require specification of an object (usually a
@@ -622,7 +817,9 @@ server but perhaps something else like a certificate database) upon
 which the CLI command will act: <br>
 
 
+
 <ul>
+
 
 
   <li><span style="font-weight: bold;">LDAP host/port</span>
@@ -631,178 +828,233 @@ the server over&nbsp;LDAP to update the&nbsp;centralized
 configuration service.</li>
 
 
+
 </ul>
+
 
 
 <h2><a class="mozTocH3" name="mozTocId47086"></a>6.3
 &nbsp;Command Forms</h2>
 
 
+
 <h3><a class="mozTocH4" name="mozTocId767457"></a>6.3.1&nbsp;Command
 description</h3>
 
 
+
 <br>
+
 
 
 <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
 
 
+
   <tbody>
 
 
+
     <tr>
+
 
 
       <td><span style="font-weight: bold;">Object</span></td>
 
 
+
       <td><span style="font-weight: bold;">Operations</span></td>
+
 
 
       <td><span style="font-weight: bold;">Note</span></td>
 
 
+
     </tr>
 
 
+
     <tr>
+
 
 
       <td>group of server</td>
 
 
+
       <td>
       
+      
       <ul>
+
 
 
         <li>create a group</li>
 
 
+
         <li>list all groups</li>
+
 
 
         <li>delete a&nbsp;group</li>
 
+
         <li>modify group properties</li>
 
 
+
+      
       
       </ul>
+
 
 
       </td>
 
 
+
       <td></td>
 
 
+
     </tr>
+
 
 
     <tr>
 
 
+
       <td>Member</td>
+
 
 
       <td>
       
+      
       <ul>
+
         <li>add a&nbsp;member into a group</li>
+
 
 
         <li>remove a&nbsp;member from a group</li>
 
 
-        <li>list all&nbsp;members</li>
+
+        
 
 
         <li>list&nbsp;members part of a group</li>
 
 
+
+      
       
       </ul>
+
 
 
       </td>
 
 
+
       <td></td>
+
 
 
     </tr>
 
 
+
+  
   
   </tbody>
 </table>
 
 
+
 <br>
+
 
 
 <h3><a class="mozTocH4" name="mozTocId453781"></a>6.3.2&nbsp;&nbsp;Command
 help</h3>
 
 
+
 <div style="margin-left: 40px; font-family: monospace;"><span style="font-weight: bold;">opdsgrpmgr&nbsp;--help</span><br>
+
 
 
 <div style="margin-left: 40px;">usage: opdsgrpmgr
 &lt;subcommand&gt;&nbsp;[GLOBAL_OPTS] [SUBCMD_OPTS]<br>
 
 
+
 OpenDS command-line
 client to manage groups of servers.<br>
+
 
 
 Type 'opdsgrpmgr
 &lt;subcommand&gt; --help' for help on a specific subcommand.<br>
 
 
+
 <br>
+
 
 
 Available
 subcommands:<br>
 
 
+
 </div>
+
 
 
 <div style="margin-left: 80px;">create-group<br>
 
 
+
 modify-group<br>
+
 
 
 delete-group<br>
 
 
+
 list-groups<br>
+
 
 
 add-to-group<br>
 
 
+
 remove-from-group<br>
+
 
 
 show-group-membership<br>
 
 
-list-members<br>
-
 
 <br>
 
 
+
 </div>
 
 
+
 </div>
+
 
 
 <div style="font-family: monospace;">
@@ -811,10 +1063,13 @@ list-members<br>
 GLOBAL_OPTS are:<br>
 
 
+
 <br>
 
 
+
 -?, --help<br>
+
 
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
@@ -822,10 +1077,13 @@ GLOBAL_OPTS are:<br>
 SUBCMD help<br>
 
 
+
 <br>
 
 
+
 -e,--encryption<br>
+
 
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
@@ -833,10 +1091,13 @@ SUBCMD help<br>
 over SSL (Default port: 636)<br>
 
 
+
 <br>
 
 
+
 --help<br>
+
 
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
@@ -844,10 +1105,13 @@ over SSL (Default port: 636)<br>
 this message | subcommand help message<br>
 
 
+
 <br>
 
 
+
 -h HOST, --hostname HOST<br>
+
 
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
@@ -857,10 +1121,13 @@ HOST
 (Default: localhost)<br>
 
 
+
 <br>
 
 
+
 -w FILE, --password FILE<br>
+
 
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
@@ -868,10 +1135,13 @@ HOST
 pwd from FILE (Default: prompt for pwd)<br>
 
 
+
 <br>
 
 
+
 -p PORT, --port PORT<br>
+
 
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
@@ -879,10 +1149,13 @@ pwd from FILE (Default: prompt for pwd)<br>
 to directory on PORT (Default: 389)<br>
 
 
+
 <br>
 
 
+
 -u USER_DN, --username USER_DN<br>
+
 
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
@@ -890,10 +1163,13 @@ to directory on PORT (Default: 389)<br>
 USER_DN (Default: cn=Directory Manager)<br>
 
 
+
 <br>
 
 
+
 -v,--verbose<br>
+
 
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
@@ -901,20 +1177,26 @@ USER_DN (Default: cn=Directory Manager)<br>
 extra messages<br>
 
 
+
 <br>
 
 
-</div>
-
 
 </div>
 
 
+
 </div>
+
+
+
+</div>
+
 
 
 <div style="margin-left: 40px; font-family: monospace;"><span style="font-weight: bold;">opdsgrpmgr&nbsp;create-group
 --help<br>
+
 
 
 </span>
@@ -922,44 +1204,57 @@ extra messages<br>
 create-group [GLOBAL_OPTS] [SUBCOMMAND_OPTS]<br>
 
 
+
 Create a new group of servers.<br>
 
 
+
 <br>
+
 
 
 Global Options: See opdsgrpmgr
 -?<br>
 
 
+
 <br>
+
 
 
 SubCommand Options:<br>
 
 
+
 <br>
 
 
+
 -g, --groupId GROUP_ID<br>
+
 
 
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 &nbsp; &nbsp; The group identifier.<br>
 
 
+
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 &nbsp; &nbsp; This option is mandatory.<br>
+
 
 
 <br>
 
 
+
 -d, --description DESCRIPTION<br>
+
 
 
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 &nbsp; &nbsp; The group description.<br>
+
 
 
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
@@ -967,14 +1262,18 @@ SubCommand Options:<br>
 description will be "".<br>
 
 
+
 <br>
+
 
 
 </div>
 
 
+
 <span style="font-weight: bold;">opdsgrpmgr modify-group
 --help</span><br>
+
 
 
 <span style="font-weight: bold;"></span>
@@ -982,58 +1281,75 @@ description will be "".<br>
 modify-group [GLOBAL_OPTS] [SUBCOMMAND_OPTS]<br>
 
 
+
 Modify group properties.<br>
 
 
+
 <br>
+
 
 
 Global Options: See opdsgrpmgr
 -?<br>
 
 
+
 <br>
+
 
 
 SubCommand Options:<br>
 
 
+
 <br>
 
 
+
 -g, --groupId GROUP_ID<br>
+
 
 
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 &nbsp; &nbsp; The group identifier.<br>
 
 
+
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 &nbsp; &nbsp; This option is mandatory.<br>
+
 
 
 <br>
 
 
+
 -n, --new-groupId<br>
+
 
 
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 &nbsp; &nbsp;&nbsp;The new group identifier.<br>
 
 
+
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 &nbsp; &nbsp; This option is optional.<br>
+
 
 
 <br>
 
 
+
 -d, --new-description DESCRIPTION<br>
+
 
 
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 &nbsp; &nbsp; The new group description.<br>
+
 
 
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
@@ -1041,11 +1357,14 @@ SubCommand Options:<br>
 </div>
 
 
+
 <div style="margin-left: 40px;"></div>
+
 
 
 <span style="font-weight: bold;">opdsgrpmgr delete-group
 --help<br>
+
 
 
 </span>
@@ -1053,20 +1372,26 @@ SubCommand Options:<br>
 delete-group [GLOBAL_OPTS] GROUP_[SUBCOMMAND_OPTS]<br>
 
 
+
 Delete an existing new group of servers<br>
 
 
+
 </div>
+
 
 
 <pre style="margin-left: 40px;">Global Options: See opdsgrpmgr -?<br><br>SubCommand Options:<br><br>-g, --groupId GROUP_ID<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; The group identifier.<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; This option is mandatory.<span style="font-family: mon;"><span style="font-weight: bold;"></span></span><span style="font-weight: bold;"></span></pre>
 
 
+
 </div>
+
 
 
 <div style="margin-left: 40px; font-family: monospace;"><span style="font-weight: bold;">opdsgrpmgr&nbsp;list-groups
 --help<br>
+
 
 
 </span>
@@ -1074,27 +1399,35 @@ Delete an existing new group of servers<br>
 list-groups [GLOBAL_OPTS]<br>
 
 
+
 List&nbsp;groups ID that are defined.<br>
 
 
+
 <br>
+
 
 
 Global Options: See opdsgrpmgr
 -?<br>
 
 
+
 </div>
+
 
 
 <pre style="margin-left: 40px;">SubCommand Options:<br></pre>
 
 
+
 </div>
+
 
 
 <div style="font-family: monospace;">
 <div style="margin-left: 80px;">-g, --groupId GROUP_ID<br>
+
 
 
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
@@ -1102,68 +1435,46 @@ Global Options: See opdsgrpmgr
 GROUP_ID only.<br>
 
 
+
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 &nbsp; &nbsp; This option is optional.<br>
+
 
 
 <br>
 
 
+
 -d, --description&nbsp;<br>
+
 
 
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 &nbsp; &nbsp; If specified, list group(s) description.<br>
 
 
+
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 &nbsp; &nbsp; This option is optional.<br>
 
 
-<br>
-
-
-</div>
-
-
-</div>
-
-
-<div style="margin-left: 40px; font-family: monospace;"><span style="font-weight: bold;"></span><span style="font-weight: bold;">opdsgrpmgr list-members
---help <br>
-
-
-</span>
-<div style="margin-left: 40px;">usage: opdsgrpmgr
-list-members [GLOBAL_OPTS] [SUBCOMMAND_OPTS]<br>
-
-
-List members that are register into the repository.<br>
-
 
 <br>
 
 
-Global Options: See opdsgrpmgr
--?<br>
+
+</div>
+
 
 
 </div>
 
 
-<pre style="margin-left: 40px;">SubCommand Options:<br></pre>
 
 
-<div style="margin-left: 40px;">
-<pre>-m, --memberId MEMBER_ID<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; If speeficied,&nbsp;list information for MEMBER_ID only.<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; This option is optional.<br><br>-H, --member-hostname<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; If specified, list member's hostname.<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; This option is optional.<br><br>-P, --member-port<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; If specified, list member's port.<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; This option is optional.<br><br>-d, --description<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; If specified, list member's description.<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; This option is optional.<br><br></pre>
-
-
-</div>
-
-
-</div>
 <div style="margin-left: 40px; font-family: monospace;"><span style="font-weight: bold;">opdsgrpmgr&nbsp;add-to-group
 --help<br>
+
 
 
 </span>
@@ -1171,13 +1482,17 @@ Global Options: See opdsgrpmgr
 add-to-group [GLOBAL_OPTS]&nbsp;[SUBCOMMAND_OPTS]<br>
 
 
+
 Add a member to a group.<br>
+
 
 
 <br>
 
 
+
 </div>
+
 
 
 <div style="margin-left: 40px;">Global Options: See
@@ -1185,28 +1500,36 @@ opdsgrpmgr
 -?<br>
 
 
+
 </div>
 
 
+
 </div>
+
 
 
 <div style="font-family: monospace;">
 <pre style="margin-left: 80px;">SubCommand Options:<br></pre>
 
 
+
 </div>
+
 
 
 <div style="margin-left: 40px; font-family: monospace;">
 <pre style="margin-left: 40px;">-m, --memberId MEMBER_ID<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; The member to add.<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; This option is mandatory.<br><br>-g, --groupId GROUP_ID<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; The group in which the member should be added.<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; This option is mandatory.</pre>
 
 
+
 </div>
+
 
 
 <div style="margin-left: 40px; font-family: monospace;"><span style="font-weight: bold;">opdsgrpmgr&nbsp;remove-from-group
 --help</span></div>
+
 
 
 <div style="margin-left: 40px;">
@@ -1215,13 +1538,17 @@ opdsgrpmgr
 remove-from-group [GLOBAL_OPTS]&nbsp;[SUBCOMMAND_OPTS]<br>
 
 
+
 Remove a member from a group.<br>
+
 
 
 <br>
 
 
+
 </div>
+
 
 
 <div style="font-family: monospace;">
@@ -1230,13 +1557,17 @@ opdsgrpmgr
 -?<br>
 
 
-</div>
-
 
 </div>
 
 
+
 </div>
+
+
+
+</div>
+
 
 
 <div style="font-family: monospace;">
@@ -1244,27 +1575,69 @@ opdsgrpmgr
 <pre style="margin-left: 80px;">SubCommand Options:<br></pre>
 
 
+
 </div>
+
 
 
 <div style="margin-left: 40px; font-family: monospace;">
-<pre style="margin-left: 40px;">-m, --memberId MEMBER_ID<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; The member to remove.<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; This option is mandatory.<br><br>-g, --groupId GROUP_ID<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; The group in which the member should be removed.<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; This option is mandatory.</pre>
+<pre style="margin-left: 40px;">-m, --memberId MEMBER_ID<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; The member to remove.<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; This option is mandatory.<br><br>-g, --groupId GROUP_ID<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; The group in which the member should be removed.<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; This option is mandatory.<br><br></pre>
+</div>
+<div style="font-family: monospace;">
+<div style="margin-left: 40px;"><span style="font-weight: bold;">opdsgrpmgr show-group-membership
+--help <br>
+
+
+
+</span>
+<div style="margin-left: 40px;">usage: opdsgrpmgr show-group-membership [GLOBAL_OPTS] [SUBCOMMAND_OPTS]<br>
+
+
+
+List members that are part of a group.<br>
+
+
+
+<br>
+
+
+
+Global Options: See opdsgrpmgr
+-?<br>
+
 
 
 </div>
 
 
+
+<pre style="margin-left: 40px;">SubCommand Options:<br><br>-g, --groupId GROUP_ID<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; The group in which the member should be listed.<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; This option is mandatory.<br><br>-H, --member-hostname<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; If specified, list member's hostname.<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; This option is optional.<br><br>-P, --member-port<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; If specified, list member's port.<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; This option is optional.<br><br>-d, --description<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; If specified, list member's description.<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; This option is optional.<br></pre>
 </div>
+</div>
+<div style="margin-left: 40px; font-family: monospace;">
+<pre style="margin-left: 40px;"></pre>
+
+
+
+</div>
+
+
+
+</div>
+
 
 
 <h1><a class="mozTocH2" name="mozTocId150173"></a>7.
 Unit Tests</h1>
 
 
+
 <p>To be determined.<br>
 
 
+
 </p>
+
 
 
 <hr size="2" width="100%">
@@ -1272,32 +1645,41 @@ Unit Tests</h1>
 Feature's Configuration</h1>
 
 
+
 <p>&lt;What configuration attributes will we expose&gt;<br>
+
 
 
 &lt;what type and valid value will they have&gt;</p>
 
 
+
 <p>&lt;How will the configuration attributes be used&gt;<br>
 
 
+
 </p>
+
 
 
 <hr style="width: 100%; height: 2px;">
 <p><br>
 
 
+
 </p>
+
 
 
 <h1><a class="mozTocH2" name="mozTocId131784"></a>9.
 External impacts</h1>
 
 
+
 <h2><a class="mozTocH3" name="mozTocId19699"></a>9.1
 Impact on
 Documentation</h2>
+
 
 
 In addition to general documentation&nbsp;about how the CLI's form
@@ -1307,15 +1689,19 @@ documentation must provide complete descriptions of each CLI command
 and its input parameters.<br>
 
 
+
 <h2><a class="mozTocH3" name="mozTocId441722"></a>9.2
 Impact on
 Configuration Interfaces<br>
 
 
+
 </h2>
 
 
+
 The CLI itself will be a configuration interface.<br>
+
 
 
 <h2><a class="mozTocH3" name="mozTocId152245"></a>9.3
@@ -1323,9 +1709,11 @@ Impact on
 Other OpenDS subsystems</h2>
 
 
+
 The CLI is a client of the administration framework's Client API and
 may impose its own set of requirements on this interface into the
 system.<br>
+
 
 
 <h2><a class="mozTocH3" name="mozTocId887139"></a>9.4
@@ -1333,16 +1721,21 @@ Other external
 Impacts </h2>
 
 
+
 None<br>
+
 
 
 <br>
 
 
+
 <p>&nbsp;&nbsp;<br>
 
 
+
 </p>
+
 
 
 </body>
