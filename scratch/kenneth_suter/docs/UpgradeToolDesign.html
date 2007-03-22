@@ -544,13 +544,18 @@ possible or requires extra work.
 <h3><span style="font-weight: bold;">5.2 &nbsp;Stop Server</span></h3>
 The first step in the upgrade process will the to stop the server as well as any other processes associated with the server.<br>
 <h3>5.3 &nbsp;Backup</h3>
-The upgrade tool will make use of the 'jar' command to create an
-archive in the /bak directory of the server's installation root.
-&nbsp;invoke the system's backup command to perform a full backup of
-the server. &nbsp;The target directory for the backup files will be
-supplied to the upgrade tool by the user. &nbsp;This backup will be
-used in supporting the upgrade tools ability to allow the user to abort
-the backup process if necessary.<br>
+The upgrade tool will make use of the&nbsp;<span style="font-family: monospace;">backup</span>
+command shipped with the server to create an archive (by default in
+the&nbsp;/bak directory of the server's installation root). &nbsp;This
+backup will be used in supporting the upgrade tools ability to allow
+the user to abort the upgrade&nbsp;process or revert to an old back at
+a later time. &nbsp;Copies of files that would need to be restored
+during an upgrade reversion will be stored in/with the directories
+created by the <span style="font-family: monospace;">backup</span>
+tool. &nbsp;Since an upgrade reversion will involve more than what is
+currently involved in a restore operation, the upgrade tool will
+support its own reversion operation either as a separate tool or an
+option in the upgrade tool itself.<br>
 <h3>5.4 &nbsp;Calculate Schema and Configuration Customizations</h3>
 The upgrade tool will calculate schema and configuration customizations
 by
@@ -662,7 +667,7 @@ website.</td>
 
       <td>-d, --backupDirectory DIRECTORY</td>
 
-      <td>Filesystem location for the backup files </td>
+      <td>Root filesystem location for the backup files. &nbsp;If not present the upgrade tool will use the server installation's <span style="font-family: monospace;">bak</span> directory.</td>
 
     </tr>
 
@@ -674,21 +679,16 @@ website.</td>
 
     </tr>
 
-    <tr>
-
-      <td></td>
-
-      <td></td>
-
-    </tr>
-
+    
   
   </tbody>
 </table>
 
 <br>
 <h3>6.2 &nbsp;Graphical Interface</h3>
-The upgrade tool will support a graphical interface which will be equivalent in functionality to the command line interface.<br>
+The upgrade tool will support a graphical interface which will be
+equivalent in functionality to the command line interface. &nbsp;The
+following mockup image shows a 3-step wizard style interface.<br>
 <br>
 <img style="width: 330px; height: 396px;" alt="Mockup for upgrade tool graphical user interface" src="upgrade.png"><br>
 <br>
