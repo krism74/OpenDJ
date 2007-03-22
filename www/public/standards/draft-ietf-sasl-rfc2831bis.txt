@@ -5,11 +5,12 @@
 
 
 INTERNET-DRAFT                                         A. Melnikov (Ed.)
-Obsoletes: 2831                                               Isode Ltd.
-Intended category: Standards track                         November 2006
+Obsoletes: RFC 2831 (if approved)                             Isode Ltd.
+Intended status: Standards track                              March 2007
+Expires: September 2007
 
             Using Digest Authentication as a SASL Mechanism
-                   draft-ietf-sasl-rfc2831bis-11.txt
+                   draft-ietf-sasl-rfc2831bis-12.txt
 
 Status of this Memo
 
@@ -18,25 +19,26 @@ Status of this Memo
    have been or will be disclosed, and any of which he or she becomes
    aware will be disclosed, in accordance with Section 6 of BCP 79.
 
-   Internet-Drafts are working documents of the Internet Engineering
-   Task Force (IETF), its areas, and its working groups.  Note that
-   other groups may also distribute working documents as Internet-
-   Drafts.
+   Internet-Drafts are working documents of the Internet
+   Engineering Task Force (IETF), its areas, and its
+   working groups. Note that other groups may also distribute
+   working documents as Internet-Drafts.
 
-   Internet-Drafts are draft documents valid for a maximum of six months
-   and may be updated, replaced, or obsoleted by other documents at any
-   time.  It is inappropriate to use Internet-Drafts as reference
-   material or to cite them other than as "work in progress".
+   Internet-Drafts are draft documents valid for a maximum of
+   six months and may be updated, replaced, or obsoleted by
+   other documents at any time. It is inappropriate to use
+   Internet-Drafts as reference material or to cite them other
+   than as "work in progress."
 
    The list of current Internet-Drafts can be accessed at
-   http://www.ietf.org/ietf/1id-abstracts.txt
+   http://www.ietf.org/1id-abstracts.html
 
    The list of Internet-Draft Shadow Directories can be accessed at
-   http://www.ietf.org/shadow.html.
+   http://www.ietf.org/shadow.html
 
 Copyright Notice
 
-   Copyright (C) The Internet Society (2006).
+   Copyright (C) The IETF Trust (2007).
 
 Abstract
 
@@ -53,15 +55,13 @@ Abstract
 
 
 
-
-
-Melnikov (Ed.)              Expires: May 2007                   [Page 1]
+Melnikov (Ed.)           Expires: September 2007                [Page 1]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
 Table of Contents
@@ -97,8 +97,8 @@ Table of Contents
     5.1 NORMATIVE REFERENCES.........................................26
     5.2 INFORMATIVE REFERENCES.......................................27
    6 IANA CONSIDERATIONS.............................................28
-   7 ABNF............................................................29
-    7.1 AUGMENTED BNF................................................29
+   7 HBNF............................................................29
+    7.1 Enhanced BNF.................................................29
     7.2 BASIC RULES..................................................31
    8 SAMPLE CODE.....................................................33
    9 AUTHORS' ADDRESSES..............................................XX
@@ -115,13 +115,13 @@ Table of Contents
 
 
 
-Melnikov (Ed.)              Expires: May 2007                   [Page 2]
+Melnikov (Ed.)           Expires: September 2007                [Page 2]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
 1  Introduction
@@ -151,8 +151,9 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
    document are to be interpreted as described in RFC 2119 [RFC 2119].
 
-   <<This specification uses the same ABNF notation and lexical
-   conventions as HTTP/1.1 specification; see section 7>>.
+   This specification uses the same EnHanced BNF notation (referred to
+   as HBNF in this document) and lexical conventions as HTTP/1.1
+   specification; see section 7.
 
    Let { a, b, ... } be the concatenation of the octet strings a, b, ...
 
@@ -174,14 +175,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-
-Melnikov (Ed.)              Expires: May 2007                   [Page 3]
-
+Melnikov (Ed.)           Expires: September 2007                [Page 3]
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
    Let unq(X) be the value of the quoted-string X without the
@@ -235,13 +235,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                   [Page 4]
+Melnikov (Ed.)           Expires: September 2007                [Page 4]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
 2  Authentication
@@ -295,18 +295,19 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                   [Page 5]
+Melnikov (Ed.)           Expires: September 2007                [Page 5]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
    digest-challenge  =
-         1#( realm / nonce / qop-options / stale / server_maxbuf /
-             charset / prep / algorithm / cipher-opts / auth-param )
+         1#( realm / nonce / qop-options / stale / server-maxbuf /
+             charset / prep-opts / algorithm / cipher-opts /
+             auth-param )
 
         realm             = "realm" "=" realm-value
         realm-value       = quoted-string
@@ -321,10 +322,10 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
                              ;; future extensions to DIGEST-MD5
         qop-token         = token
         stale             = "stale" "=" "true"
-        server_maxbuf     = "maxbuf" "=" maxbuf-value
+        server-maxbuf     = "maxbuf" "=" maxbuf-value
         maxbuf-value      = 1*DIGIT
         charset           = "charset" "=" "utf-8"
-        prep              = "prep" "=" DQUOTE prep-mechs DQUOTE
+        prep-opts         = "prep" "=" DQUOTE prep-mechs DQUOTE
         prep-mechs        = 1#prep-mech
         prep-mech         = "rfc4013"
         algorithm         = "algorithm" "=" "md5-sess"
@@ -351,19 +352,19 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
                             ;; for future channel bindings>>
         channel-bindings  = 1*TEXTCHAR
                             ;; channel binding data as defined by
+
+
+
+Melnikov (Ed.)           Expires: September 2007                [Page 6]
+
+
+
+
+
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
+
+
                             ;; the channel type
-
-
-
-Melnikov (Ed.)              Expires: May 2007                   [Page 6]
-
-
-
-
-
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
-
-
         nonce-octets      = 1*TEXTCHAR
 
    The meanings of the values of the directives used above are as
@@ -411,19 +412,19 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
       list of realms advertised by the server.
 
    nonce
+
+
+
+Melnikov (Ed.)           Expires: September 2007                [Page 7]
+
+
+
+
+
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
+
+
       A server-specified string erstwhile intended to add entropy to the
-
-
-
-Melnikov (Ed.)              Expires: May 2007                   [Page 7]
-
-
-
-
-
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
-
-
       challenge.  The nonce field may be used to exchange channel
       binding data.
 
@@ -471,19 +472,19 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
       "auth,auth-int" (with no quotes).
 
    qop-options
+
+
+
+Melnikov (Ed.)           Expires: September 2007                [Page 8]
+
+
+
+
+
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
+
+
       A quoted string of one or more comma-separated tokens indicating
-
-
-
-Melnikov (Ed.)              Expires: May 2007                   [Page 8]
-
-
-
-
-
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
-
-
       the "quality of protection" values supported by the server.  The
       value "auth" indicates authentication; the value "auth-int"
       indicates authentication with integrity protection; the value
@@ -504,7 +505,7 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
       directive may appear at most once; if multiple instances are
       present, the client MUST abort the authentication exchange.
 
-   server_maxbuf ("maximal ciphertext buffer size")
+   server-maxbuf ("maximal ciphertext buffer size")
       A number indicating the size of the largest buffer (in bytes) the
       server is able to receive when using "auth-int" or "auth-conf".
       The value MUST be bigger than 16 and smaller or equal to 16777215
@@ -531,25 +532,25 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
       which US-ASCII [USASCII] is a subset). The directive is needed for
       backwards compatibility with HTTP Digest<<, which only supports
       ISO 8859-1>>.  This directive may appear at most once; if multiple
+
+
+
+Melnikov (Ed.)           Expires: September 2007                [Page 9]
+
+
+
+
+
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
+
+
       instances are present, the client MUST abort the authentication
-
-
-
-Melnikov (Ed.)              Expires: May 2007                   [Page 9]
-
-
-
-
-
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
-
-
       exchange.
 
       Note, that this directive doesn't affect authorization id
       ("authzid").
 
-   prep
+   prep-opts
       Servers compliant with this specification MUST include this
       directive.
 
@@ -574,15 +575,15 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
       <<Another alternative: this directive implies charset=utf-8.
       However this would mean that an older client (which doesn't
-      recognize the prep directive will think that the server doesn't
-      support UTF-8.>> >>
+      recognize the prep-opts directive will think that the server
+      doesn't support UTF-8.>> >>
 
       If this directive is missing, the server doesn't support any
       preparation algorithm, i.e. the server is an RFC 2831 only server.
 
       If this directive is present multiple times the client MUST treat
-      it as if it received a single prep directive containing a comma
-      separated value from all instances.
+      it as if it received a single prep-opts directive containing a
+      comma separated value from all instances.
 
    algorithm
       This directive is required for backwards compatibility with HTTP
@@ -591,19 +592,19 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
       multiple instances are present, the client SHOULD abort the
       authentication exchange.
 
+
+
+
+Melnikov (Ed.)           Expires: September 2007               [Page 10]
+
+
+
+
+
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
+
+
    cipher-opts
-
-
-
-Melnikov (Ed.)              Expires: May 2007                  [Page 10]
-
-
-
-
-
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
-
-
       A list of ciphers that the server supports. This directive must be
       present exactly once if "auth-conf" is offered in the
       "qop-options" directive, in which case the "aes-ctr" cipher is
@@ -651,20 +652,20 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
    "digest-response" defined as follows:
 
    digest-response  = 1#( username / realm / nonce / cnonce /
+
+
+
+Melnikov (Ed.)           Expires: September 2007               [Page 11]
+
+
+
+
+
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
+
+
                           nonce-count / qop / digest-uri / response /
-
-
-
-Melnikov (Ed.)              Expires: May 2007                  [Page 11]
-
-
-
-
-
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
-
-
-                          response-v2 / client_maxbuf / charset / prep /
+                          response-v2 / client-maxbuf / charset / prep /
                           cipher / authzid / auth-param )
 
        username         = "username" "=" username-value
@@ -673,7 +674,7 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
        cnonce-value     = nonce-value
        nonce-count      = "nc" "=" nc-value
        nc-value         = 8LHEX
-       client_maxbuf    = "maxbuf" "=" maxbuf-value
+       client-maxbuf    = "maxbuf" "=" maxbuf-value
        qop              = "qop" "=" qop-value
        digest-uri       = "digest-uri" "="
                           DQUOTE digest-uri-value DQUOTE
@@ -711,19 +712,19 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
       value of the "charset" directive. This directive MUST appear at
       most once and SHOULD contain one of the realms provided by the
       server in the "digest-challenge". If the directive is missing,
+
+
+
+Melnikov (Ed.)           Expires: September 2007               [Page 12]
+
+
+
+
+
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
+
+
       "realm-value" will set to the empty string when computing A1 (see
-
-
-
-Melnikov (Ed.)              Expires: May 2007                  [Page 12]
-
-
-
-
-
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
-
-
       below for details).
 
       <<If the realm value was provided by the client, if the "charset"
@@ -774,14 +775,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-
-Melnikov (Ed.)              Expires: May 2007                  [Page 13]
-
+Melnikov (Ed.)           Expires: September 2007               [Page 13]
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
       When channel bindings are in use, servers MUST reject responses
@@ -831,22 +831,22 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
       Indicates the name of the service if it is replicated. The service
       is considered to be replicated if the client's service-location
       process involves resolution using standard DNS lookup operations,
-      and if these operations involve DNS records (such as SRV [RFC
+      and if these operations involve DNS records (such as SRV
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 14]
+Melnikov (Ed.)           Expires: September 2007               [Page 14]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
-      2782], or MX) which resolve one DNS name into a set of other DNS
-      names. In this case, the initial name used by the client is the
-      "serv-name", and the final name is the "host" component. For
+      [RFC-2782], or MX) which resolve one DNS name into a set of other
+      DNS names. In this case, the initial name used by the client is
+      the "serv-name", and the final name is the "host" component. For
       example, the incoming mail service for "example.com" may be
       replicated through the use of MX records stored in the DNS, one of
       which points at an SMTP server called "mail3.example.com"; it's
@@ -895,13 +895,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 15]
+Melnikov (Ed.)           Expires: September 2007               [Page 15]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
    response-v2
@@ -911,13 +911,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
       fails.  If during SS calculation (see section 2.1.2.1) preparation
       of the username and/or the password fails or results in an empty
       string (*), then the client MUST NOT send this directive. Also, if
-      none of the values in the server's "prep" directive is recognized,
-      then this directive MUST NOT be sent.
+      none of the values in the server's "prep-opts" directive is
+      recognized, then this directive MUST NOT be sent.
 
       (*) In this case an interactive client can request a repeated
       entry of the username and/or the password.
 
-   client_maxbuf
+   client-maxbuf
       A number indicating the size of the largest ciphertext buffer the
       client is able to receive when using "auth-int" or "auth-conf". If
       this directive is missing, the default value is 65536. This
@@ -926,9 +926,9 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
       value is less or equal to 16, or bigger than 16777215 (i.e.
       2**24-1), the server MUST abort the authentication exchange.
 
-      Upon processing/sending of the client_maxbuf value both the server
+      Upon processing/sending of the client-maxbuf value both the server
       and the client calculate their "maximal ciphertext buffer size" as
-      the minimum of the server_maxbuf (Step One) and the client_maxbuf
+      the minimum of the server-maxbuf (Step One) and the client-maxbuf
       (Step Two).  The "maximal sender size" can be calculated by
       subtracting 16 from the calculated "maximal ciphertext buffer
       size".
@@ -955,13 +955,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 16]
+Melnikov (Ed.)           Expires: September 2007               [Page 16]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
       identity ("authzid").
@@ -970,7 +970,7 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
       This directive, if present, specifies which username/password
       preparation algorithms has been used by the client when
       calculating response-v2.  This directive MUST contain one of the
-      values specified in the "prep" directive from the digest-
+      values specified in the "prep-opts" directive from the digest-
       challenge, or authentication exchange fails.  This document
       defines only a single possible value "rfc4013", which means
       support for [SASLPrep]. Future Standard Track or Experimantal
@@ -1015,13 +1015,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 17]
+Melnikov (Ed.)           Expires: September 2007               [Page 17]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
       "charset" directive doesn't affect how this value is encoded.
@@ -1075,13 +1075,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 18]
+Melnikov (Ed.)           Expires: September 2007               [Page 18]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
     For "response-v2" option, SS is calculated as follows:
@@ -1093,10 +1093,10 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
        directive.
        <<This assumes that both input and result are in UTF-8>>
 
-   <<Note that client/server behavior in absence of the "prep" directive
-   is described in RFC 2831. This behavior SHOULD be supported for
-   backward compatibility with RFC 2831, however it is not required for
-   compliance with this specification.>>
+   <<Note that client/server behavior in absence of the "prep-
+   opts"/"prep" directive is described in RFC 2831. This behavior SHOULD
+   be supported for backward compatibility with RFC 2831, however it is
+   not required for compliance with this specification.>>
 
    If the "qop" directive's value is "auth", then A2 is:
 
@@ -1135,13 +1135,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 19]
+Melnikov (Ed.)           Expires: September 2007               [Page 19]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
    If the "qop" value is "auth-int" or "auth-conf" then A2 is:
@@ -1195,13 +1195,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 20]
+Melnikov (Ed.)           Expires: September 2007               [Page 20]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
    its correctness according to the used SASL protocol profile. If the
@@ -1255,13 +1255,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 21]
+Melnikov (Ed.)           Expires: September 2007               [Page 21]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
    as defined in this section.  Note, that a subsequent authentication
@@ -1315,13 +1315,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 22]
+Melnikov (Ed.)           Expires: September 2007               [Page 22]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
    the previous authentication, or for any other reason, the server MAY
@@ -1375,13 +1375,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 23]
+Melnikov (Ed.)           Expires: September 2007               [Page 23]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
    to 0 after 2**32-1.
@@ -1435,13 +1435,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 24]
+Melnikov (Ed.)           Expires: September 2007               [Page 24]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
    the chosen cipher along with the message.
@@ -1495,13 +1495,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 25]
+Melnikov (Ed.)           Expires: September 2007               [Page 25]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
    For each buffer of cleartext data to be encrypted the sender performs
@@ -1555,13 +1555,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 26]
+Melnikov (Ed.)           Expires: September 2007               [Page 26]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
       This will generate plaintext {P[1], ..., P[m]}, which is
@@ -1615,13 +1615,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 27]
+Melnikov (Ed.)           Expires: September 2007               [Page 27]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
 3  Security Considerations
@@ -1637,11 +1637,11 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
    Digest Authentication does not provide a strong authentication
    mechanism, when compared to public key based mechanisms, for example.
    However, since it prevents chosen plaintext attacks, it is stronger
-   than (e.g.) CRAM-MD5, which has been proposed for use with ACAP [RFC
-   2244], POP and IMAP [RFC 2195]. It is intended to replace the much
-   weaker and even more dangerous use of plaintext passwords; however,
-   since it is still a password based mechanism it avoids some of the
-   potential deployability issues with public-key, OTP or similar
+   than (e.g.) CRAM-MD5, which has been proposed for use with ACAP
+   [RFC-2244], POP and IMAP [RFC 2195]. It is intended to replace the
+   much weaker and even more dangerous use of plaintext passwords;
+   however, since it is still a password based mechanism it avoids some
+   of the potential deployability issues with public-key, OTP or similar
    mechanisms.
 
    Digest Authentication offers no confidentiality protection beyond
@@ -1675,13 +1675,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 28]
+Melnikov (Ed.)           Expires: September 2007               [Page 28]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
    service name and that the hostname/IP address belongs to the server.
@@ -1735,13 +1735,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 29]
+Melnikov (Ed.)           Expires: September 2007               [Page 29]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
    cryptanalysis much easier [MD5].
@@ -1795,13 +1795,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 30]
+Melnikov (Ed.)           Expires: September 2007               [Page 30]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
    it does not automatically compromise others with the same username
@@ -1855,13 +1855,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 31]
+Melnikov (Ed.)           Expires: September 2007               [Page 31]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
 3.11  Multiple realms
@@ -1915,13 +1915,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 32]
+Melnikov (Ed.)           Expires: September 2007               [Page 32]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
     S: realm="elwood.innosoft.com",nonce="OA6MG9tEQGm2hh",qop="auth",
@@ -1975,13 +1975,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 33]
+Melnikov (Ed.)           Expires: September 2007               [Page 33]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
 5   References
@@ -2035,13 +2035,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 34]
+Melnikov (Ed.)           Expires: September 2007               [Page 34]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
    [SASLPrep] Zeilenga, K., "SASLprep: Stringprep profile for user names
@@ -2067,7 +2067,7 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 5.2   Informative references
 
-   [RFC 2782] Gulbrandsen, A., Vixie, P. and L. Esibov, "A DNS RR for
+   [RFC-2782] Gulbrandsen, A., Vixie, P. and L. Esibov, "A DNS RR for
               specifying the location of services (DNS SRV)", RFC 2782,
               February 2000.
 
@@ -2082,7 +2082,7 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
    [RFC 3501] Crispin, M., "Internet Message Access Protocol - Version
               4rev1", RFC 3501, March 2003.
 
-   [RFC 2244] Newman, C., Myers, J., "ACAP -- Application Configuration
+   [RFC-2244] Newman, C., Myers, J., "ACAP -- Application Configuration
               Access Protocol", RFC 2244, November 1997.
 
    [RFC 2616] Fielding, R., Gettys, J., Mogul, J., Frystyk, H.,
@@ -2095,13 +2095,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 35]
+Melnikov (Ed.)           Expires: September 2007               [Page 35]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
    [RFC 4648] Josefsson, S., "The Base16, Base32, and Base64 Data
@@ -2155,13 +2155,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 36]
+Melnikov (Ed.)           Expires: September 2007               [Page 36]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
 6  IANA Considerations
@@ -2215,16 +2215,16 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 37]
+Melnikov (Ed.)           Expires: September 2007               [Page 37]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
-7  ABNF
+7  HBNF
 
    <<What follows is the definition of the notation as is used in the
    HTTP/1.1 specification [RFC 2616] and the HTTP authentication
@@ -2235,12 +2235,12 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
    Since it is cut-and-paste from the HTTP specifications, not all
    productions may be used in this specification.>>
 
-7.1   Augmented BNF
+7.1   EnHanced BNF
 
    All of the mechanisms specified in this document are described in
-   both prose and an Augmented Backus-Naur Form (BNF) which is a
-   superset of the ABNF defined in [ABNF]. The Augmented BNF used by
-   this document defines the following extra syntactic rule:
+   both prose and an EnHanced Backus-Naur Form (HBNF) which is a
+   superset of the ABNF defined in [ABNF]. The Enhanced BNF used by this
+   document defines the following extra syntactic rule:
 
    #rule
       A construct "#" is defined, similar to "*", for defining lists of
@@ -2248,7 +2248,7 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
       <n> and at most <m> elements, each separated by one or more commas
       (",") and OPTIONAL linear white space (LWSP). This makes the usual
       form of lists very easy; a rule such as
-        ( LWSP element *( LWSP "," LWSP element ) LWSP )
+        ( LWSP element *( LWSP "," LWSP [element] ) LWSP )
       can be shown as
         1#element
       Wherever this construct is used, null elements are allowed, but do
@@ -2275,15 +2275,17 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 38]
+Melnikov (Ed.)           Expires: September 2007               [Page 38]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
+      Implementations SHOULD NOT insert LWSP when generating challenges/
+      responses, but MUST accept them in any received data.
 7.2   Basic Rules
 
    The following rules are used throughout this specification to
@@ -2299,18 +2301,6 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
    downstream.
 
        LWSP           = *(WSP / CRLF WSP)
-
-   The TEXT rule is only used for descriptive field contents and values
-   that are not intended to be interpreted by the message parser. Words
-   of TEXT contains characters either from ISO-8859-1 [ISO-8859]
-   character set or UTF-8 [UTF-8].
-
-       TEXT           = <any *OCTET except CTLs,
-                        but including LWSP>
-
-   A CRLF is allowed in the definition of TEXT only as part of a header
-   field continuation. It is expected that the folding LWSP will be
-   replaced with a single SP before interpretation of the TEXT value.
 
    Many HTTP/1.1 header field values consist of words separated by LWSP
    or special characters. These special characters MUST be in a quoted
@@ -2332,18 +2322,6 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
        qdstr-val      = *( qdtext / quoted-pair )
        qdtext         = <any TEXTCHAR except DQUOTE and BACKSLASH>
 
-
-
-
-Melnikov (Ed.)              Expires: May 2007                  [Page 39]
-
-
-
-
-
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
-
-
    Note that LWSP is NOT implicit between the double-quote marks
    (DQUOTE) surrounding a qdstr-val and the qdstr-val; any LWSP will be
    considered part of the qdstr-val.  This is also the case for
@@ -2354,9 +2332,177 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
        quoted-pair    = BACKSLASH CHAR
 
+
+
+
+Melnikov (Ed.)           Expires: September 2007               [Page 39]
+
+
+
+
+
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
+
+
    The value of this construct is CHAR. Note that an effect of this rule
    is that backslash itself MUST be quoted.
 
+7.3   Collected grammar in ABNF
+
+   <<This section is Informative in this revision. It was not checked
+   for correctness.>>
+
+   ;;; 2.1.1 Step One
+
+   digest-challenge = LWSP d-c-e *(LWSP "," LWSP [d-c-e]) LWSP
+   d-c-e            = realm / nonce / qop-options / stale
+                    / server-maxbuf / charset / prep-opts / algorithm
+                    / cipher-opts / auth-param
+
+   realm            = "realm" EQU realm-value
+   realm-value      = quoted-string
+   nonce            = "nonce" EQU nonce-value
+   nonce-value      = quoted-string
+                      ;; contains data described by "nonce-data"
+   qop-options      = "qop" EQU DQUOTE qop-list DQUOTE
+   qop-list         = LWSP qop-value *(LWSP "," LWSP [qop-value]) LWSP
+   qop-value        = "auth" / "auth-int" / "auth-conf" /
+                       qop-token
+                       ;; qop-token is reserved for identifying
+                       ;; future extensions to DIGEST-MD5
+   qop-token        = token
+   stale            = "stale" EQU "true"
+   server-maxbuf    = "maxbuf" EQU maxbuf-value
+   maxbuf-value     = 1*DIGIT
+   charset          = "charset" EQU "utf-8"
+   prep-opts             = "prep" EQU DQUOTE prep-mechs DQUOTE
+   prep-mechs       = LWSP prep-mech *(LWSP "," LWSP [prep-mech]) LWSP
+   prep-mech        = "rfc4013"
+   algorithm        = "algorithm" EQU "md5-sess"
+   cipher-opts      = "cipher" EQU DQUOTE cipher-list DQUOTE
+   cipher-list      = LWSP cipher-value
+                      *(LWSP "," LWSP [cipher-value]) LWSP
+   cipher-value     = "rc4-40" / "rc4" / "rc4-56" /
+                      "aes-ctr" / cipher-token
+                       ;; cipher-token is reserved for
+                       ;; new ciphersuites
+   cipher-token     = token
+   auth-param       = token EQU ( token / quoted-string )
+   nonce-data       = new-nonce-data / obs-nonce-data
+   new-nonce-data   = "CB-" channel-type ":" channel-bindings
+                      ":" qop-list ":" cipher-list
+                      ":" nonce-octets
+
+
+
+Melnikov (Ed.)           Expires: September 2007               [Page 40]
+
+
+
+
+
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
+
+
+   obs-nonce-data   = nonce-octets
+                      ;; nonce value as defined in RFC 2831.
+                      ;; SHOULD be accepted. MUST NOT be
+                      ;; generated.
+   channel-type     = "TLS" / channel-type-ext
+                      ;; Should be taken from
+                      ;; [CHANNEL-BINDINGS].
+   channel-type-ext = 1*(ALPHA / DIGIT)
+                      ;; for future channel bindings>>
+   channel-bindings = 1*TEXTCHAR
+                      ;; channel binding data as defined by
+                      ;; the channel type
+
+   nonce-octets     = 1*TEXTCHAR
+
+   ;;; 2.1.2 Step Two
+
+   digest-response  = LWSP d-r-e *(LWSP "," LWSP [d-r-e]) LWSP
+   d-r-e            = username / realm / nonce / cnonce
+                    / nonce-count / qop / digest-uri / response
+                    / response-v2 / client-maxbuf / charset
+                    / prep / cipher / authzid / auth-param
+
+   username         = "username" EQU username-value
+   username-value   = quoted-string
+   cnonce           = "cnonce" EQU cnonce-value
+   cnonce-value     = nonce-value
+   nonce-count      = "nc" EQU nc-value
+   nc-value         = 8LHEX
+   client-maxbuf    = "maxbuf" EQU maxbuf-value
+   qop              = "qop" EQU qop-value
+   digest-uri       = "digest-uri" EQU
+                      DQUOTE digest-uri-value DQUOTE
+   digest-uri-value = serv-type "/" host [ "/" serv-name ]
+   serv-type        = 1*ALPHA
+   serv-name        = host
+   prep            = "prep" EQU prep-mech
+   response         = "response" EQU response-value
+   response-v2      = "response-v2" EQU response-value
+   response-value   = 32LHEX
+   LHEX             = DIGIT / "a" / "b" /
+                      "c" / "d" / "e" / "f"
+   cipher           = "cipher" EQU cipher-value
+   authzid          = "authzid" EQU authzid-value
+   authzid-value    = quoted-string
+
+   host             = IP-literal / IPv4address / reg-name
+   IP-literal       = <see RFC 3986>
+
+
+
+Melnikov (Ed.)           Expires: September 2007               [Page 41]
+
+
+
+
+
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
+
+
+   IPv4address      = <see RFC 3986>
+   reg-name         = <see RFC 3986>
+
+   ;;; 2.1.2.1 Response-value
+
+   password         = *OCTET
+
+   ;;; 2.1.3 Step Three
+
+   auth-info        = LWSP a-i-e *(LWSP "," LWSP [a-i-e]) LWSP
+   a-i-e            = response-auth / response-v2-auth / auth-param
+
+   response-auth    = "rspauth" EQU response-value
+   response-v2-auth = "rspauth-v2" EQU response-value
+
+   ;;; 7.2 Basic rules
+
+   TEXTCHAR         = HTAB / %x20-7E / %x80-FF
+   LWSP             = *(WSP / CRLF WSP)
+
+   token            = 1*TOKENCHAR
+   BACKSLASH        = %x5C
+                      ;  character
+   separators       = "(" / ")" / "<" / ">" / "@"
+                    / "," / ";" / ":" / BACKSLASH / DQUOTE
+                    / "/" / "[" / "]" / "?" / "="
+                    / "{" / "}" / SP  / HTAB
+   TOKENCHAR        = <any CHAR except CTLs or separators>
+
+   quoted-string    = DQUOTE qdstr-val DQUOTE
+   qdstr-val        = *( qdtext / quoted-pair )
+   qdtext           = HTAB / %x20-21 / %x23-5B / %x5D-7E / %x80-FF
+
+   quoted-pair      = BACKSLASH CHAR
+
+   EQU              = LWSP "=" LWSP
+
+   ;;; The following non-terminals were imported from RFC 4234:
+   ;;DIGIT, DQUOTE, ALPHA, OCTET, WSP, CRLF, HTAB, SP, CHAR and CTL
 
 
 
@@ -2369,39 +2515,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
+Melnikov (Ed.)           Expires: September 2007               [Page 42]
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Melnikov (Ed.)              Expires: May 2007                  [Page 40]
-
-
-
-
-
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
 8  Authors' Addresses
@@ -2455,13 +2575,13 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 41]
+Melnikov (Ed.)           Expires: September 2007               [Page 43]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
    Jeffrey Hutzelman
@@ -2515,18 +2635,18 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 42]
+Melnikov (Ed.)           Expires: September 2007               [Page 44]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
 10  Full Copyright Statement
 
-   Copyright (C) The Internet Society (2006).
+   Copyright (C) The IETF Trust (2007).
 
    This document is subject to the rights, licenses and restrictions
    contained in BCP 78, and except as set forth therein, the authors
@@ -2534,10 +2654,10 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
 
    This document and the information contained herein are provided on an
    "AS IS" basis and THE CONTRIBUTOR, THE ORGANIZATION HE/SHE REPRESENTS
-   OR IS SPONSORED BY (IF ANY), THE INTERNET SOCIETY AND THE INTERNET
-   ENGINEERING TASK FORCE DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED,
-   INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE
-   INFORMATION HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED
+   OR IS SPONSORED BY (IF ANY), THE INTERNET SOCIETY, THE IETF TRUST AND
+   THE INTERNET ENGINEERING TASK FORCE DISCLAIM ALL WARRANTIES, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF
+   THE INFORMATION HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED
    WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
 
 Acknowledgement
@@ -2575,13 +2695,13 @@ Acknowledgement
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 43]
+Melnikov (Ed.)           Expires: September 2007               [Page 45]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
 Appendix A: Changes from 2831
@@ -2635,13 +2755,13 @@ Appendix A: Changes from 2831
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 44]
+Melnikov (Ed.)           Expires: September 2007               [Page 46]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
    19). Clarified client behavior, if it recognizes no ciphers.
@@ -2695,13 +2815,13 @@ Appendix B: Differences between HTTP Digest and DIGEST-MD5
 
 
 
-Melnikov (Ed.)              Expires: May 2007                  [Page 45]
+Melnikov (Ed.)           Expires: September 2007               [Page 47]
 
 
 
 
 
-INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
+INTERNET DRAFT          DIGEST-MD5 SASL Mechanism             March 2007
 
 
    5) DIGEST-MD5 doesn't use the following HTTP Digest options in
@@ -2714,9 +2834,8 @@ INTERNET DRAFT          DIGEST-MD5 SASL Mechanism          November 2006
    info": "nextnonce", "qop", "cnonce" and "nonce-count"
 
    8) A second directive (response-v2) confirming that a user knows its
-   password
-      is added. A corresponding directive (rspauth-v2) was added for the
-   server.
+   password was added. A corresponding directive (rspauth-v2) was added
+   for the server.
 
 Appendix C: Open Issues/ToDo List
 
@@ -2731,8 +2850,14 @@ Appendix C: Open Issues/ToDo List
 
    4). Update example to match the updated draft, in particular need
        to add channel binding, qop & cipher lists into nonce/cnonce.
+       Also need to use example.{com|net} in examples.
 
-   5). Need to clarify backward compatibility with RFC 2831 in several
+   5). Frank Ellermann asked if the procedure for unescaping is actually
+       correct and consistent with HTTP Digest.
+       He suggested that simple removal of surrounding quotes is what
+       people actually implement. Need to perform some interop testing.
+
+   6). Need to clarify backward compatibility with RFC 2831 in several
        places.
 
 
@@ -2750,11 +2875,6 @@ Appendix C: Open Issues/ToDo List
 
 
 
-
-
-
-
-
-Melnikov (Ed.)              Expires: May 2007                  [Page 46]
+Melnikov (Ed.)           Expires: September 2007               [Page 48]
 
 

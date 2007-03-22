@@ -3,12 +3,14 @@
 
 SASL Working Group                                     L. Nerenberg, Ed.
 Internet-Draft                                           Orthanc Systems
-Obsoletes: RFC2195 (if approved)                           June 12, 2006
-Expires: December 14, 2006
+Obsoletes: RFC2195                                         March 5, 2007
+(if approved)
+Intended status: Standards Track
+Expires: September 6, 2007
 
 
                       The CRAM-MD5 SASL Mechanism
-                       draft-ietf-sasl-crammd5-07
+                       draft-ietf-sasl-crammd5-08
 
 Status of this Memo
 
@@ -33,11 +35,11 @@ Status of this Memo
    The list of Internet-Draft Shadow Directories can be accessed at
    http://www.ietf.org/shadow.html.
 
-   This Internet-Draft will expire on December 14, 2006.
+   This Internet-Draft will expire on September 6, 2007.
 
 Copyright Notice
 
-   Copyright (C) The Internet Society (2006).
+   Copyright (C) The IETF Trust (2007).
 
 Abstract
 
@@ -50,34 +52,33 @@ Abstract
 
 
 
-
-
-Nerenberg               Expires December 14, 2006               [Page 1]
+Nerenberg               Expires September 6, 2007               [Page 1]
 
-Internet-Draft         The CRAM-MD5 SASL Mechanism             June 2006
+Internet-Draft         The CRAM-MD5 SASL Mechanism            March 2007
 
 
 Table of Contents
 
    1.  Introduction . . . . . . . . . . . . . . . . . . . . . . . . .  3
    2.  The CRAM-MD5 SASL Mechanism  . . . . . . . . . . . . . . . . .  3
-   3.  Formal Grammar . . . . . . . . . . . . . . . . . . . . . . . .  4
-   4.  Security Considerations  . . . . . . . . . . . . . . . . . . .  4
-   5.  References . . . . . . . . . . . . . . . . . . . . . . . . . .  5
-     5.1.  Normative References . . . . . . . . . . . . . . . . . . .  5
-     5.2.  Informative References . . . . . . . . . . . . . . . . . .  6
-   Appendix A.  Examples  . . . . . . . . . . . . . . . . . . . . . .  6
-     A.1.  IMAP4  . . . . . . . . . . . . . . . . . . . . . . . . . .  6
+   3.  Formal Grammar . . . . . . . . . . . . . . . . . . . . . . . .  3
+   4.  Interoperability Considerations  . . . . . . . . . . . . . . .  4
+   5.  Security Considerations  . . . . . . . . . . . . . . . . . . .  5
+   6.  References . . . . . . . . . . . . . . . . . . . . . . . . . .  6
+     6.1.  Normative References . . . . . . . . . . . . . . . . . . .  6
+     6.2.  Informative References . . . . . . . . . . . . . . . . . .  6
+   Appendix A.  Examples  . . . . . . . . . . . . . . . . . . . . . .  7
+     A.1.  IMAP4  . . . . . . . . . . . . . . . . . . . . . . . . . .  7
        A.1.1.  Example 1: Simple IMAP . . . . . . . . . . . . . . . .  7
-       A.1.2.  Example 2: IMAP4 with embedded spaces  . . . . . . . .  7
-       A.1.3.  Example 3: IMAP4 with Unicode characters . . . . . . .  7
+       A.1.2.  Example 2: IMAP4 with embedded spaces  . . . . . . . .  8
+       A.1.3.  Example 3: IMAP4 with Unicode characters . . . . . . .  8
      A.2.  ACAP . . . . . . . . . . . . . . . . . . . . . . . . . . .  8
        A.2.1.  Example 4: Simple ACAP . . . . . . . . . . . . . . . .  8
-   Appendix B.  IANA Considerations . . . . . . . . . . . . . . . . .  8
-   Appendix C.  Contributors  . . . . . . . . . . . . . . . . . . . .  8
+   Appendix B.  IANA Considerations . . . . . . . . . . . . . . . . .  9
+   Appendix C.  Contributors  . . . . . . . . . . . . . . . . . . . .  9
    Appendix D.  Changes since RFC 2195  . . . . . . . . . . . . . . .  9
-   Author's Address . . . . . . . . . . . . . . . . . . . . . . . . . 10
-   Intellectual Property and Copyright Statements . . . . . . . . . . 11
+   Author's Address . . . . . . . . . . . . . . . . . . . . . . . . .  9
+   Intellectual Property and Copyright Statements . . . . . . . . . . 10
 
 
 
@@ -107,10 +108,9 @@ Table of Contents
 
 
 
-
-Nerenberg               Expires December 14, 2006               [Page 2]
+Nerenberg               Expires September 6, 2007               [Page 2]
 
-Internet-Draft         The CRAM-MD5 SASL Mechanism             June 2006
+Internet-Draft         The CRAM-MD5 SASL Mechanism            March 2007
 
 
 1.  Introduction
@@ -120,12 +120,12 @@ Internet-Draft         The CRAM-MD5 SASL Mechanism             June 2006
    Security and Authentication Layer (SASL) [RFC4422].  The mechanism
    name associated with CRAM-MD5 is 'CRAM-MD5'.
 
-   This mechanism is an improvement over plain text authentication
-   schemes, such as the SASL PLAIN [I-D.ietf-sasl-plain] mechanism, in
-   that it transmits the clients' authentication credentials in a secure
-   manner.
-
    This mechanism does not provide a security layer.
+
+   The CRAM-MD5 mechanism is intended to have limited use on the
+   Internet.  The mechanism offers inadequate protection against common
+   attacks against application-level protocols (see Section 5) and is
+   prone to interoperability problems (see Section 4).
 
 
 2.  The CRAM-MD5 SASL Mechanism
@@ -151,29 +151,23 @@ Internet-Draft         The CRAM-MD5 SASL Mechanism             June 2006
    the token separating the user name from the digest.  If the digest is
    correct, the server should consider the client authenticated.
 
-   The client MUST prepare the user name and shared secret strings using
-   the SASLprep [RFC4013] profile of the Stringprep [RFC3454] algorithm.
-   The resulting values MUST be encoded as UTF-8 [RFC3629] strings.  The
-   server may store the prepared string instead of, or as well as, the
-   unprepared string, so that it does not have to prepare it every time
-   it is needed for computation.  However, if the original (unprepared)
-   string is not stored, it may render the computed secret to be
-   incompatible with a future revisions of SASLprep that support
-   currently unassigned code points (see section 7 of [RFC3454]).  It is
-   therefor recommended to store the unprepared string in the database.
-
-
-
-Nerenberg               Expires December 14, 2006               [Page 3]
-
-Internet-Draft         The CRAM-MD5 SASL Mechanism             June 2006
-
 
 3.  Formal Grammar
 
    The following grammar specification uses the Augmented Backus-Naur
    Form (ABNF) as specified in [RFC4234], and incorporates by reference
    the Core Rules defined in that document.
+
+
+
+
+
+
+
+Nerenberg               Expires September 6, 2007               [Page 3]
+
+Internet-Draft         The CRAM-MD5 SASL Mechanism            March 2007
+
 
      challenge  = "<" 3*(%x21-3B / %x3D / %x3F-7E) ">"
                   ; a bracketed string of printing ASCII characters, not
@@ -189,15 +183,73 @@ Internet-Draft         The CRAM-MD5 SASL Mechanism             June 2006
                   ; MUST be well-formed UTF-8.
 
 
-4.  Security Considerations
+4.  Interoperability Considerations
 
-   It is conjectured that use of the CRAM-MD5 authentication mechanism
-   provides replay protection for a session.
+   The design of CRAM-MD5 [RFC2095] pre-dated any widespread use of
+   UTF-8 to encode protocol elements.  It was initially deployed as an
+   extension to the IMAP4 protocol at a time when authentication and
+   authorization identifiers were almost exclusively encoded in the US-
+   ASCII character set, therefore it is silent about the encoding and
+   representation of non-US-ASCII data elements.  When sites first began
+   using alternate character sets to encode user names (and passwords)
+   they simply used the raw 8-bit character representation.  This works
+   - for the most part - but only because these enclaves tend to use a
+   common character set amongst themselves.  When a second group of
+   users using a different character set is introduced into the mix,
+   interoperability suffers.
+
+   So as not to render existing implementations non-compliant, this
+   update preserves the existing opaque nature of user names and
+   passwords.  However, implementors are strongly encouraged to process
+   the user name and password data as described in the next paragraph.
+   Doing so prevents interoperability problems caused by incompatible
+   character set encodings.
+
+   The client SHOULD prepare the user name and shared secret strings
+   using the SASLprep [RFC4013] profile of the Stringprep [RFC3454]
+   algorithm.  The resulting values SHOULD be encoded as UTF-8 [RFC3629]
+   strings.  The server may store the prepared string instead of, or as
+   well as, the unprepared string, so that it does not have to prepare
+   it every time it is needed for computation.  However, if the original
+   (unprepared) string is not stored, it may render the computed secret
+   to be incompatible with a future revisions of SASLprep that support
+   currently unassigned code points (see section 7 of [RFC3454]).  It is
+   therefor recommended to store the unprepared string in the database.
+
+
+
+
+
+Nerenberg               Expires September 6, 2007               [Page 4]
+
+Internet-Draft         The CRAM-MD5 SASL Mechanism            March 2007
+
+
+5.  Security Considerations
+
+   CRAM-MD5 is no longer considered to provide adequate protection.
+
+   This mechanism is vulnerable to dictionary attack by any passive
+   listener able to observe the user name, challenge and response.  An
+   attacker can use the user name and challenge to compute a series of
+   responses based on a pass-phrase dictionary, looking for a match to
+   the response sent by the client.
+
+   CRAM-MD5 does not authenticate the server and does not include a
+   client-supplied nonce.  As a result, it is possible to construct a
+   server with a fixed challenge string that has pre-computed the hashes
+   for all possible passwords up to a certain length (or from a
+   dictionary).  Such a server could then immediately determine the
+   user's password if it is sufficiently short or non-random.
 
    This mechanism does not obscure the user name in any way.
    Accordingly, a server that implements both a clear-text password
    command and this authentication type should not allow both methods of
    access for a given user name.
+
+   For the reasons described above, CRAM-MD5 SHOULD NOT be used unless
+   the application protocol session is protected by an encryption layer,
+   such as provided by TLS.
 
    Keyed MD5 is chosen for this application because of the greater
    security imparted to authentication of short messages.  In addition,
@@ -217,22 +269,19 @@ Internet-Draft         The CRAM-MD5 SASL Mechanism             June 2006
    the host and its databases are subject to compromise, and the network
    is not, this technique (and all others like it) is unattractive.  It
    is perhaps even less attractive than clear-text passwords, which are
-
-
-
-Nerenberg               Expires December 14, 2006               [Page 4]
-
-Internet-Draft         The CRAM-MD5 SASL Mechanism             June 2006
-
-
    typically stored on hosts in one-way hash form.  On the other hand,
    if the server databases are perceived as reasonably secure, and one
    is concerned about client-side or network interception of the
    passwords (secrets), then this (and similar) techniques are
-   preferable to clear-text passwords by a wide margin.
 
-   As the length of the shared secret increases, so does the difficulty
-   of deriving it.
+
+
+Nerenberg               Expires September 6, 2007               [Page 5]
+
+Internet-Draft         The CRAM-MD5 SASL Mechanism            March 2007
+
+
+   preferable to clear-text passwords by a wide margin.
 
    While there are now suggestions in the literature that the use of MD5
    and keyed MD5 in authentication procedures probably has a limited
@@ -248,38 +297,14 @@ Internet-Draft         The CRAM-MD5 SASL Mechanism             June 2006
    attacks.  An example of an increasingly common active attack is 'TCP
    Session Hijacking' as described in CERT Advisory CA-95:01.
 
-   CRAM-MD5 does not authenticate the server and does not include a
-   client-supplied nonce.  As a result, it is possible to construct a
-   server with a fixed challenge string that has pre-computed the hashes
-   for all possible passwords up to a certain length (or from a
-   dictionary).  Such a server could then immediately determine the
-   user's password if it is sufficiently short.
 
-   Many people have expressed concerns over the suitability of CRAM-MD5
-   to current and future internet protocols.  While lacking modern
-   features (such as integrity protection and encryption), this
-   mechanism can still provide a useful service when deployed in a
-   suitable security context.  One example of this involves networks
-   utilizing radio links licensed in the amateur radio service, where by
-   law the use of codes to obscure communications is prohibited, but
-   exceptions are permitted soley for the purposes of authentication.
+6.  References
 
-
-5.  References
-
-5.1.  Normative References
+6.1.  Normative References
 
    [RFC2104]  Krawczyk, H., Bellare, M., and R. Canetti, "HMAC: Keyed-
               Hashing for Message Authentication", RFC 2104,
               February 1997.
-
-
-
-
-Nerenberg               Expires December 14, 2006               [Page 5]
-
-Internet-Draft         The CRAM-MD5 SASL Mechanism             June 2006
-
 
    [RFC3454]  Hoffman, P. and M. Blanchet, "Preparation of
               Internationalized Strings ("stringprep")", RFC 3454,
@@ -291,23 +316,34 @@ Internet-Draft         The CRAM-MD5 SASL Mechanism             June 2006
    [RFC4013]  Zeilenga, K., "SASLprep: Stringprep Profile for User Names
               and Passwords", RFC 4013, February 2005.
 
-   [RFC4234]  Crocker, D. and P. Overell, "Augmented BNF for Syntax
+   [RFC4234]  Crocker, D., Ed. and P. Overell, "Augmented BNF for Syntax
               Specifications: ABNF", RFC 4234, October 2005.
 
    [RFC4422]  Melnikov, A. and K. Zeilenga, "Simple Authentication and
               Security Layer (SASL)", RFC 4422, June 2006.
 
-5.2.  Informative References
+6.2.  Informative References
 
-   [I-D.ietf-sasl-plain]
-              Zeilenga, K., "The Plain SASL Mechanism",
-              draft-ietf-sasl-plain-08 (work in progress), March 2005.
+   [RFC2095]  Klensin, J., Catoe, R., and P. Krumviede, "IMAP/POP
+              AUTHorize Extension for Simple Challenge/Response",
+              RFC 2095, January 1997.
 
    [RFC2244]  Newman, C. and J. Myers, "ACAP -- Application
+
+
+
+Nerenberg               Expires September 6, 2007               [Page 6]
+
+Internet-Draft         The CRAM-MD5 SASL Mechanism            March 2007
+
+
               Configuration Access Protocol", RFC 2244, November 1997.
 
    [RFC3501]  Crispin, M., "INTERNET MESSAGE ACCESS PROTOCOL - VERSION
               4rev1", RFC 3501, March 2003.
+
+   [RFC4616]  Zeilenga, K., "The PLAIN Simple Authentication and
+              Security Layer (SASL) Mechanism", RFC 4616, August 2006.
 
 
 Appendix A.  Examples
@@ -322,20 +358,6 @@ A.1.  IMAP4
    [RFC3501] AUTHENTICATE command.  The base64 encoding of the
    challenges and responses is part of the IMAP4 AUTHENTICATE command,
    and not part of the CRAM-MD5 specification itself.
-
-
-
-
-
-
-
-
-
-
-Nerenberg               Expires December 14, 2006               [Page 6]
-
-Internet-Draft         The CRAM-MD5 SASL Mechanism             June 2006
-
 
 A.1.1.  Example 1: Simple IMAP
 
@@ -363,6 +385,14 @@ A.1.1.  Example 1: Simple IMAP
 
    This produces a digest value (in hexadecimal) of
    '3dbc88f0624776a737b39093f6eb6427'.  The user name is then prepended
+
+
+
+Nerenberg               Expires September 6, 2007               [Page 7]
+
+Internet-Draft         The CRAM-MD5 SASL Mechanism            March 2007
+
+
    to it, forming 'joe 3dbc88f0624776a737b39093f6eb6427', which is then
    base64 encoded to meet the requirements of the IMAP4 AUTHENTICATE
    command yielding 'am9lIDNkYmM4OGYwNjI0Nzc2YTczN2IzOTA5M2Y2ZWI2NDI3'.
@@ -385,14 +415,6 @@ A.1.3.  Example 3: IMAP4 with Unicode characters
    user name with SASLprep returns 'Aladdin<U+00AE>' which we then
    encode into the UTF-8 string 'Aladdin\xC2\xAE' (shown here and below
    using C-style string format notation).  As before, the shared secret
-
-
-
-Nerenberg               Expires December 14, 2006               [Page 7]
-
-Internet-Draft         The CRAM-MD5 SASL Mechanism             June 2006
-
-
    is 'Open, Sesame'.
 
      S: <92230559549732219941.0@localhost>
@@ -418,6 +440,15 @@ A.2.1.  Example 4: Simple ACAP
     S: AUTH OK "You're logged in as joe. Frooby."
 
 
+
+
+
+
+Nerenberg               Expires September 6, 2007               [Page 8]
+
+Internet-Draft         The CRAM-MD5 SASL Mechanism            March 2007
+
+
 Appendix B.  IANA Considerations
 
    It is requested that the Internet Assigned Numbers Authority (IANA)
@@ -441,14 +472,6 @@ Appendix C.  Contributors
    AUTHorize Extension for Simple Challenge/Response.  The authors of
    that document -- John C. Klensin, Paul Krumviede, and Randy Catoe --
    are to be credited with the design and specification of CRAM-MD5, and
-
-
-
-Nerenberg               Expires December 14, 2006               [Page 8]
-
-Internet-Draft         The CRAM-MD5 SASL Mechanism             June 2006
-
-
    they are the original authors of the majority of the text in this
    document.  This memo serves only to re-state CRAM-MD5 within the
    formal context of SASL, which specification it preceded by several
@@ -461,107 +484,45 @@ Appendix D.  Changes since RFC 2195
 
    The syntax of the <challenge> has been relaxed.
 
-   Both the user name and the shared secret (password) must be prepared
-   using SASLprep, and the resulting values encoded as UTF-8 strings.
+   A section on interoperability concerns has been added.
 
-   Minor editorial changes to clarify the text.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Nerenberg               Expires December 14, 2006               [Page 9]
-
-Internet-Draft         The CRAM-MD5 SASL Mechanism             June 2006
+   The security considerations have been updated to reflect the current
+   views of the security community.
 
 
 Author's Address
 
    Lyndon Nerenberg (editor)
    Orthanc Systems
-   304 - 1755 Robson Street
-   Vancouver, BC  V6G 3B7
-   Canada
 
    Email: lyndon+rfc-crammd5@orthanc.ca
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Nerenberg               Expires December 14, 2006              [Page 10]
+Nerenberg               Expires September 6, 2007               [Page 9]
 
-Internet-Draft         The CRAM-MD5 SASL Mechanism             June 2006
+Internet-Draft         The CRAM-MD5 SASL Mechanism            March 2007
 
 
-Intellectual Property Statement
+Full Copyright Statement
+
+   Copyright (C) The IETF Trust (2007).
+
+   This document is subject to the rights, licenses and restrictions
+   contained in BCP 78, and except as set forth therein, the authors
+   retain all their rights.
+
+   This document and the information contained herein are provided on an
+   "AS IS" basis and THE CONTRIBUTOR, THE ORGANIZATION HE/SHE REPRESENTS
+   OR IS SPONSORED BY (IF ANY), THE INTERNET SOCIETY, THE IETF TRUST AND
+   THE INTERNET ENGINEERING TASK FORCE DISCLAIM ALL WARRANTIES, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF
+   THE INFORMATION HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED
+   WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+
+Intellectual Property
 
    The IETF takes no position regarding the validity or scope of any
    Intellectual Property Rights or other rights that might be claimed to
@@ -586,31 +547,14 @@ Intellectual Property Statement
    ietf-ipr@ietf.org.
 
 
-Disclaimer of Validity
-
-   This document and the information contained herein are provided on an
-   "AS IS" basis and THE CONTRIBUTOR, THE ORGANIZATION HE/SHE REPRESENTS
-   OR IS SPONSORED BY (IF ANY), THE INTERNET SOCIETY AND THE INTERNET
-   ENGINEERING TASK FORCE DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED,
-   INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE
-   INFORMATION HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED
-   WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
-
-
-Copyright Statement
-
-   Copyright (C) The Internet Society (2006).  This document is subject
-   to the rights, licenses and restrictions contained in BCP 78, and
-   except as set forth therein, the authors retain all their rights.
-
-
 Acknowledgment
 
-   Funding for the RFC Editor function is currently provided by the
-   Internet Society.
+   Funding for the RFC Editor function is provided by the IETF
+   Administrative Support Activity (IASA).
 
 
 
 
-Nerenberg               Expires December 14, 2006              [Page 11]
+
+Nerenberg               Expires September 6, 2007              [Page 10]
 
