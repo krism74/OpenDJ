@@ -2,196 +2,150 @@
 <html>
 <head>
 
-
-  
   <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
-
-  
   <title>OpenDS Upgrade Tool Design</title>
+
+
 </head>
 
 
 <body style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
 
-
 <center>
 <div class="title"><big><sup><img src="opends_logo_welcome.png" title="OpenDS" alt="OpenDS"><br>
 
-
 </sup></big><sup><br>
-
 
 </sup></div>
 
-
 <div class="subtitle">OpenDS Upgrade Tool<br>
-
 
 </div>
 
-
 <div class="subtitle">Software Design Document</div>
-
 
 <p align="center"><br>
 
-
 </p>
 
-
 </center>
-
 
 <hr noshade="noshade" size="1">
 <div class="section">Revision History</div>
 
-
 <table border="0" cellpadding="0" cellspacing="0">
-
 
   <tbody>
 
-
     <tr>
 
-
       <td bgcolor="#666699">
-      
       <table border="0" cellpadding="2" cellspacing="1">
-
 
         <tbody>
 
-
           <tr>
-
 
             <th><font color="#ffffff">Version</font></th>
 
-
             <th><font color="#ffffff">Author</font></th>
-
 
             <th><font color="#ffffff">Date</font></th>
 
-
             <th><font color="#ffffff">Comments</font></th>
 
-
           </tr>
-
 
           <tr>
 
-
             <td align="center" bgcolor="#ffffff">0.1</td>
-
 
             <td bgcolor="white">Kenneth Suter</td>
 
-
             <td bgcolor="white">2007-03-21</td>
-
 
             <td bgcolor="white">Initial Draft</td>
 
+          </tr>
+
+          <tr>
+
+            <td align="center" bgcolor="#ffffff">0.2</td>
+ <td bgcolor="white">Kenneth Suter</td>
+
+            <td bgcolor="white">2007-03-22</td>
+
+            <td bgcolor="white">Added --dry-run option<br>
+            </td>
 
           </tr>
 
-
-        
         </tbody>
-      
       </table>
-
 
       </td>
 
-
     </tr>
 
-
-  
   </tbody>
 </table>
-
 
 <hr noshade="noshade" size="1">
 <div class="section">Table of Contents</div>
 
-
 <a href="#Introduction">1.
 Introduction</a><br>
-
 
 <a href="#Overview">2.
 Overview</a><br>
 
-
 <a href="#Design%20Considerations">3.
 Design Considerations</a><br>
-
 
 &nbsp;&nbsp;&nbsp; <a href="#Assumptions%20and%20Dependencies">3.1
 Assumptions and Dependencies</a><br>
 
-
 &nbsp;&nbsp;&nbsp; <a href="#Goals%20and%20Guideline">3.2
 Goals and Guideline</a><br>
-
 
 <a href="#Architectural%20Strategies">4.
 Architectural Strategies</a><br>
 
-
 <a href="#System%20Architecture">5.
 Upgrade Process Specification</a><br>
-
 
 <a href="#Detailed%20System%20Architecture">6.
 User Interface Specification</a><br>
 
-
 <a href="#7._Unit_Tests">7. Unit tests</a><br>
-
 
 <a href="DesignTemplate.html#7._Features_Configuration">8.
 Feature's
 configuration</a><br>
 
-
 <a href="#External_Impacts">9. External Impacts</a><br>
-
 
 &nbsp;&nbsp;&nbsp; <a href="#9.1_Impact_on_Documentation">9.1 Impact
 on Documentation</a><br>
 
-
 &nbsp;&nbsp;&nbsp; <a href="#9.2_Impact_on_Configuration">9.2 Impact
 on Configuration interfaces</a><br>
-
 
 &nbsp;&nbsp;&nbsp; <a href="#9.3_Impact_on_Other_OpenDS_subsystems">9.3
 Impact on other subsystems</a><br>
 
-
 &nbsp;&nbsp;&nbsp; <a href="#9.4_Other_external_Impacts_">9.4 Other
 external impacts</a><br>
 
-
 <br>
 
-
 <br>
-
 
 <hr noshade="noshade" size="1">
 <h2><a name="Introduction">
 <div class="section">1. Introduction</div>
 
-
 </a></h2>
-
 
 <p>The purpose of this document is to provide a design for the
 OpenDS upgrade tool. The scope of this document covers the
@@ -200,183 +154,137 @@ intended audience is the OpenDS community that will develop, test and
 document the tool.
 </p>
 
-
 <p>&nbsp;</p>
-
 
 <h3>1.1 References</h3>
 
-
 <table border="0" cellpadding="2" cellspacing="0" width="80%">
-
 
   <tbody>
 
-
     <tr bgcolor="#666699">
 
-
       <th style="width: 505px;">
-      
       <p><font color="#ffffff">Title</font></p>
 
-
       </th>
-
 
       <th style="width: 237px;">
-      
       <p><font color="#ffffff">Revision</font></p>
 
-
       </th>
-
 
       <th style="width: 182px;">
-      
       <p><font color="#ffffff">Author</font></p>
 
-
       </th>
-
 
     </tr>
 
-
     <tr>
-
 
       <td><a href="https://opends.dev.java.net/issues/show_bug.cgi?id=598"><span style="text-decoration: underline;">OpenDS Issue Tracker
 Issue 598</span></a></td>
 
-
       <td></td>
-
 
       <td>David Ely and &nbsp;Neil Wilson</td>
 
-
     </tr>
 
-
     <tr>
-
 
       <td style="width: 182px;" colspan="3" bgcolor="#666699"></td>
 
-
     </tr>
 
-
-  
   </tbody>
 </table>
-
 
 <h3>1.2 Glossary</h3>
 
-
 <table border="0" cellpadding="2" cellspacing="0" width="80%">
-
 
   <col width="77*"> <col width="179*"> <tbody>
 
-
     <tr bgcolor="#666699">
 
-
       <th width="30%">
-      
       <p><font color="#ffffff">Term</font></p>
 
-
       </th>
-
 
       <th width="70%">
-      
       <p><font color="#ffffff">Description</font></p>
 
-
       </th>
-
 
     </tr>
 
-
     <tr bgcolor="#666699">
 
-
       <td bgcolor="#ffffff" width="30%">
-      
       <p>base configuration<br>
-
 
       </p>
 
-
       </td>
 
-
       <td bgcolor="#ffffff" width="70%">
-      
       <p>The default configuration of a server associated with a
-particular version. &nbsp;The base configuration may change over time
+particular version. &nbsp;The base configuration may change over
+time
 as new configuration elements are added to the servers configuration
 with new builds.<br>
 
-
       </p>
-
 
       </td>
 
-
     </tr>
 
-
-    
-
-    
-
     <tr>
+
       <td>install image</td>
-      <td>The .zip file containing the server bits obtained from the OpenDS website.</td>
+
+      <td>The .zip file containing the server bits obtained from
+the OpenDS website.</td>
+
     </tr>
-    <tr>
-      <td>transient files</td>
-      <td>Files that should not&nbsp;be managed by the upgrade process (e.g. log files).</td>
-    </tr>
+
     <tr>
 
+      <td>transient files</td>
+
+      <td>Files that should not&nbsp;be managed by the
+upgrade process (e.g. log files).</td>
+
+    </tr>
+
+    <tr>
 
       <td colspan="2" bgcolor="#666699" width="100%"></td>
 
-
     </tr>
 
-
-  
   </tbody>
 </table>
-<p></p>
+
 <p></p>
 
+<p></p>
 
 <hr noshade="noshade" size="1">
 <h2><a name="Overview">
 <div class="section">2. Overview</div>
 
-
 </a></h2>
-
 
 <p>Given that OpenDS seeks to establish a rich developer
 community, it is important to that it be as easy as possible to upgrade
 OpenDS install image from one build to a future build. &nbsp;This
 functionality will be provided by a tool that allows such a 'one-click'
 upgrade feature through either a command-line or GUI interface.</p>
-
 
 <p>Upgrade processes are ofter complicated an prone to unforseen
 conflicts between current and future versions. &nbsp;As such the
@@ -385,52 +293,40 @@ server&nbsp;either while the upgrade is in&nbsp;progress or
 following a completed&nbsp;invocation of the tool.
 </p>
 
-
 <hr noshade="noshade" size="1">
 <h2><a name="Design Considerations">
 <div class="section">3. Design Considerations</div>
 
-
 </a></h2>
-
 
 <h3><a name="Assumptions and Dependencies">
 <div class="subsection">3.1 Assumptions and Dependencies</div>
 
-
 </a></h3>
 
-
 <ul>
-
 
   <li>It must be possible to revert an upgraded server to a
 previous version either while the upgrade is in progress or following a
 completed invocation of the tools</li>
 
-
-  <li>The tool should be capable of downloading the install image&nbsp;for the
+  <li>The tool should be capable of downloading the install
+image&nbsp;for the
 new server&nbsp;from the OpenDS web site.</li>
-
 
   <li>The tool should be capable of allowing the user to specify
 a previously downloaded version of the server since it is possible that
 there will not be access to the internet at the installation site.</li>
 
-
   <li>The tool should provide both command line and graphical
 user interfaces.</li>
 
-
 </ul>
-
 
 <h3><a name="Goals and Guideline">
 <div class="subsection">3.2 Goals and Guideline</div>
 
-
 </a></h3>
-
 
 <p>The initial goal of the upgrade tool will be to provide a
 simple tool that is functional for 'sunny day' scenarios while
@@ -439,38 +335,28 @@ upgrade process if something goes wrong. &nbsp;Subsequent versions
 of the tools may become more sophisticated as requirements and
 resources allow.</p>
 
-
 <p>The benefits of such a tool will be twofold:</p>
 
-
 <ul>
-
 
   <li>Allow the development community to easily stay on the
 cutting edge but supporting a simple upgrade mechanism</li>
 
-
   <li>Easily allow production and test servers to be upgraded in
 the field</li>
 
-
 </ul>
-
 
 <p>The tool will conform to existing OpenDS&nbsp;command line
 and GUI interface design standards.</p>
 
-
 <p>&nbsp;</p>
-
 
 <hr noshade="noshade" size="1">
 <h2><a name="Architectural Strategies">
 <div class="section">4. Architectural Strategies</div>
 
-
 </a></h2>
-
 
 <p>The upgrade tool will made use of existing OpenDS tools
 whereever possible, namely LDAP and LDIF tools that&nbsp;might
@@ -479,24 +365,20 @@ changes. &nbsp;Additoinally existing code from the installer and
 command line parsing tools will be reused for the user interfaces.
 </p>
 
-
 <p>&nbsp;</p>
-
 
 <hr noshade="noshade" size="1">
 <p><a name="System Architecture"><br>
 
-
 </a></p>
 
+<h2><a name="System Architecture">5. Upgrade
+Specification</a></h2>
 
-<h2><a name="System Architecture">5. Upgrade Specification</a></h2>
-
-
-
-
-<p>The upgrade tool will be responsible for updating all components of
-the server. &nbsp;There are four primary component areas of the OpenDS
+<p>The upgrade tool will be responsible for updating all
+components of
+the server. &nbsp;There are four primary component areas of the
+OpenDS
 system that must
 be considered in performing an upgrade: &nbsp;filesystem bits,
 custom configuration,&nbsp;schema, and customizations to the
@@ -505,11 +387,13 @@ supporting operating system (e.g. Windows service). &nbsp;</p>
 <p>Upgrading filesystem bits is&nbsp;fairly staightforward
 disregarding operating system issues with file locking and permissions.
 Schema and configuration migration are more challenging in that these
-system components are customizable by the user. &nbsp;Currently OpenDS
+system components are customizable by the user. &nbsp;Currently
+OpenDS
 maintains a copy of the base configuration and schema associated with
 the version of the installed server.</p>
 
-<p>In general, the tool will use the following algorithm for upgrading an installation:</p>
+<p>In general, the tool will use the following algorithm for
+upgrading an installation:</p>
 
 <ol>
 
@@ -523,110 +407,171 @@ the version of the installed server.</p>
 
   </li>
 
-  <li>Apply the configuration and schema customizations to the newly upgraded system's configuration and schema</li>
+  <li>Apply the configuration and schema customizations to the
+newly upgraded system's configuration and schema</li>
 
   <li>Start the server</li>
 
 </ol>
-Each of these steps are described in more detail in the following sections.<br>
+
+Each of these steps are described in more detail in the following
+sections.<br>
+
 <h3>5.1 &nbsp;Initialization</h3>
+
 During this phase, the upgrade tool may download an install image or
 verify the existence of a previously downloaded file in the local
-filesystem. &nbsp;Downloading an image may require user specification
+filesystem. &nbsp;Downloading an image may require user
+specification
 of&nbsp;web proxy information.<br>
+
 <br>
+
 The upgrade tool may perform tests that may indicate that an upgrade
-might fail. &nbsp;For instance checks might be performed to make sure
+might fail. &nbsp;For instance checks might be performed to make
+sure
 that all of the files necessary for upgrade (e.g. base configuration
-and schema) are present. &nbsp;There might also be known 'flag days'
+and schema) are present. &nbsp;There might also be known 'flag
+days'
 that would necessitate a warning to the user that the upgrade is not
 possible or requires extra work.
-<h3><span style="font-weight: bold;">5.2 &nbsp;Stop Server</span></h3>
-The first step in the upgrade process will the to stop the server as well as any other processes associated with the server.<br>
+<h3><span style="font-weight: bold;">5.2
+&nbsp;Stop Server</span></h3>
+
+The first step in the upgrade process will the to stop the server as
+well as any other processes associated with the server.<br>
+
 <h3>5.3 &nbsp;Backup</h3>
+
 The upgrade tool will make use of the&nbsp;<span style="font-family: monospace;">backup</span>
 command shipped with the server to create an archive (by default in
-the&nbsp;/bak directory of the server's installation root). &nbsp;This
+the&nbsp;/bak directory of the server's installation root).
+&nbsp;This
 backup will be used in supporting the upgrade tools ability to allow
-the user to abort the upgrade&nbsp;process or revert to an old back at
+the user to abort the upgrade&nbsp;process or revert to an old back
+at
 a later time. &nbsp;Copies of files that would need to be restored
 during an upgrade reversion will be stored in/with the directories
 created by the <span style="font-family: monospace;">backup</span>
-tool. &nbsp;Since an upgrade reversion will involve more than what is
+tool. &nbsp;Since an upgrade reversion will involve more than what
+is
 currently involved in a restore operation, the upgrade tool will
 support its own reversion operation either as a separate tool or an
 option in the upgrade tool itself.<br>
-<h3>5.4 &nbsp;Calculate Schema and Configuration Customizations</h3>
+
+<h3>5.4 &nbsp;Calculate Schema and Configuration
+Customizations</h3>
+
 The upgrade tool will calculate schema and configuration customizations
 by
-determining the&nbsp;differences between the current installation and
-base's&nbsp;configuration and schema. &nbsp;To do this the upgrade tool
+determining the&nbsp;differences between the current installation
+and
+base's&nbsp;configuration and schema. &nbsp;To do this the
+upgrade tool
 will make use of the servers persistence of the base configuration and
 schema in the config/upgrade directories. &nbsp;<br>
+
 <br>
-To determine configuration customizations, the upgrade tool will make use of the 'LDIF diff' tool to compare <span style="font-family: monospace;">/conf/config.ldif</span> with&nbsp;<span style="font-family: monospace;">/conf/upgrade/config.ldif.&lt;svn rev&gt;</span>.
+
+To determine configuration customizations, the upgrade tool will make
+use of the 'LDIF diff' tool to compare <span style="font-family: monospace;">/conf/config.ldif</span>
+with&nbsp;<span style="font-family: monospace;">/conf/upgrade/config.ldif.&lt;svn
+rev&gt;</span>.
 &nbsp;The output of the LDIF diff tool is an LDIF file describing
 changes that will later be applies to the new base configuration once
 the upgrade has been performed.<br>
+
 <br>
-To determine schema customizations, the upgrade tool will look for the presense of the file <span style="font-family: monospace;">/conf/upgrade/schema.ldif.current</span>
+
+To determine schema customizations, the upgrade tool will look for the
+presense of the file <span style="font-family: monospace;">/conf/upgrade/schema.ldif.current</span>
 which indicates that a schema customization has been applied to the
-server. &nbsp;If this file is present it will be LDIF diff compared to <span style="font-family: monospace;">/conf/upgrade/schema.ldif.&lt;svn rev&gt;</span>
+server. &nbsp;If this file is present it will be LDIF diff compared
+to <span style="font-family: monospace;">/conf/upgrade/schema.ldif.&lt;svn
+rev&gt;</span>
 for modifications. &nbsp;Entries in these files contain an
 X-SCHEMA-FILE attribute whose value indicates the file to which the
-modification will need to be applied. &nbsp;If <span style="font-family: monospace;">/conf/upgrade/schema.ldif.current</span> is not present no modifications to the new base configuration's schema will need to be performed.<br>
-<br>
-<h3>5.5 &nbsp;Upgrade&nbsp;Components</h3>
-During this phase of upgrade, the upgrade tool will <br>
-<ul>
-  <li>replace files from the local filesystem with those found in the install image</li>
-  <li>add new files from the install image to the local filesystem</li>
-  <li>remove non-transient files from the local filesystem not appearing in the install image</li>
-</ul>
-<h3>5.6 &nbsp;Apply Customizations<br>
-</h3>
-<div class="section">
+modification will need to be applied. &nbsp;If <span style="font-family: monospace;">/conf/upgrade/schema.ldif.current</span>
+is not present no modifications to the new base configuration's schema
+will need to be performed.<br>
 
+<br>
+
+<h3>5.5 &nbsp;Upgrade&nbsp;Components</h3>
+
+During this phase of upgrade, the upgrade tool will <br>
+
+<ul>
+
+  <li>replace files from the local filesystem with those found in
+the install image</li>
+
+  <li>add new files from the install image to the local filesystem</li>
+
+  <li>remove non-transient files from the local filesystem not
+appearing in the install image</li>
+
+</ul>
+
+<h3>5.6 &nbsp;Apply Customizations<br>
+
+</h3>
+
+<div class="section">
 It should be noted that the server must be off line during an upgrade.
-&nbsp;It may not be possible&nbsp;to apply new configuration elements
+&nbsp;It may not be possible&nbsp;to apply new configuration
+elements
 to the old system &nbsp;since they they may contain attributes not
 recognized or allowed by the schema, or the configuration change
-validation process may reject them. &nbsp;Conversely, if you attempt
+validation process may reject them. &nbsp;Conversely, if you
+attempt
 the changes after the server has been upgraded, then the server may not
 start because it's missing configuration elements that are required by
 the new version. As such, the changes to the server configuration must
 always be made with the server offline.<br>
+
 <br>
+
 During this phase of the upgrade process, the user interface may
 present customization in an iterative way, allowing the user to select
 or reject specific customizations before they are applied to the
 upgraded server.<br>
+
 <h3>5.6 &nbsp;Verify Upgrade</h3>
+
 During this phase the upgrade tool will attempt to verify that the
-upgrade was successful. &nbsp;At the very least an attempt will be made
+upgrade was successful. &nbsp;At the very least an attempt will be
+made
 to start the server. &nbsp;<br>
+
 <br>
-Following the upgrade process the user should&nbsp;have the option of
-reverting to the old installation. &nbsp;Additionally the user should
+
+Following the upgrade process the user should&nbsp;have the option
+of
+reverting to the old installation. &nbsp;Additionally the user
+should
 be told about the process for reverting the installation should they
 decide to do so at a later time after the upgrade tool has finished
 execution.<br>
-&nbsp;</div>
 
+&nbsp;</div>
 
 <hr noshade="noshade" size="1">
 <h2><a name="Detailed System Architecture">
 <div class="section">6. User Interface Specification</div>
 
-
 </a></h2>
+
 <h3>6.1 &nbsp;Command Line Interface</h3>
 
-<p>The upgrade tool will support a command line interface which whose
+<p>The upgrade tool will support a command line interface which
+whose
 executable file will reside in the top level of the installation root
 on the filesystem and be a peer of the 'setup' and 'uninstall'
 commands. &nbsp;The will be of the form<span style="font-family: monospace;">:</span></p>
-<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; upgrade [OPTIONS]</span><br>
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
+upgrade [OPTIONS]</span><br>
 
 <br>
 
@@ -648,7 +593,8 @@ where OPTIONS are<br>
 
       <td>-c, --cli</td>
 
-      <td>Specifies a command line upgrade. &nbsp;If not specified the graphical interface will be launched.</td>
+      <td>Specifies a command line upgrade. &nbsp;If not
+specified the graphical interface will be launched.</td>
 
     </tr>
 
@@ -657,7 +603,8 @@ where OPTIONS are<br>
       <td>-f, --file FILE</td>
 
       <td>Install image previously downloaded from the
-OpenDS website. &nbsp;If this option is not present, the upgrade tool
+OpenDS website. &nbsp;If this option is not present, the upgrade
+tool
 will attempt to download the latest install package from the OpenDS
 website.</td>
 
@@ -667,7 +614,10 @@ website.</td>
 
       <td>-d, --backupDirectory DIRECTORY</td>
 
-      <td>Root filesystem location for the backup files. &nbsp;If not present the upgrade tool will use the server installation's <span style="font-family: monospace;">bak</span> directory.</td>
+      <td>Root filesystem location for the backup files.
+&nbsp;If not present the upgrade tool will use the server
+installation's <span style="font-family: monospace;">bak</span>
+directory.</td>
 
     </tr>
 
@@ -675,112 +625,98 @@ website.</td>
 
       <td>-p, &nbsp;--proxy</td>
 
-      <td>URL specifying the HTTP proxy used for downloading the latest&nbsp;install image from the OpenDS website.</td>
+      <td>URL specifying the HTTP proxy used for downloading the
+latest&nbsp;install image from the OpenDS website.</td>
 
     </tr>
+    <tr>
+      <td>-n, --dry-run</td>
+      <td>Perform a trial run of the schema and configuration migration but don't actually perform the migration</td>
+    </tr>
 
-    
-  
   </tbody>
 </table>
 
 <br>
+
 <h3>6.2 &nbsp;Graphical Interface</h3>
+
 The upgrade tool will support a graphical interface which will be
-equivalent in functionality to the command line interface. &nbsp;The
+equivalent in functionality to the command line interface.
+&nbsp;The
 following mockup image shows a 3-step wizard style interface.<br>
+
 <br>
+
 <img style="width: 330px; height: 396px;" alt="Mockup for upgrade tool graphical user interface" src="upgrade.png"><br>
+
 <br>
 
 <hr style="width: 100%; height: 2px;"><span style="font-weight: bold;"><a name="7._Unit_Tests"></a></span>
 <h2>7. Unit Tests</h2>
 
-
 <p>It would be theoretically possible to develop functional tests
 that perform upgrade of any server version 0.A to server version 0.B<br>
 
-
 </p>
-
 
 <p>Currently OpenDS does not have a strategy for testing GUI
 components. &nbsp;Unit test should be developed for testing the
 command line invocation of the upgrade tool.<br clear="all">
 
-
 </p>
-
 
 <hr size="2" width="100%">
 <h2><a name="7._Features_Configuration"></a>8.
 Feature's Configuration</h2>
-
 
 <p>The upgrade tool will not maintain a configuration other than
 the filesystem resources that it has available to it at the time of
 invocation. &nbsp;For instance in order to revert to a previous
 version of the server the old bits must be available in the filesystem.<br>
 
-
 <br>
 
-
 </p>
-
 
 <hr style="width: 100%; height: 2px;">
 <p><a name="External_Impacts"></a><br>
 
-
 </p>
 
-
 <h2>9. External impacts</h2>
-
 
 <h3><a name="9.1_Impact_on_Documentation"></a>9.1
 Impact on
 Documentation</h3>
 
-
 Like other OpenDS tools, complete documentation will need to be
 generated regarding the upgrade tool's usage.<br>
-
 
 <h3><a name="9.2_Impact_on_Configuration"></a>9.2
 Impact on
 Configuration Interfaces<br>
 
-
 </h3>
 
-
 None.<br>
-
 
 <h3><a name="9.3_Impact_on_Other_OpenDS_subsystems"></a>9.3
 Impact on
 Other OpenDS subsystems</h3>
-
 
 None.
 <h3><a name="9.4_Other_external_Impacts_"></a>9.4
 Other external
 Impacts </h3>
 
-
 None.<br>
-
 
 <br>
 
-
 <p>&nbsp;&nbsp;<br>
 
-
 </p>
-
 
 </body>
 </html>
