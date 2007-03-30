@@ -12,9 +12,10 @@
 <body style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
 
 <center>
-<div class="title"><big><sup><img src="opends_logo_welcome.png" title="OpenDS" alt="OpenDS"><br>
+<div class="title"><big><sup><img style="width: 197px; height: 57px;" src="https://opends.dev.java.net/public/images/opends_logo_welcome.png" title="OpenDS" alt="OpenDS"><br>
 
-</sup></big><sup><br>
+</sup>
+</big><sup><br>
 
 </sup></div>
 
@@ -71,11 +72,28 @@
           <tr>
 
             <td align="center" bgcolor="#ffffff">0.2</td>
- <td bgcolor="white">Kenneth Suter</td>
+
+            <td bgcolor="white">Kenneth Suter</td>
 
             <td bgcolor="white">2007-03-22</td>
 
             <td bgcolor="white">Added --dry-run option<br>
+
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td align="center" bgcolor="#ffffff">0.3</td>
+
+            <td bgcolor="white">Kenneth Suter</td>
+
+            <td bgcolor="white">2007-03-22</td>
+
+            <td bgcolor="white">Added spec for upgrade
+history, updated link reference to GUI design spec<br>
+
             </td>
 
           </tr>
@@ -189,6 +207,17 @@ Issue 598</span></a></td>
       <td></td>
 
       <td>David Ely and &nbsp;Neil Wilson</td>
+
+    </tr>
+
+    <tr>
+
+      <td><a href="http://bde.central/projects/opends/www/public/docs/ui-docs/specs/updater.html">GUI
+Design Specification</a></td>
+
+      <td></td>
+
+      <td>Brian Ehret</td>
 
     </tr>
 
@@ -444,8 +473,9 @@ well as any other processes associated with the server.<br>
 <h3>5.3 &nbsp;Backup</h3>
 
 The upgrade tool will make use of the&nbsp;<span style="font-family: monospace;">backup</span>
-command shipped with the server to create an archive (by default in
-the&nbsp;/bak directory of the server's installation root).
+command shipped with the server to create an archive of the current
+installation in the <span style="font-family: monospace;">/upgrade</span>
+directory (this directory will be created if it does not exist).
 &nbsp;This
 backup will be used in supporting the upgrade tools ability to allow
 the user to abort the upgrade&nbsp;process or revert to an old back
@@ -554,6 +584,27 @@ be told about the process for reverting the installation should they
 decide to do so at a later time after the upgrade tool has finished
 execution.<br>
 
+<br>
+
+<h3>5.7 &nbsp;History</h3>
+
+In order to facilitate the diagnosis of potential problems with a
+particular installation, a historical record or upgrade will be kept in
+a text file <span style="font-family: monospace;">&lt;install
+root&gt;/upgrade/history</span>. &nbsp;The history file
+will contain historical records in the format:<br>
+
+<br>
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
+from: &nbsp;0.1 build 32</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
+to: &nbsp;0.1 build 33</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
+result: &nbsp;success</span><br style="font-family: monospace;">
+
 &nbsp;</div>
 
 <hr noshade="noshade" size="1">
@@ -612,26 +663,20 @@ website.</td>
 
     <tr>
 
-      <td>-d, --backupDirectory DIRECTORY</td>
-
-      <td>Root filesystem location for the backup files.
-&nbsp;If not present the upgrade tool will use the server
-installation's <span style="font-family: monospace;">bak</span>
-directory.</td>
-
-    </tr>
-
-    <tr>
-
       <td>-p, &nbsp;--proxy</td>
 
       <td>URL specifying the HTTP proxy used for downloading the
 latest&nbsp;install image from the OpenDS website.</td>
 
     </tr>
+
     <tr>
+
       <td>-n, --dry-run</td>
-      <td>Perform a trial run of the schema and configuration migration but don't actually perform the migration</td>
+
+      <td>Perform a trial run of the schema and configuration
+migration but don't actually perform the migration</td>
+
     </tr>
 
   </tbody>
@@ -642,13 +687,12 @@ latest&nbsp;install image from the OpenDS website.</td>
 <h3>6.2 &nbsp;Graphical Interface</h3>
 
 The upgrade tool will support a graphical interface which will be
-equivalent in functionality to the command line interface.
-&nbsp;The
-following mockup image shows a 3-step wizard style interface.<br>
+equivalent in functionality to the command line interface.<br>
 
 <br>
 
-<img style="width: 330px; height: 396px;" alt="Mockup for upgrade tool graphical user interface" src="upgrade.png"><br>
+See the <a href="http://bde.central/projects/opends/www/public/docs/ui-docs/specs/updater.html">GUI
+Design Specification</a> for the latest specification.<br>
 
 <br>
 
