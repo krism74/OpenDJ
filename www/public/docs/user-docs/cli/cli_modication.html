@@ -2,242 +2,336 @@
 <html>
 <head>
 
+
+  
   <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+
+  
   <title>CLI Usage Modifications</title>
-
-
 </head>
 
 
 <body>
 
-<h2 style="font-family: monospace;">Command Line Tool
+
+<h2>Command Line Tool
 Usage Changes </h2>
 
-<tt style="font-family: monospace;">Consistency is
+
+Consistency is
 critical to the learning and recall of cli's. In the interest of
 establishing consistency for existing commands and formalizing
 conventions for use in future commands, below are the modifications
 that have been made to the existing commands.<br>
 
-</tt>
-<h2 style="font-family: monospace;"> Summary</h2>
 
-<span style="font-family: monospace;">configure-ds</span><br style="font-family: monospace;">
 
-<div style="margin-left: 40px; font-family: monospace;">"-j"
+<h2> Summary</h2>
+
+
+configure-ds<br>
+
+
+<div style="margin-left: 40px;">"-j"
 short option for "jmx port" option is replaced by "-x"<br>
+
 
 "-W" short option for "root password file" option is replaced by "-j"<br>
 
-<span style="font-family: monospace;">"--</span><font face="monospace">rootDN</font><span style="font-family: monospace;">" long option for "root User
-DN"&nbsp;option is replaced by&nbsp;</span><span style="color: rgb(0, 0, 0);">"<font face="monospace">rootUserDN</font>"</span><br>
+
+"--rootDN" long option for "root User
+DN"&nbsp;option is replaced by&nbsp;<span style="color: rgb(0, 0, 0);">"rootUserDN"</span><br>
+
 
 <br>
+
 
 </div>
 
-<span style="font-family: monospace;">encode-password</span><br>
 
-<div style="margin-left: 40px;"><span style="font-family: monospace;"> </span><span style="font-family: monospace;">"-F" short option for "clear
+encode-password<br>
+
+
+<div style="margin-left: 40px;"> "-F" short option for "clear
 password file" option is replaced by "-f"<br>
 
-</span></div>
 
-<span style="font-family: monospace;"><br>
+</div>
 
-</span><span style="font-family: monospace;">export-ldif</span><br style="font-family: monospace;">
-
-<div style="margin-left: 40px;"><span style="font-family: monospace;">"</span><font face="monospace">--</font><span style="font-family: monospace;">compressLDIF"<span style="font-family: monospace;"> </span>long option
-for "compress"&nbsp;option is replaced by&nbsp;</span><span style="color: rgb(0, 0, 0);">"</span><font face="monospace">--compress</font><span style="color: rgb(0, 0, 0);">"<br>
 
 <br>
 
-</span> <span style="font-family: monospace;"></span></div>
 
-<span style="font-family: monospace;">import</span><span style="font-family: monospace;">-ldif<br style="font-family: monospace;">
+export-ldif<br>
 
-</span>
-<div style="margin-left: 40px;"><span style="font-family: monospace;">"-S" short option for "</span><span style="font-family: monospace;">randomSeed</span><span style="font-family: monospace;">"&nbsp;option is
+
+<div style="margin-left: 40px;">"--compressLDIF" long option
+for "compress"&nbsp;option is replaced by&nbsp;<span style="color: rgb(0, 0, 0);">"</span>--compress<span style="color: rgb(0, 0, 0);">"<br>
+
+
+<br>
+
+
+</span> </div>
+
+
+import-ldif<br>
+
+
+
+<div style="margin-left: 40px;">"-S" short option for "randomSeed"&nbsp;option is
 replaced by "-s" (switch with "skip schema validation" short option)<br>
 
-</span><span style="font-family: monospace;">"-s"
-short option for "skipSchemaValidation" option is replaced by "-S" </span><span style="font-family: monospace;">(switch with&nbsp;</span><span style="font-family: monospace;">"</span><span style="font-family: monospace;">randomSeed</span><span style="font-family: monospace;"></span><span style="font-family: monospace;">" short option)<br>
+
+"-s"
+short option for "skipSchemaValidation" option is replaced by "-S" (switch with&nbsp;"randomSeed" short option)<br>
+
 
 <br>
 
-</span></div>
 
-<span style="font-family: monospace;">ldapcompare</span><br style="font-family: monospace;">
+</div>
 
-<div style="margin-left: 40px;"><span style="font-family: monospace;">"--host" long option for
+
+ldapcompare<br>
+
+
+<div style="margin-left: 40px;">"--host" long option for
 "hostname" option is replaced by "--hostname"<br>
+
 
 "--startTLS" long option for "startTLS"&nbsp;option is replaced by
 "--useStartTLS"<br>
 
+
 "--noop" long option for "no operation"&nbsp;option is replaced by
 "--dry-run"<br>
 
-</span></div>
 
-<br style="font-family: monospace;">
+</div>
 
-<span style="font-family: monospace;"></span><span style="font-family: monospace;">ldapdelete</span><br style="font-family: monospace;">
-
-<div style="margin-left: 40px;"><span style="font-family: monospace;">"--host" long option for
-"hostname" option is replaced by "</span><span style="font-family: monospace;">--hostname</span><span style="font-family: monospace;">"<br>
-
-</span><span style="font-family: monospace;">"--startTLS"
-long option for "startTLS"&nbsp;option is replaced by "</span><span style="font-family: monospace;">--useStartTLS"<br>
-
-</span><span style="font-family: monospace;">"--noop"
-long option for "no operation"&nbsp;option is replaced by "</span><span style="font-family: monospace;">--dry-run"<br>
 
 <br>
 
-</span><span style="font-family: monospace;"></span></div>
 
-<span style="font-family: monospace;"></span><span style="font-family: monospace;">ldapmodify</span><br style="font-family: monospace;">
+ldapdelete<br>
 
-<div style="margin-left: 40px;"><span style="font-family: monospace;">"--host" long option for
-"hostname" option is replaced by "</span><span style="font-family: monospace;">--hostname</span><span style="font-family: monospace;">"<br>
 
-</span><span style="font-family: monospace;">"--startTLS"
-long option for "startTLS"&nbsp;option is replaced by "</span><span style="font-family: monospace;">--useStartTLS"<br>
+<div style="margin-left: 40px;">"--host" long option for
+"hostname" option is replaced by "--hostname"<br>
 
-</span><span style="font-family: monospace;">"--noop"
-long option for "no operation"&nbsp;option is replaced by "</span><span style="font-family: monospace;">--dry-run"<br>
 
-<br>
+"--startTLS"
+long option for "startTLS"&nbsp;option is replaced by "--useStartTLS"<br>
 
-</span><span style="font-family: monospace;"></span></div>
 
-<span style="font-family: monospace;"></span><span style="font-family: monospace;">ldappasswordmodify</span><br style="font-family: monospace;">
+"--noop"
+long option for "no operation"&nbsp;option is replaced by "--dry-run"<br>
 
-<div style="margin-left: 40px;"><span style="font-family: monospace;">"--hostHost" long option for
-"hostname" option is replaced by "</span><span style="font-family: monospace;">--hostname</span><span style="font-family: monospace;">"<br>
-
-</span><span style="font-family: monospace;">"--ldapPort"
-long option for "port" option is replaced by "</span><span style="font-family: monospace;">--port"</span><span style="font-family: monospace;"></span><span style="font-family: monospace;"></span><span style="font-family: monospace;"><br>
-
-</span><span style="font-family: monospace;">"--noop"
-long option for "no operation"&nbsp;option is replaced by "</span><span style="font-family: monospace;">--dry-run"<br>
 
 <br>
 
-</span><span style="font-family: monospace;"></span></div>
 
-<span style="font-family: monospace;">ldapsearch</span><br style="font-family: monospace;">
+</div>
 
-<div style="margin-left: 40px;"><span style="font-family: monospace;">"--host" long option for
-"hostname" option is replaced by "</span><span style="font-family: monospace;">--hostname</span><span style="font-family: monospace;">"<br>
 
-</span><span style="font-family: monospace;">"--startTLS"
-long option for "startTLS"&nbsp;option is replaced by "</span><span style="font-family: monospace;">--useStartTLS"<br>
+ldapmodify<br>
 
-</span><span style="font-family: monospace;">"--noop"
-long option for "no operation"&nbsp;option is replaced by "</span><span style="font-family: monospace;">--dry-run"<br>
 
-</span></div>
+<div style="margin-left: 40px;">"--host" long option for
+"hostname" option is replaced by "--hostname"<br>
+
+
+"--startTLS"
+long option for "startTLS"&nbsp;option is replaced by "--useStartTLS"<br>
+
+
+"--noop"
+long option for "no operation"&nbsp;option is replaced by "--dry-run"<br>
+
 
 <br>
 
-<span style="font-family: monospace;">makediff renamed to
+
+</div>
+
+
+ldappasswordmodify<br>
+
+
+<div style="margin-left: 40px;">"--hostHost" long option for
+"hostname" option is replaced by "--hostname"<br>
+
+
+"--ldapPort"
+long option for "port" option is replaced by "--port"<br>
+
+
+"--noop"
+long option for "no operation"&nbsp;option is replaced by "--dry-run"<br>
+
+
+<br>
+
+
+</div>
+
+
+ldapsearch<br>
+
+
+<div style="margin-left: 40px;">"--host" long option for
+"hostname" option is replaced by "--hostname"<br>
+
+
+"--startTLS"
+long option for "startTLS"&nbsp;option is replaced by "--useStartTLS"<br>
+
+
+"--noop"
+long option for "no operation"&nbsp;option is replaced by "--dry-run"<br>
+
+
+</div>
+
+
+<br>
+
+
+makediff renamed to
 make-ldif<br>
 
+
 <br>
 
-restore</span><span style="font-family: monospace;"></span><span style="font-family: monospace;"></span><br>
 
-<div style="margin-left: 40px;"><span style="font-family: monospace;"></span><span style="font-family: monospace;">"--verifyOnly" long option
-for "no operation"&nbsp;option is replaced by "</span><span style="font-family: monospace;">--dry-run"<br>
+restore<br>
 
-<br style="font-family: monospace;">
 
-</span></div>
+<div style="margin-left: 40px;">"--verifyOnly" long option
+for "no operation"&nbsp;option is replaced by "--dry-run"<br>
 
-<span style="font-family: monospace;">start-ds</span><br style="font-family: monospace;">
 
-<div style="margin-left: 40px; font-family: monospace;">"-v"
+<br>
+
+
+</div>
+
+
+start-ds<br>
+
+
+<div style="margin-left: 40px;">"-v"
 short option for "version" option is replaced by "-V"<br>
+
 
 "-V" short option for "full version" option is replaced by "-F"</div>
 
-<br style="font-family: monospace;">
 
-<span style="font-family: monospace;">statuspanel renamed
+<br>
+
+
+statuspanel renamed
 to&nbsp;status-panel<br>
 
-<br style="font-family: monospace;">
-
-</span> <span style="font-family: monospace;">stop-ds</span><br style="font-family: monospace;">
-
-<div style="margin-left: 40px;"><span style="font-family: monospace;">"--host" long option for
-"hostname" option is replaced by "</span><span style="font-family: monospace;">--hostname</span><span style="font-family: monospace;">"</span><br>
-
-<span style="font-family: monospace;"></span><span style="font-family: monospace;">"--startTLS" long option for
-"startTLS"&nbsp;option is replaced by "</span><span style="font-family: monospace;">--useStartTLS"<br>
-
-</span><span style="font-family: monospace;"></span><span style="font-family: monospace;">"--trustStoreFile" long
-option for "</span><span style="font-family: monospace;">trustStoreFile</span><span style="font-family: monospace;">"&nbsp;option is
-replaced by "</span><span style="font-family: monospace;">--trustStorePath"<br>
 
 <br>
 
-</span></div>
 
-<span style="font-family: monospace;">setup</span><br style="font-family: monospace;">
+ stop-ds<br>
 
-<div style="margin-left: 40px;"><span style="font-family: monospace;">"-i" short option for "ldif
-file" option is replaced by "-l"</span><br>
 
-<span style="font-family: monospace;">"--importLDIF" long
-option for "</span><span style="font-family: monospace;">ldif
-file"</span><span style="font-family: monospace;">
-option is replaced by "</span><span style="font-family: monospace;">--ldifFile"<br>
+<div style="margin-left: 40px;">"--host" long option for
+"hostname" option is replaced by "--hostname"<br>
 
-"-j" short option for "jmx port" option is replaced by "-x"</span><span style="font-family: monospace;"></span><br>
 
-<span style="font-family: monospace;"></span><span style="font-family: monospace;"></span><span style="font-family: monospace;">"-W" short option for
+"--startTLS" long option for
+"startTLS"&nbsp;option is replaced by "--useStartTLS"<br>
+
+
+"--trustStoreFile" long
+option for "trustStoreFile"&nbsp;option is
+replaced by "--trustStorePath"<br>
+
+
+<br>
+
+
+</div>
+
+
+setup<br>
+
+
+<div style="margin-left: 40px;">"-i" short option for "ldif
+file" option is replaced by "-l"<br>
+
+
+"--importLDIF" long
+option for "ldif
+file"
+option is replaced by "--ldifFile"<br>
+
+
+"-j" short option for "jmx port" option is replaced by "-x"<br>
+
+
+"-W" short option for
 "rootUserPasswordFile" option is replaced by "-j"<br>
 
+
 <br>
 
-</span></div>
 
-<span style="font-family: monospace;">windowsservice
-renamed to&nbsp;</span><span style="font-family: monospace;">windows-service</span>
+</div>
+
+
+windowsservice
+renamed to&nbsp;windows-service
 <br>
 
-<h2 style="font-family: monospace;">Details</h2>
 
-<tt style="font-family: monospace;"> </tt>
-<table style="font-family: monospace; width: 100%;" border="1" cellpadding="5" cellspacing="0">
+<h2>Details</h2>
+
+
+ 
+<table style="width: 100%;" border="1" cellpadding="5" cellspacing="0">
+
 
   <tbody>
 
+
     <tr>
 
+
       <td style="font-weight: bold; width: 557px;" align="center" valign="top"><big><big><br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">OLD
 CLI Usage</span><br>
 
+
       <br>
+
 
       </big></big></td>
 
+
       <td style="font-weight: bold; width: 551px;" align="center" valign="top"><big><big><br>
+
 
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">NEW
 CLI Usage</span><br>
 
+
       <br>
+
 
       </big></big></td>
 
+
     </tr>
+
 
 <!-- <tr>
 <td style="width: 557px;" valign="top"><big><big style="font-weight: bold;">backup</big></big><br>
@@ -298,3652 +392,5208 @@ Usage:&nbsp; backup {options}<br>
 -->
     <tr>
 
+
       <td><big><big><span style="font-weight: bold;">backup</span></big></big>
       <br>
+
 
 This utility may be used to back up one or more Directory Server
 backends.<br>
 
+
 Usage:&nbsp; backup {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -n {backendID}&nbsp; or&nbsp;&nbsp; --backendID {backendID}<br>
+
 
 &nbsp;&nbsp;&nbsp; Backend ID for the backend to archive<br>
 
+
 -a&nbsp; or&nbsp;&nbsp; --backUpAll<br>
+
 
 &nbsp;&nbsp;&nbsp; Back up all backends in the server<br>
 
+
 -I {backupID}&nbsp; or&nbsp;&nbsp; --backupID {backupID}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the provided identifier for the
 backup<br>
+
 
 -d {backupDir}&nbsp; or&nbsp;&nbsp; --backupDirectory
 {backupDir}<br>
 
+
 &nbsp;&nbsp;&nbsp; Path to the target directory for the
 backup file(s)<br>
 
+
 -i&nbsp; or&nbsp;&nbsp; --incremental<br>
+
 
 &nbsp;&nbsp;&nbsp; Perform an incremental backup rather
 than a full backup<br>
+
 
 -B {backupID}&nbsp; or&nbsp;&nbsp; --incrementalBaseID
 {backupID}<br>
 
+
 &nbsp;&nbsp;&nbsp; Backup ID of the source archive for an
 incremental backup<br>
 
+
 -c&nbsp; or&nbsp;&nbsp; --compress<br>
+
 
 &nbsp;&nbsp;&nbsp; Compress the backup contents<br>
 
+
 -y&nbsp; or&nbsp;&nbsp; --encrypt<br>
+
 
 &nbsp;&nbsp;&nbsp; Encrypt the backup contents<br>
 
+
 -h&nbsp; or&nbsp;&nbsp; --hash<br>
+
 
 &nbsp;&nbsp;&nbsp; Generate a hash of the backup contents<br>
 
+
 -s&nbsp; or&nbsp;&nbsp; --signHash<br>
+
 
 &nbsp;&nbsp;&nbsp; Sign the hash of the backup contents<br>
 
+
 -H&nbsp; or&nbsp;&nbsp; --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information</td>
 
+
       <td><big><big><span style="font-weight: bold;">backup</span></big></big><br>
+
 
 This utility may be used to back up one or more Directory Server
 backends.<br>
 
+
 Usage:&nbsp; backup {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -n, --backendID {backendID}<br>
+
 
 &nbsp;&nbsp;&nbsp; Backend ID for the backend to archive<br>
 
+
 -a, --backUpAll<br>
+
 
 &nbsp;&nbsp;&nbsp; Back up all backends in the server<br>
 
+
 -I, --backupID {backupID}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the provided identifier for the
 backup<br>
 
+
 -d, --backupDirectory {backupDir}<br>
+
 
 &nbsp;&nbsp;&nbsp; Path to the target directory for the
 backup file(s)<br>
 
+
 -i, --incremental<br>
+
 
 &nbsp;&nbsp;&nbsp; Perform an incremental backup rather
 than a full backup<br>
 
+
 -B, --incrementalBaseID {backupID}<br>
+
 
 &nbsp;&nbsp;&nbsp; Backup ID of the source archive for an
 incremental backup<br>
 
+
 -c, --compress<br>
+
 
 &nbsp;&nbsp;&nbsp; Compress the backup contents<br>
 
+
 -y, --encrypt<br>
+
 
 &nbsp;&nbsp;&nbsp; Encrypt the backup contents<br>
 
+
 -h, --hash<br>
+
 
 &nbsp;&nbsp;&nbsp; Generate a hash of the backup contents<br>
 
+
 -s, --signHash<br>
+
 
 &nbsp;&nbsp;&nbsp; Sign the hash of the backup contents<br>
 
+
 -H, --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information.</td>
 
+
     </tr>
+
 
     <tr>
 
+
       <td style="width: 557px;" valign="top"><big><big style="font-weight: bold;">configure-ds</big></big><br>
+
 
 This utility may be used to define a base configuration for the
 Directory Server.<br>
 
+
 Usage:&nbsp; configure-ds {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -p {ldapPort}&nbsp; or&nbsp;&nbsp; --ldapPort {ldapPort}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the port on which the
 Directory Server should<br>
 
+
 &nbsp; &nbsp; listen for LDAP communication.<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-j
 {jmxPort}&nbsp; or&nbsp;&nbsp; --jmxPort {jmxPort}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Specifies the port on which the
 Directory Server should<br>
 
+
 &nbsp; &nbsp; listen for JMX communication.<br>
 
+
 -b {baseDN}&nbsp; or&nbsp;&nbsp; --baseDN {baseDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the base DN for user
 information in the<br>
 
+
 &nbsp; &nbsp; Directory Server.<br>
+
 
 &nbsp;&nbsp;&nbsp; Multiple base DNs may be provided by
 using this option<br>
 
+
 &nbsp; &nbsp; multiple times.<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-D
 {rootUserDN}&nbsp; or&nbsp;&nbsp; --rootDN {rootUserDN}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Specifies the DN for the initial root
 user for the <br>
 
+
 &nbsp;&nbsp;&nbsp; Directory Server.<br>
+
 
 -w {rootUserPW}&nbsp; or&nbsp;&nbsp; --rootPassword
 {rootUserPW}<br>
 
+
 &nbsp;&nbsp;&nbsp; Specifies the password for the initial
 root user for the<br>
 
+
 &nbsp; &nbsp; Directory Server.<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-W
 {filename}&nbsp; or&nbsp;&nbsp; --rootPasswordFile
 {filename}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Specifies the path to a file containing
 the password for<br>
 
+
 &nbsp; &nbsp; the initial root user for the Directory Server.<br>
 
+
 -H&nbsp; or&nbsp;&nbsp; --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Displays usage information for this
 program.<br>
 
+
       </td>
 
+
       <td style="width: 551px;" valign="top"><big><big style="font-weight: bold;">configure-ds</big></big><br>
+
 
 This utility may be used to define a base configuration for the
 Directory Server.<br>
 
+
 Usage:&nbsp; configure-ds {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -p, --ldapPort {ldapPort}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the port on which the
 Directory Server should<br>
 
+
 &nbsp; &nbsp; listen for LDAP communication.<br>
+
 
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-x</span>,
 --jmxPort {jmxPort}<br>
 
+
 &nbsp;&nbsp;&nbsp; Specifies the port on which the
 Directory Server should<br>
 
+
 &nbsp; &nbsp; listen for JMX communication.<br>
 
+
 -b, --baseDN {baseDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the base DN for user
 information in the<br>
 
+
 &nbsp; &nbsp; Directory Server.<br>
+
 
 &nbsp;&nbsp;&nbsp; Multiple base DNs may be provided by
 using this option<br>
 
+
 &nbsp; &nbsp; multiple times.<br>
+
 
 -D, <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">--rootUserDN</span>
 {rootUserDN}<br>
 
+
 &nbsp;&nbsp;&nbsp; Specifies the DN for the initial root
 user for the<br>
 
+
 &nbsp; &nbsp; Directory Server.<br>
 
+
 -w, --rootPassword {rootUserPW}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the password for the initial
 root user for the<br>
 
+
 &nbsp; &nbsp; Directory Server.<br>
+
 
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-j</span>,
 --rootPasswordFile {filename}<br>
 
+
 &nbsp;&nbsp;&nbsp; Specifies the path to a file containing
 the password for<br>
 
+
 &nbsp; &nbsp; the initial root user for the Directory Server<br>
+
 
 -H, --help<br>
 
+
 &nbsp;&nbsp;&nbsp; Display this usage information.<br>
+
 
       </td>
 
+
     </tr>
+
 
     <tr>
 
+
       <td style="width: 557px;" valign="top"><big style="font-weight: bold;"><big>encode-password</big></big><br>
+
 
 This utility may be used to encode user passwords with a specified
 storage scheme, or to determine whether a given clear-text value
 matches a provided encoded password.<br>
 
+
 Usage:&nbsp; encode-password {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -l&nbsp; or&nbsp;&nbsp; --listSchemes<br>
+
 
 &nbsp;&nbsp;&nbsp; List available password storage schemes<br>
 
+
 -c {clearPW}&nbsp; or&nbsp;&nbsp; --clearPassword {clearPW}<br>
+
 
 &nbsp;&nbsp;&nbsp; Clear-text password to encode or to
 compare against an<br>
 
+
 &nbsp; &nbsp; encoded password<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-F
 {filename}&nbsp; or&nbsp;&nbsp; --clearPasswordFile
 {filename}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Clear-text password file<br>
+
 
 -e {encodedPW}&nbsp; or&nbsp;&nbsp; --encodedPassword
 {encodedPW}<br>
 
+
 &nbsp;&nbsp;&nbsp; Encoded password to compare against the
 clear-text password<br>
+
 
 -E {filename}&nbsp; or&nbsp;&nbsp; --encodedPasswordFile
 {filename}<br>
 
+
 &nbsp;&nbsp;&nbsp; Encoded password file<br>
+
 
 -s {scheme}&nbsp; or&nbsp;&nbsp; --storageScheme {scheme}<br>
 
+
 &nbsp;&nbsp;&nbsp; Scheme to use for the encoded password<br>
 
+
 -a&nbsp; or&nbsp;&nbsp; --authPasswordSyntax<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the authentication password syntax
 rather than the user<br>
 
+
 &nbsp; &nbsp; password syntax<br>
 
+
 -r&nbsp; or&nbsp;&nbsp; --useCompareResultCode<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the LDAP compare result as an exit
 code for the password<br>
 
+
 &nbsp;&nbsp; comparison<br>
+
 
 -H&nbsp; or&nbsp;&nbsp; --help<br>
 
+
 &nbsp;&nbsp;&nbsp; Displays this usage information.<br>
+
 
       </td>
 
+
       <td style="width: 551px;" valign="top"><big><big style="font-weight: bold;">encode-password</big></big><br>
+
 
 This utility may be used to encode user passwords with a specified
 storage<br>
 
+
 scheme, or to determine whether a given clear-text value matches a
 provided encoded password.<br>
 
+
 Usage:&nbsp; encode-password {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -l, --listSchemes<br>
+
 
 &nbsp;&nbsp;&nbsp; List available password storage scheme<br>
 
+
 -c {clearPW}&nbsp; or&nbsp;&nbsp; --clearPassword {clearPW}<br>
+
 
 &nbsp;&nbsp;&nbsp; Clear-text password to encode or to
 compare against an<br>
 
+
 &nbsp; &nbsp; encoded password<br>
+
 
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-f</span>,
 --clearPasswordFile {filemane}<br>
 
+
 &nbsp;&nbsp;&nbsp; Clear-text password file<br>
 
+
 -e, --encodedPassword {encodedPW}<br>
+
 
 &nbsp;&nbsp;&nbsp; Encoded password to compare against the
 clear-text password<br>
 
+
 -E, --encodedPasswordFile {filename}<br>
+
 
 &nbsp;&nbsp;&nbsp; Encoded password file<br>
 
+
 -s, --storageScheme {scheme}<br>
+
 
 &nbsp;&nbsp;&nbsp; Scheme to use for the encoded password<br>
 
+
 -a, --authPasswordSyntax<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the authentication password syntax
 rather than the user<br>
 
+
 &nbsp; &nbsp; password syntax<br>
 
+
 -r, --useCompareResultCode<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the LDAP compare result as an exit
 code for the password<br>
 
+
 &nbsp; &nbsp; comparison<br>
+
 
 -H, --help<br>
 
+
 &nbsp;&nbsp;&nbsp; Displays this usage information.<br>
+
 
       </td>
 
+
     </tr>
+
 
     <tr>
 
+
       <td style="width: 557px;" valign="top"><big><big style="font-weight: bold;">export-ldif</big></big><br>
+
 
 This utility may be used to export data from a Directory Server backend
 in<br>
 
+
 LDIF form.<br>
 
+
 Usage:&nbsp; export-ldif {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -l {ldifFile}&nbsp; or&nbsp;&nbsp; --ldifFile {ldifFile}<br>
+
 
 &nbsp;&nbsp;&nbsp; Path to the LDIF file to be written<br>
 
+
 -a&nbsp; or&nbsp;&nbsp; --appendToLDIF<br>
+
 
 &nbsp;&nbsp;&nbsp; Append an existing LDIF file rather than
 overwriting it<br>
 
+
 -n {backendID}&nbsp; or&nbsp;&nbsp; --backendID {backendID}<br>
 
+
 &nbsp;&nbsp;&nbsp; Backend ID for the backend to export<br>
+
 
 -b {branchDN}&nbsp; or&nbsp;&nbsp; --includeBranch
 {branchDN}<br>
 
+
 &nbsp;&nbsp;&nbsp; Base DN of a branch to include in the
 LDIF export<br>
+
 
 -B {branchDN}&nbsp; or&nbsp;&nbsp; --excludeBranch
 {branchDN}<br>
 
+
 &nbsp;&nbsp;&nbsp; Base DN of a branch to exclude from the
 LDIF export<br>
+
 
 -i {attribute}&nbsp; or&nbsp;&nbsp; --includeAttribute
 {attribute}<br>
 
+
 &nbsp;&nbsp;&nbsp; Attribute to include in the LDIF export<br>
+
 
 -e {attribute}&nbsp; or&nbsp;&nbsp; --excludeAttribute
 {attribute}<br>
 
+
 &nbsp;&nbsp;&nbsp; Attribute to exclude from the LDIF export<br>
 
+
 -I {filter}&nbsp; or&nbsp;&nbsp; --includeFilter {filter}<br>
+
 
 &nbsp;&nbsp;&nbsp; Filter to identify entries to include in
 the LDIF export<br>
 
+
 -E {filter}&nbsp; or&nbsp;&nbsp; --excludeFilter {filter}<br>
+
 
 &nbsp;&nbsp;&nbsp; Filter to identify entries to exclude
 from the LDIF export<br>
 
+
 -O&nbsp; or&nbsp;&nbsp; --excludeOperational<br>
+
 
 &nbsp;&nbsp;&nbsp; Exclude operational attributes from the
 LDIF export<br>
+
 
 -w {wrapColumn}&nbsp; or&nbsp;&nbsp; --wrapColumn
 {wrapColumn}<br>
 
+
 &nbsp;&nbsp;&nbsp; Column at which to wrap long lines (0
 for no wrapping)<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-c&nbsp;
 or&nbsp;&nbsp; --compressLDIF</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Compress the LDIF data as it is exported<br>
+
 
 -y&nbsp; or&nbsp;&nbsp; --encryptLDIF<br>
 
+
 &nbsp;&nbsp;&nbsp; Encrypt the LDIF data as it is exported<br>
+
 
 -s&nbsp; or&nbsp;&nbsp; --signHash<br>
 
+
 &nbsp;&nbsp;&nbsp; Generate a signed hash of the export data<br>
+
 
 -H&nbsp; or&nbsp;&nbsp; --help<br>
 
+
 &nbsp;&nbsp;&nbsp; Display this usage information<br>
+
 
       </td>
 
+
       <td style="width: 551px;" valign="top"><big style="font-weight: bold;"><big>export-ldif</big></big><br>
+
 
 This utility may be used to export data from a Directory Server backend
 in LDIF form.<br>
 
+
 Usage:&nbsp; export-ldif {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -l, --ldifFile {ldifFile}<br>
+
 
 &nbsp;&nbsp;&nbsp; Path to the LDIF file to be written<br>
 
+
 -a, --appendToLDIF<br>
+
 
 &nbsp;&nbsp;&nbsp; Append an existing LDIF file rather than
 overwriting it<br>
 
+
 -n, --backendID {backendID}<br>
+
 
 &nbsp;&nbsp;&nbsp; Backend ID for the backend to export<br>
 
+
 -b, --includeBranch {branchDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Base DN of a branch to include in the
 LDIF export<br>
 
+
 -B, --excludeBranch {branchDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Base DN of a branch to exclude from the
 LDIF export<br>
 
+
 -i, --includeAttribute {attribute}<br>
+
 
 &nbsp;&nbsp;&nbsp; Attribute to include in the LDIF export<br>
 
+
 -e, --excludeAttribute {attribute}<br>
+
 
 &nbsp;&nbsp;&nbsp; Attribute to exclude from the LDIF export<br>
 
+
 -I, --includeFilter {filter}<br>
+
 
 &nbsp;&nbsp;&nbsp; Filter to identify entries to include in
 the LDIF export<br>
 
+
 -E, --excludeFilter {filter}<br>
+
 
 &nbsp;&nbsp;&nbsp; Filter to identify entries to exclude
 from the LDIF export<br>
 
+
 -O, --excludeOperational<br>
+
 
 &nbsp;&nbsp;&nbsp; Exclude operational attributes from the
 LDIF export<br>
 
+
 -w, --wrapColumn {wrapColumn}<br>
+
 
 &nbsp;&nbsp;&nbsp; Column at which to wrap long lines (0
 for no wrapping)<br>
 
+
 -c, <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">--compress</span><br>
+
 
 &nbsp;&nbsp;&nbsp; Compress the LDIF data as it is exported<br>
 
+
 -y, --encryptLDIF<br>
+
 
 &nbsp;&nbsp;&nbsp; Encrypt the LDIF data as it is exported<br>
 
+
 -s, --signHash<br>
+
 
 &nbsp;&nbsp;&nbsp; Generate a signed hash of the export data<br>
 
+
 -H, --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information.<br>
 
+
       </td>
+
 
     </tr>
 
+
     <tr>
 
+
       <td style="width: 557px;" valign="top"><big><big style="font-weight: bold;">import-ldif</big></big><br>
+
 
 This utility may be used to import LDIF data into a Directory Server
 backend.<br>
 
+
 Usage:&nbsp; import-ldif {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -l {ldifFile}&nbsp; or&nbsp;&nbsp; --ldifFile {ldifFile}<br>
 
+
 &nbsp;&nbsp;&nbsp; Path to the LDIF file to be imported<br>
+
 
 -t {templateFile}&nbsp; or&nbsp;&nbsp; --templateFile
 {templateFile}<br>
 
+
 &nbsp;&nbsp;&nbsp; Path to a MakeLDIF template to use to
 generate the import<br>
 
+
 &nbsp; &nbsp; data<br>
 
+
 -a&nbsp; or&nbsp;&nbsp; --append<br>
+
 
 &nbsp;&nbsp;&nbsp; Append to an existing database rather
 than overwriting it<br>
 
+
 -r&nbsp; or&nbsp;&nbsp; --replaceExisting<br>
+
 
 &nbsp;&nbsp;&nbsp; Replace existing entries when appending
 to the database<br>
 
+
 -n {backendID}&nbsp; or&nbsp;&nbsp; --backendID {backendID}<br>
 
+
 &nbsp;&nbsp;&nbsp; Backend ID for the backend to import<br>
+
 
 -b {branchDN}&nbsp; or&nbsp;&nbsp; --includeBranch
 {branchDN}<br>
 
+
 &nbsp;&nbsp;&nbsp; Base DN of a branch to include in the
 LDIF import<br>
+
 
 -B {branchDN}&nbsp; or&nbsp;&nbsp; --excludeBranch
 {branchDN}<br>
 
+
 &nbsp;&nbsp;&nbsp; Base DN of a branch to exclude from the
 LDIF import<br>
+
 
 -i {attribute}&nbsp; or&nbsp;&nbsp; --includeAttribute
 {attribute}<br>
 
+
 &nbsp;&nbsp;&nbsp; Attribute to include in the LDIF import<br>
+
 
 -e {attribute}&nbsp; or&nbsp;&nbsp; --excludeAttribute
 {attribute}<br>
 
+
 &nbsp;&nbsp;&nbsp; Attribute to exclude from the LDIF import<br>
 
+
 -I {filter}&nbsp; or&nbsp;&nbsp; --includeFilter {filter}<br>
+
 
 &nbsp;&nbsp;&nbsp; Filter to identify entries to include in
 the LDIF import<br>
 
+
 -E {filter}&nbsp; or&nbsp;&nbsp; --excludeFilter {filter}<br>
+
 
 &nbsp;&nbsp;&nbsp; Filter to identify entries to exclude
 from the LDIF import<br>
+
 
 -R {rejectFile}&nbsp; or&nbsp;&nbsp; --rejectFile
 {rejectFile}<br>
 
+
 &nbsp;&nbsp;&nbsp; Write rejected entries to the specified
 file<br>
 
+
 -O&nbsp; or&nbsp;&nbsp; --overwriteRejects<br>
+
 
 &nbsp;&nbsp;&nbsp; Overwrite an existing rejects file
 rather than appending to<br>
 
+
 &nbsp; &nbsp; it<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-S
 {seed}&nbsp; or&nbsp;&nbsp; --randomSeed {seed}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Seed for the MakeLDIF random number
 generator<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-s&nbsp;
 or&nbsp;&nbsp; --skipSchemaValidation</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Skip schema validation during the LDIF
 import<br>
 
+
 -c&nbsp; or&nbsp;&nbsp; --isCompressed<br>
+
 
 &nbsp;&nbsp;&nbsp; LDIF file is compressed<br>
 
+
 -y&nbsp; or&nbsp;&nbsp; --isEncrypted<br>
+
 
 &nbsp;&nbsp;&nbsp; LDIF file is encrypted<br>
 
+
 -q&nbsp; or&nbsp;&nbsp; --quiet<br>
+
 
 &nbsp;&nbsp;&nbsp; Use quiet mode (no output)<br>
 
+
 -H&nbsp; or&nbsp;&nbsp; --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information.<br>
 
+
       </td>
 
+
       <td style="width: 551px;" valign="top"><big><big style="font-weight: bold;">import-ldif </big></big><br>
+
 
 This utility may be used to import LDIF data into a Directory Server
 backend.<br>
 
+
 Usage:&nbsp; import-ldif {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -l, --ldifFile {ldifFile}<br>
+
 
 &nbsp;&nbsp;&nbsp; Path to the LDIF file to be imported<br>
 
+
 -t, --templateFile {templateFile}<br>
+
 
 &nbsp;&nbsp;&nbsp; Path to a MakeLDIF template to use to
 generate the import<br>
 
+
 &nbsp; &nbsp; data<br>
 
+
 -a, --append<br>
+
 
 &nbsp;&nbsp;&nbsp; Append to an existing database rather
 than overwriting it<br>
 
+
 -r, --replaceExisting<br>
+
 
 &nbsp;&nbsp;&nbsp; Replace existing entries when appending
 to the database<br>
 
+
 -n, --backendID {backendID}<br>
+
 
 &nbsp;&nbsp;&nbsp; Backend ID for the backend to import<br>
 
+
 -b, --includeBranch {branchDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Base DN of a branch to include in the
 LDIF import<br>
 
+
 -B, --excludeBranch {branchDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Base DN of a branch to exclude from the
 LDIF import<br>
 
+
 -i, --includeAttribute {attribute}<br>
+
 
 &nbsp;&nbsp;&nbsp; Attribute to include in the LDIF import<br>
 
+
 -e, --excludeAttribute {attribute}<br>
+
 
 &nbsp;&nbsp;&nbsp; Attribute to exclude from the LDIF import<br>
 
+
 -I, --includeFilter {filter}<br>
+
 
 &nbsp;&nbsp;&nbsp; Filter to identify entries to include in
 the LDIF import<br>
 
+
 -E, --excludeFilter {filter}<br>
+
 
 &nbsp;&nbsp;&nbsp; Filter to identify entries to exclude
 from the LDIF import<br>
 
+
 -R, --rejectFile {rejectFile}<br>
+
 
 &nbsp;&nbsp;&nbsp; Write rejected entries to the specified
 file<br>
 
+
 -O, --overwriteRejects<br>
+
 
 &nbsp;&nbsp;&nbsp; Overwrite an existing rejects file
 rather than appending to<br>
 
+
 &nbsp; &nbsp; it<br>
+
 
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-s</span>,
 --randomSeed {seed}<br>
 
+
 &nbsp;&nbsp;&nbsp; Seed for the MakeLDIF random number
 generator<br>
+
 
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-S</span>,
 --skipSchemaValidation<br>
 
+
 &nbsp;&nbsp;&nbsp; Skip schema validation during the LDIF
 import<br>
 
+
 -c, --isCompressed<br>
+
 
 &nbsp;&nbsp;&nbsp; LDIF file is compressed<br>
 
+
 -y, --isEncrypted<br>
+
 
 &nbsp;&nbsp;&nbsp; LDIF file is encrypted<br>
 
+
 -q, --quiet<br>
+
 
 &nbsp;&nbsp;&nbsp; Use quiet mode (no output)<br>
 
+
 -H, --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information.<br>
 
+
       </td>
+
 
     </tr>
 
+
     <tr>
 
+
       <td style="width: 557px;" valign="top"><big><big style="font-weight: bold;">ldapcompare</big></big><br>
+
 
 This utility may be used to perform LDAP compare operations in the
 Directory Server.<br>
 
+
 Usage:&nbsp; ldapcompare {options}&nbsp; 'attribute:value' "DN"
 ...<br>
 
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-h
 {host}&nbsp; or&nbsp;&nbsp; --host {host}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server hostname or IP address<br>
+
 
 -p {port}&nbsp; or&nbsp;&nbsp; --port {port}<br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server port number<br>
 
+
 -Z&nbsp; or&nbsp;&nbsp; --useSSL<br>
+
 
 &nbsp;&nbsp;&nbsp; Use SSL for secure communication with
 the server<br>
 
+
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-q&nbsp;
 or&nbsp;&nbsp; --startTLS</span><br>
+
 
 &nbsp;&nbsp;&nbsp; Use StartTLS to secure communication
 with the server<br>
 
+
 -D {bindDN}&nbsp; or&nbsp;&nbsp; --bindDN {bindDN}<br>
 
+
 &nbsp;&nbsp;&nbsp; Bind DN<br>
+
 
 -w {bindPassword}&nbsp; or&nbsp;&nbsp; --bindPassword
 {bindPassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Bind password<br>
+
 
 -j {bindPasswordFilename}&nbsp; or&nbsp;&nbsp;
 --bindPasswordFile {bindPasswordFilename}<br>
 
+
 &nbsp;&nbsp;&nbsp; Bind password file<br>
 
+
 -f {filename}&nbsp; or&nbsp;&nbsp; --filename {filename}<br>
+
 
 &nbsp;&nbsp;&nbsp; File containing the DNs of the entries
 to compare<br>
 
+
 -r&nbsp; or&nbsp;&nbsp; --useSASLExternal<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the SASL EXTERNAL authentication
 mechanism<br>
 
+
 -o {name=value}&nbsp; or&nbsp;&nbsp; --saslOption
 {name=value}<br>
 
+
 &nbsp;&nbsp;&nbsp; SASL bind options<br>
+
 
 -X&nbsp; or&nbsp;&nbsp; --trustAll<br>
 
+
 &nbsp;&nbsp;&nbsp; Trust all server SSL certificates<br>
+
 
 -K {keyStorePath}&nbsp; or&nbsp;&nbsp; --keyStorePath
 {keyStorePath}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore path<br>
+
 
 -W {keyStorePassword}&nbsp; or&nbsp;&nbsp;
 --keyStorePassword {keyStorePassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">--keyStorePasswordFile
 {path}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN file<br>
 
+
 -N {nickname}&nbsp; or&nbsp;&nbsp; --certNickname {nickname}<br>
+
 
 &nbsp;&nbsp;&nbsp; Nickname of certificate for SSL client
 authentication<br>
 
+
 -P {trustStorePath}&nbsp; or&nbsp;&nbsp; --trustStorePath
 {trustStorePath}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store path<br>
+
 
 --trustStorePassword {trustStorePassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">--trustStorePasswordFile
 {path}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN file<br>
 
+
 --assertionFilter {filter}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the LDAP assertion control with the
 provided filter<br>
 
+
 -J {controloid[:criticality[:value|::b64value|:&lt;filePath]]}<br>
+
 
 or&nbsp;&nbsp; --control
 {controloid[:criticality[:value|::b64value|:&lt;filePath]]}<br>
 
+
 &nbsp;&nbsp;&nbsp; Use a request control with the provided
 information<br>
 
+
 -V {version}&nbsp; or&nbsp;&nbsp; --version {version}<br>
+
 
 &nbsp;&nbsp;&nbsp; LDAP protocol version number<br>
 
+
 -i {encoding}&nbsp; or&nbsp;&nbsp; --encoding {encoding}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the specified character set for
 command-line input<br>
 
+
 -c&nbsp; or&nbsp;&nbsp; --continueOnError<br>
+
 
 &nbsp;&nbsp;&nbsp; Continue processing even if there are
 errors<br>
 
+
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-n&nbsp;
 or&nbsp;&nbsp; --noop</span><br>
+
 
 &nbsp;&nbsp;&nbsp; Show what would be done but do not
 perform any operation<br>
 
+
 -v&nbsp; or&nbsp;&nbsp; --verbose<br>
+
 
 &nbsp;&nbsp;&nbsp; Use verbose mode<br>
 
+
 -H&nbsp; or&nbsp;&nbsp; --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information<br>
 
+
       </td>
 
+
       <td style="width: 551px;" valign="top"><big><big style="font-weight: bold;">ldapcompare</big></big><br>
+
 
 This utility may be used to perform LDAP compare operations in the
 Directory Server.<br>
 
+
 Usage:&nbsp; ldapcompare {options}&nbsp; 'attribute:value' "DN"
 ...<br>
 
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
+
 
 -h, <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">--hostname</span>
 {host}<br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server hostname or IP address<br>
+
 
 -p, --port {port}<br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server port number<br>
 
+
 -Z, --useSSL<br>
+
 
 &nbsp;&nbsp;&nbsp; Use SSL for secure communication with
 the server<br>
 
+
 -q, <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">--useStartTLS</span><br>
+
 
 &nbsp;&nbsp;&nbsp; Use StartTLS to secure communication
 with the server<br>
 
+
 -D, --bindDN {bindDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the DN to use to bind to the
 server.<br>
 
+
 -w, --bindPassword {bindPassword}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the password to use to bind to
 the server<br>
 
+
 -j, --bindPasswordFile {bindPasswordFile}<br>
+
 
 &nbsp;&nbsp;&nbsp; Bind password file<br>
 
+
 -f, --filename {filemane}<br>
+
 
 &nbsp;&nbsp;&nbsp; File containing the DNs of the entries
 to compare<br>
 
+
 -r, --useSASLExternal<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the SASL EXTERNAL authentication
 mechanism<br>
 
+
 -o, --saslOption {name=value}<br>
+
 
 &nbsp;&nbsp;&nbsp; SASL bind options<br>
 
+
 -X, --trustAll<br>
+
 
 &nbsp;&nbsp;&nbsp; Trust all server SSL certificates<br>
 
+
 -K, --keyStorePath {keyStorePath}<br>
+
 
 &nbsp;&nbsp;&nbsp; Certificate keystore path<br>
 
+
 -W, --keyStorePassword {keyStorePassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN<br>
+
 
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-u</span>,
 --keyStorePasswordFile&nbsp; {path}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN file<br>
 
+
 -N, --certNickname {nickname}<br>
+
 
 &nbsp;&nbsp;&nbsp; Nickname of certificate for SSL client
 authentication<br>
 
+
 -P, --trustStorePath {trustStorePath}<br>
+
 
 &nbsp;&nbsp;&nbsp; Certificate trust store path<br>
 
+
 --trustStorePassword {trustStorePassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN<br>
+
 
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-U</span>,
 --TrustStorePasswordFile&nbsp; {path}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN file<br>
 
+
 --assertionFilter {filter}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the LDAP assertion control with the
 provided filter<br>
 
+
 -J, --control
 {controloid[:criticality[:value|::b64value|:&lt;filePath]]}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use a request control with the provided
 information<br>
 
+
       <br>
+
 
 -V, --version {version}<br>
 
+
 &nbsp;&nbsp;&nbsp; LDAP protocol version number<br>
 
+
 -i, --encoding {encoding}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the specified character set for
 command-line input<br>
 
+
 -c, --continueOnError<br>
+
 
 &nbsp;&nbsp;&nbsp; Continue processing even if there are
 errors<br>
 
+
 -n, <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-<span style="font-weight: bold;">-dry-run</span></span><br>
+
 
 &nbsp;&nbsp;&nbsp; Show what would be done but do not
 perform any operation<br>
 
+
 -v, --verbose<br>
+
 
 &nbsp;&nbsp;&nbsp; Use verbose mode<br>
 
+
 -H, --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information.<br>
 
+
       </td>
+
 
     </tr>
 
+
     <tr>
 
+
       <td style="width: 557px;" valign="top"><big style="font-weight: bold;"><big>ldapdelete</big></big><br>
+
 
 This utility may be used to perform LDAP delete operations in the
 Directory Server.<br>
 
+
 Usage:&nbsp; ldapdelete {options} "DN"<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-h
 {host}&nbsp; or&nbsp;&nbsp; --host {host}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server hostname or IP address<br>
+
 
 -p {port}&nbsp; or&nbsp;&nbsp; --port {port}<br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server port number<br>
 
+
 -Z&nbsp; or&nbsp;&nbsp; --useSSL<br>
+
 
 &nbsp;&nbsp;&nbsp; Use SSL for secure communication with
 the server<br>
 
+
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-q&nbsp;
 or&nbsp;&nbsp; --startTLS</span><br>
+
 
 &nbsp;&nbsp;&nbsp; Use StartTLS to secure communication
 with the server<br>
 
+
 -D {bindDN}&nbsp; or&nbsp;&nbsp; --bindDN {bindDN}<br>
 
+
 &nbsp;&nbsp;&nbsp; Bind DN<br>
+
 
 -w {bindPassword}&nbsp; or&nbsp;&nbsp; --bindPassword
 {bindPassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Bind password<br>
+
 
 -j {bindPasswordFilename}&nbsp; or&nbsp;&nbsp;
 --bindPasswordFile {bindPasswordFilename}<br>
 
+
 &nbsp;&nbsp;&nbsp; Bind password file<br>
 
+
 -f {filename}&nbsp; or&nbsp;&nbsp; --filename {filename}<br>
+
 
 &nbsp;&nbsp;&nbsp; File containing the DNs of the entries
 to delete<br>
 
+
 -r&nbsp; or&nbsp;&nbsp; --useSASLExternal<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the SASL EXTERNAL authentication
 mechanism<br>
 
+
 -o {name=value}&nbsp; or&nbsp;&nbsp; --saslOption
 {name=value}<br>
 
+
 &nbsp;&nbsp;&nbsp; SASL bind options<br>
+
 
 -X&nbsp; or&nbsp;&nbsp; --trustAll<br>
 
+
 &nbsp;&nbsp;&nbsp; Trust all server SSL certificates<br>
+
 
 -K {keyStorePath}&nbsp; or&nbsp;&nbsp; --keyStorePath
 {keyStorePath}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore path<br>
+
 
 -W {keyStorePassword}&nbsp; or&nbsp;&nbsp;
 --keyStorePassword {keyStorePassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">--keyStorePasswordFile
 {path}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN file<br>
 
+
 -N {nickname}&nbsp; or&nbsp;&nbsp; --certNickname {nickname}<br>
+
 
 &nbsp;&nbsp;&nbsp; Nickname of certificate for SSL client
 authentication<br>
 
+
 -P {trustStorePath}&nbsp; or&nbsp;&nbsp; --trustStorePath
 {trustStorePath}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store path<br>
+
 
 --trustStorePassword {trustStorePassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">--trustStorePasswordFile
 {path}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN file<br>
 
+
 -x&nbsp; or&nbsp;&nbsp; --deleteSubtree<br>
+
 
 &nbsp;&nbsp;&nbsp; Delete the specified entry and all
 entries below it<br>
 
+
 -J {controloid[:criticality[:value|::b64value|:&lt;fileurl]]}<br>
+
 
 or&nbsp;&nbsp; --control
 {controloid[:criticality[:value|::b64value|:&lt;fileurl]]}<br>
 
+
 &nbsp;&nbsp;&nbsp; Use a request control with the provided
 information<br>
 
+
 -V {version}&nbsp; or&nbsp;&nbsp; --version {version}<br>
+
 
 &nbsp;&nbsp;&nbsp; LDAP protocol version number<br>
 
+
 -i {encoding}&nbsp; or&nbsp;&nbsp; --encoding {encoding}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the specified character set for
 command-line input<br>
 
+
 -c&nbsp; or&nbsp;&nbsp; --continueOnError<br>
+
 
 &nbsp;&nbsp;&nbsp; Continue processing even if there are
 errors<br>
 
+
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-n&nbsp;
 or&nbsp;&nbsp; --noop</span><br>
+
 
 &nbsp;&nbsp;&nbsp; Show what would be done but do not
 perform any operation<br>
 
+
 -v&nbsp; or&nbsp;&nbsp; --verbose<br>
+
 
 &nbsp;&nbsp;&nbsp; Use verbose mode<br>
 
+
 -H&nbsp; or&nbsp;&nbsp; --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information<br>
 
+
       </td>
 
+
       <td style="width: 551px;" valign="top"><big style="font-weight: bold;"><big>ldapdelete</big></big><br>
+
 
 This utility may be used to perform LDAP delete operations in the
 Directory Server.<br>
 
+
 Usage:&nbsp; ldapdelete {options} "DN"<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
+
 
 -h, <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">--hostname</span><span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">
       </span>{host}<br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server hostname or IP address<br>
+
 
 -p, --port {port}<br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server port number<br>
 
+
 -Z, --useSSL<br>
+
 
 &nbsp;&nbsp;&nbsp; Use SSL for secure communication with
 the server<br>
 
+
 -q, <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">--useStartTLS</span><br>
+
 
 &nbsp;&nbsp;&nbsp; Use StartTLS to secure communication
 with the server<br>
 
+
 -D, --bindDN {bindDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the DN to use to bind to the
 server.<br>
 
+
 -w, --bindPassword {bindPassword}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the password to use to bind to
 the server<br>
 
+
 -j, --bindPasswordFile {bindPasswordFile}<br>
+
 
 &nbsp;&nbsp;&nbsp; Bind password file<br>
 
+
 -f, --filename {filemane}<br>
+
 
 &nbsp;&nbsp;&nbsp; File containing the DNs of the entries
 to delete<br>
 
+
 -r, --useSASLExternal<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the SASL EXTERNAL authentication
 mechanism<br>
 
+
 -o, --saslOption {name=value}<br>
+
 
 &nbsp;&nbsp;&nbsp; SASL bind options<br>
 
+
 -X, --trustAll<br>
+
 
 &nbsp;&nbsp;&nbsp; Trust all server SSL certificates<br>
 
+
 -K, --keyStorePath {keyStorePath}<br>
+
 
 &nbsp;&nbsp;&nbsp; Certificate keystore path<br>
 
+
 -W, --keyStorePassword {keyStorePassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN<br>
+
 
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-u</span>,
 --keyStorePasswordFile&nbsp; {path}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN file<br>
 
+
 -N, --certNickname {nickname}<br>
+
 
 &nbsp;&nbsp;&nbsp; Nickname of certificate for SSL client
 authentication<br>
 
+
 -P, --trustStorePath {trustStorePath}<br>
+
 
 &nbsp;&nbsp;&nbsp; Certificate trust store path<br>
 
+
 --trustStorePassword {trustStorePassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN<br>
+
 
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-U</span>,
 --TrustStorePasswordFile&nbsp; {path}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN file<br>
 
+
 -x, --deleteSubtree<br>
+
 
 &nbsp;&nbsp;&nbsp; Delete the specified entry and all
 entries below it<br>
 
+
 -J, --control
 {controloid[:criticality[:value|::b64value|:&lt;fileurl]]}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use a request control with the provided
 information<br>
 
+
       <br>
+
 
 -V, --version {version}<br>
 
+
 &nbsp;&nbsp;&nbsp; LDAP protocol version number<br>
 
+
 -i, --encoding {encoding}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the specified character set for
 command-line input<br>
 
+
 -c, --continueOnError<br>
+
 
 &nbsp;&nbsp;&nbsp; Continue processing even if there are
 errors<br>
 
+
 -n, <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">--dry-run</span><br>
+
 
 &nbsp;&nbsp;&nbsp; Show what would be done but do not
 perform any operation<br>
 
+
 -v, --verbose<br>
+
 
 &nbsp;&nbsp;&nbsp; Use verbose mode<br>
 
+
 -H, --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information.<br>
 
+
       </td>
+
 
     </tr>
 
+
     <tr>
 
+
       <td style="width: 557px;" valign="top"><big><big><span style="font-weight: bold;">ldapmodify</span></big></big><br>
+
 
 This utility may be used to perform LDAP modify, add, delete, and
 modify DN<br>
 
+
 operations in the Directory Server.<br>
 
+
 Usage:&nbsp; ldapmodify {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-h
 {host}&nbsp; or&nbsp;&nbsp; --host {host}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server hostname or IP address<br>
+
 
 -p {port}&nbsp; or&nbsp;&nbsp; --port {port}<br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server port number<br>
 
+
 -Z&nbsp; or&nbsp;&nbsp; --useSSL<br>
+
 
 &nbsp;&nbsp;&nbsp; Use SSL for secure communication with
 the server<br>
 
+
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-q&nbsp;
 or&nbsp;&nbsp; --startTLS</span><br>
+
 
 &nbsp;&nbsp;&nbsp; Use StartTLS to secure communication
 with the server<br>
 
+
 -D {bindDN}&nbsp; or&nbsp;&nbsp; --bindDN {bindDN}<br>
 
+
 &nbsp;&nbsp;&nbsp; Bind DN<br>
+
 
 -w {bindPassword}&nbsp; or&nbsp;&nbsp; --bindPassword
 {bindPassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Bind password<br>
+
 
 -j {bindPasswordFilename}&nbsp; or&nbsp;&nbsp;
 --bindPasswordFile {bindPasswordFilename}<br>
 
+
 &nbsp;&nbsp;&nbsp; Bind password file<br>
 
+
 -a&nbsp; or&nbsp;&nbsp; --defaultAdd<br>
+
 
 &nbsp;&nbsp;&nbsp; Treat records with no changetype as add
 operations<br>
 
+
 -f {filename}&nbsp; or&nbsp;&nbsp; --filename {filename}<br>
+
 
 &nbsp;&nbsp;&nbsp; File containing the DNs of the entries
 to delete<br>
 
+
 -r&nbsp; or&nbsp;&nbsp; --useSASLExternal<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the SASL EXTERNAL authentication
 mechanism<br>
 
+
 -o {name=value}&nbsp; or&nbsp;&nbsp; --saslOption
 {name=value}<br>
 
+
 &nbsp;&nbsp;&nbsp; SASL bind options<br>
+
 
 -X&nbsp; or&nbsp;&nbsp; --trustAll<br>
 
+
 &nbsp;&nbsp;&nbsp; Trust all server SSL certificates<br>
+
 
 -K {keyStorePath}&nbsp; or&nbsp;&nbsp; --keyStorePath
 {keyStorePath}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore path<br>
+
 
 -W {keyStorePassword}&nbsp; or&nbsp;&nbsp;
 --keyStorePassword {keyStorePassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">--keyStorePasswordFile
 {path}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN file<br>
 
+
 -N {nickname}&nbsp; or&nbsp;&nbsp; --certNickname {nickname}<br>
+
 
 &nbsp;&nbsp;&nbsp; Nickname of certificate for SSL client
 authentication<br>
 
+
 -P {trustStorePath}&nbsp; or&nbsp;&nbsp; --trustStorePath
 {trustStorePath}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store path<br>
+
 
 --trustStorePassword {trustStorePassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">--trustStorePasswordFile
 {path}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN file<br>
 
+
 -Y {authzID}&nbsp; or&nbsp;&nbsp; --proxyAs {authzID}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the proxied authorization control
 with the given authorization ID<br>
 
+
 -E&nbsp; or&nbsp;&nbsp; --reportAuthzID<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the authorization identity control<br>
 
+
 --assertionFilter {filter}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the LDAP assertion control with the
 provided filter<br>
 
+
 --preReadAttributes {attrList}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the LDAP ReadEntry pre-read control<br>
 
+
 --postReadAttributes {attrList}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the LDAP ReadEntry post-read control<br>
 
+
 -J {controloid[:criticality[:value|::b64value|:&lt;fileurl]]}<br>
+
 
 or&nbsp;&nbsp; --control
 {controloid[:criticality[:value|::b64value|:&lt;fileurl]]}<br>
 
+
 &nbsp;&nbsp;&nbsp; Use a request control with the provided
 information<br>
 
+
 -V {version}&nbsp; or&nbsp;&nbsp; --version {version}<br>
+
 
 &nbsp;&nbsp;&nbsp; LDAP protocol version number<br>
 
+
 -i {encoding}&nbsp; or&nbsp;&nbsp; --encoding {encoding}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the specified character set for
 command-line input<br>
 
+
 -c&nbsp; or&nbsp;&nbsp; --continueOnError<br>
+
 
 &nbsp;&nbsp;&nbsp; Continue processing even if there are
 errors<br>
 
+
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-n&nbsp;
 or&nbsp;&nbsp; --noop</span><br>
+
 
 &nbsp;&nbsp;&nbsp; Show what would be done but do not
 perform any operation<br>
 
+
 -v&nbsp; or&nbsp;&nbsp; --verbose<br>
+
 
 &nbsp;&nbsp;&nbsp; Use verbose mode<br>
 
+
 -H&nbsp; or&nbsp;&nbsp; --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information</td>
 
+
       <td style="width: 551px;" valign="top"><big><big><span style="font-weight: bold;">ldapmodify</span></big></big><br>
+
 
 This utility may be used to perform LDAP modify, add, delete, and
 modify DN operations in the Directory Server.<br>
 
+
 Usage:&nbsp; ldapmodify {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -h, <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">--hostname</span>
 {host}<br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server hostname or IP address<br>
+
 
 -p, --port {port}<br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server port number<br>
 
+
 -Z, --useSSL<br>
+
 
 &nbsp;&nbsp;&nbsp; Use SSL for secure communication with
 the server<br>
 
+
 -q, <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">--useStartTLS</span><br>
+
 
 &nbsp;&nbsp;&nbsp; Use StartTLS to secure communication
 with the server<br>
 
+
 -D, --bindDN {bindDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the DN to use to bind to the
 server.<br>
 
+
 -w, --bindPassword {bindPassword}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the password to use to bind to
 the server<br>
 
+
 -j, --bindPasswordFile {bindPasswordFile}<br>
+
 
 &nbsp;&nbsp;&nbsp; Bind password file<br>
 
+
 -a, --defaultAdd<br>
+
 
 &nbsp;&nbsp;&nbsp; Treat records with no changetype as add
 operations<br>
 
+
 -f, --filename {filemane}<br>
+
 
 &nbsp;&nbsp;&nbsp; File containing the DNs of the entries
 to delete<br>
 
+
 -r, --useSASLExternal<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the SASL EXTERNAL authentication
 mechanism<br>
 
+
 -o, --saslOption {name=value}<br>
+
 
 &nbsp;&nbsp;&nbsp; SASL bind options<br>
 
+
 -X, --trustAll<br>
+
 
 &nbsp;&nbsp;&nbsp; Trust all server SSL certificates<br>
 
+
 -K, --keyStorePath {keyStorePath}<br>
+
 
 &nbsp;&nbsp;&nbsp; Certificate keystore path<br>
 
+
 -W, --keyStorePassword {keyStorePassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN<br>
+
 
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-u</span>,
 --keyStorePasswordFile&nbsp; {path}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN file<br>
 
+
 -N, --certNickname {nickname}<br>
+
 
 &nbsp;&nbsp;&nbsp; Nickname of certificate for SSL client
 authentication<br>
 
+
 -P, --trustStorePath {trustStorePath}<br>
+
 
 &nbsp;&nbsp;&nbsp; Certificate trust store path<br>
 
+
 --trustStorePassword {trustStorePassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN<br>
+
 
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-U</span>,
 --TrustStorePasswordFile&nbsp; {path}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN file<br>
 
+
 -Y, --proxyAs {authzID}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the proxied authorization control
 with the given authorization ID<br>
 
+
 -E, --reportAuthzID<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the authorization identity control<br>
 
+
 --assertionFilter {filter}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the LDAP assertion control with the
 provided filter<br>
 
+
 --preReadAttributes {attrList}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the LDAP ReadEntry pre-read control<br>
 
+
 --postReadAttributes {attrList}<br>
 
+
 &nbsp;&nbsp;&nbsp; Use the LDAP ReadEntry post-read control<br>
+
 
 -J, --control
 {controloid[:criticality[:value|::b64value|:&lt;fileurl]]}<br>
 
+
 &nbsp;&nbsp;&nbsp; Use a request control with the provided
 information<br>
 
+
       <br>
+
 
 -V, --version {version}<br>
 
+
 &nbsp;&nbsp;&nbsp; LDAP protocol version number<br>
 
+
 -i, --encoding {encoding}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the specified character set for
 command-line input<br>
 
+
 -c, --continueOnError<br>
+
 
 &nbsp;&nbsp;&nbsp; Continue processing even if there are
 errors<br>
 
+
 -n, <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">--dry-run</span><br>
+
 
 &nbsp;&nbsp;&nbsp; Show what would be done but do not
 perform any operation<br>
 
+
 -v, --verbose<br>
+
 
 &nbsp;&nbsp;&nbsp; Use verbose mode<br>
 
+
 -H, --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information.</td>
 
+
     </tr>
 
+
     <tr>
+
 
       <td style="width: 557px;" valign="top"><big><big><span style="font-weight: bold;">ldappasswordmodify</span></big></big>
       <br>
 
+
 This utility may be used to perform LDAP password modify operations in
 the<br>
 
+
 Directory Server.<br>
+
 
 Usage:&nbsp; ldappasswordmodify {options}<br>
 
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-h
 {host}&nbsp; or&nbsp;&nbsp; --ldapHost {host}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Specifies the address of the Directory
 Server system.<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-p
 {port}&nbsp; or&nbsp;&nbsp; --ldapPort {port}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Specifies the port in which the
 Directory Server is listening for LDAP<br>
 
+
 &nbsp;&nbsp;&nbsp; client connections.<br>
 
+
 -Z&nbsp; or&nbsp;&nbsp; --useSSL<br>
+
 
 &nbsp;&nbsp;&nbsp; Use SSL to secure the communication with
 the Directory Server.<br>
 
+
 -q&nbsp; or&nbsp;&nbsp; --useStartTLS<br>
+
 
 &nbsp;&nbsp;&nbsp; Use StartTLS to secure the communication
 with the Directory Server.<br>
 
+
 -D {bindDN}&nbsp; or&nbsp;&nbsp; --bindDN {bindDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the DN to use to bind to the
 server.<br>
 
+
 -w {bindDN}&nbsp; or&nbsp;&nbsp; --bindPassword {bindDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the password to use to bind to
 the server.<br>
 
+
 -j {file}&nbsp; or&nbsp;&nbsp; --bindPasswordFile {file}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the path to a file containing
 the password to use to bind to the<br>
 
+
 &nbsp;&nbsp;&nbsp; server.<br>
 
+
 -a {authzID}&nbsp; or&nbsp;&nbsp; --authzID {authzID}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the authorization ID for the
 user entry whose password should be<br>
 
+
 &nbsp;&nbsp;&nbsp; changed.<br>
 
+
 -A&nbsp; or&nbsp;&nbsp; --provideDNForAuthzID<br>
+
 
 &nbsp;&nbsp;&nbsp; Indicates that the bind DN should be
 used as the authorization ID for the<br>
 
+
 &nbsp;&nbsp;&nbsp; password modify operation.<br>
+
 
 -n {newPassword}&nbsp; or&nbsp;&nbsp; --newPassword
 {newPassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Specifies the new password to provide
 for the target user.<br>
 
+
 -N {file}&nbsp; or&nbsp;&nbsp; --newPasswordFile {file}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the path to a file containing
 the new password to provide for the<br>
 
+
 &nbsp;&nbsp;&nbsp; target user.<br>
+
 
 -c {currentPassword}&nbsp; or&nbsp;&nbsp; --currentPassword
 {currentPassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Specifies the current password for the
 target user.<br>
 
+
 -C {file}&nbsp; or&nbsp;&nbsp; --currentPasswordFile {file}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the path to a file containing
 the current password for the target<br>
 
+
 &nbsp;&nbsp;&nbsp; user.<br>
 
+
 -X&nbsp; or&nbsp;&nbsp; --trustAll<br>
+
 
 &nbsp;&nbsp;&nbsp; Blindly trust any SSL certificate
 presented by the server.<br>
 
+
 -K {keyStorePath}&nbsp; or&nbsp;&nbsp; --keyStorePath
 {keyStorePath}<br>
+
 
 &nbsp;&nbsp;&nbsp; The path to the keystore to use when
 establishing SSL/TLS communication<br>
 
+
 &nbsp;&nbsp;&nbsp; with the server.<br>
+
 
 -W {password}&nbsp; or&nbsp;&nbsp; --keyStorePassword
 {password}<br>
 
+
 &nbsp;&nbsp;&nbsp; The PIN needed to access the contents of
 the keystore.<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">--keyStorePasswordFile
 {path}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; The path to a file containing the PIN
 needed to access the contents of the<br>
 
+
 &nbsp;&nbsp;&nbsp; keystore.<br>
+
 
 -P {trustStorePath}&nbsp; or&nbsp;&nbsp; --trustStorePath
 {trustStorePath}<br>
 
+
 &nbsp;&nbsp;&nbsp; The path to the trust store to use when
 establishing SSL/TLS communication<br>
 
+
 &nbsp;&nbsp;&nbsp; with the server.<br>
 
+
 --trustStorePassword {password}<br>
+
 
 &nbsp;&nbsp;&nbsp; The PIN needed to access the contents of
 the trust store.<br>
 
+
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">--trustStorePasswordFile
 {path}</span><br>
+
 
 &nbsp;&nbsp;&nbsp; The path to a file containing the PIN
 needed to accessthe contents of the<br>
 
+
 &nbsp;&nbsp;&nbsp; trust store.<br>
 
+
 -J {controloid[:criticality[:value|::b64value|:&lt;fileurl]]}<br>
+
 
 or&nbsp;&nbsp; --control
 {controloid[:criticality[:value|::b64value|:&lt;fileurl]]}<br>
 
+
 &nbsp;&nbsp;&nbsp; Use a request control with the provided
 information<br>
 
+
 -H&nbsp; or&nbsp;&nbsp; --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Show this usage information.</td>
 
+
       <td style="width: 551px;" valign="top"><big><big><span style="font-weight: bold;">ldappasswordmodify </span></big></big><br>
+
 
 This utility may be used to perform LDAP password modify operations in
 the<br>
 
+
 Directory Server.<br>
 
+
 Usage:&nbsp; ldappasswordmodify {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -h, <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">--hostname</span>
 {host}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the address of the Directory
 Server system.<br>
 
+
 -p, <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">--port</span>
 {port}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the port in which the
 Directory Server is listening for LDAP<br>
 
+
 &nbsp;&nbsp;&nbsp; client connections.<br>
 
+
 -Z, --useSSL<br>
+
 
 &nbsp;&nbsp;&nbsp; Use SSL to secure the communication with
 the Directory Server.<br>
 
+
 -q, --useStartTLS<br>
+
 
 &nbsp;&nbsp;&nbsp; Use StartTLS to secure the communication
 with the Directory Server.<br>
 
+
 -D, --bindDN {bindDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the DN to use to bind to the
 server.<br>
 
+
 -w, --bindPassword {bindPassword}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the password to use to bind to
 the server.<br>
 
+
 -j, --bindPasswordFile {bindPasswordFile}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the path to a file containing
 the password to use to bind to<br>
 
+
 &nbsp; &nbsp; the server.<br>
 
+
 -a, --authzID {authzID}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the authorization ID for the
 user entry whose password should be<br>
 
+
 &nbsp;&nbsp;&nbsp; changed.<br>
 
+
 -A, --provideDNForAuthzID<br>
+
 
 &nbsp;&nbsp;&nbsp; Indicates that the bind DN should be
 used as the authorization ID for the<br>
 
+
 &nbsp;&nbsp;&nbsp; password modify operation.<br>
 
+
 -n, --newPassword {newPassword}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the new password to provide
 for the target user.<br>
 
+
 -N, --newPasswordFile {file}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the path to a file containing
 the new password to provide for<br>
 
+
 &nbsp; &nbsp; the target user.<br>
 
+
 -c, --currentPassword {currentPassword}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the current password for the
 target user.<br>
 
+
 -C, --currentPasswordFile {file}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the path to a file containing
 the current password for the<br>
 
+
 &nbsp; &nbsp; target&nbsp; user.<br>
 
+
 -X, --trustAll<br>
+
 
 &nbsp;&nbsp;&nbsp; Blindly trust any SSL certificate
 presented by the server.<br>
 
+
 -K, --keyStorePath {keyStorePath}<br>
+
 
 &nbsp;&nbsp;&nbsp; The path to the keystore to use when
 establishing SSL/TLS communication<br>
 
+
 &nbsp;&nbsp;&nbsp; with the server.<br>
 
+
 -W, --keyStorePassword {keyStorePassword}<br>
+
 
 &nbsp;&nbsp;&nbsp; The PIN needed to access the contents of
 the keystore.<br>
 
+
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-u</span>,
 --keyStorePasswordFile&nbsp; {path}<br>
+
 
 &nbsp;&nbsp;&nbsp; The path to a file containing the PIN
 needed to access the contents of the<br>
 
+
 &nbsp;&nbsp;&nbsp; keystore.<br>
 
+
 -P, --trustStorePath {trustStorePath}<br>
+
 
 &nbsp;&nbsp;&nbsp; The path to the trust store to use when
 establishing SSL/TLS communication<br>
 
+
 &nbsp;&nbsp;&nbsp; with the server.<br>
 
+
 --trustStorePassword {trustStorePassword}<br>
+
 
 &nbsp;&nbsp;&nbsp; The PIN needed to access the contents of
 the trust store.<br>
 
+
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-U</span>,
 --TrustStorePasswordFile&nbsp; {path}<br>
+
 
 &nbsp;&nbsp;&nbsp; The path to a file containing the PIN
 needed to accessthe contents of the<br>
 
+
 &nbsp;&nbsp;&nbsp; trust store.<br>
+
 
 -J, --control
 {controloid[:criticality[:value|::b64value|:&lt;fileurl]]}<br>
 
+
 &nbsp;&nbsp;&nbsp; Use a request control with the provided
 information<br>
 
+
       <br>
+
 
 -H, --help<br>
 
+
 &nbsp;&nbsp;&nbsp; Display this usage information.</td>
+
 
     </tr>
 
+
     <tr>
+
 
       <td style="width: 557px;" valign="top"><big><big><span style="font-weight: bold;">ldapsearch</span></big></big>
       <br>
 
+
 This utility may be used to perform LDAP search operations in the
 Directory<br>
 
+
 Server.<br>
 
+
 Usage:&nbsp; ldapsearch {options} [filter] [attributes ...]<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-h
 {host}&nbsp; or&nbsp;&nbsp; --host {host}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server hostname or IP address<br>
+
 
 -p {port}&nbsp; or&nbsp;&nbsp; --port {port}<br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server port number<br>
+
 
 -Z&nbsp; or&nbsp;&nbsp; --useSSL<br>
 
+
 &nbsp;&nbsp;&nbsp; Use SSL for secure communication with
 the server<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-q&nbsp;
 or&nbsp;&nbsp; --startTLS</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Use StartTLS to secure communication
 with the server<br>
 
+
 -D {bindDN}&nbsp; or&nbsp;&nbsp; --bindDN {bindDN}<br>
 
+
 &nbsp;&nbsp;&nbsp; Bind DN<br>
+
 
 -w {bindPassword}&nbsp; or&nbsp;&nbsp; --bindPassword
 {bindPassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Bind password<br>
+
 
 -j {bindPasswordFilename}&nbsp; or&nbsp;&nbsp;
 --bindPasswordFile {bindPasswordFilename}<br>
 
+
 &nbsp;&nbsp;&nbsp; Bind password file<br>
+
 
 -b {baseDN}&nbsp; or&nbsp;&nbsp; --baseDN {baseDN}<br>
 
+
 &nbsp;&nbsp;&nbsp; Search base DN<br>
+
 
 -s {searchScope}&nbsp; or&nbsp;&nbsp; --searchScope
 {searchScope}<br>
 
+
 &nbsp;&nbsp;&nbsp; Search scope ('base', 'one', 'sub', or
 'subordinate')<br>
 
+
 -f {filename}&nbsp; or&nbsp;&nbsp; --filename {filename}<br>
+
 
 &nbsp;&nbsp;&nbsp; File containing a list of search filter
 strings<br>
 
+
 -r&nbsp; or&nbsp;&nbsp; --useSASLExternal<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the SASL EXTERNAL authentication
 mechanism<br>
+
 
 -o {name=value}&nbsp; or&nbsp;&nbsp; --saslOption
 {name=value}<br>
 
+
 &nbsp;&nbsp;&nbsp; SASL bind options<br>
+
 
 -X&nbsp; or&nbsp;&nbsp; --trustAll<br>
 
+
 &nbsp;&nbsp;&nbsp; Trust all server SSL certificates<br>
+
 
 -K {keyStorePath}&nbsp; or&nbsp;&nbsp; --keyStorePath
 {keyStorePath}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore path<br>
+
 
 -W {keyStorePassword}&nbsp; or&nbsp;&nbsp;
 --keyStorePassword {keyStorePassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">--keyStorePasswordFile
 {path}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN file<br>
+
 
 -N {nickname}&nbsp; or&nbsp;&nbsp; --certNickname {nickname}<br>
 
+
 &nbsp;&nbsp;&nbsp; Nickname of certificate for SSL client
 authentication<br>
+
 
 -P {trustStorePath}&nbsp; or&nbsp;&nbsp; --trustStorePath
 {trustStorePath}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store path<br>
+
 
 --trustStorePassword {trustStorePassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">--trustStorePasswordFile
 {path}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN file<br>
 
+
 -Y {authzID}&nbsp; or&nbsp;&nbsp; --proxyAs {authzID}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the proxied authorization control
 with the given authorization ID<br>
 
+
 -E&nbsp; or&nbsp;&nbsp; --reportAuthzID<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the authorization identity control<br>
 
+
 --usePasswordPolicyControl<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the password policy request control<br>
 
+
 -C ps[:changetype[:changesonly[:entrychgcontrols]]]<br>
+
 
 or&nbsp;&nbsp; --persistentSearch
 ps[:changetype[:changesonly[:entrychgcontrols]]]<br>
 
+
 &nbsp;&nbsp;&nbsp; Use the persistent search control<br>
 
+
 --simplePageSize {numEntries}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the simple paged results control
 with the given page size<br>
 
+
 --assertionFilter {filter}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the LDAP assertion control with the
 provided filter<br>
 
+
 --matchedValuesFilter {filter}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the LDAP matched values control with
 the provided filter<br>
 
+
 -J {controloid[:criticality[:value|::b64value|:&lt;fileurl]]}<br>
+
 
 or&nbsp;&nbsp; --control
 {controloid[:criticality[:value|::b64value|:&lt;fileurl]]}<br>
 
+
 &nbsp;&nbsp;&nbsp; Use a request control with the provided
 information<br>
 
+
 -V {version}&nbsp; or&nbsp;&nbsp; --version {version}<br>
+
 
 &nbsp;&nbsp;&nbsp; LDAP protocol version number<br>
 
+
 -i {encoding}&nbsp; or&nbsp;&nbsp; --encoding {encoding}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the specified character set for
 command-line input<br>
+
 
 -a {dereferencePolicy}&nbsp; or&nbsp;&nbsp;
 --dereferencePolicy {dereferencePolicy}<br>
 
+
 &nbsp;&nbsp;&nbsp; Alias dereference policy ('never',
 'always', 'search', or 'find')<br>
 
+
 -A&nbsp; or&nbsp;&nbsp; --typesOnly<br>
+
 
 &nbsp;&nbsp;&nbsp; Only retrieve attribute names but not
 their values<br>
 
+
 -z {sizeLimit}&nbsp; or&nbsp;&nbsp; --sizeLimit {sizeLimit}<br>
+
 
 &nbsp;&nbsp;&nbsp; Maximum number of entries to return from
 the search<br>
 
+
 -l {timeLimit}&nbsp; or&nbsp;&nbsp; --timeLimit {timeLimit}<br>
+
 
 &nbsp;&nbsp;&nbsp; Maximum length of time in seconds to
 allow for the search<br>
 
+
 -T&nbsp; or&nbsp;&nbsp; --dontWrap<br>
+
 
 &nbsp;&nbsp;&nbsp; Do not wrap long lines<br>
 
+
 --countEntries<br>
+
 
 &nbsp;&nbsp;&nbsp; Count the number of entries returned by
 the server<br>
 
+
 -c&nbsp; or&nbsp;&nbsp; --continueOnError<br>
+
 
 &nbsp;&nbsp;&nbsp; Continue processing even if there are
 errors<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-n&nbsp;
 or&nbsp;&nbsp; --noop</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Show what would be done but do not
 perform any operation<br>
 
+
 -v&nbsp; or&nbsp;&nbsp; --verbose<br>
+
 
 &nbsp;&nbsp;&nbsp; Use verbose mode<br>
 
+
 -H&nbsp; or&nbsp;&nbsp; --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information</td>
 
+
       <td style="width: 551px;" valign="top"><big><big><span style="font-weight: bold;">ldapsearch</span></big></big><br>
+
 
 This utility may be used to perform LDAP search operations in the
 Directory<br>
 
+
 Server.<br>
+
 
 Usage:&nbsp; ldapsearch {options} [filter] [attributes ...]<br>
 
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
+
 
 -h, <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">--hostname</span>
 {host}<br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server hostname or IP address<br>
+
 
 -p, --port {port}<br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server port number<br>
 
+
 -Z, --useSSL<br>
+
 
 &nbsp;&nbsp;&nbsp; Use SSL for secure communication with
 the server<br>
 
+
 -q, <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">--useStartTLS</span><br>
+
 
 &nbsp;&nbsp;&nbsp; Use StartTLS to secure communication
 with the server<br>
 
+
 -D, --bindDN {bindDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the DN to use to bind to the
 server.<br>
 
+
 -w, --bindPassword {bindPassword}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the password to use to bind to
 the server<br>
 
+
 -j, --bindPasswordFile {bindPasswordFile}<br>
+
 
 &nbsp;&nbsp;&nbsp; Bind password file<br>
 
+
 -b, --baseDN {baseDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Search base DN<br>
 
+
 -s, --searchScope {searchScope}<br>
+
 
 &nbsp;&nbsp;&nbsp; Search scope ('base', 'one', 'sub', or
 'subordinate')<br>
 
+
 -f, --filename {filemane}<br>
+
 
 &nbsp;&nbsp;&nbsp; File containing a list of search filter
 strings<br>
 
+
 -r, --useSASLExternal<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the SASL EXTERNAL authentication
 mechanism<br>
 
+
 -o, --saslOption {name=value}<br>
+
 
 &nbsp;&nbsp;&nbsp; SASL bind options<br>
 
+
 -X, --trustAll<br>
+
 
 &nbsp;&nbsp;&nbsp; Trust all server SSL certificates<br>
 
+
 -K, --keyStorePath {keyStorePath}<br>
+
 
 &nbsp;&nbsp;&nbsp; Certificate keystore path<br>
 
+
 -W, --keyStorePassword {keyStorePassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN<br>
+
 
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-u</span>,
 --keyStorePasswordFile&nbsp; {path}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN file<br>
 
+
 -N, --certNickname {nickname}<br>
+
 
 &nbsp;&nbsp;&nbsp; Nickname of certificate for SSL client
 authentication<br>
 
+
 -P, --trustStorePath {trustStorePath}<br>
+
 
 &nbsp;&nbsp;&nbsp; Certificate trust store path<br>
 
+
 --trustStorePassword {trustStorePassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN<br>
+
 
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-U</span>,
 --TrustStorePasswordFile&nbsp; {path}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN file<br>
 
+
 -Y, --proxyAs {authzID}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the proxied authorization control
 with the given authorization ID<br>
 
+
 -E, --reportAuthzID<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the authorization identity control<br>
 
+
 --usePasswordPolicyControl<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the password policy request control<br>
 
+
 -C, --persistentSearch ps[:changetype[:changesonly[:entrychgcontrols]]]<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the persistent search control<br>
 
+
       <br>
 
+
 --simplePageSize {numEntries}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the simple paged results control
 with the given page size<br>
 
+
 --assertionFilter {filter}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the LDAP assertion control with the
 provided filter<br>
 
+
 --matchedValuesFilter {filter}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the LDAP matched values control with
 the provided filter<br>
 
+
 -J, --control
 {controloid[:criticality[:value|::b64value|:&lt;fileurl]]}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use a request control with the provided
 information<br>
 
+
       <br>
+
 
 -V, --version {version}<br>
 
+
 &nbsp;&nbsp;&nbsp; LDAP protocol version number<br>
 
+
 -i, --encoding {encoding}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the specified character set for
 command-line input<br>
 
+
 -a, --dereferencePolicy {dereferencePolicy}<br>
+
 
 &nbsp;&nbsp;&nbsp; Alias dereference policy ('never',
 'always', 'search', or 'find')<br>
 
+
 -A, --typesOnly<br>
+
 
 &nbsp;&nbsp;&nbsp; Only retrieve attribute names but not
 their values<br>
 
+
 -z, --sizeLimit {sizeLimit}<br>
+
 
 &nbsp;&nbsp;&nbsp; Maximum number of entries to return from
 the search<br>
 
+
 -l, --timeLimit {timeLimit}<br>
+
 
 &nbsp;&nbsp;&nbsp; Maximum length of time in seconds to
 allow for the search<br>
 
+
 -T, --dontWrap<br>
+
 
 &nbsp;&nbsp;&nbsp; Do not wrap long lines<br>
 
+
 --countEntries<br>
+
 
 &nbsp;&nbsp;&nbsp; Count the number of entries returned by
 the server<br>
 
+
 -c, --continueOnError<br>
+
 
 &nbsp;&nbsp;&nbsp; Continue processing even if there are
 errors<br>
 
+
 -n, <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">--dry-run</span><br>
+
 
 &nbsp;&nbsp;&nbsp; Show what would be done but do not
 perform any operation<br>
 
+
 -v, --verbose<br>
+
 
 &nbsp;&nbsp;&nbsp; Use verbose mode<br>
 
+
 -H, --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information.</td>
 
+
     </tr>
+
 
     <tr>
 
+
       <td style="width: 557px;" valign="top"><big><big><span style="font-weight: bold;">ldif-diff</span></big></big><br>
+
 
 This utility may be used to compare two LDIF files and report the
 differences<br>
 
+
 in LDIF format.<br>
 
+
 Usage:&nbsp; ldif-diff {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -s {filename}&nbsp; or&nbsp;&nbsp; --sourceLDIF {filename}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the LDIF file to use as the
 source data.<br>
 
+
 -t {filename}&nbsp; or&nbsp;&nbsp; --targetLDIF {filename}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the LDIF file to use as the
 target data.<br>
 
+
 -o {filename}&nbsp; or&nbsp;&nbsp; --outputLDIF {filename}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the file to which the output
 should be written.<br>
 
+
 -O&nbsp; or&nbsp;&nbsp; --overwriteExisting<br>
+
 
 &nbsp;&nbsp;&nbsp; Indicates that any existing output file
 should be overwritten rather than<br>
 
+
 &nbsp;&nbsp;&nbsp; appending to it.<br>
 
+
 -S&nbsp; or&nbsp;&nbsp; --singleValueChanges<br>
+
 
 &nbsp;&nbsp;&nbsp; Indicates that each attribute-level
 change should be written as a separate<br>
 
+
 &nbsp;&nbsp;&nbsp; modification per attribute value rather
 than one modification per entry.<br>
 
+
 -H&nbsp; or&nbsp;&nbsp; --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Displays usage information for this
 program.</td>
 
+
       <td style="width: 551px;" valign="top"><big><big><span style="font-weight: bold;">ldif-diff</span></big></big><br>
+
 
 This utility may be used to compare two LDIF files and report the
 differences<br>
 
+
 in LDIF format.<br>
 
+
 Usage:&nbsp; ldif-diff {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -s, --sourceLDIF {filename}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the LDIF file to use as the
 source data.<br>
 
+
 -t, --targetLDIF {filename}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the LDIF file to use as the
 target data.<br>
 
+
 -o, --outputLDIF {filename}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the file to which the output
 should be written.<br>
 
+
 -O, --overwriteExisting<br>
+
 
 &nbsp;&nbsp;&nbsp; Indicates that any existing output file
 should be overwritten rather than<br>
 
+
 &nbsp;&nbsp;&nbsp; appending to it.<br>
 
+
 -S, --singleValueChanges<br>
+
 
 &nbsp;&nbsp;&nbsp; Indicates that each attribute-level
 change should be written as a separate<br>
 
+
 &nbsp;&nbsp;&nbsp; modification per attribute value rather
 than one modification per entry.<br>
 
+
 -H, --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information.</td>
 
+
     </tr>
 
+
     <tr>
+
 
       <td style="width: 557px;" valign="top"><big><big><span style="font-weight: bold;">ldifmodify</span></big></big>
       <br>
 
+
 This utility may be used to apply a set of modify, add, and delete
 operations<br>
 
+
 against data in an LDIF file.<br>
 
+
 Usage:&nbsp; ldifmodify {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -s {file}&nbsp; or&nbsp;&nbsp; --sourceLDIF {file}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the LDIF file containing the
 data to be updated.<br>
 
+
 -m {file}&nbsp; or&nbsp;&nbsp; --changesLDIF {file}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies he LDIF file containing the
 changes to apply.<br>
 
+
 -t {file}&nbsp; or&nbsp;&nbsp; --targetLDIF {file}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies he file to which the updated
 data should be written.<br>
 
+
 -H&nbsp; or&nbsp;&nbsp; --help<br>
 
+
 &nbsp;&nbsp;&nbsp; Displays this usage information.</td>
+
 
       <td style="width: 551px;" valign="top"><big><big><span style="font-weight: bold;">ldifmodify</span></big></big>
       <br>
 
+
 This utility may be used to apply a set of modify, add, and delete
 operations<br>
 
+
 against data in an LDIF file.<br>
 
+
 Usage:&nbsp; ldifmodify {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -s, --sourceLDIF {file}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the LDIF file containing the
 data to be updated.<br>
 
+
 -m, --changesLDIF {file}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies he LDIF file containing the
 changes to apply.<br>
 
+
 -t, --targetLDIF {file}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies he file to which the updated
 data should be written.<br>
 
+
 -H, --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Displays this usage information.</td>
 
+
     </tr>
+
 
     <tr>
 
+
       <td style="width: 557px;" valign="top"><big><big><span style="font-weight: bold;">ldifsearch</span></big></big><br>
+
 
 This utility may be used to perform search operations against data in
 an LDIF<br>
 
+
 file.<br>
 
+
 Usage:&nbsp; ldifsearch {options} [filter] [attributes ...]<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -l {ldifFile}&nbsp; or&nbsp;&nbsp; --ldifFile {ldifFile}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the LDIF file containing the
 data to search.&nbsp; Multiple files may<br>
 
+
 &nbsp;&nbsp;&nbsp; be specified by providing the option
 multiple times.&nbsp; If no files are<br>
+
 
 &nbsp;&nbsp;&nbsp; provided, the data will be read from
 standard input.<br>
 
+
 -b {baseDN}&nbsp; or&nbsp;&nbsp; --baseDN {baseDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; The base DN for the search.&nbsp;
 Multiple base DNs may be specified by<br>
 
+
 &nbsp;&nbsp;&nbsp; providing the option multiple
 times.&nbsp; If no base DN is provided, then the<br>
 
+
 &nbsp;&nbsp;&nbsp; root DSE will be used.<br>
 
+
 -s {scope}&nbsp; or&nbsp;&nbsp; --scope {scope}<br>
+
 
 &nbsp;&nbsp;&nbsp; The scope for the search.&nbsp; It
 must be one of 'base', 'one', 'sub', or<br>
 
+
 &nbsp;&nbsp;&nbsp; 'subordinate'.&nbsp; If it is not
 provided, then 'sub' will be used.<br>
+
 
 -f {filterFile}&nbsp; or&nbsp;&nbsp; --filterFile
 {filterFile}<br>
 
+
 &nbsp;&nbsp;&nbsp; The path to the file containing the
 search filter(s) to use.&nbsp; If this is<br>
+
 
 &nbsp;&nbsp;&nbsp; not provided, then the filter must be
 provided on the command line after<br>
 
+
 &nbsp;&nbsp;&nbsp; all configuration options.<br>
+
 
 -o {outputFile}&nbsp; or&nbsp;&nbsp; --outputFile
 {outputFile}<br>
 
+
 &nbsp;&nbsp;&nbsp; The path to the output file to which the
 matching entries should be<br>
+
 
 &nbsp;&nbsp;&nbsp; written.&nbsp; If this is not
 provided, then the data will be written to<br>
 
+
 &nbsp;&nbsp;&nbsp; standard output.<br>
 
+
 -O&nbsp; or&nbsp;&nbsp; --overwriteExisting<br>
+
 
 &nbsp;&nbsp;&nbsp; Indicates that any existing output file
 should be overwritten rather than<br>
 
+
 &nbsp;&nbsp;&nbsp; appending to it.<br>
 
+
 -T&nbsp; or&nbsp;&nbsp; --dontWrap<br>
+
 
 &nbsp;&nbsp;&nbsp; Indicates that long lines should not be
 wrapped.<br>
 
+
 -z {sizeLimit}&nbsp; or&nbsp;&nbsp; --sizeLimit {sizeLimit}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the maximum number of matching
 entries to return.<br>
 
+
 -t {timeLimit}&nbsp; or&nbsp;&nbsp; --timeLimit {timeLimit}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the maximum length of time (in
 seconds) to spend processing.<br>
 
+
 -H&nbsp; or&nbsp;&nbsp; --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Displays usage information for this
 program.</td>
 
+
       <td style="width: 551px;" valign="top"><big><big><span style="font-weight: bold;">ldifsearch</span></big></big><br>
+
 
 This utility may be used to perform search operations against data in
 an LDIF<br>
 
+
 file.<br>
 
+
 Usage:&nbsp; ldifsearch {options} [filter] [attributes ...]<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -l, --ldifFile {ldifFile}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the LDIF file containing the
 data to search.&nbsp; Multiple files may<br>
 
+
 &nbsp;&nbsp;&nbsp; be specified by providing the option
 multiple times.&nbsp; If no files are<br>
+
 
 &nbsp;&nbsp;&nbsp; provided, the data will be read from
 standard input.<br>
 
+
 -b, --baseDN {baseDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; The base DN for the search.&nbsp;
 Multiple base DNs may be specified by<br>
 
+
 &nbsp;&nbsp;&nbsp; providing the option multiple
 times.&nbsp; If no base DN is provided, then the<br>
 
+
 &nbsp;&nbsp;&nbsp; root DSE will be used.<br>
 
+
 -s, --scope {scope}<br>
+
 
 &nbsp;&nbsp;&nbsp; The scope for the search.&nbsp; It
 must be one of 'base', 'one', 'sub', or<br>
 
+
 &nbsp;&nbsp;&nbsp; 'subordinate'.&nbsp; If it is not
 provided, then 'sub' will be used.<br>
 
+
 -f, --filterFile {filterFile}<br>
+
 
 &nbsp;&nbsp;&nbsp; The path to the file containing the
 search filter(s) to use.&nbsp; If this is<br>
 
+
 &nbsp;&nbsp;&nbsp; not provided, then the filter must be
 provided on the command line after<br>
 
+
 &nbsp;&nbsp;&nbsp; all configuration options.<br>
 
+
 -o, --outputFile {outputFile}<br>
+
 
 &nbsp;&nbsp;&nbsp; The path to the output file to which the
 matching entries should be<br>
 
+
 &nbsp;&nbsp;&nbsp; written.&nbsp; If this is not
 provided, then the data will be written to<br>
 
+
 &nbsp;&nbsp;&nbsp; standard output.<br>
 
+
 -O, --overwriteExisting<br>
+
 
 &nbsp;&nbsp;&nbsp; Indicates that any existing output file
 should be overwritten rather than<br>
 
+
 &nbsp;&nbsp;&nbsp; appending to it.<br>
 
+
 -T, --dontWrap<br>
+
 
 &nbsp;&nbsp;&nbsp; Indicates that long lines should not be
 wrapped.<br>
 
+
 -z, --sizeLimit {sizeLimit}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the maximum number of matching
 entries to return.<br>
 
+
 -t, --timeLimit {timeLimit}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the maximum length of time (in
 seconds) to spend processing.<br>
 
+
 -H, --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Displays usage information for this
 program</td>
 
+
     </tr>
 
+
     <tr>
+
 
       <td style="width: 557px;" valign="top"><big><big><span style="font-weight: bold;">list-backends</span></big></big><br>
 
+
 This utility may be used to list the backends and base DNs configured
 in the<br>
 
+
 Directory Server.<br>
+
 
 Usage:&nbsp; list-backends {options}<br>
 
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
+
 
 -n {backendID}&nbsp; or&nbsp;&nbsp; --backendID {backendID}<br>
 
+
 &nbsp;&nbsp;&nbsp; Backend ID of the backend for which to
 list the base DNs<br>
 
+
 -b {baseDN}&nbsp; or&nbsp;&nbsp; --baseDN {baseDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Base DN for which to list the backend ID<br>
 
+
 -H&nbsp; or&nbsp;&nbsp; --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information.</td>
 
+
       <td style="width: 551px;" valign="top"><big><big><span style="font-weight: bold;">list-backends</span></big></big><br>
+
 
 This utility may be used to list the backends and base DNs configured
 in the<br>
 
+
 Directory Server.<br>
 
+
 Usage:&nbsp; list-backends {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -n, --backendID {backendID}<br>
+
 
 &nbsp;&nbsp;&nbsp; Backend ID of the backend for which to
 list the base DNs<br>
 
+
 -b, --baseDN {baseDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Base DN for which to list the backend ID<br>
 
+
 -H, --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information.</td>
 
+
     </tr>
 
+
     <tr>
+
 
       <td style="width: 557px;" valign="top"><span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;"><big>makeldif</big></span><br>
 
+
 This utility may be used to generate LDIF data based on a definition in
 a<br>
 
+
 template file.<br>
+
 
 Usage:&nbsp; makeldif {options}<br>
 
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -t {file}&nbsp; or&nbsp;&nbsp; --templateFile {file}<br>
+
 
 &nbsp;&nbsp;&nbsp; The path to the template file with
 information about the LDIF data to<br>
 
+
 &nbsp;&nbsp;&nbsp; generate.<br>
+
 
 -o {file}&nbsp; or&nbsp;&nbsp; --ldifFile {file}<br>
 
+
 &nbsp;&nbsp;&nbsp; The path to the LDIF file to be written.<br>
 
+
 -s {seed}&nbsp; or&nbsp;&nbsp; --randomSeed {seed}<br>
+
 
 &nbsp;&nbsp;&nbsp; The seed to use to initialize the random
 number generator.<br>
 
+
 -H&nbsp; or&nbsp;&nbsp; --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Show this usage information.</td>
 
+
       <td style="width: 551px;" valign="top"><span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;"><big>make-ldif</big></span><big><br>
+
 
 This utility may be used to generate LDIF data based on a definition in
 a<br>
 
+
 template file.<br>
 
+
 Usage:&nbsp; make-ldif {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -t, --templateFile {file}<br>
+
 
 &nbsp;&nbsp;&nbsp; The path to the template file with
 information about the LDIF data to<br>
 
+
 &nbsp;&nbsp;&nbsp; generate.<br>
+
 
 -o, --ldifFile {file}<br>
 
+
 &nbsp;&nbsp;&nbsp; The path to the LDIF file to be written.<br>
 
+
 -s, --randomSeed {seed}<br>
+
 
 &nbsp;&nbsp;&nbsp; The seed to use to initialize the random
 number generator.<br>
 
+
 -H, --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information.</big></td>
 
+
     </tr>
+
 
     <tr>
 
+
       <td style="width: 557px;" valign="top"><big><big><span style="font-weight: bold;">restore</span></big></big><br>
+
 
 This utility may be used to restore a backup of a Directory Server
 backend.<br>
 
+
 Usage:&nbsp; restore {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -I {backupID}&nbsp; or&nbsp;&nbsp; --backupID {backupID}<br>
 
+
 &nbsp;&nbsp;&nbsp; Backup ID of the backup to restore<br>
+
 
 -d {backupDir}&nbsp; or&nbsp;&nbsp; --backupDirectory
 {backupDir}<br>
 
+
 &nbsp;&nbsp;&nbsp; Path to the directory containing the
 backup file(s)<br>
 
+
 -l&nbsp; or&nbsp;&nbsp; --listBackups<br>
+
 
 &nbsp;&nbsp;&nbsp; List available backups in the backup
 directory<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-V&nbsp;
 or&nbsp;&nbsp; --verifyOnly</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Verify the contents of the backup but do
 not restore it<br>
 
+
 -H&nbsp; or&nbsp;&nbsp; --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information</td>
 
+
       <td style="width: 551px;" valign="top"><big><big><span style="font-weight: bold;">restore</span></big></big><br>
+
 
 This utility may be used to restore a backup of a Directory Server
 backend.<br>
 
+
 Usage:&nbsp; restore {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -I, --backupID {backupID}<br>
+
 
 &nbsp;&nbsp;&nbsp; Backup ID of the backup to restore<br>
 
+
 -d, --backupDirectory {backupDir}<br>
+
 
 &nbsp;&nbsp;&nbsp; Path to the directory containing the
 backup file(s)<br>
 
+
 -l, --listBackups<br>
+
 
 &nbsp;&nbsp;&nbsp; List available backups in the backup
 directory<br>
 
+
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">
 -n, --dry-run</span><br>
+
 
 &nbsp;&nbsp;&nbsp; Verify the contents of the backup but do
 not restore it<br>
 
+
 -H, --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information.</td>
 
+
     </tr>
+
 
     <tr>
 
+
       <td style="width: 557px;" valign="top"><big><big><span style="font-weight: bold;">start-ds</span></big></big><br>
+
 
 This utility may be used to start the Directory Server, as well as to
 obtain<br>
 
+
 the server version and other forms of general server information.<br>
+
 
 Usage:&nbsp; start-ds {options}<br>
 
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-v&nbsp;
 or&nbsp;&nbsp; --version</span><br style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">
 
+
 &nbsp;&nbsp;&nbsp; Display Directory Server version
 information<br>
 
+
 -s&nbsp; or&nbsp;&nbsp; --systemInfo<br>
+
 
 &nbsp;&nbsp;&nbsp; Display general system information<br>
 
+
 -N&nbsp; or&nbsp;&nbsp; --nodetach<br>
+
 
 &nbsp;&nbsp;&nbsp; Do not detach from the terminal and
 continue running in the foreground<br>
 
+
 -H&nbsp; or&nbsp;&nbsp; --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information</td>
 
+
       <td style="width: 551px;" valign="top"><big><big><span style="font-weight: bold;">start-ds</span></big></big><br>
+
 
 This utility may be used to start the Directory Server, as well as to
 obtain<br>
 
+
 the server version and other forms of general server information.<br>
+
 
 Usage:&nbsp; start-ds {options}<br>
 
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
+
 
       <span style="font-weight: bold;"><span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-V</span>,</span>
 --version<br style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">
 
+
 &nbsp;&nbsp;&nbsp; Display Directory Server version
 information<br>
 
+
 -s, --systemInfo<br>
+
 
 &nbsp;&nbsp;&nbsp; Display general system information<br>
 
+
 -N, --nodetach<br>
+
 
 &nbsp;&nbsp;&nbsp; Do not detach from the terminal and
 continue running in the foreground<br>
 
+
 -H, --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information</td>
 
+
     </tr>
+
 
     <tr>
 
+
       <td style="width: 557px;" valign="top"><big><big><span style="font-weight: bold;">status</span></big></big><br>
+
 
 This command displays basic server information.<br>
 
+
       <br>
 
+
 Usage:&nbsp; status {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -D {bindDN}&nbsp; or&nbsp;&nbsp; --bindDN {bindDN}<br>
 
+
 &nbsp;&nbsp;&nbsp; Bind DN<br>
+
 
 -w {bindPassword}&nbsp; or&nbsp;&nbsp; --bindPassword
 {bindPassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Bind password<br>
+
 
 -j {bindPasswordFile}&nbsp; or&nbsp;&nbsp;
 --bindPasswordFile {bindPasswordFile}<br>
 
+
 &nbsp;&nbsp;&nbsp; Bind password file<br>
+
 
 -H&nbsp; or&nbsp;&nbsp; --help<br>
 
+
 &nbsp;&nbsp;&nbsp; Display this usage information.</td>
+
 
       <td style="width: 551px;" valign="top"><big><big><span style="font-weight: bold;">status</span></big></big><br>
 
+
 This command displays basic server information.<br>
+
 
       <br>
 
+
 Usage:&nbsp; status {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -D {bindDN}, --bindDN {bindDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Bind DN<br>
 
+
 -w {bindPassword}, --bindPassword {bindPassword}<br>
+
 
 &nbsp;&nbsp;&nbsp; Bind password<br>
 
+
 -j {bindPasswordFile}, --bindPasswordFile {bindPasswordFile}<br>
+
 
 &nbsp;&nbsp;&nbsp; Bind password file<br>
 
+
 -H , --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information.</td>
 
+
     </tr>
+
 
     <tr>
 
+
       <td style="width: 557px;" valign="top"><big style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;"><big><span style="font-weight: bold;">statuspanel</span></big></big><br>
+
 
 This command launches the Status Panel window which displays basic
 server<br>
 
+
 information and will allow you to start, stop and restart the server.<br>
 
+
 Usage:&nbsp; statuspanel {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -H&nbsp; or&nbsp;&nbsp; --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Displays usage information for this
 program.</td>
 
+
       <td style="width: 551px;" valign="top"><big style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;"><big><span style="font-weight: bold;">status-panel</span></big></big><br>
+
 
 This command launches the Status Panel window which displays basic
 server<br>
 
+
 information and will allow you to start, stop and restart the server.<br>
 
+
 Usage:&nbsp; statuspanel {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -H, --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information.</td>
 
+
     </tr>
+
 
     <tr>
 
+
       <td style="width: 557px;" valign="top"><big><big><span style="font-weight: bold;">stop-ds</span></big></big><br>
+
 
 This utility may be used to request that the Directory Server stop
 running or<br>
 
+
 perform a restart.<br>
 
+
 Usage:&nbsp; stop-ds {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-h
 {host}&nbsp; or&nbsp;&nbsp; --host {host}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server hostname or IP address<br>
+
 
 -p {port}&nbsp; or&nbsp;&nbsp; --port {port}<br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server port number<br>
 
+
 -Z&nbsp; or&nbsp;&nbsp; --useSSL<br>
+
 
 &nbsp;&nbsp;&nbsp; Use SSL for secure communication with
 the server<br>
 
+
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-q&nbsp;
 or&nbsp;&nbsp; --useStartTLS</span><br>
+
 
 &nbsp;&nbsp;&nbsp; Use StartTLS for secure communication
 with the server<br>
 
+
 -D {bindDN}&nbsp; or&nbsp;&nbsp; --bindDN {bindDN}<br>
 
+
 &nbsp;&nbsp;&nbsp; Bind DN<br>
+
 
 -w {bindPassword}&nbsp; or&nbsp;&nbsp; --bindPassword
 {bindPassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Bind password<br>
+
 
 -j {bindPasswordFile}&nbsp; or&nbsp;&nbsp;
 --bindPasswordFile {bindPasswordFile}<br>
 
+
 &nbsp;&nbsp;&nbsp; Bind password file<br>
+
 
 -o {saslOption}&nbsp; or&nbsp;&nbsp; --saslOption
 {saslOption}<br>
 
+
 &nbsp;&nbsp;&nbsp; SASL bind options<br>
+
 
 -Y {proxyAuthZID}&nbsp; or&nbsp;&nbsp; --proxyAs
 {proxyAuthZID}<br>
 
+
 &nbsp;&nbsp;&nbsp; Use the proxied authorization control
 with the given authorization ID<br>
+
 
 -r {stopReason}&nbsp; or&nbsp;&nbsp; --stopReason
 {stopReason}<br>
 
+
 &nbsp;&nbsp;&nbsp; Reason the server is being stopped or
 restarted<br>
 
+
 -R&nbsp; or&nbsp;&nbsp; --restart<br>
+
 
 &nbsp;&nbsp;&nbsp; Attempt to automatically restart the
 server once it has stopped<br>
 
+
 -t {stopTime}&nbsp; or&nbsp;&nbsp; --stopTime {stopTime}<br>
+
 
 &nbsp;&nbsp;&nbsp; Time to begin the shutdown in
 YYYYMMDDhhmmss format (local time)<br>
 
+
 -X&nbsp; or&nbsp;&nbsp; --trustAll<br>
 
+
 &nbsp;&nbsp;&nbsp; Trust all server SSL certificates<br>
+
 
 -K {keyStoreFile}&nbsp; or&nbsp;&nbsp; --keyStoreFile
 {keyStoreFile}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore path<br>
+
 
 -W {keyStorePassword}&nbsp; or&nbsp;&nbsp;
 --keyStorePassword {keyStorePassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN<br>
+
 
 -u {keyStorePasswordFile}&nbsp; or&nbsp;&nbsp;
 --keyStorePasswordFile {keyStorePasswordFile}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN file<br>
+
 
 -N {nickname}&nbsp; or&nbsp;&nbsp; --certNickname {nickname}<br>
 
+
 &nbsp;&nbsp;&nbsp; Nickname of certificate for SSL client
 authentication<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-P
 {trustStoreFile}&nbsp; or&nbsp;&nbsp; --trustStoreFile
 {trustStoreFile}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store path<br>
+
 
 -T {trustStorePassword}&nbsp; or&nbsp;&nbsp;
 --trustStorePassword {trustStorePassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN<br>
+
 
 -U {trustStorePasswordFile}<br>
 
+
 or&nbsp;&nbsp; --trustStorePasswordFile {trustStorePasswordFile}<br>
+
 
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN file<br>
 
+
 -H&nbsp; or&nbsp;&nbsp; --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information.</td>
 
+
       <td style="width: 551px;" valign="top"><big><big><span style="font-weight: bold;">stop-ds</span></big></big><br>
+
 
 This utility may be used to request that the Directory Server stop
 running or<br>
 
+
 perform a restart.<br>
 
+
 Usage:&nbsp; stop-ds {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -h, <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">--hostname</span>
 {host}<br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server hostname or IP address<br>
+
 
 -p, --port {port}<br>
 
+
 &nbsp;&nbsp;&nbsp; Directory server port number<br>
 
+
 -Z, --useSSL<br>
+
 
 &nbsp;&nbsp;&nbsp; Use SSL for secure communication with
 the server<br>
 
+
 -q, <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">--useStartTLS</span><br>
+
 
 &nbsp;&nbsp;&nbsp; Use StartTLS for secure communication
 with the server<br>
 
+
 -D, --bindDN {bindDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the DN to use to bind to the
 server.<br>
 
+
 -w, --bindPassword {bindPassword}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the password to use to bind to
 the server.<br>
 
+
 -j, --bindPasswordFile {file}<br>
+
 
 &nbsp;&nbsp;&nbsp; Bind password file<br>
 
+
 -o, --saslOption {name=value}<br>
+
 
 &nbsp;&nbsp;&nbsp; SASL bind options<br>
 
+
 -Y, --proxyAs {authzID}<br>
+
 
 &nbsp;&nbsp;&nbsp; Use the proxied authorization control
 with the given authorization ID<br>
 
+
 -r, --stopReason {stopReason}<br>
+
 
 &nbsp;&nbsp;&nbsp; Reason the server is being stopped or
 restarted<br>
 
+
 -R, --restart<br>
+
 
 &nbsp;&nbsp;&nbsp; Attempt to automatically restart the
 server once it has stopped<br>
 
+
 -t, --stopTime {stopTime}<br>
+
 
 &nbsp;&nbsp;&nbsp; Time to begin the shutdown in
 YYYYMMDDhhmmss format (local time)<br>
 
+
 -X, --trustAll<br>
+
 
 &nbsp;&nbsp;&nbsp; Trust all server SSL certificates<br>
 
+
 -K, --keyStorePath {keyStorePath}<br>
+
 
 &nbsp;&nbsp;&nbsp; Certificate keystore path<br>
 
+
 -W, --keyStorePassword {keyStorePassword}<br>
+
 
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN<br>
 
+
 -u, --keyStorePasswordFile&nbsp; {path}<br>
+
 
 &nbsp;&nbsp;&nbsp; Certificate keystore PIN file<br>
 
+
 -N, --certNickname {nickname}<br>
+
 
 &nbsp;&nbsp;&nbsp; Nickname of certificate for SSL client
 authentication<br>
 
+
 -P, <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">--trustStorePath</span>
 {trustStorePath}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store path<br>
+
 
 -T, --trustStorePassword {trustStorePassword}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN<br>
+
 
 -U, --TrustStorePasswordFile&nbsp; {path}<br>
 
+
 &nbsp;&nbsp;&nbsp; Certificate trust store PIN file<br>
+
 
 -H, --help<br>
 
+
 &nbsp;&nbsp;&nbsp; Display this usage information.</td>
+
 
     </tr>
 
+
     <tr>
+
 
       <td style="width: 557px;" valign="top"><big><big><span style="font-weight: bold;">setup</span></big></big><br>
 
+
 This utility may be used to setup the Directory Server.<br>
 
+
 Usage:&nbsp; setup {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 --cli<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies to use the command line
 setup.&nbsp; If not specified the graphical<br>
 
+
 &nbsp;&nbsp;&nbsp; interface will be launched.<br>
 
+
 -H&nbsp; or&nbsp;&nbsp; --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Displays usage information for this
 program.<br>
 
+
       <br>
+
 
 The following options will only be taken into account if the option
 --cli <br>
 
+
 (command line) is specified<br>
+
 
 -s&nbsp; or&nbsp;&nbsp; --silentInstall<br>
 
+
 &nbsp;&nbsp;&nbsp; Perform a silent installation.<br>
 
+
 -b {baseDN}&nbsp; or&nbsp;&nbsp; --baseDN {baseDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the base DN for user
 information in the Directory Server.<br>
 
+
 &nbsp;&nbsp;&nbsp; Multiple base DNs may be provided by
 using this option multiple times.<br>
 
+
 -a&nbsp; or&nbsp;&nbsp; --addBaseEntry<br>
+
 
 &nbsp;&nbsp;&nbsp; Indicates whether to create the base
 entry in the Directory Server<br>
 
+
 &nbsp;&nbsp;&nbsp; database.<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-i
 {ldifFile}&nbsp; or&nbsp;&nbsp; --importLDIF {ldifFile}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Specifies the path to an LDIF file
 containing data that should be added to<br>
+
 
 &nbsp;&nbsp;&nbsp; the Directory Server database.&nbsp;
 Multiple LDIF files may be provided by<br>
 
+
 &nbsp;&nbsp;&nbsp; using this option multiple times.<br>
+
 
 -d {numEntries}&nbsp; or&nbsp;&nbsp; --sampleData
 {numEntries}<br>
 
+
 &nbsp;&nbsp;&nbsp; Specifies that the database should be
 populated with the specified number<br>
 
+
 &nbsp;&nbsp;&nbsp; of sample entries.<br>
 
+
 -p {port}&nbsp; or&nbsp;&nbsp; --ldapPort {port}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the port on which the
 Directory Server should listen for LDAP<br>
 
+
 &nbsp;&nbsp;&nbsp; communication.<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-j
 {jmxPort}&nbsp; or&nbsp;&nbsp; --jmxPort {jmxPort}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Specifies the port on which the
 Directory Server should listen for JMX<br>
 
+
 &nbsp;&nbsp;&nbsp; communication.<br>
 
+
 -S&nbsp; or&nbsp;&nbsp; --skipPortCheck<br>
+
 
 &nbsp;&nbsp;&nbsp; Skip the check to determine whether the
 specified LDAP port is usable.<br>
 
+
 -D {rootDN}&nbsp; or&nbsp;&nbsp; --rootUserDN {rootDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the DN for the initial
 Administrative User for the Directory Server.<br>
 
+
 -w {password}&nbsp; or&nbsp;&nbsp; --rootUserPassword
 {password}<br>
 
+
 &nbsp;&nbsp;&nbsp; Specifies the password for the initial
 Administrative User for the Directory Server.<br>
+
 
       <span style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;">-W
 {filename}&nbsp; or&nbsp;&nbsp; --rootUserPasswordFile
 {filename}</span><br>
 
+
 &nbsp;&nbsp;&nbsp; Specifies the path to a file containing
 the password for the initial Administrative<br>
 
+
 &nbsp;&nbsp;&nbsp; User for the Directory Server.</td>
+
 
       <td style="width: 551px;" valign="top"><big><big><span style="font-weight: bold;">setup</span></big></big><br>
 
+
 This utility may be used to setup the Directory Server.<br>
 
+
 Usage:&nbsp; setup {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 --cli<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies to use the command line
 setup.&nbsp; If not specified the graphical<br>
 
+
 &nbsp;&nbsp;&nbsp; interface will be launched.<br>
+
 
 -H , --help<br>
 
+
 &nbsp;&nbsp;&nbsp; Display this usage information.<br>
 
+
       <br>
+
 
 The following options will only be taken into account if the option
 --cli <br>
 
+
 (command line) is specified<br>
+
 
 -s, --silentInstall<br>
 
+
 &nbsp;&nbsp;&nbsp; Perform a silent installation.<br>
 
+
 -b, --baseDN {baseDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the base DN for user
 information in the Directory Server.<br>
 
+
 &nbsp;&nbsp;&nbsp; Multiple base DNs may be provided by
 using this option multiple times.<br>
 
+
 -a, --addBaseEntry<br>
+
 
 &nbsp;&nbsp;&nbsp; Indicates whether to create the base
 entry in the Directory Server<br>
 
+
 &nbsp;&nbsp;&nbsp; database.<br>
+
 
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-l,
 --ldifFile</span> {ldifFile}<br>
 
+
 &nbsp;&nbsp;&nbsp; Specifies the path to an LDIF file
 containing data that should be added to<br>
+
 
 &nbsp;&nbsp;&nbsp; the Directory Server database.&nbsp;
 Multiple LDIF files may be provided by<br>
 
+
 &nbsp;&nbsp;&nbsp; using this option multiple times.<br>
 
+
 -d {numEntries}, --sampleData {numEntries}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies that the database should be
 populated with the specified number<br>
 
+
 &nbsp;&nbsp;&nbsp; of sample entries.<br>
 
+
 -p, --ldapPort {port}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the port on which the
 Directory Server should listen for LDAP<br>
 
+
 &nbsp;&nbsp;&nbsp; communication.<br>
+
 
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-x</span>,
 --jmxPort {jmxPort}<br>
 
+
 &nbsp;&nbsp;&nbsp; Specifies the port on which the
 Directory Server should listen for JMX<br>
 
+
 &nbsp;&nbsp;&nbsp; communication.<br>
 
+
 -S , --skipPortCheck<br>
+
 
 &nbsp;&nbsp;&nbsp; Skip the check to determine whether the
 specified LDAP port is usable.<br>
 
+
 -D, --rootUserDN {rootUserDN}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the DN for the initial
 Administrative User for the Directory Server.<br>
 
+
 -w, --rootUserPassword {password}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the password for the initial
 Administrative User for the Directory Server.<br>
 
+
       <span style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;">-j</span>,
 --rootUserPasswordFile {filename}<br>
+
 
 &nbsp;&nbsp;&nbsp; Specifies the path to a file containing
 the password for the initial Administrative<br>
 
+
 &nbsp;&nbsp;&nbsp; User for the Directory Server.</td>
 
+
+    </tr>
+
+
+    <tr>
+
+      <td style="vertical-align: top;"><big><big><span style="font-weight: bold;">verify-index</span></big></big><br>
+
+This utility may be used to ensure that index data is consistent within a<br>
+
+backend based on the Berkeley DB Java Edition.<br>
+
+Usage:&nbsp; verify-index {options}<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; where {options} include:<br>
+
+-b {baseDN}&nbsp; or&nbsp;&nbsp; --baseDN {baseDN}<br>
+
+&nbsp;&nbsp;&nbsp; Specifies the base DN of a backend supporting indexing. Verification is<br>
+
+&nbsp;&nbsp;&nbsp; performed on indexes within the scope of the given base DN.<br>
+
+-i {index}&nbsp; or&nbsp;&nbsp; --index {index}<br>
+
+&nbsp;&nbsp;&nbsp; Specifies the name of an index to be verified. For an attribute index this<br>
+
+&nbsp;&nbsp;&nbsp; is simply an attribute name.&nbsp; Multiple indexes may be verified for<br>
+
+&nbsp;&nbsp;&nbsp; completeness, or all indexes if no indexes are specified.&nbsp; An index is<br>
+
+&nbsp;&nbsp;&nbsp; complete if each index value references all entries containing that value.<br>
+
+-c&nbsp; or&nbsp;&nbsp; --clean<br>
+
+&nbsp;&nbsp;&nbsp; Specifies that a single index should be verified to ensure it is clean.&nbsp; An<br>
+
+&nbsp;&nbsp;&nbsp; index is clean if each index value references only entries containing that<br>
+
+&nbsp;&nbsp;&nbsp; value.&nbsp; Only one index at a time may be verified in this way.<br>
+
+-H&nbsp; or&nbsp;&nbsp; --help<br>
+
+&nbsp;&nbsp;&nbsp; Displays this usage information.</td>
+
+      <td><big><big><span style="font-weight: bold;">verify-index</span></big></big><br>
+
+This utility may be used to ensure that index data is consistent within a<br>
+
+backend based on the Berkeley DB Java Edition.<br>
+
+Usage:&nbsp; verify-index {options}<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; where {options} include:<br>
+
+-b, --baseDN {baseDN}<br>
+
+&nbsp;&nbsp;&nbsp; Specifies the base DN of a backend supporting indexing. Verification is<br>
+
+&nbsp;&nbsp;&nbsp; performed on indexes within the scope of the given base DN.<br>
+
+-i, --index {index}<br>
+
+&nbsp;&nbsp;&nbsp; Specifies the name of an index to be verified. For an attribute index this<br>
+
+&nbsp;&nbsp;&nbsp; is simply an attribute name.&nbsp; Multiple indexes may be verified for<br>
+
+&nbsp;&nbsp;&nbsp; completeness, or all indexes if no indexes are specified.&nbsp; An index is<br>
+
+&nbsp;&nbsp;&nbsp; complete if each index value references all entries containing that value.<br>
+
+-c, --clean<br>
+
+&nbsp;&nbsp;&nbsp; Specifies that a single index should be verified to ensure it is clean.&nbsp; An<br>
+
+&nbsp;&nbsp;&nbsp; index is clean if each index value references only entries containing that<br>
+
+&nbsp;&nbsp;&nbsp; value.&nbsp; Only one index at a time may be verified in this way.<br>
+
+-H, --help<br>
+
+&nbsp;&nbsp;&nbsp; Displays this usage information.<br>
+
+      </td>
+
     </tr>
 
     <tr>
-      <td style="vertical-align: top;"><big><big><span style="font-weight: bold;">verify-index</span></big></big><br>
-This utility may be used to ensure that index data is consistent within a<br>
-backend based on the Berkeley DB Java Edition.<br>
-Usage:&nbsp; verify-index {options}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; where {options} include:<br>
--b {baseDN}&nbsp; or&nbsp;&nbsp; --baseDN {baseDN}<br>
-&nbsp;&nbsp;&nbsp; Specifies the base DN of a backend supporting indexing. Verification is<br>
-&nbsp;&nbsp;&nbsp; performed on indexes within the scope of the given base DN.<br>
--i {index}&nbsp; or&nbsp;&nbsp; --index {index}<br>
-&nbsp;&nbsp;&nbsp; Specifies the name of an index to be verified. For an attribute index this<br>
-&nbsp;&nbsp;&nbsp; is simply an attribute name.&nbsp; Multiple indexes may be verified for<br>
-&nbsp;&nbsp;&nbsp; completeness, or all indexes if no indexes are specified.&nbsp; An index is<br>
-&nbsp;&nbsp;&nbsp; complete if each index value references all entries containing that value.<br>
--c&nbsp; or&nbsp;&nbsp; --clean<br>
-&nbsp;&nbsp;&nbsp; Specifies that a single index should be verified to ensure it is clean.&nbsp; An<br>
-&nbsp;&nbsp;&nbsp; index is clean if each index value references only entries containing that<br>
-&nbsp;&nbsp;&nbsp; value.&nbsp; Only one index at a time may be verified in this way.<br>
--H&nbsp; or&nbsp;&nbsp; --help<br>
-&nbsp;&nbsp;&nbsp; Displays this usage information.</td>
-      <td><big><big><span style="font-weight: bold;">verify-index</span></big></big><br>
-This utility may be used to ensure that index data is consistent within a<br>
-backend based on the Berkeley DB Java Edition.<br>
-Usage:&nbsp; verify-index {options}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; where {options} include:<br>
--b, --baseDN {baseDN}<br>
-&nbsp;&nbsp;&nbsp; Specifies the base DN of a backend supporting indexing. Verification is<br>
-&nbsp;&nbsp;&nbsp; performed on indexes within the scope of the given base DN.<br>
--i, --index {index}<br>
-&nbsp;&nbsp;&nbsp; Specifies the name of an index to be verified. For an attribute index this<br>
-&nbsp;&nbsp;&nbsp; is simply an attribute name.&nbsp; Multiple indexes may be verified for<br>
-&nbsp;&nbsp;&nbsp; completeness, or all indexes if no indexes are specified.&nbsp; An index is<br>
-&nbsp;&nbsp;&nbsp; complete if each index value references all entries containing that value.<br>
--c, --clean<br>
-&nbsp;&nbsp;&nbsp; Specifies that a single index should be verified to ensure it is clean.&nbsp; An<br>
-&nbsp;&nbsp;&nbsp; index is clean if each index value references only entries containing that<br>
-&nbsp;&nbsp;&nbsp; value.&nbsp; Only one index at a time may be verified in this way.<br>
--H, --help<br>
-&nbsp;&nbsp;&nbsp; Displays this usage information.<br>
-      </td>
-    </tr>
-    <tr>
+
 
       <td style="width: 557px;" valign="top"><big style="border-top: 1px dashed rgb(255, 0, 0); border-bottom: 1px dashed rgb(255, 0, 0); color: rgb(255, 0, 0); font-weight: bold;"><big><span style="font-weight: bold;">windowsservice.bat</span></big></big><br>
 
+
 Usage:&nbsp; windowsservice {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -e&nbsp; or&nbsp;&nbsp; --enableService<br>
+
 
 &nbsp;&nbsp;&nbsp; Enables OpenDS as a Windows service.<br>
 
+
 -d&nbsp; or&nbsp;&nbsp; --disableService<br>
+
 
 &nbsp;&nbsp;&nbsp; Disables OpenDS as a Windows service and
 stops the server<br>
 
+
 -s&nbsp; or&nbsp;&nbsp; --serviceState<br>
+
 
 &nbsp;&nbsp;&nbsp; Provides information about the state of
 OpenDS as a Windows service.<br>
+
 
 -c {serviceName}&nbsp; or&nbsp;&nbsp; --cleanupService
 {serviceName}<br>
 
+
 &nbsp;&nbsp;&nbsp; Allows to disable the OpenDS service and
 to clean up the windows registry<br>
+
 
 &nbsp;&nbsp;&nbsp; information associated with the provided
 service name.<br>
 
+
 -H&nbsp; or&nbsp;&nbsp; --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information.</td>
 
+
       <td style="width: 551px;" valign="top"><big style="border-top: 3px double rgb(0, 0, 255); border-bottom: 3px double rgb(0, 0, 255); color: rgb(0, 0, 255); font-weight: bold;"><big><span style="font-weight: bold;">windows-service.bat</span></big></big><br>
+
 
 This utility may be used to configure OpenDS as a Windows service.<br>
 
+
 Usage:&nbsp; windows-service {options}<br>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 where {options} include:<br>
 
+
 -e, --enableService<br>
+
 
 &nbsp;&nbsp;&nbsp; Enables OpenDS as a Windows service.<br>
 
+
 -d, --disableService<br>
+
 
 &nbsp;&nbsp;&nbsp; Disables OpenDS as a Windows service and
 stops the server<br>
 
+
 -s, --serviceState<br>
+
 
 &nbsp;&nbsp;&nbsp; Provides information about the state of
 OpenDS as a Windows service.<br>
 
+
 -c, --cleanupService {serviceName}<br>
+
 
 &nbsp;&nbsp;&nbsp; Allows to disable the OpenDS service and
 to clean up the windows registry<br>
 
+
 &nbsp;&nbsp;&nbsp; information associated with the provided
 service name.<br>
 
+
 -H, --help<br>
+
 
 &nbsp;&nbsp;&nbsp; Display this usage information.</td>
 
+
     </tr>
 
+
+  
   </tbody>
 </table>
 
-<tt style="font-family: monospace;"><br>
 
 <br>
 
-</tt>
+
+<br>
+
+
+
 </body>
 </html>
