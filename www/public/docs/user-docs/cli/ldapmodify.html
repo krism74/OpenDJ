@@ -1,31 +1,53 @@
 <!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
 <html>
 <head>
-<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
-<style type="text/css"> 
+
+  <link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+
+  <style type="text/css"> 
 /* <![CDATA[ */
  @import "/branding/css/tigris.css";
  @import "/branding/css/inst.css";
  /* ]]> */
-</style>
-<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
-<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
-<title>OpenDS Directory Server - Quick Reference Guide</title>
+  </style>
+  <link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print">
+
+  <link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+
+  <title>OpenDS Directory Server - Quick Reference Guide</title>
 </head>
+
+
 <body>
-<table class="tertmasttable" width="100%" cellspacing="0">
+
+<table class="tertmasttable" cellspacing="0" width="100%">
+
   <tbody>
+
     <tr>
-      <td><div class="collectionheader">Command Line Usage Guide</div></td>
-      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+
+      <td>
+      <div class="collectionheader">Command Line Usage Guide</div>
+      </td>
+
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" align="middle" border="0" height="33" width="104"></a> </td>
+
     </tr>
+
+  
   </tbody>
 </table>
-<hr noshade size="1" >
-    <div align="right"><a href="index.html">Return to Command List</a></div>
-    <div class="secpageheader">The ldapmodify Utility</div>
+
+<hr noshade="noshade" size="1">
+    
+<div align="right"><a href="index.html">Return to Command List</a></div>
+
+    
+<div class="secpageheader">The ldapmodify Utility</div>
+
 
     <br>
+
     The <code>ldapmodify</code> utility may be used to perform LDAP modify,
     add, delete, and modify DN operations in the Directory Server.  The
     operations to perform in the server should be specified in LDIF change
@@ -33,31 +55,31 @@
     <a href="../../../standards/rfc2849.txt">RFC 2849</a>.  This change syntax
     uses the <code>changetype</code> keyword to indicate the type of change.
 
-    <br><br>
+    <br>
+<br>
+
     An add change record is very straightforward because it is just a complete
     entry in LDIF form with a <code>changetype</code> value of
     "<code>add</code>".  For example:
-    <blockquote><pre>dn: uid=john.doe,ou=People,dc=example,dc=com
-changetype: add
-objectClass: top
-objectClass: person
-objectClass: organizationalPerson
-objectClass: inetOrgPerson
-uid: john.doe
-givenName: John
-sn: Doe
-cn: John Doe
-mail: john.doe@example.com
-userPassword: password</pre></blockquote>
+    
+<blockquote>
+  <pre>dn: uid=john.doe,ou=People,dc=example,dc=com<br>changetype: add<br>objectClass: top<br>objectClass: person<br>objectClass: organizationalPerson<br>objectClass: inetOrgPerson<br>uid: john.doe<br>givenName: John<br>sn: Doe<br>cn: John Doe<br>mail: john.doe@example.com<br>userPassword: password</pre>
+</blockquote>
+
 
     <br>
+
     A delete change record is even simpler than an add.  It merely consists of
     a line with the entry DN followed by another line with a
     <code>changetype</code> of "<code>delete</code>".  For example:
-    <blockquote><pre>dn: uid=john.doe,ou=People,dc=example,dc=com
-changetype: delete</pre></blockquote>
+    
+<blockquote>
+  <pre>dn: uid=john.doe,ou=People,dc=example,dc=com<br>changetype: delete</pre>
+</blockquote>
+
 
     <br>
+
     Modify change records are the most complex because there are a number of
     variants.  They all start with the entry DN followed by a
     <code>changetype</code> of "<code>modify</code>", and then the next line
@@ -72,26 +94,27 @@ changetype: delete</pre></blockquote>
     starting the next line with a new <code>add</code>, <code>delete</code>, or
     <code>replace</code> tag followed by a colon and the next attribute name
     and then the set of values for that attribute.  For example:
-    <blockquote><pre>dn: uid=john.doe,ou=People,dc=example,dc=com
-changetype: modify
-replace: description
-description: This is the new description for John Doe
--
-add: mailAlternateAddress
-mailAlternateAddress: jdoe@example.com</pre></blockquote>
+    
+<blockquote>
+  <pre>dn: uid=john.doe,ou=People,dc=example,dc=com<br>changetype: modify<br>replace: description<br>description: This is the new description for John Doe<br>-<br>add: mailAlternateAddress<br>mailAlternateAddress: jdoe@example.com</pre>
+</blockquote>
+
 
     <br>
+
     Modify DN change records should always contain the <code>newRDN</code> and
     <code>deleteOldRDN</code> elements, and may optionally contain the
     <code>newSuperior</code> component to specify a new parent for the target
     entry.  For example:
-    <blockquote><pre>dn: uid=john.doe,ou=People,dc=example,dc=com
-changetype: moddn
-newRDN: uid=jdoe
-deleteOldRDN: 1</pre></blockquote>
+    
+<blockquote>
+  <pre>dn: uid=john.doe,ou=People,dc=example,dc=com<br>changetype: moddn<br>newRDN: uid=jdoe<br>deleteOldRDN: 1</pre>
+</blockquote>
+
 
 
     <br>
+
     If no arguments are provided to the <code>ldapmodify</code> tool, it
     attempts to interact with a Directory Server instance using an
     unauthenticated connection using the loopback address on port 389, and
@@ -101,113 +124,166 @@ deleteOldRDN: 1</pre></blockquote>
     to the server.  The complete set of arguments that may be used with the
     <code>ldapmodify</code> tool is:
      
-    <ul>
+    
+<ul>
+
       <li>
         <code>-h</code> <i>{address}</i>
         <br>
-        <code>--host</code> <i>{address}</i>
-        <br><br>
+
+        <code>--host</code>name <i>{address}</i>
+        <br>
+    <br>
+
         This argument specifies the address to use to communicate with the
         Directory Server.  It may be an IP address or a resolvable name.  If
         this is not provided, then a default value of "localhost" will be used.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-p</code> <i>{port}</i>
         <br>
+
         <code>--port</code> <i>{port}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the port to use to communicate with the
         Directory Server.  It should be an integer value between 1 and 65535,
         inclusive.  If this is not provided, then a default port of 389 will be
         used.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-Z</code>
         <br>
+
         <code>--useSSL</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument indicates that the communication with the Directory
         Server should be protected using SSL.  If this option is provided, then
         the <code>--port</code> option should be used to specify the secure
         port for the server.  This argument must not be used in conjunction
         with the <code>--useStartTLS</code> option.  For more information about
         using SSL, see <a href="ssl-tls.html">this page</a>.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-q</code>
         <br>
+
         <code>--useStartTLS</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument indicates that the communication with the Directory
         Server should be protected using the StartTLS extended operation.  This
         argument must not be used in conjunction with the <code>--useSSL</code>
         option.  For more information about using StartTLS, see
         <a href="ssl-tls.html">this page</a>.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-D</code> <i>{dn}</i>
         <br>
+
         <code>--bindDN</code> <i>{dn}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the DN to use when binding to the Directory
         Server through simple authentication.  It is not required when using
         SASL authentication or if no authentication is to be performed.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-w</code> <i>{password}</i>
         <br>
+
         <code>--bindPassword</code> <i>{password}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the password to use when authenticating to the
         Directory Server.  It is used for simple authentication, as well as for
         password-based SASL mechanisms like CRAM-MD5, DIGEST-MD5, and PLAIN.
         It is not required if no authentication is to be performed.  This
         option must not be used in conjunction with the
         <code>--bindPasswordFile</code> argument.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-j</code> <i>{path}</i>
         <br>
+
         <code>--bindPasswordFile</code> <i>{path}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the path to a file containing the password to
         use when authenticating to the Directory Server.  It is used for simple
         authentication, as well as for password-based SASL mechanisms like
         CRAM-MD5, DIGEST-MD5, and PLAIN.  It is not required if no
         authentication is to be performed.  This option must not be used in
         conjunction with the <code>--bindPassword</code> argument.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-a</code>
         <br>
+
         <code>--defaultAdd</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument indicates that the tool should attempt to treat any
         LDIF record without a <code>changetype</code> element as an add
         request.  This may be used in order to add entries from a standard LDIF
         file that does not contain information in the LDIF change format.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-f</code> <i>{path}</i>
         <br>
+
         <code>--filename</code> <i>{path}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the path to an LDIF file containing the changes
         to apply within the server.  The records in the LDIF file shoould be in
         the LDIF change format (i.e., including the <code>changetype</code>
@@ -217,7 +293,9 @@ deleteOldRDN: 1</pre></blockquote>
         <code>changetype</code> element.  The provided file may contain
         multiple changes as long as there is at least one blank line between
         change records.
-        <br><br>
+        <br>
+    <br>
+
         If this argument is not provided, then the <code>ldapmodify</code> tool
         will attempt to read change information from standard input.  This
         makes it possible to have the change records either provided
@@ -225,11 +303,15 @@ deleteOldRDN: 1</pre></blockquote>
         tool from some other source.
       </li>
 
+
       <li>
         <code>-r</code>
         <br>
+
         <code>--useSASLExternal</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies that the client should authenticate using the
         SASL EXTERNAL mechanism, which will attempt to identify the client
         using an SSL certificate that it presents to the Directory Server.  If
@@ -237,27 +319,39 @@ deleteOldRDN: 1</pre></blockquote>
         also be provided to specify the path to the client keystore, and either
         the <code>--useSSL</code> or the <code>--useStartTLS</code> option must
         be used to establish a secure communication channel with the server.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-o</code> <i>{option}</i>
         <br>
+
         <code>--saslOption</code> <i>{option}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument may be used to specify an option for use when performing
         SASL authentication.  Multiple SASL options may be provided by using
         this argument multiple times, once for each option.  See
         <a href="sasl-auth.html">this page</a> for more information on using
         SASL authentication in OpenDS clients.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-X</code>
         <br>
+
         <code>--trustAll</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument indicates that the client should trust any SSL
         certificate that the server may present when performing secure
         communication with either SSL or the StartTLS extended operation.  This
@@ -267,62 +361,92 @@ deleteOldRDN: 1</pre></blockquote>
         provided, then the <code>--trustStorePath</code> option should be used
         to specify the path to a trust store to consult in order to determine
         whether to trust a server certificate.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-K</code> <i>{path}</i>
         <br>
+
         <code>--keyStorePath</code> <i>{option}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the path to a client key store file that should
         be used for secure communication via SSL or the StartTLS extended
         operation.  This option is generally only required if the client needs
         to present its own certificate to the server, such as when performing
         SASL external authentication.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-W</code> <i>{password}</i>
         <br>
+
         <code>--keyStorePassword</code> <i>{password}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the password needed to access the contents of
         the client key store.  This is only required if the
         <code>--keyStorePath</code> option is used.  This option must not be
         used in conjunction with the <code>--keyStorePasswordFile</code>
         argument.
-        <br><br>
+        <br>
+    <br>
+
       </li>
 
+
       <li>
-        <code>--keyStorePasswordFile</code> <i>{path}</i>
-        <br><br>
+        <code>-u</code><code></code> <i>{path}</i>
+    <br>
+    <code>--keyStorePasswordFile</code> <i>{path}</i>
+        <br>
+    <br>
+
         This argument specifies the path to a file containing the password
         needed to access the contents of the client key store.  This is only
         required if the <code>--keyStorePath</code> option is used.  This
         option must not be used in conjunction with the
         <code>--keyStorePassword</code> argument.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-P</code> <i>{path}</i>
         <br>
+
         <code>--trustStorePath</code> <i>{option}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the path to a clien trust store file that
         should be used for secure communication via SSL or the StartTLS
         extended operation.  This argument is not needed if the
         <code>--trustAll</code> option is not used, although it is recommended
         that a trust store be used when working in a production environment.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>--trustStorePassword</code> <i>{password}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the password needed to access the contents of
         the client trust store.  This is only required if the
         <code>--trustStorePath</code> option is used and the specified trust
@@ -330,12 +454,18 @@ deleteOldRDN: 1</pre></blockquote>
         stores do not require this).  This option must not be used in
         conjunction with the <code>--trustStorePasswordFile</code>
         argument.
-        <br><br>
+        <br>
+    <br>
+
       </li>
 
+
       <li>
-        <code>--trustStorePasswordFile</code> <i>{path}</i>
-        <br><br>
+        <code>-U</code><code></code> <i>{path}</i>&nbsp;<code><br>
+--trustStorePasswordFile</code> <i>{path}</i>
+        <br>
+    <br>
+
         This argument specifies the path to a file containing the password
         needed to access the contents of the client trust store.  This is only
         required if the <code>--trustStorePath</code> option is used and the
@@ -343,14 +473,20 @@ deleteOldRDN: 1</pre></blockquote>
         contents (most trust stores do not require this).  This option must not
         be used in conjunction with the <code>--trustStorePassword</code>
         argument.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-Y</code> <i>{authzID}</i>
         <br>
+
         <code>--proxyAs</code> <i>{authzID}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies that the client should use the proxied
         authorization control to specify the identity of the user as whom the
         operations should be performed.  This will use version 2 of the proxied
@@ -361,14 +497,20 @@ deleteOldRDN: 1</pre></blockquote>
         "dn:uid=john.doe,ou=People,dc=example,dc=com"), or "u:" followed by the
         username (e.g., "u:john.doe").  If this argument is not provided, then
         proxied authorization will not be used.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-E</code>
         <br>
+
         <code>--reportAuthzID</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument indicates that the client should include the
         authorization identity request control (as defined in
         <a href="../../../standards/rfc3829.txt">RFC 3829</a>) in the bind
@@ -378,23 +520,33 @@ deleteOldRDN: 1</pre></blockquote>
         has completed (the line containing the authorization ID will be
         prefixed with a "<code>#</code>" character, making it a comment if the
         output is to be interpreted as LDIF).
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>--assertionFilter</code> <i>{filter}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies that the client should use the LDAP assertion
         control (as defined in 
         <a href="../../../standards/rfc4528.txt">RFC 4528</a>) to indicate that
         the operation should only be processed if the assertion contained in
         the provided filter is true.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>--preReadAttributes</code> <i>{attrList}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies that the client should use the LDAP ReadEntry
         pre-read control (as defined in
         <a href="../../../standards/rfc4527.txt">RFC 4527</a>) to indicate that
@@ -410,12 +562,17 @@ deleteOldRDN: 1</pre></blockquote>
         "<code>@</code><i>{ocname}</i>" for all attributes in the specified
         objectclass, etc.).  If no attributes are specified (signified with
         empty quotes), then all user attributes will be returned.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>--postReadAttributes</code> <i>{attrList}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies that the client should use the LDAP ReadEntry
         post-read control (as defined in
         <a href="../../../standards/rfc4527.txt">RFC 4527</a>) to indicate that
@@ -431,29 +588,40 @@ deleteOldRDN: 1</pre></blockquote>
         "<code>@</code><i>{ocname}</i>" for all attributes in the specified
         objectclass, etc.).  If no attributes are specified (signified with
         empty quotes), then all user attributes will be returned.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-J</code> <i>{controlSpec}</i>
         <br>
+
         <code>--control</code> <i>{controlSpec}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies that the client should include the specified
         control in update request(s) sent to the server.  This makes it
         possible to include arbitrary request controls that the client may not
         directly support.  The value for this argument must be in the form:
-        <blockquote>
-          <i>{oid}</i>[:<i>{criticality}</i>[:</i>{value}</i>|::<i>{b64value}</i>|:&lt;<i>{fileurl}</i>]]
+        
+    <blockquote>
+          <i>{oid}</i>[:<i>{criticality}</i>[:{value}|::<i>{b64value}</i>|:&lt;<i>{fileurl}</i>]]
         </blockquote>
+
         The elements of this value include:
-        <ul>
+        
+    <ul>
+
           <li>"<i>{oid}</i>" -- This specifies the OID for the control.  For
               certain types of controls, a text name may be used instead of the
               numeric OID (for update operations, this includes "managedsait"
               for the manage DSA IT control, "noop" for the LDAP no-op control,
               and "subtreedelete" for the subtree delete control).  This
               element must be provided.</li>
+
           <li>"<i>{criticality}</i>" -- This should be either
               "<code>true</code>" if the control should be marked critical
               (meaning that the server should not process the operation unless
@@ -461,98 +629,145 @@ deleteOldRDN: 1</pre></blockquote>
               "<code>false</code>" if the control should not be marked
               critical.  If this is not provided, then the control will not be
               marked critical.</li>
+
           <li>"<i>{value}</i>" -- This specifies the value for the control.
               This form should only be used if the value can be expressed as a
               string.  It must not be used in conjunction with either the
               "::<i>{b64value}</i>" or ":&lt;<i>{fileurl}</i>" forms.  If none
               of these options is present, then the control will not have a
               value.</li>
+
           <li>"<i>{b64value}</i>" -- This specifies the value for the control
               in base64-encoded form.  It must not be used in conjunction with
               either the ":<i>{value}</i>" or ":&lt;<i>{fileurl}</i>" forms.
               If none of these options is present, then the control will not
               have a value.</li>
+
           <li>"<i>{fileurl}</i>" -- This specifies a URL that references a file
               from which the value of the control should be taken.  It must not
               be used in conjunction with either the ":<i>{value}</i>" or
               "::<i>{b64value}</i>" forms.  If none of these options is
               present, then the control will not have a value.</li>
-        </ul>
+
+        
+    </ul>
+
         For example, the value "<code>1.2.3.4:true:foo</code>" will include a
         critical control with an OID of "1.2.3.4" and a string value of "foo".
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-V</code> <i>{version}</i>
         <br>
+
         <code>--version</code> <i>{version}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the LDAP protocol version that the client
         should use when communicating with the Directory Server.  The value
         must be either "2" (for LDAPv2 communication) or "3" (for LDAPv3).  If
         this argument is not provided, then the client will use LDAPv3.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-i</code> <i>{charset}</i>
         <br>
+
         <code>--encoding</code> <i>{charset}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the character set that the client will use to
         interpret the information that should be used to generate the update
         request.  If this is not provided, then a default of "UTF-8" will be
         used.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-c</code>
         <br>
+
         <code>--continueOnError</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument indicates that the client should continue processing even
         if an error occurs.  Normally, the tool will exit immediately after the
         first error is encountered, regardless of whether the modifications are
         provided via standard input or from a file.  With this option, the
         error will be reported, but processing will continue.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-n</code>
         <br>
+
         <code>--noop</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument indicates that the client should report what it would do
         but should not actually perform any updates or communicate with the
         server in any way.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-v</code>
         <br>
+
         <code>--verbose</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument indicates that the client should provide verbose
         information about the processing that it is performing and the
         interaction that it has with the server.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-H</code>
         <br>
+
         <code>--help</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument will display usage information for the
         <code>ldapmodify</code> utility and will exit without attempting to
         perform any additional processing.
-        <br><br>
-      </li>
-    </ul>
-  </body>
-</html>
+        <br>
+    <br>
 
+      </li>
+
+    
+</ul>
+
+  
+</body>
+</html>

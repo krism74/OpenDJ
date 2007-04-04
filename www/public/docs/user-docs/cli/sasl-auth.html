@@ -1,79 +1,121 @@
 <!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
 <html>
 <head>
-<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
-<style type="text/css"> 
+
+  <link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+
+  <style type="text/css"> 
 /* <![CDATA[ */
  @import "/branding/css/tigris.css";
  @import "/branding/css/inst.css";
  /* ]]> */
-</style>
-<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
-<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
-<title>OpenDS Directory Server - Quick Reference Guide</title>
+  </style>
+  <link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print">
+
+  <link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+
+  <title>OpenDS Directory Server - Quick Reference Guide</title>
 </head>
+
+
 <body>
-<table class="tertmasttable" width="100%" cellspacing="0">
+
+<table class="tertmasttable" cellspacing="0" width="100%">
+
   <tbody>
+
     <tr>
-      <td><div class="collectionheader">Command Line Usage Guide</div></td>
-      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+
+      <td>
+      <div class="collectionheader">Command Line Usage Guide</div>
+      </td>
+
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" align="middle" border="0" height="33" width="104"></a> </td>
+
     </tr>
+
+  
   </tbody>
 </table>
-<hr noshade size="1" >
-    <div align="right"><a href="index.html">Return to Command List</a></div>
-    <div class="secpageheader">Using SASL Authentication in OpenDS Clients</div>
+
+<hr noshade="noshade" size="1">
+    
+<div align="right"><a href="index.html">Return to Command List</a></div>
+
+    
+<div class="secpageheader">Using SASL Authentication in OpenDS Clients</div>
+
 
     <br>
+
     The LDAP protocol definition provides two ways that clients may
     authenticate to the server.  LDAP simple authentication (in which the
     client specifies the DN and password for the user) is by far the most
     common mechanism, and in most cases it is also the easiest to use.  But it
     does have a number of limitations, including:
-    <ul>
+    
+<ul>
+
       <li>It always requires the user to provide the full DN, rather than
           something that could be more user-friendly like a username.</li>
+
       <li>It only allows for password-based authentication.</li>
+
       <li>It requires that the client provide the complete clear-text password
           to the server.</li>
-    </ul>
+
+    
+</ul>
+
 
     <br>
+
     To address these issues, it is also possible to authenticate clients
     through the Simple Authentication and Security Layer (SASL), as defined in
     <a href="../../../standards/rfc4422.txt">RFC 4422</a>.  This is a very
     extensible framework, and makes it possible for servers to support many
     different kinds of authentication.  At present, OpenDS supports the
     following SASL mechanisms:
-    <ul>
+    
+<ul>
+
       <li>ANONYMOUS -- This mechanism does not actually authenticate clients,
           but does provide a mechanism for including trace information in
           server logs for debugging purposes.</li>
+
       <li>CRAM-MD5 -- This mechanism provides the ability for clients to use
           password-based authentication without sending the clear-text password
           to the server.  It is similar to, although somewhat less secure than,
           the DIGEST-MD5 mechanism.</li>
+
       <li>DIGEST-MD5 -- This mechanism provides the ability for clients to use
           password-based authentication without sending the password to the
           server.  Instead, the client only needs to provide information that
           proves it knows the password.  This mechanism offers more options and
           better security than the CRAM-MD5 mechanism.</li>
+
       <li>EXTERNAL -- This mechanism provides the ability for clients to
           identify themselves based on information provided outside of the
           direct flow of LDAP communication.  In OpenDS, this may be achieved
           through the use of SSL client certificates.</li>
+
       <li>GSSAPI -- This mechanism provides the ability for clients to
           authenticate to the server through their participation in a
           Kerberos V environment.</li>
+
       <li>PLAIN -- This mechanism uses a password based authentication, but
           does offer the ability to use a username rather than requiring a
           DN.</li>
-    </ul>
+
+    
+</ul>
+
     Support for additional SASL mechanisms may also be added by implementing
     custom SASL mechanism handlers in the server.
 
-    <br><br>
+    <br>
+<br>
+
     Because SASL mechanisms are so extensible, the set of information that the
     client needs to provide to the server in order to perform the
     authentication varies from one mechanism to another.  As such, OpenDS
@@ -83,136 +125,186 @@
     user should select which SASL mechanism to use using the "mech" option,
     like:
 
-    <blockquote>
+    
+<blockquote>
       <code>--saslOption mech=DIGEST-MD5</code>
     </blockquote>
+
 
     The other options that are available for use depend on the SASL mechanism
     that has been chosen, and they are listed below.
 
-    <br><br>
+    <br>
+<br>
+
     <b>Authorization IDs</b>
     <br>
+
     Many of the SASL mechanisms below provide the ability to identify a user
     based on an authorization ID rather than a user DN.  An authorization ID
     may be given in one of two forms:
-    <ul>
+    
+<ul>
+
       <li>"<code>dn:</code><i>{dn}</i> -- This is used to provide the full DN
           of the user to authenticate (e.g.,
           "<code>dn:uid=john.doe,ou=People,dc=example,dc=com</code>").  A value
           of "<code>dn:</code>" with no DN is to be treated as the anonymous
           user, although this form is not accepted by many of the SASL
           mechanisms listed below.</li>
+
       <li>"<code>u:</code><i>{username}</i> -- This is used to provide the
           username of the user rather tahn the full DN (e.g.,
           "<code>u:john.doe</code>").</li>
-    </ul>
+
+    
+</ul>
+
     If the "<code>u:</code><i>{username}</i>" form is used, then the mechanism
     that the server will use to resolve that username to the corresponding user
     entry will be based on the identity mapping configuration within the
     server.
 
-    <br><br>
+    <br>
+<br>
+
     <b>SASL Options for the ANONYMOUS Mechanism</b>
     <br>
+
     Because the ANONYMOUS mechanism isn't really used to perform
     authentication, no additional options are required.  However, there is one
     optional option that may be given:
-    <ul>
+    
+<ul>
+
       <li><code>trace</code> -- This option may be used to provide a trace
           string that will be written to the server's access log.  This may be
           useful for debugging purposes or to identify the client, although
           without authentication it is not possible to rely on the validity of
           this value.</li>
-    </ul>
+
+    
+</ul>
+
 
     The following command demonstrates the use of SASL anonymous
     authentication:
 
-    <blockquote>
-      <code>ldapsearch --host server.example.com --port 389
+    
+<blockquote>
+      <code>ldapsearch --hostname server.example.com --port 389
             --saslOption mech=ANONYMOUS
             --saslOption "trace=Example Trace String" --baseDN ""
             --searchScope base "(objectClass=*)"</code>
     </blockquote>
 
-    <br><br>
+
+    <br>
+<br>
+
     <b>SASL Options for the CRAM-MD5 Mechanism</b>
     <br>
+
     The CRAM-MD5 mechanism is used to perform password-based authentication to
     the server without exposing the clear-text password.  It does this by
     providing an MD5 digest of the clear-text password combined with some
     randomly-generated data provided by the server, which helps prevent replay
     attacks.
 
-    <br><br>
+    <br>
+<br>
+
     The SASL CRAM-MD5 mechanism has one SASL option that must be provided:
-    <ul>
+    
+<ul>
+
       <li><code>authid</code> -- This specifies the identity of the user that
           is authenticating to the server.  It should be an authorization ID
           value as described above.</li>
-    </ul>
+
+    
+</ul>
+
 
     The password is specified using either the <code>--bindPassword</code> or
     <code>--bindPasswordFile</code> option, just as when using simple
     authentication.  The following command demonstrates the use of SASL
     CRAM-MD5 authentication:
 
-    <blockquote>
-      <code>ldapsearch --host server.example.com --port 389
+    
+<blockquote>
+      <code>ldapsearch --hostname server.example.com --port 389
             --saslOption mech=CRAM-MD5 --saslOption authid=u:john.doe
             --baseDN "" --searchScope base "(objectClass=*)"</code>
     </blockquote>
 
-    <br><br>
+
+    <br>
+<br>
+
     <b>SASL Options for the DIGEST-MD5 Mechanism</b>
     <br>
+
     The DIGEST-MD5 mechanism is very similar to the CRAM-MD5 mechanism, but it
     is more secure because it combines random data from both the client and the
     server in order to help foil both replay and man-in-the-middle attacks.
     DIGEST-MD5 authentication also offers a number of SASL options, including:
-    <ul>
+    
+<ul>
+
       <li><code>authid</code> -- This specifies the identity of the user that
           is authenticating to the server.  It should be an authorization ID
           value as described above.  This option must be provided.</li>
+
       <li><code>realm</code> -- This specifies the realm that should be used
           when authenticating to the server.  This parameter is optional if
           there is only a single user suffix defined, but if there are multiple
           user suffixes then this must be the suffix below which the user
           entry exists.</li>
+
       <li><code>qop</code> -- This specifies the quality of protection to use
           for the communication.  At the present time, only the "auth" QoP
           value is supported, and it is the default that will be used if this
           SASL option is not explicitly provided.  Neither the "auth-int" or
           "auth-conf" QoP modes are currently available for use.</li>
+
       <li><code>digest-uri</code> -- This specifies the digest URI that the
           client is using to communicate with the server.  This is an optional
           parameter, but if it is provided, it should be in the form
           "<code>ldap/</code><i>{serveraddress}</i>", where
           "<i>{serveraddress}</i>" is the fully-qualified address of the
           server.</li>
+
       <li><code>authzid</code> -- This specifies the authorization ID that
           should be used during the authentication process.  This may be used
           to indicate that the operations requested on the connection after
           authentication should be performed under the authority of another
           user.  This capability is not yet supported in OpenDS.</li>
-    </ul>
+
+    
+</ul>
+
 
     The password is specified using either the <code>--bindPassword</code> or
     <code>--bindPasswordFile</code> option, just as when using simple
     authentication.  The following command demonstrates the use of SASL
     DIGEST-MD5 authentication:
 
-    <blockquote>
-      <code>ldapsearch --host server.example.com --port 389
+    
+<blockquote>
+      <code>ldapsearch --hostname server.example.com --port 389
             --saslOption mech=DIGEST-MD5 --saslOption authid=u:john.doe
             --saslOption realm=dc=example,dc=com --baseDN "" --searchScope base
             "(objectClass=*)"</code>
     </blockquote>
 
-    <br><br>
+
+    <br>
+<br>
+
     <b>SASL Options for the EXTERNAL Mechanism</b>
     <br>
+
     The EXTERNAL mechanism is used to perform authentication based on
     information that is available to the server outside of the LDAP session.
     At present, this is available only through SSL client authentication, in
@@ -221,15 +313,18 @@
     StartTLS when communicating with the server, and a client certificate
     keystore must be available.
 
-    <br><br>
+    <br>
+<br>
+
     The EXTERNAL mechanism doesn't support any additional SASL options.  In
     most cases, it can be requested using either
     <code>--saslOption mech=EXTERNAL</code>" or
     "<code>--useSASLExternal</code>".  The following command demonstrates the
     use of SASL EXTERNAL authentication:
 
-    <blockquote>
-      <code>ldapsearch --host server.example.com --port 636 --useSSL
+    
+<blockquote>
+      <code>ldapsearch --hostname server.example.com --port 636 --useSSL
             --keyStorePath /path/to/key.store
             --keyStorePasswordFile /path/to/key.store.pin
             --trustStorePath /path/to/trust.store
@@ -237,33 +332,45 @@
             "(objectClass=*)"</code>
     </blockquote>
 
-    <br><br>
+
+    <br>
+<br>
+
     <b>SASL Options for the GSSAPI Mechanism</b>
     <br>
+
     The GSSAPI mechanism is used to perform authentication in a Kerberos V
     environment, and generally requires that the client system be configured
     to participate in such an environment.  The options available for use with
     the GSSAPI mechanism include:
-    <ul> 
+    
+<ul>
+ 
       <li><code>authid</code> -- This specifies the authentication ID that
           should be used to identify the user.  This should be in the form of
           a Kerberos principal, and not in the authorization ID form listed
           above.  This must be provided.</li>
+
       <li><code>authzid</code> -- This specifies the authorization ID that
           should be used to identify the user under whose authority operations
           should be performed.  This capability is not yet supported in
           OpenDS.</li>
+
       <li><code>kdc</code> -- This specifies the address of the KDC to which
           authentication should be performed.  This is optional, and if it is
           not provided then the client will attempt to determine it from the
           underlying system's Kerberos configuration.  If an address is
           provided, then it is recommended that it be a fully-qualified,
           DNS-resolvable address.</li>
+
       <li><code>realm</code> -- This specifies the Kerberos realm to which the
           authentication should be performed.  This is optional, and if it is
           not provided then the client will attempt to determine it from the
           underlying system's Kerberos configuration.</li>
-    </ul> 
+
+    
+</ul>
+ 
 
     If the user already has a valid Kerberos ticket on the system when
     attempting to use GSSAPI, then the client will attempt to use it so that no
@@ -272,43 +379,58 @@
     will need to be provided using either the <code>--bindPassword</code> or
     <code>--bindPasswordFile</code> options.
 
-    <br><br>
+    <br>
+<br>
+
     The following command demonstrates the use of SASL GSSAPI authentication
     for a user that already has a valid Kerberos session:
 
-    <blockquote>
-      <code>ldapsearch --host server.example.com --port 389
+    
+<blockquote>
+      <code>ldapsearch --hostname server.example.com --port 389
             --saslOption mech=GSSAPI --saslOption authid=jdoe@EXAMPLE.COM
             --baseDN "" --searchScope base "(objectClass=*)"</code>
     </blockquote>
 
-    <br><br>
+
+    <br>
+<br>
+
     <b>SASL Options for the PLAIN Mechanism</b>
     <br>
+
     The PLAIN mechanism provides many of the same capabilities as LDAP simple
     authentication, although the user may be identified in the form of an
     authorization ID rather than requiring a full DN.  The following options
     are available for use when using SASL PLAIN authentication:
-    <ul>
+    
+<ul>
+
       <li><code>authid</code> -- This specifies the identity of the user that
           is authenticating to the server.  It should be an authorization ID
           value as described above.  This option must be provided.</li>
+
       <li><code>authzid</code> -- This specifies the identity of the user under
           whose authority operations should be performed.  It should also be
           in the form of an authorization ID.  This capability is not yet
           supported in OpenDS.</li>
-    </ul>
+
+    
+</ul>
+
 
     The password is specified using either the <code>--bindPassword</code> or
     <code>--bindPasswordFile</code> option, just as when using simple
     authentication.  The following command demonstrates the use of SASL PLAIN
     authentication:
 
-    <blockquote>
-      <code>ldapsearch --host server.example.com --port 389
+    
+<blockquote>
+      <code>ldapsearch --hostname server.example.com --port 389
             --saslOption mech=PLAIN --saslOption authid=u:john.doe
             --baseDN "" --searchScope base "(objectClass=*)"</code>
     </blockquote>
-  </body>
-</html>
 
+  
+</body>
+</html>

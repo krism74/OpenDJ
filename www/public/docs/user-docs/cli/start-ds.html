@@ -1,102 +1,161 @@
 <!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
 <html>
 <head>
-<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
-<style type="text/css"> 
+
+  <link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+
+  <style type="text/css"> 
 /* <![CDATA[ */
  @import "/branding/css/tigris.css";
  @import "/branding/css/inst.css";
  /* ]]> */
-</style>
-<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
-<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
-<title>OpenDS Directory Server - Quick Reference Guide</title>
+  </style>
+  <link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print">
+
+  <link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+
+  <title>OpenDS Directory Server - Quick Reference Guide</title>
 </head>
+
+
 <body>
-<table class="tertmasttable" width="100%" cellspacing="0">
+
+<table class="tertmasttable" cellspacing="0" width="100%">
+
   <tbody>
+
     <tr>
-      <td><div class="collectionheader">Command Line Usage Guide</div></td>
-      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+
+      <td>
+      <div class="collectionheader">Command Line Usage Guide</div>
+      </td>
+
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" align="middle" border="0" height="33" width="104"></a> </td>
+
     </tr>
+
+  
   </tbody>
 </table>
-<hr noshade size="1" >
-    <div align="right"><a href="index.html">Return to Command List</a></div>
-    <div class="secpageheader">The start-ds Utility</div>
+
+<hr noshade="noshade" size="1">
+    
+<div align="right"><a href="index.html">Return to Command List</a></div>
+
+    
+<div class="secpageheader">The start-ds Utility</div>
+
 
     <br>
+
     The <code>start-ds</code> utility may be used to start the Directory
     Server, as well as to provide general information about the product.
 
-    <br><br>
+    <br>
+<br>
+
     It may be run without any arguments, in which case it will start the server
     as a background process.  In this case, the script will not exit until the
     server has either started successfully or has encountered an error that
     prevents it from starting.
 
-    <br><br>
+    <br>
+<br>
+
     The arguments available for this utility include:
 
-    <ul>
+    
+<ul>
+
       <li>
         <code>-N</code>
         <br>
+
         <code>--nodetach</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument will cause the Directory Server to start as a
         foreground process which does not detach from the terminal.  When the
         server is running in this mode, it may be stopped using the
         <code>stop-ds</code> tool from another window, or by pressing
         <code>Ctrl+C</code> in the terminal in which the server is running.
-        <br><br>
+        <br>
+    <br>
+
       </li>
 
+
       <li>
-        <code>-v</code>
-        <br>
+        <code>-V</code><br>
+
         <code>--version</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument will cause the Directory Server to display its version
         information and exit rather than attempting to start the server.
-        <br><br>
+        <br>
+    <br>
+
       </li>
 
+
       <li>
-        <code>-V</code>
+        <code>-F</code>
         <br>
+
         <code>--fullVersion</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument will cause the Directory Server to display a more
         verbose set of version information than will be displayed when using
         the <code>--version</code> option.  It will also exit after
         displaying the version information rather than actually attempting to
         start the server.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-s</code>
         <br>
+
         <code>--systemInfo</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument will cause the Directory Server to display a set of
         general information about the system on which it is installed.  It
         will then exit rather than attempting to actually start the server.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-H</code>
         <br>
+
         <code>--help</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument will cause the Directory Server to display usage
         information and then exit rather than actually attempting to start
         the server.
-        <br><br>
-      </li>
-    </ul>
-  </body>
-</html>
+        <br>
+    <br>
 
+      </li>
+
+    
+</ul>
+
+  
+</body>
+</html>

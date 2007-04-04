@@ -1,36 +1,60 @@
 <!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
 <html>
 <head>
-<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
-<style type="text/css"> 
+
+  <link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+
+  <style type="text/css"> 
 /* <![CDATA[ */
  @import "/branding/css/tigris.css";
  @import "/branding/css/inst.css";
  /* ]]> */
-</style>
-<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
-<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
-<title>OpenDS Directory Server - Quick Reference Guide</title>
+  </style>
+  <link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print">
+
+  <link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+
+  <title>OpenDS Directory Server - Quick Reference Guide</title>
 </head>
+
+
 <body>
-<table class="tertmasttable" width="100%" cellspacing="0">
+
+<table class="tertmasttable" cellspacing="0" width="100%">
+
   <tbody>
+
     <tr>
-      <td><div class="collectionheader">Command Line Usage Guide</div></td>
-      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+
+      <td>
+      <div class="collectionheader">Command Line Usage Guide</div>
+      </td>
+
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" align="middle" border="0" height="33" width="104"></a> </td>
+
     </tr>
+
+  
   </tbody>
 </table>
-<hr noshade size="1" >
-    <div align="right"><a href="index.html">Return to Command List</a></div>
-    <div class="secpageheader">Using SSL and StartTLS in OpenDS Clients</div>
+
+<hr noshade="noshade" size="1">
+    
+<div align="right"><a href="index.html">Return to Command List</a></div>
+
+    
+<div class="secpageheader">Using SSL and StartTLS in OpenDS Clients</div>
+
 
     <br>
+
     All of the utilities provided with OpenDS that can communicate with the
     server over LDAP also support the ability to secure that communication with
     either SSL or StartTLS.
 
-    <br><br>
+    <br>
+<br>
+
     SSL (secure sockets layer) is a very common technology that is used to
     encrypt all communication that a client has with the server, from the time
     the connection is established until the time that it is closed.  If SSL is
@@ -40,7 +64,9 @@
     important to understand that the use of TLS is not the same as the use of
     the StartTLS extended operation.
 
-    <br><br>
+    <br>
+<br>
+
     The StartTLS extended operation is a mechanism described in
     <a href="../../../standards/rfc4513.txt">RFC 4513</a> that may also be used
     to secure the communication between LDAP clients and the Directory Server.
@@ -59,9 +85,12 @@
     client and the server it is only necessary to allow communication on a
     single port.
 
-    <br><br>
+    <br>
+<br>
+
     <b>Blindly Trusting Any Server Certificate</b>
     <br>
+
     The easiest way to communicate securely with the Directory Server is to
     configure the client to automatically trust any certificate that the server
     presents to it.  However, this is also the least secure method of
@@ -71,20 +100,26 @@
     for testing purposes, or when there is a relative degree of confidence that
     the target server may be trusted.
 
-    <br><br>
+    <br>
+<br>
+
     This "blind trust" capability may be enabled using either the
     <code>-X</code> or the <code>--trustAll</code> argument.  For example, the
     following command will retrieve the root DSE from a Directory Server over
     SSL:
 
-    <blockquote>
-      <code>ldapsearch --host server.example.com --port 636 --useSSL --trustAll
+    
+<blockquote>
+      <code>ldapsearch --hostname server.example.com --port 636 --useSSL --trustAll
             --baseDN "" --searchScope base "(objectClass=*)"</code>
     </blockquote>
 
+
     <br>
+
     <b>Using a Certificate Trust Store</b>
     <br>
+
     A more secure way to perform secure communication with the Directory Server
     is to configure the client to use a certificate trust store, which contains
     information about the certificate(s) that it will trust.  This may be done
@@ -98,16 +133,20 @@
     then you can add it to the trust store and secure communication will be
     allowed.
 
-    <br><br>
+    <br>
+<br>
+
     The following command will retrieve the root DSE from a Directory Server
     using security provided with the StartTLS extended operation and a
     certificate trust store:
 
-    <blockquote>
-      <code>ldapsearch --host server.example.com --port 389 --useStartTLS
+    
+<blockquote>
+      <code>ldapsearch --hostname server.example.com --port 389 --useStartTLS
             --trustStorePath /path/to/trust.store --baseDN ""
             --searchScope base "(objectClass=*)"</code>
     </blockquote>
+
 
     Note that in some rare cases, the certificate trust store may require that
     a PIN be provided in order to access its contents.  If this is necessary,
@@ -116,9 +155,12 @@
     the file containing that PIN with the
     <code>--trustStorePasswordFile</code> option.
 
-    <br><br>
+    <br>
+<br>
+
     <b>Providing a Client Certificate</b>
     <br>
+
     In some cases, it may be necessary for the client to present its own
     certificate to the Directory Server.  This will be needed if the client
     wishes to perform SASL EXTERNAL authentication, or if the server is
@@ -133,17 +175,21 @@
     to a file containing the PIN with the <code>--keyStorePasswordFile</code>
     argument.
 
-    <br><br>
+    <br>
+<br>
+
     The following command will perform SASL EXTERNAL authentication over an
     SSL-based client connection to retrieve the root DSE from the server:
 
-    <blockquote>
-      <code>ldapsearch --host server.example.com --port 636 --useSSL
+    
+<blockquote>
+      <code>ldapsearch --hostname server.example.com --port 636 --useSSL
             --keyStorePath /path/to/key.store
             --keyStorePasswordFile /path/to/key.store.pin
             --trustStorePath /path/to/trust/store --useSASLExternal
             --baseDN "" --searchScope base "(objectClass=*)"</code>
     </blockquote>
-  </body>
-</html>
 
+  
+</body>
+</html>

@@ -1,78 +1,121 @@
 <!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
 <html>
 <head>
-<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
-<style type="text/css"> 
+
+  <link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+
+  <style type="text/css"> 
 /* <![CDATA[ */
  @import "/branding/css/tigris.css";
  @import "/branding/css/inst.css";
  /* ]]> */
-</style>
-<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
-<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
-<title>OpenDS Directory Server - Quick Reference Guide</title>
+  </style>
+  <link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print">
+
+  <link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+
+  <title>OpenDS Directory Server - Quick Reference Guide</title>
 </head>
+
+
 <body>
-<table class="tertmasttable" width="100%" cellspacing="0">
+
+<table class="tertmasttable" cellspacing="0" width="100%">
+
   <tbody>
+
     <tr>
-      <td><div class="collectionheader">Command Line Usage Guide</div></td>
-      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+
+      <td>
+      <div class="collectionheader">Command Line Usage Guide</div>
+      </td>
+
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" align="middle" border="0" height="33" width="104"></a> </td>
+
     </tr>
+
+  
   </tbody>
 </table>
-<hr noshade size="1" >
-    <div align="right"><a href="index.html">Return to Command List</a></div>
-    <div class="secpageheader">The import-ldif Utility</div>
+
+<hr noshade="noshade" size="1">
+    
+<div align="right"><a href="index.html">Return to Command List</a></div>
+
+    
+<div class="secpageheader">The import-ldif Utility</div>
+
 
     <br>
+
     The <code>import-ldif</code> utility may be used to populate a Directory
     Server backend with data read from an LDIF file, or with data generated
     based on a MakeLDIF template.  In most cases, it is significantly faster
     than adding entries using LDAP.
 
-    <br><br>
+    <br>
+<br>
+
     In order to use this tool, the <code>--backendID</code> argument is
     required to specify the backend into which the data should be imported, as
     well as either the <code>--ldifFile</code> or <code>templateFile</code>
     option to specify the data source.  The complete set of options that may
     be used with this tool is:
 
-    <ul>
+    
+<ul>
+
       <li>
         <code>-n</code> <i>{backendID}</i>
         <br>
+
         <code>--backendID</code> <i>{backendID}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the backend ID of the backend into which the
         data should be imported.  The available backends in the server may be
         determined using the <a href="list-backends.html">list-backends</a>
         tool.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-l</code> <i>{path}</i>
         <br>
+
         <code>--ldifFile</code> <i>{path}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the path to the LDIF file containing the data
         to import into the specified backend.  This argument must not be used
         in conjunction with the <code>--templateFile</code> argument.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-t</code> <i>{path}</i>
         <br>
+
         <code>--templateFile</code> <i>{path}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the path to a MakeLDIF template file that
         should be used to generate the data to import into the backend.  If
         this argument is provided, then it is recommended that the
         <code>--randomSeed</code> argument also be used to ensure that the
         data generated for a given template is consistently the same.
-        <br><br>
+        <br>
+    <br>
+
         Note that if the path provided for this argument is an absolute path,
         then it will be interpreted as-is.  If it is a relative path, then it
         will first be interpreted as relative to the
@@ -80,220 +123,324 @@
         If no such template file exists relative to that path, then the server
         will look for the file relative to the user's current working directory
         when the tool was invoked.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-a</code>
         <br>
+
         <code>--append</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument indicates that the data should be appended to the data
         that already exists in the backend, rather than clearing all data in
         the backend before starting the import.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-r</code>
         <br>
+
         <code>--replaceExisting</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument indicates that if an entry to import already exists in
         the target backend, it will be replaced with the content from the
         import.  If this argument is not provided, then existing entries will
         not be overwritten.  This is only applicable if the
         <code>--append</code> option has also been provided.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-b</code> <i>{baseDN}</i>
         <br>
+
         <code>--includeBranch</code> <i>{baseDN}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the base DN for a branch of the data that
         should be included in the import.  This argument may be used multiple
         times to specify multiple include base DNs.  If this argument is
         provided, then any entries contained in the import source that are not
         at or below one of the provided include base DNs will be skipped.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-B</code> <i>{baseDN}</i>
         <br>
+
         <code>--excludeBranch</code> <i>{baseDN}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the base DN for a branch of the data that
         should be excluded from the import.  This argument may be used multiple
         times to specify multiple exclude base DNs.  If this argumnt is
         provided, then any entries contained in the import source that are at
         or below one of the provided exclude base DNs will be skipped.
-        <br><br>
+        <br>
+    <br>
+
         Note that the use of the <code>--excludeBranch</code> option takes
         precedence over the <code>--includeBranch</code> option, so if an entry
         is at or below a DN contained in both the include and exclude lists, it
         will not be included.  This capability makes it possible to include
         data for only part of a branch (e.g., all entries below
         "dc=example,dc=com" except those below "ou=People,dc=example,dc=com").
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-i</code> <i>{attribute}</i>
         <br>
+
         <code>--includeAttribute</code> <i>{attribute}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the name of an attribute that should be
         included in the import.  This argument may be used multiple times to
         specify multiple include attributes.  If this argument is provided,
         then any attributes not listed in this set will be omitted from the
         entries that are imported.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-e</code> <i>{attribute}</i>
         <br>
+
         <code>--excludeAttribute</code> <i>{attribute}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the name of an attribute that should be
         excluded from the import.  This argument may be used multiple times to
         specify multiple exclude attributes.  If this argument is provided,
         then any attributes listed in this set will be omitted from the entries
         that are imported.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-I</code> <i>{filter}</i>
         <br>
+
         <code>--includeFilter</code> <i>{filter}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies a search filter that may be used to identify
         entries that should be included in the import.  This argument may be
         used multiple times to specify multiple include filters.  If this
         argument is provided, then any entry in the import source that does not
         match an include filter will be skipped.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-E</code> <i>{filter}</i>
         <br>
+
         <code>--excludeFilter</code> <i>{filter}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies a search filter that may be used to identify
         entries that should be excluded from the import.  This argument may be
         used multiple times to specify multiple exclude filters.  If this
         argument is provided, then any entry in the import source that matches
         an exclude filter will be skipped.
-        <br><br>
+        <br>
+    <br>
+
         Note that the use of the <code>--excludeFilter</code> argument takes
         precedence over the <code>--includeFilter</code> option, so if an entry
         matches filters in the include and exclude lists, then the entry will
         be skipped.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-R</code> <i>{path}</i>
         <br>
+
         <code>--rejectFile</code> <i>{path}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the path to a file that will be used to hold
         any entries that should be included in the import (i.e., not excluded
         by the include/exclude base DN or filter lists) but are rejected by the
         server for some reason.  A comment will be included before the entry
         indicating the reason that it was rejected.  If this argument is not
         provided, then no reject file will be written.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-O</code>
         <br>
+
         <code>--overwriteRejects</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument indicates that the server should overwrite the specified
         reject file if it already exists.  If this option is not provided, then
         any rejected entries will be appended to the file rather than
         overwriting it.  This option is only applicable if the
         <code>--rejectFile</code> argument is also provided.
-        <br><br>
+        <br>
+    <br>
+
       </li>
 
+
       <li>
-        <code>-S</code> <i>{seed}</i>
+        <code>-s </code><i>{seed}</i>
         <br>
+
         <code>--randomSeed</code> <i>{seed}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the seed that should be used for the random
         number generator when generating entries from a MakeLDIF template.
         Seeding the random number generator with a particular value may be used
         to ensure that the same template and random seed will always generate
         exactly the same data.
-        <br><br>
+        <br>
+    <br>
+
       </li>
 
+
       <li>
-        <code>-s</code>
-        <br>
+        <code>-S</code><br>
+
         <code>--skipSchemaValidation</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument indicates that the server should not perform any schema
         validation on the entries as they are imported.  This may provide
         improved import performance, but it should only be used if it is known
         that import data is valid.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-c</code>
         <br>
+
         <code>--isCompressed</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument indicates that the file containing the LDIF import data
         is compressed.  It should be compressed using the GZIP format, which is
         the format used by the <code>--compressLDIF</code> option of the
         <code>export-ldif</code> tool.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-y</code>
         <br>
+
         <code>--isEncrypted</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument indicates that the file containing the LDIF import data
         is encrypted.  Only data encrypted with the <code>--encryptLDIF</code>
         option of the <code>export-ldif</code> tool.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-q</code>
         <br>
+
         <code>--quiet</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument indicates that the import should be performed in quiet
         mode, in which no output will be generated unless a significant error
         occurs during the import process.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-H</code>
         <br>
+
         <code>--help</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument will display usage information for the
         <code>import-ldif</code> utility and will exit without attempting to
         import any data.
-        <br><br>
-      </li>
-    </ul>
-  </body>
-</html>
+        <br>
+    <br>
 
+      </li>
+
+    
+</ul>
+
+  
+</body>
+</html>

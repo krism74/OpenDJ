@@ -1,100 +1,156 @@
 <!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN" "http://style.tigris.org/nonav/tigris_transitional.dtd">
 <html>
 <head>
-<link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
-<style type="text/css"> 
+
+  <link rel="SHORTCUT ICON" href="https://opends.dev.java.net/public/images/opends_favicon.gif">
+
+  <style type="text/css"> 
 /* <![CDATA[ */
  @import "/branding/css/tigris.css";
  @import "/branding/css/inst.css";
  /* ]]> */
-</style>
-<link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print" />
-<link rel="stylesheet" href="../../../css/opends.css" type="text/css">
-<title>OpenDS Directory Server - Quick Reference Guide</title>
+  </style>
+  <link rel="stylesheet" type="text/css" href="/branding/css/print.css" media="print">
+
+  <link rel="stylesheet" href="../../../css/opends.css" type="text/css">
+
+  <title>OpenDS Directory Server - Quick Reference Guide</title>
 </head>
+
+
 <body>
-<table class="tertmasttable" width="100%" cellspacing="0">
+
+<table class="tertmasttable" cellspacing="0" width="100%">
+
   <tbody>
+
     <tr>
-      <td><div class="collectionheader">Command Line Usage Guide</div></td>
-      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" width="104" height="33" border="0" align="middle"></a> </td>
+
+      <td>
+      <div class="collectionheader">Command Line Usage Guide</div>
+      </td>
+
+      <td width="10%"><a href="https://opends.dev.java.net/"><img src="../../../images/opends_logo_sm.png" alt="OpenDS Logo" align="middle" border="0" height="33" width="104"></a> </td>
+
     </tr>
+
+  
   </tbody>
 </table>
-<hr noshade size="1" >
-    <div align="right"><a href="index.html">Return to Command List</a></div>
-    <div class="secpageheader">The restore Utility</div>
+
+<hr noshade="noshade" size="1">
+    
+<div align="right"><a href="index.html">Return to Command List</a></div>
+
+    
+<div class="secpageheader">The restore Utility</div>
+
 
     <br>
+
     The <code>restore</code> utility may be used to restore a previous backup
     taken of a Directory Server backend.  Only one backend may be restored at a
     time with this command.
 
-    <br><br>
+    <br>
+<br>
+
     In order to use this tool, the <code>--backupDirectory</code> option must
     be used to specify the location of the backup files.  The complete set of
     arguments that may be used includes:
 
-    <ul>
+    
+<ul>
+
       <li>
         <code>-d</code> <i>{path}</i>
         <br>
+
         <code>--backupDirectory</code> <i>{path}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument specifies the path to the directory that contains the
         backup archive.  This directory must exist and must contain a backup
         descriptor file and one or more backups for a given backend.  The
         backup descriptor file will be read to obtain information about the
         available backups and the options used to create them.  This is a
         required argument.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-l</code>
         <br>
+
         <code>--listBackups</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument indicates that the server should display information
         about the available backups contained in the backup directory.  It will
         cause the tool to exit without performing any restore.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-I</code> <i>{backupID}</i>
         <br>
+
         <code>--backupID</code> <i>{backupID}</i>
-        <br><br>
+        <br>
+    <br>
+
         This argument may be used to specify the backup ID of the backup to be
         restored.  If this option is not provided, then the latest backup
         contained in the backup directory will be restored.
-        <br><br>
+        <br>
+    <br>
+
       </li>
 
+
       <li>
-        <code>-V</code>
-        <br>
-        <code>--verifyOnly</code>
-        <br><br>
+        <code>-n</code><br>
+
+        <code>--dry-run</code><br>
+    <br>
+
         This argument may be used to specify that the server should verify that
         the specified backup is valid (i.e., ensure that it appears to be a
         valid archive, and that any hash and/or signature matches its
         contents).  It will not actually attempt to restore the backup.
-        <br><br>
+        <br>
+    <br>
+
       </li>
+
 
       <li>
         <code>-H</code>
         <br>
+
         <code>--help</code>
-        <br><br>
+        <br>
+    <br>
+
         This argument will display usage information for the
         <code>restore</code> utility and will exit without attempting to perform
         a restore.
-        <br><br>
-      </li>
-    </ul>
-  </body>
-</html>
+        <br>
+    <br>
 
+      </li>
+
+    
+</ul>
+
+  
+</body>
+</html>
