@@ -27,6 +27,8 @@
 package org.opends.server.extensions;
 
 import com.sleepycat.bind.EntryBinding;
+import com.sleepycat.bind.serial.SerialBinding;
+import com.sleepycat.bind.serial.StoredClassCatalog;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -46,8 +48,9 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.opends.server.api.Backend;
 import org.opends.server.api.ConfigurableComponent;
 import org.opends.server.api.EntryCache;
@@ -76,6 +79,7 @@ import static org.opends.server.config.ConfigConstants.*;
 import static org.opends.server.loggers.debug.DebugLogger.debugCaught;
 import static org.opends.server.loggers.debug.DebugLogger.debugEnabled;
 import org.opends.server.types.DebugLogLevel;
+import org.opends.server.types.LockManager;
 import org.opends.server.types.ObjectClass;
 import static org.opends.server.loggers.Error.*;
 import static org.opends.server.messages.ExtensionsMessages.*;
@@ -145,7 +149,9 @@ public class FileSystemEntryCache
   
   // The lock used to provide threadsafe access when changing the contents of
   // the cache.
-  private Lock cacheLock;
+  private ReentrantReadWriteLock cacheLock;
+  private Lock cacheReadLock;
+  private Lock cacheWriteLock;
 
   // The maximum length of time to try to obtain a lock before giving up.
   private long lockTimeout;
@@ -156,21 +162,19 @@ public class FileSystemEntryCache
   // The mapping between DNs and IDs.
   private LinkedHashMapRotator<DN,Long> dnMap;
   
-  // The mapping between IDs and DNs.
-  private LinkedHashMap<Long,DN> idMap;
+  // BDB JE environment and database related fields for this cache.
+  private Environment entryCacheEnv;
+  private EnvironmentConfig entryCacheEnvConfig;
+  private EnvironmentMutableConfig entryCacheEnvMutableConfig;
+  private DatabaseConfig entryCacheDBConfig;
+  private Database entryCacheDB;
+  private Database entryCacheClassDB;
+  private StoredClassCatalog classCatalog;
+  private EntryBinding entryCacheDataBinding;
   
-  // BDB JE environment and database for this cache.
-  private Environment entryCacheEnv = null;
-  private EnvironmentConfig entryCacheEnvConfig = null;
-  private EnvironmentMutableConfig entryCacheEnvMutableConfig = null;
-  private DatabaseConfig entryCacheDBConfig = null;
-  private Database entryCacheDB = null;
-  private EntryBinding intKeyBinding = null;
-  
-  /**
-   * The ASN1 tag for the DatabaseEntry type.
-   */
-  public static final byte TAG_CACHEDB_ENTRY = 0x60;
+  private static final String ENTRYCACHEDBNAME = "EntryCacheDB";
+  private static final String INDEXCLASSDBNAME = "IndexClassDB";
+  private static final String INDEXKEY = "EntryCacheIndex";
   
   static
   {
@@ -216,10 +220,11 @@ public class FileSystemEntryCache
     // Initialize the cache structures.
     backendMap = new LinkedHashMap<Backend,LinkedHashMap<Long,DN>>();
     // TODO: FIFO by default, add cfg and args to allow for LRU.
-    dnMap      = new LinkedHashMapRotator<DN,Long>();
-    idMap      = new LinkedHashMap<Long,DN>();
-    cacheLock  = new ReentrantLock();
-    runtime    = Runtime.getRuntime();
+    dnMap = new LinkedHashMapRotator<DN,Long>();
+    cacheLock = new ReentrantReadWriteLock();
+    cacheReadLock = cacheLock.readLock();
+    cacheWriteLock = cacheLock.writeLock();
+    runtime = Runtime.getRuntime();
     
     // Open JE environment and primary database.
     
@@ -230,7 +235,8 @@ public class FileSystemEntryCache
       entryCacheEnvConfig.setConfigParam("je.cleaner.maxBatchFiles", "1");
       entryCacheEnvConfig.setConfigParam("je.cleaner.minAge", "1");
       entryCacheEnvConfig.setConfigParam("je.cleaner.minFileUtilization", "50");
-      entryCacheEnvConfig.setConfigParam("je.checkpointer.bytesInterval", "10485760");
+      entryCacheEnvConfig.setConfigParam("je.checkpointer.bytesInterval", 
+                                         "10485760");
       // TODO: add cfg and logic stuff for persistent cache.
       entryCacheEnvConfig.setAllowCreate(true);
       entryCacheEnv =
@@ -245,8 +251,78 @@ public class FileSystemEntryCache
       entryCacheDBConfig = new DatabaseConfig();
       entryCacheDBConfig.setAllowCreate(true);
       entryCacheDB = entryCacheEnv.openDatabase(null,
-              "entryCacheDB", entryCacheDBConfig);
+              ENTRYCACHEDBNAME, entryCacheDBConfig);
+      entryCacheClassDB = 
+        entryCacheEnv.openDatabase(null, INDEXCLASSDBNAME, entryCacheDBConfig);
+      // Instantiate the class catalog
+      classCatalog = new StoredClassCatalog(entryCacheClassDB);
+      entryCacheDataBinding = 
+          new SerialBinding(classCatalog, FileSystemEntryCacheIndex.class);
+      
+      // Retrieve index.
+      FileSystemEntryCacheIndex entryCacheIndex = 
+          new FileSystemEntryCacheIndex();
+      DatabaseEntry indexData = new DatabaseEntry();
+      DatabaseEntry indexKey = new DatabaseEntry(INDEXKEY.getBytes());
+      
+      OperationStatus jdbStatus = null;
+      jdbStatus = entryCacheDB.get(null, indexKey, indexData, LockMode.DEFAULT);
+      
+      if (jdbStatus == OperationStatus.SUCCESS) {
+        entryCacheIndex =
+          (FileSystemEntryCacheIndex) 
+            entryCacheDataBinding.entryToObject(indexData);
+      }
+      // Check index state.
+      if ((entryCacheIndex.dnMap.isEmpty()) ||
+          (entryCacheIndex.backendMap.isEmpty()) ||
+          (entryCacheIndex.offlineState.isEmpty())) {
+        // Truncate entry cache db.
+        clear();
+      } else {
+        // Restore entry cache maps.
+        maxEntries = DEFAULT_FIFOCACHE_MAX_ENTRIES;
+        // Convert cache index maps to entry cache maps.
+        Set backendSet = entryCacheIndex.backendMap.keySet();
+        Iterator backendIterator = backendSet.iterator();
+        while (backendIterator.hasNext()) {
+          String backend = (String) backendIterator.next();
+          LinkedHashMap<Long,String> entriesMap = 
+              entryCacheIndex.backendMap.get(backend);
+          Set entriesSet = entriesMap.keySet();
+          Iterator entriesIterator = entriesSet.iterator();
+          LinkedHashMap<Long,DN> entryMap = new LinkedHashMap<Long,DN>();
+          while (entriesIterator.hasNext()) {
+            Long entryID = (Long) entriesIterator.next();
+            String entryStringDN = entriesMap.get(entryID);
+            DN entryDN = DN.decode(entryStringDN);
+            dnMap.put(entryDN, entryID);
+            entryMap.put(entryID, entryDN);
+          }
+          backendMap.put(DirectoryServer.getBackend(backend), entryMap);
+        }
+
+        // Compare last known offline states to offline states on startup.
+        ConcurrentHashMap currentBackendsState = 
+            DirectoryServer.getOfflineBackendsStateIDs();      
+        Set offlineBackendSet = entryCacheIndex.offlineState.keySet();
+        Iterator offlineBackendIterator = offlineBackendSet.iterator();
+        while (offlineBackendIterator.hasNext()) {
+          String backend = (String) offlineBackendIterator.next();
+          Long offlineId = entryCacheIndex.offlineState.get(backend);
+          Long currentId = (Long) currentBackendsState.get(backend);
+          if ( !(offlineId.equals(currentId)) ) {
+            // Remove cache entries specific to this backend.
+            clearBackend(DirectoryServer.getBackend(backend));
+          }
+        }
+      }
+      
+      System.out.printf("<<<DEBUG>>> initializeEntryCache: index get: %s\n",
+          jdbStatus.toString());
+      
     } catch (Exception e) {
+      e.printStackTrace();
       // TODO: disable this cache.
       if (debugEnabled()) {
         debugCaught(DebugLogLevel.ERROR, e);
@@ -471,21 +547,68 @@ public class FileSystemEntryCache
    */
   public void finalizeEntryCache() {
     // Release all memory currently in use by this cache.
-    cacheLock.lock();
+    
+    cacheWriteLock.lock();
+    
+    // Check if the main Directory database environment is closed.
+    // If not do not persist this cache, just clean up everything.
+    
+    FileSystemEntryCacheIndex entryCacheIndex = new FileSystemEntryCacheIndex();
+    // There must be at least one backend at this stage.
+    entryCacheIndex.offlineState = 
+        DirectoryServer.getOfflineBackendsStateIDs();
+    
+    // Convert entry cache maps to serializable maps for cache index. 
+    Set backendSet = backendMap.keySet();
+    Iterator backendIterator = backendSet.iterator();
+    while (backendIterator.hasNext()) {
+      Backend backend = (Backend) backendIterator.next();
+      LinkedHashMap<Long,DN> entriesMap = backendMap.get(backend);
+      Set entriesSet = entriesMap.keySet();
+      Iterator entriesIterator = entriesSet.iterator();
+      LinkedHashMap<Long,String> entryMap = new LinkedHashMap<Long,String>();
+      while (entriesIterator.hasNext()) {
+        Long entryID = (Long) entriesIterator.next();
+        DN entryDN = entriesMap.get(entryID);
+        entryCacheIndex.dnMap.put(entryDN.toString(), entryID);
+        entryMap.put(entryID, entryDN.toString());
+      }
+      entryCacheIndex.backendMap.put(backend.getBackendID(), entryMap);
+    }
+        
+    OperationStatus jdbStatus = null;
+    // Store index.
+    try {
+      DatabaseEntry indexData = new DatabaseEntry();
+      entryCacheDataBinding.objectToEntry(entryCacheIndex, indexData);
+      DatabaseEntry indexKey = new DatabaseEntry(INDEXKEY.getBytes());
+      jdbStatus = entryCacheDB.put(null, indexKey, indexData);
+    } catch (Exception e) {
+      e.printStackTrace();
+      if (debugEnabled()) {
+        debugCaught(DebugLogLevel.ERROR, e);
+      }   
+      // Log an error message.
+      logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.SEVERE_ERROR,
+              /* TODO: */ 0, "Failed to store FS entry cache index",
+              stackTraceToSingleLineString(e));
+    }
+    
+    System.out.printf("<<<DEBUG>>> finalizeEntryCache: index put status: %s\n", 
+        jdbStatus.toString());
     
     // Close JE database and environment.
     // TODO: check for persistent cache cfg option, 
     // close & remove if not set, simple close otherwise.
     try {
       backendMap.clear();
-      idMap.clear();
       dnMap.clear();
 
       if (entryCacheDB != null) {
         entryCacheDB.close();
       }
       if (entryCacheEnv != null) {
-        // entryCacheEnv.cleanLog(); // Clean the log before closing
+        entryCacheEnv.cleanLog();
         entryCacheEnv.close();
       }
     } catch (Exception e) {
@@ -498,7 +621,7 @@ public class FileSystemEntryCache
               /* TODO: */ 0, "Failed to close FS entry cache",
               stackTraceToSingleLineString(e));
     } finally {
-      cacheLock.unlock();
+      cacheWriteLock.unlock();
     }
   }
   
@@ -517,7 +640,14 @@ public class FileSystemEntryCache
   public boolean containsEntry(DN entryDN) 
   {
     // Indicate whether the DN map contains the specified DN.
-    return dnMap.containsKey(entryDN);
+    boolean containsEntry = false;
+    cacheReadLock.lock();
+    try {
+      containsEntry = dnMap.containsKey(entryDN);
+    } finally {
+      cacheReadLock.unlock();
+    }
+    return containsEntry;
   }
   
   
@@ -533,7 +663,19 @@ public class FileSystemEntryCache
    *          <CODE>null</CODE> if it is not present.
    */
   public Entry getEntry(DN entryDN) {
-    return getEntry(entryDN, null, null);
+    // Get the entry from the DN map if it is present.  If not, then return
+    // null.
+    Entry entry = null;
+    cacheReadLock.lock();
+    try {
+      if (dnMap.containsKey(entryDN)) {
+        //System.out.printf("<<<DEBUG>>> getEntry: cache hit for: %s\n", entryDN);
+        entry = getEntryFromDB(entryDN);
+      }
+    } finally {
+      cacheReadLock.unlock();
+    }
+    return entry;
   }
   
   
@@ -549,8 +691,14 @@ public class FileSystemEntryCache
    *          in the cache.
    */
   public long getEntryID(DN entryDN) {
-    // TODO:
-    return -1;
+    long entryID = -1;
+    cacheReadLock.lock();
+    try {
+      entryID = dnMap.get(entryDN);
+    } finally {
+      cacheReadLock.unlock();
+    }
+    return entryID;
   }
   
   
@@ -573,16 +721,141 @@ public class FileSystemEntryCache
    */
   public Entry getEntry(DN entryDN, LockType lockType, List<Lock> lockList) {
     
-    // Get the entry from the DN map if it is present.  If not, then return
-    // null.
-    if (dnMap.containsKey(entryDN)) {
-      //System.out.printf("<<<DEBUG>>> getEntry: cache hit for: %s\n", entryDN);
-      return getEntryFromDB(entryDN);
+    Entry entry = getEntry(entryDN);
+    if (entry == null)
+    {
+      return null;
     }
-    return null;
+    
+    // Obtain a lock for the entry as appropriate.  If an error occurs, then
+    // make sure no lock is held and return null.  Otherwise, return the entry.
+    switch (lockType)
+    {
+      case READ:
+        // Try to obtain a read lock for the entry.
+        Lock readLock = LockManager.lockRead(entryDN, lockTimeout);
+        if (readLock == null)
+        {
+          // We couldn't get the lock, so we have to return null.
+          return null;
+        }
+        else
+        {
+          try
+          {
+            lockList.add(readLock);
+            return entry;
+          }
+          catch (Exception e)
+          {
+            if (debugEnabled())
+            {
+              debugCaught(DebugLogLevel.ERROR, e);
+            }
+
+            // The attempt to add the lock to the list failed, so we need to
+            // release the lock and return null.
+            try
+            {
+              LockManager.unlock(entryDN, readLock);
+            }
+            catch (Exception e2)
+            {
+              if (debugEnabled())
+              {
+                debugCaught(DebugLogLevel.ERROR, e2);
+              }
+            }
+
+            return null;
+          }
+        }
+
+      case WRITE:
+        // Try to obtain a write lock for the entry.
+        Lock writeLock = LockManager.lockWrite(entryDN, lockTimeout);
+        if (writeLock == null)
+        {
+          // We couldn't get the lock, so we have to return null.
+          return null;
+        }
+        else
+        {
+          try
+          {
+            lockList.add(writeLock);
+            return entry;
+          }
+          catch (Exception e)
+          {
+            if (debugEnabled())
+            {
+              debugCaught(DebugLogLevel.ERROR, e);
+            }
+
+            // The attempt to add the lock to the list failed, so we need to
+            // release the lock and return null.
+            try
+            {
+              LockManager.unlock(entryDN, writeLock);
+            }
+            catch (Exception e2)
+            {
+              if (debugEnabled())
+              {
+                debugCaught(DebugLogLevel.ERROR, e2);
+              }
+            }
+
+            return null;
+          }
+        }
+
+      case NONE:
+        // We don't need to obtain a lock, so just return the entry.
+        return entry;
+
+      default:
+        // This is an unknown type of lock, so we'll return null.
+        return null;
+    }
   }
   
-  
+  /**
+   * Retrieves the requested entry if it is present in the cache.
+   *
+   * @param  backend   The backend associated with the entry to retrieve.
+   * @param  entryID   The entry ID within the provided backend for the
+   *                   specified entry.
+   *
+   * @return  The requested entry if it is present in the cache, or
+   *          <CODE>null</CODE> if it is not present.
+   */
+  public Entry getEntry(Backend backend, long entryID) {
+    
+    Entry entry = null;
+    cacheReadLock.lock();
+    try {
+      // Get the hash map for the provided backend.  If it isn't present, then
+      // return null.
+      LinkedHashMap map = backendMap.get(backend);
+      if ( !(map == null) ) {
+        // Get the entry from the map by its ID.  If it isn't present, then 
+        // return null.
+        DN dn = (DN) map.get(entryID);
+        if ( !(dn == null) ) {
+          if (dnMap.containsKey(dn)) {
+            //System.out.printf("<<<DEBUG>>> getEntry: cache hit for: %d\n", entryID);
+            entry = getEntryFromDB(dn);
+          }
+        }
+      }
+    } finally {
+      cacheReadLock.unlock();
+    }
+    return entry;
+  }
+
   /**
    * Retrieves the requested entry if it is present in the cache, obtaining a
    * lock on the entry before it is returned.  If the entry is present in the
@@ -604,24 +877,104 @@ public class FileSystemEntryCache
   public Entry getEntry(Backend backend, long entryID, LockType lockType,
           List<Lock> lockList) {
     
-    // Get the hash map for the provided backend.  If it isn't present, then
-    // return null.
-    LinkedHashMap map = backendMap.get(backend);
-    if (map == null)
+    Entry entry = getEntry(backend, entryID);
+    if (entry == null)
     {
       return null;
     }
-    // Get the entry from the map by its ID.  If it isn't present, then return
-    // null.
-    DN dn = (DN) map.get(entryID);
-    if (dn == null) {
-      return null;
+    
+    // Obtain a lock for the entry as appropriate.  If an error occurs, then
+    // make sure no lock is held and return null.  Otherwise, return the entry.
+    switch (lockType)
+    {
+      case READ:
+        // Try to obtain a read lock for the entry.
+        Lock readLock = LockManager.lockRead(entry.getDN(), lockTimeout);
+        if (readLock == null)
+        {
+          // We couldn't get the lock, so we have to return null.
+          return null;
+        }
+        else
+        {
+          try
+          {
+            lockList.add(readLock);
+            return entry;
+          }
+          catch (Exception e)
+          {
+            if (debugEnabled())
+            {
+              debugCaught(DebugLogLevel.ERROR, e);
+            }
+
+            // The attempt to add the lock to the list failed, so we need to
+            // release the lock and return null.
+            try
+            {
+              LockManager.unlock(entry.getDN(), readLock);
+            }
+            catch (Exception e2)
+            {
+              if (debugEnabled())
+              {
+                debugCaught(DebugLogLevel.ERROR, e2);
+              }
+            }
+
+            return null;
+          }
+        }
+
+      case WRITE:
+        // Try to obtain a write lock for the entry.
+        Lock writeLock = LockManager.lockWrite(entry.getDN(), lockTimeout);
+        if (writeLock == null)
+        {
+          // We couldn't get the lock, so we have to return null.
+          return null;
+        }
+        else
+        {
+          try
+          {
+            lockList.add(writeLock);
+            return entry;
+          }
+          catch (Exception e)
+          {
+            if (debugEnabled())
+            {
+              debugCaught(DebugLogLevel.ERROR, e);
+            }
+
+            // The attempt to add the lock to the list failed, so we need to
+            // release the lock and return null.
+            try
+            {
+              LockManager.unlock(entry.getDN(), writeLock);
+            }
+            catch (Exception e2)
+            {
+              if (debugEnabled())
+              {
+                debugCaught(DebugLogLevel.ERROR, e2);
+              }
+            }
+
+            return null;
+          }
+        }
+
+      case NONE:
+        // We don't need to obtain a lock, so just return the entry.
+        return entry;
+
+      default:
+        // This is an unknown type of lock, so we'll return null.
+        return null;
     }
-    if (dnMap.containsKey(dn)) {
-      //System.out.printf("<<<DEBUG>>> getEntry: cache hit for: %d\n", entryID);
-      return getEntryFromDB(dn);
-    }
-    return null;
   }
   
   
@@ -684,7 +1037,7 @@ public class FileSystemEntryCache
     
     // Obtain a lock on the cache.  If this fails, then don't do anything.
     try {
-      if (! cacheLock.tryLock(lockTimeout, TimeUnit.MILLISECONDS)) {
+      if (! cacheWriteLock.tryLock(lockTimeout, TimeUnit.MILLISECONDS)) {
         // We can't rule out the possibility of a conflict, so return false.
         return;
       }
@@ -697,7 +1050,7 @@ public class FileSystemEntryCache
       // We can't rule out the possibility of a conflict, so return false.
       return;
     } finally {
-      cacheLock.unlock();
+      cacheWriteLock.unlock();
     }
   }
   
@@ -769,7 +1122,7 @@ public class FileSystemEntryCache
 
     try {
       // Obtain a lock on the cache.  If this fails, then don't do anything.
-      if (! cacheLock.tryLock(lockTimeout, TimeUnit.MILLISECONDS)) {
+      if (! cacheWriteLock.tryLock(lockTimeout, TimeUnit.MILLISECONDS)) {
         // We can't rule out the possibility of a conflict, so return false.
         return false;
       }
@@ -786,7 +1139,7 @@ public class FileSystemEntryCache
       // We can't rule out the possibility of a conflict, so return false.
       return false;
     } finally {
-      cacheLock.unlock();
+      cacheWriteLock.unlock();
     }
   }
   
@@ -798,8 +1151,30 @@ public class FileSystemEntryCache
    * @param  entryDN  The DN of the entry to remove from the cache.
    */
   public void removeEntry(DN entryDN) {
-    // TODO:
-    return;
+    cacheWriteLock.lock();
+    
+    try {
+      long entryID = dnMap.get(entryDN);
+      Set backendSet = backendMap.keySet();
+      
+      Iterator backendIterator = backendSet.iterator();
+      while (backendIterator.hasNext()) {
+        LinkedHashMap map = backendMap.get(backendIterator.next());
+        map.remove(entryID);
+      }
+      
+      dnMap.remove(entryDN);
+      entryCacheDB.delete(null, 
+        new DatabaseEntry(entryDN.toString().getBytes()));
+    } catch (Exception e) {
+      e.printStackTrace();
+      if (debugEnabled()) {
+        debugCaught(DebugLogLevel.ERROR, e);
+      }
+    } finally {
+      cacheWriteLock.unlock();
+    }
+
   }
   
   
@@ -809,8 +1184,32 @@ public class FileSystemEntryCache
    * for future use.
    */
   public void clear() {
-    // TODO:
-    return;
+    cacheWriteLock.lock();
+    
+    dnMap.clear();
+    backendMap.clear();
+
+    try {
+      if ((entryCacheDB != null) && (entryCacheEnv != null) && 
+          (entryCacheDBConfig != null)) {
+        entryCacheDB.close();
+        entryCacheEnv.truncateDatabase(null, ENTRYCACHEDBNAME, false);
+        entryCacheEnv.cleanLog();
+        entryCacheDB = entryCacheEnv.openDatabase(null,
+              ENTRYCACHEDBNAME, entryCacheDBConfig);
+      }
+    } catch (Exception e) {
+      if (debugEnabled()) {
+        debugCaught(DebugLogLevel.ERROR, e);
+      }
+      
+      // Log an error message.
+      logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.SEVERE_ERROR,
+              /* TODO: */ 0, "Failed to clear FS entry cache",
+              stackTraceToSingleLineString(e));
+    } finally {
+      cacheWriteLock.unlock();
+    }
   }
   
   
@@ -822,8 +1221,37 @@ public class FileSystemEntryCache
    * @param  backend  The backend for which to flush the associated entries.
    */
   public void clearBackend(Backend backend) {
-    // TODO:
-    clear();
+    // Might take awhile to complete on a relatively large cache.
+    
+    cacheWriteLock.lock();
+    
+    LinkedHashMap backendEntriesMap = backendMap.get(backend);
+    
+    try {
+      Set entriesSet = backendEntriesMap.keySet();
+      
+      Iterator backendEntriesIterator = entriesSet.iterator();
+      while (backendEntriesIterator.hasNext()) {
+        long entryID = (Long) backendEntriesIterator.next();
+        DN entryDN = (DN) backendEntriesMap.get(entryID);
+        entryCacheDB.delete(null,
+            new DatabaseEntry(entryDN.toString().getBytes()));
+        dnMap.remove(entryDN);
+      }
+      
+    } catch (Exception e) {
+      if (debugEnabled()) {
+        debugCaught(DebugLogLevel.ERROR, e);
+      }
+      
+      // Log an error message.
+      logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.SEVERE_ERROR,
+          /* TODO: */ 0, "FS entry cache: failed to clear backend",
+          stackTraceToSingleLineString(e));
+    } finally {
+      backendMap.remove(backend);
+      cacheWriteLock.unlock();
+    }
   }
   
   
@@ -834,8 +1262,37 @@ public class FileSystemEntryCache
    * @param  baseDN  The base DN below which all entries should be flushed.
    */
   public void clearSubtree(DN baseDN) {
-    // TODO:
-    clear();
+    // Determine which backend should be used for the provided base DN.  If
+    // there is none, then we don't need to do anything.
+    Backend backend = DirectoryServer.getBackend(baseDN);
+    if (backend == null)
+    {
+      return;
+    }
+    
+    // Acquire a lock on the cache.  We should not return until the cache has
+    // been cleared, so we will block until we can obtain the lock.
+    cacheWriteLock.lock();
+
+    // At this point, it is absolutely critical that we always release the lock
+    // before leaving this method, so do so in a finally block.
+    try
+    {
+      clearSubtree(baseDN, backend);
+    }
+    catch (Exception e)
+    {
+      if (debugEnabled())
+      {
+        debugCaught(DebugLogLevel.ERROR, e);
+      }
+
+      // This shouldn't happen, but there's not much that we can do if it does.
+    }
+    finally
+    {
+      cacheWriteLock.unlock();
+    }
   }
   
   
@@ -848,8 +1305,61 @@ public class FileSystemEntryCache
    * @param  backend  The backend for which to remove the appropriate entries.
    */
   private void clearSubtree(DN baseDN, Backend backend) {
-    // TODO:
-    clear();
+    // See if there are any entries for the provided backend in the cache.  If
+    // not, then return.
+    LinkedHashMap<Long,DN> map = backendMap.get(backend);
+    if (map == null)
+    {
+      // No entries were in the cache for this backend, so we can return without
+      // doing anything.
+      return;
+    }
+
+    // Since the provided base DN could hold a subset of the information in the
+    // specified backend, we will have to do this by iterating through all the
+    // entries for that backend.  Since this could take a while, we'll
+    // periodically release and re-acquire the lock in case anyone else is
+    // waiting on it so this doesn't become a stop-the-world event as far as the
+    // cache is concerned.
+    int entriesExamined = 0;
+    Iterator<DN> iterator = map.values().iterator();
+    while (iterator.hasNext())
+    {
+      DN entryDN = iterator.next();
+      if (entryDN.isDescendantOf(baseDN))
+      {
+        iterator.remove();
+        dnMap.remove(entryDN);
+      }
+
+      entriesExamined++;
+      if ((entriesExamined % 1000) == 0)
+      {
+        cacheWriteLock.unlock();
+        Thread.currentThread().yield();
+        cacheWriteLock.lock();
+      }
+    }
+
+    // See if the backend has any subordinate backends.  If so, then process
+    // them recursively.
+    for (Backend subBackend : backend.getSubordinateBackends())
+    {
+      boolean isAppropriate = false;
+      for (DN subBase : subBackend.getBaseDNs())
+      {
+        if (subBase.isDescendantOf(baseDN))
+        {
+          isAppropriate = true;
+          break;
+        }
+      }
+
+      if (isAppropriate)
+      {
+        clearSubtree(baseDN, subBackend);
+      }
+    }
   }
   
   
@@ -861,7 +1371,13 @@ public class FileSystemEntryCache
    * errors.
    */
   public void handleLowMemory() {
-    // TODO:
+    // If this cache db is tmpfs based and tmpfs is not explicitly limited 
+    // [ which it isnt by default ] truncate all to prevent swapping that
+    // is already taking place at this point. removing oldest or lru items
+    // one by one or in chunks will not have desired effect. it is better
+    // to loose this cache than be in constantly swapping state, perf wise.
+    // TODO: revisit this and maybe introduce cfg parameter for non tmpfs
+    // based storage or tmpfs that is explicitly limited by administrator.
     clear();
   }
   
@@ -1711,7 +2227,6 @@ public class FileSystemEntryCache
       } else {
         // Add the entry to the cache.
         dnMap.put(entry.getDN(), entryID);
-        idMap.put(entryID, entry.getDN());
         
         LinkedHashMap<Long,DN> map = backendMap.get(backend);
         if (map == null) {
@@ -1929,20 +2444,21 @@ public class FileSystemEntryCache
     @Override protected boolean removeEldestEntry(Map.Entry eldest) {
       if (size() > maxEntries) {
         DatabaseEntry cacheEntryKey = new DatabaseEntry();
+        cacheWriteLock.lock();
         cacheEntryKey.setData(eldest.getKey().toString().getBytes());
         //System.out.printf("<<<DEBUG>>> removeEldestEntry Rotating DN: %s, ID: %d,",
           //      eldest.getKey().toString(), eldest.getValue());
         try {
-          cacheLock.lock();
           long entryID = (long) ((Long) eldest.getValue()).longValue();
           // DN entryDN = idMap.get(entryID);
           Set backendSet = backendMap.keySet();
+          
           Iterator backendIterator = backendSet.iterator();
           while (backendIterator.hasNext()) {
             LinkedHashMap map = backendMap.get(backendIterator.next());
             map.remove(entryID);
           }
-          idMap.remove(entryID);
+          
           entryCacheDB.delete(null, cacheEntryKey);
           //System.out.printf(" removed: %s\n", entryDN.toString());
         } catch (Exception e) {
@@ -1950,13 +2466,13 @@ public class FileSystemEntryCache
           if (debugEnabled()) {
             debugCaught(DebugLogLevel.ERROR, e);
           }
-          // FIXME:
-          return true;
         } finally {
-          cacheLock.unlock();
+          cacheWriteLock.unlock();
         }
+        return true;
+      } else {
+        return false;
       }
-      return size() > maxEntries;
     }
   }
 
