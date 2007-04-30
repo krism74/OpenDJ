@@ -1304,12 +1304,12 @@ help</h3>
 
 
 
-<div style="margin-left: 40px; font-family: monospace;"><big><span style="font-weight: bold;">opdsgrpmgr --help</span></big><br>
+<div style="margin-left: 40px; font-family: monospace;"><big><span style="font-weight: bold;">dsservice --help</span></big><br>
 
 
 
 
-<div style="margin-left: 40px;">usage: opdsgrpmgr SUBCOMMAND [GLOBAL_OPTS] [SUBCMD_OPTS]<br>
+<div style="margin-left: 40px;">usage: dsservice SUBCOMMAND [GLOBAL_OPTS] [SUBCMD_OPTS]<br>
 
 
 
@@ -1319,7 +1319,7 @@ OpenDS command-line client to manage groups of servers.<br>
 
 
 
-Type 'opdsgrpmgr SUBCOMMAND --help' for help on a
+Type 'dsservice SUBCOMMAND --help' for help on a
 specific subcommand.<br>
 
 
@@ -1508,13 +1508,13 @@ Gloabal Options:<br>
 
 
 
-<big><span style="font-weight: bold;">opdsgrpmgr
+<big><span style="font-weight: bold;">dsservice
 create-group --help</span></big><br>
 
 
 
 
-<div style="margin-left: 40px;">usage: opdsgrpmgr
+<div style="margin-left: 40px;">usage: dsservice
 create-group [GLOBAL_OPTS] [SUBCOMMAND_OPTS] OPERAND<br>
 
 
@@ -1535,7 +1535,7 @@ Global Options:<br>
 
 
 <div style="margin-left: 40px;">
-See opdsgrpmgr -?<br>
+See dsservice -?<br>
 
 
 
@@ -1608,13 +1608,13 @@ GROUP_ID<br>
 
 
 
-<big><span style="font-weight: bold;">opdsgrpmgr modify-group
+<big><span style="font-weight: bold;">dsservice modify-group
 --help</span></big><br>
 
 
 
 
-<div style="margin-left: 40px;">usage: opdsgrpmgr
+<div style="margin-left: 40px;">usage: dsservice
 modify-group [GLOBAL_OPTS] [SUBCOMMAND_OPTS] OPERAND<br>
 
 
@@ -1635,7 +1635,7 @@ Global Options:<br>
 
 
 
-<div style="margin-left: 40px;">See opdsgrpmgr -?<br>
+<div style="margin-left: 40px;">See dsservice -?<br>
 
 
 
@@ -1713,13 +1713,13 @@ OPERAND:<br>
 
 
 
-<big><span style="font-weight: bold;">opdsgrpmgr delete-group
+<big><span style="font-weight: bold;">dsservice delete-group
 --help</span></big><br>
 
 
 
 <div style="margin-left: 40px;">
-usage: opdsgrpmgr delete-group [GLOBAL_OPTS] OPERAND<br>
+usage: dsservice delete-group [GLOBAL_OPTS] OPERAND<br>
 
 
 
@@ -1738,7 +1738,7 @@ Global Options:<br>
 
 
 <div style="margin-left: 40px;">
-See opdsgrpmgr -?<br>
+See dsservice -?<br>
 
 
 
@@ -1781,13 +1781,13 @@ The identifier of the group to delete<br>
 
 
 
-<big><span style="font-weight: bold;">opdsgrpmgr list-groups
+<big><span style="font-weight: bold;">dsservice list-groups
 --help</span></big><br>
 
 
 <div style="margin-left: 40px;">
 
-usage: opdsgrpmgr list-groups [GLOBAL_OPTS] [SUBCOMMAND_OPTS]<br>
+usage: dsservice list-groups [GLOBAL_OPTS] [SUBCOMMAND_OPTS]<br>
 
 
 
@@ -1805,7 +1805,7 @@ Global Options:<br>
 
 <div style="margin-left: 40px;">
 
-See opdsgrpmgr -?<br>
+See dsservice -?<br>
 
 
 </div>
@@ -1847,14 +1847,14 @@ If specified, also show group properties<br>
 
 
 
-<span style="font-weight: bold;">opdsgrpmgr add-to-group
+<span style="font-weight: bold;">dsservice add-to-group
 --help</span></big>
 <br>
 
 
 <div style="margin-left: 40px;">
 
-usage: opdsgrpmgr add-to-group [GLOBAL_OPTS] [SUBCOMMAND_OPTS] OPERAND<br>
+usage: dsservice add-to-group [GLOBAL_OPTS] [SUBCOMMAND_OPTS] OPERAND<br>
 
 
 
@@ -1872,7 +1872,7 @@ Global Options:<br>
 
 <div style="margin-left: 40px;">
 
-See opdsgrpmgr -?<br>
+See dsservice -?<br>
 
 
 </div>
@@ -1940,13 +1940,13 @@ The identifier of the group to which a member is added<br>
 
 
 
-<big><span style="font-weight: bold;">opdsgrpmgr
+<big><span style="font-weight: bold;">dsservice
 remove-from-group --help</span></big><br>
 
 
 <div style="margin-left: 40px;">
 
-usage: opdsgrpmgr remove-from-group [GLOBAL_OPTS] [SUBCOMMAND_OPTS]
+usage: dsservice remove-from-group [GLOBAL_OPTS] [SUBCOMMAND_OPTS]
 OPERAND<br>
 
 
@@ -1965,7 +1965,7 @@ Global Options:<br>
 
 <div style="margin-left: 40px;">
 
-See opdsgrpmgr -?<br>
+See dsservice -?<br>
 
 
 </div>
@@ -2033,13 +2033,13 @@ The identifier of the group from which a member is removed</div>
 
 
 
-<big><span style="font-weight: bold;">opdsgrpmgr list-members
+<big><span style="font-weight: bold;">dsservice list-members
 --help</span></big><br>
 
 
 <div style="margin-left: 40px;">
 
-usage: opdsgrpmgr list-members [GLOBAL_OPTS] OPERAND<br>
+usage: dsservice list-members [GLOBAL_OPTS] OPERAND<br>
 
 
 List members of the specified group<br>
@@ -2055,7 +2055,7 @@ Global Options:<br>
 
 <div style="margin-left: 40px;">
 
-See opdsgrpmgr -?<br>
+See dsservice -?<br>
 
 
 </div>
@@ -2103,14 +2103,14 @@ The identifier of the group whose members are listed
 
 
 
-<span style="font-weight: bold;">opdsgrpmgr
+<span style="font-weight: bold;">dsservice
 list-membership --help</span></big>
 <br>
 
 
 <div style="margin-left: 40px;">
 
-usage: opdsgrpmgr list-membership [GLOBAL_OPTS] [SUBCOMMAND_OPTS] OPERAND<br>
+usage: dsservice list-membership [GLOBAL_OPTS] [SUBCOMMAND_OPTS] OPERAND<br>
 
 
 List groups in which the specified server is a member<br>
