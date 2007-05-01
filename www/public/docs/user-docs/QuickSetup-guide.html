@@ -23,7 +23,7 @@
 </table>
 <hr noshade size="1" >
 <h1>Overview</h1>
-<p> QuickSetup is a Java-based graphical tool designed to let you to quickly  configure an OpenDS LDAP server, load it up with data and get it running. It asks some basic questions about the server configuration and then gives you the choice of leaving your database empty, loading your server with data   from your own  LDIF or loading you server with sample data that QuickSetup will automatically generates for you.  It will  optionally even start the server  for you when it's done with all of that. </p>
+<p> QuickSetup is a Java-based graphical tool designed to let you to quickly  configure an OpenDS LDAP server, load it up with data and get it running. It asks some basic questions about the server configuration and then gives you the choice of leaving your database empty, loading your server with data   from your own  LDIF or loading you server with sample data that QuickSetup will automatically generates for you.  It will  optionally  start the server  for you when it's done with all of that. On the final panel you will be given the option of launching the <a href="StatusPanel-guide.html">Status Panel</a>, which is a graphical tool that provides basic server  information and  allows you to start, stop or restart the server. </p>
 <p>QuickSetup can be run remotely via Java Web Start or it can be run locally from within a weekly build that you've already  downloaded and unzipped. The main difference is that if you run it from Java Web Start QuickSetup will automatically download and unzip the latest build for you in addition to handling server configuration, whereas if you run it locally it will configure the build  it is bundled with. Both of these options are described in more detail below. </p>
 <p><a href="http://builds.opends.org/install/QuickSetup.jnlp"><strong>Launch QuickSetup Now</strong></a></p>
 <h3>Running OpenDS QuickSetup via Java Web Start</h3>
@@ -31,15 +31,16 @@
 <p> You can launch the Java Web Start version of QuickSetup  via the <a href="http://builds.opends.org/install/QuickSetup.jnlp">Launch QuickSetup (via Java Web Start)</a> links on the OpenDS site, or if you have  run QuickSetup in the past, you can double-click the OpenDSQuickSetup.jnlp file that was downloaded when you ran it. When you launch QuickSetup, Java Web Start will  check to make sure that you have the latest version of the QuickSetup bits and will download them if necessary. It will then show you the QuickSetup Welcome Page.</p>
 <p>QuickSetup then steps you through your server configuration and data import options, gives you a chance to review what you've specified and then gives you detailed output on its progress. See the screenshots below to see what's involved. </p>
 <h3>Running OpenDS QuickSetup Locally</h3>
-<p>You can also run QuickSetup after you have downloaded and unzipped a weekly build. All you need to do is run the setup.sh (or setup.bat) command at the top level of your OpenDS installation directory. The configuration screens are almost identical to those shown below with the exception that you won't be asked to provide a installation directory on the Server Settings panel. If you want to run a functionally-equivalent command-line version of the QuickSetup tool, just execute the setup command with a --cli option, like so: <font face="monospace">setup --cli </font></p>
+<p>You can also run QuickSetup after you have downloaded and unzipped a weekly build. All you need to do is run the <font face="monospace">setup</font> (or <font face="monospace">setup.bat</font>) command located at the top level of your OpenDS installation directory. The configuration screens are almost identical to those shown below with the exception that you won't be asked to provide a installation directory on the Server Settings panel. If you want to run a functionally-equivalent command-line version of the QuickSetup tool, just execute the setup command with a --cli option, like so: <font face="monospace">setup --cli </font></p>
 <hr noshade="noshade" size="1" />
 <h1>Screenshots</h1>
-<p><img src="QuickSetup-images/qs-panel1.png" alt="OpenDS QuickSetup Welcome Screen" width="786" height="476" /></p>
-<p><img src="QuickSetup-images/qs-panel2.png" alt="OpenDS QuickSetup Server Settings Screen" width="786" height="476" /></p>
-<p><img src="QuickSetup-images/qs-panel3.png" alt="OpenDS QuickSetup Data Options Screen" width="786" height="476" /></p>
-<p><img src="QuickSetup-images/qs-panel4.png" alt="OpenDS QuickSetup Review Screen" width="786" height="476" /></p>
-<p><img src="QuickSetup-images/qs-panel5.png" alt="OpenDS QuickSetup Progess Screen" width="786" height="476" /></p>
-<p><img src="QuickSetup-images/qs-panel5a.png" alt="OpenDS QuickSetup Pregress Screen when Done" width="786" height="476" /></p>
+<p><img src="QuickSetup-images/qs-panel1.png" alt="OpenDS QuickSetup Welcome Screen" width="800" height="539" /></p>
+<p><img src="QuickSetup-images/qs-panel2.png" alt="OpenDS QuickSetup Server Settings Screen" width="800" height="539" /></p>
+<p><img src="QuickSetup-images/qs-panel3.png" alt="OpenDS QuickSetup Data Options Screen" width="800" height="539" /></p>
+<p><img src="QuickSetup-images/qs-panel4.png" alt="OpenDS QuickSetup Review Screen" width="800" height="539" /></p>
+<p><img src="QuickSetup-images/qs-panel5.png" alt="OpenDS QuickSetup Progess Screen" width="800" height="539" /></p>
+<p><img src="QuickSetup-images/qs-panel5a.png" alt="OpenDS QuickSetup Progress Screen when Done" width="800" height="539" /></p>
+<p><img src="QuickSetup-images/qs-statpanel.png" alt="StatusPanel Screen" width="675" height="653" /></p>
 <hr noshade size="1" >
 <h1>Feedback</h1>
 <p>If you have any questions, comments or problems with OpenDS QuickSetup, send an e-mail to the <a href="users@opends.dev.java.net">users@opends.dev.java.net</a> mailing list.</p>
