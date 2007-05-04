@@ -1,0 +1,158 @@
+<!--
+ ! CDDL HEADER START
+ !
+ ! The contents of this file are subject to the terms of the
+ ! Common Development and Distribution License, Version 1.0 only
+ ! (the "License").  You may not use this file except in compliance
+ ! with the License.
+ !
+ ! You can obtain a copy of the license at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE
+ ! or https://OpenDS.dev.java.net/OpenDS.LICENSE.
+ ! See the License for the specific language governing permissions
+ ! and limitations under the License.
+ !
+ ! When distributing Covered Code, include this CDDL HEADER in each
+ ! file and include the License file at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE.  If applicable,
+ ! add the following below this CDDL HEADER, with the fields enclosed
+ ! by brackets "[]" replaced with your own identifying information:
+ !      Portions Copyright [yyyy] [name of copyright owner]
+ !
+ ! CDDL HEADER END
+ !
+ !
+ !      Portions Copyright 2007 Sun Microsystems, Inc.
+ ! -->
+<script>document.getElementById('pagetitletext').innerHTML=clicked;makeBcm('mod');</script>
+<div class="Tab1Div_sun4">
+  <table class="Tab1TblNew_sun4" title="" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="Tab1TblSelTd_sun4"><div class="Tab1SelTxtLeft_sun4"></div>
+            <div class="Tab1SelTxtNew_sun4" title="Current Selection: Topology View">Connections</div></td>
+        <td><a id="topovw" class="Tab1Lnk_sun4" href="javascript:loadFile('syncmodhome2.html')">Properties</a></td>
+        <td><a id="topovw" class="Tab1Lnk_sun4" href="javascript:loadFile('syncmodhome3.html')">Conflicts</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="bottom">
+    <td nowrap="nowrap" valign="bottom"><div class="TtlTxtDiv_sun4">
+        <h1 class="TtlTxt_sun4"><img src="../suntheme/images/bde-examples/sm-sync.png" width="38" height="39" style="margin-bottom:-10px;" alt="Directory Replicator " title="Directory Replicator "><span id="pagetitletext"></span> - Connections </h1>
+    </div></td>
+  </tr>
+</table>
+<div><img src="../suntheme/images/other/dot.gif" alt="" width="1" height="15" border="0" align="top" /></div>
+<div class="TblMgn_sun4">
+  <table width="98%" border="1" cellpadding="0" cellspacing="0" class="Tbl_sun4"title="" summary="This table allows you to view and manage Server Groups.">
+    <caption class="TblTtlTxt_sun4">
+    Connections (2 items)
+    </caption>
+    <tr>
+      <td class="TblActTd_sun4" colspan="7" nowrap="nowrap" align="left"><input class="Btn2_sun4" type="submit" name="newButton" id="newButton" value="Add Connection..." onFocus="if (this.disabled==0) this.className='Btn2Hov_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'" onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" onBlur="if (this.disabled==0) this.className='Btn2_sun4'" onClick="alert('Launches Add Connection Wizard');" title="Add Connection" />
+          <input class="Btn2_sun4" type="submit" name="openButton" id="openButton" value="Delect Connection..." onFocus="if (this.disabled==0) this.className='Btn2Hov_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'" onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" onBlur="if (this.disabled==0) this.className='Btn2_sun4'" onClick="alert('Allows Removal of Server or Service ');" title="Remove  from Service" />
+          <select class="MnuJmp_sun4" id="actionMenu1" onChange="MM_jumpMenu('parent',this,1)">
+            <option selected="selected" class="MnuJmpOpt_sun4">&#8212;&nbsp;More Connection Actions&nbsp;&#8212;</option>
+            <option class="MnuJmpOptDis_sun4" disabled="disabled">&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;</option>
+            <!--   <option id="fn" class="MnuJmpOpt_sun4" value="showPopUpWin('prog-agg.html',700,500)">Start Servers</option>
+          <option id="fn" class="MnuJmpOpt_sun4" value="popConfirm('Confirm Stop Servers\nAre you sure you want to stop all of the servers in the service group?','restart-server.html',700,500)">Stop Servers...</option>
+          <option id="fn" class="MnuJmpOpt_sun4" value="popConfirm('Confirm Restart Servers\nAre you sure you want to restart all of the servers in the service group?','restart-server.html',700,500)">Restart Servers...</option> -->
+          </select>
+          <img src="../suntheme/images/table/actions_separator.gif" alt="" width="18" height="18" border="0" align="top" />
+          <label for="filterMenu"><span class="LblLev2Txt_sun4">Filter:</span></label>
+          <select name="filterMenu" class="MnuJmp_sun4" id="filterMenu" onChange="MM_jumpMenu('parent',this,0)">
+            <option class="MnuJmpOpt_sun4" value="top-servers.html" selected="selected" >All Items</option>
+            <optgroup class="MnuJmpOptGrp_sun4" label=" Types">
+            <option id="fn" class="MnuJmpOpt_sun4" value="alert('shows table with only modules of the selected type')">Directory </option>
+            <option id="fn" class="MnuJmpOpt_sun4" value="alert('shows table with only modules of the selected type')">Load Balancer</option>
+            <option id="fn" class="MnuJmpOpt_sun4" value="alert('shows table with only modules of the selected type')">Directory Replicator</option>
+            <option id="fn" class="MnuJmpOpt_sun4" value="alert('shows table with only modules of the selected type')">Data Distributor</option>
+            <option id="fn" class="MnuJmpOpt_sun4" value="alert('shows table with only modules of the selected type')">JDBC Connector</option>
+            <option id="fn" class="MnuJmpOpt_sun4" value="alert('shows table with only modules of the selected type')">Active Directory Connector</option>
+            </optgroup>
+            <optgroup class="MnuJmpOptGrp_sun4" label="Directory Services">
+            <option id="fn" class="MnuJmpOpt_sun4" value="alert('shows table with only modules on servers in the selected service')">dc=replex, dc=com</option>
+            <option id="fn" class="MnuJmpOpt_sun4" value="alert('shows table with only modules on servers in the selected service')">dc=proxyex, dc=com</option>
+            <option id="fn" class="MnuJmpOpt_sun4" value="alert('shows table with only modules on servers in the selected service')">dc=distribex, dc=com</option>
+            <option id="fn" class="MnuJmpOpt_sun4" value="alert('shows table with only modules on servers in the selected service')">dc=virtex, dc=com</option>
+            </optgroup>
+            <optgroup class="MnuJmpOptGrp_sun4" label="Server Groups">
+            <option id="fn" class="MnuJmpOpt_sun4" value="alert('shows table with only modules on servers in the selected group')">Austin Data Center</option>
+            <option id="fn" class="MnuJmpOpt_sun4" value="alert('shows table with only modules on servers in the selected group')">Boulder Data Center</option>
+            <option id="fn" class="MnuJmpOpt_sun4" value="alert('shows table with only modules on servers in the selected group')">Cleveland Data Center</option>
+            <option id="fn" class="MnuJmpOpt_sun4" value="alert('shows table with only modules on servers in the selected group')">Grenoble Data Center</option>
+            </optgroup>
+          </select>
+      </td>
+    </tr>
+    <tr>
+      <th id="form1:table1:rowGroup1:col0:_columnHeader" class="TblColHdrSel_sun4" nowrap="nowrap" align="left" scope="col" width="3%"> <table class="TblHdrTbl_sun4"border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td align="left"><a  class="TblHdrLnk_sun4"  href="#" title="Click to Make This the Primary Sort Column - Ascending (Selected Items First)"><img id="form1:table1:rowGroup1:col0:_columnHeader:_selectSortButton:_selectSortButton_image" src="../suntheme/images/table/sort_select.gif" alt="Button to sort column selection column as the primary sort column." height="13" width="11" border="0" align="top" /></a></td>
+          </tr>
+      </table></th>
+      <th align="left" nowrap="nowrap" class="TblColHdrSrt_sun4" scope="col"><table class="TblHdrTbl_sun4"border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="left"><a class="TblHdrLnk_sun4"  href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)">Service Module </a></td>
+            <td><a  class="TblHdrImgLnk_sun4" href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)"><img id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortButton:_primarySortButton_image" src="../suntheme/images/table/sort_primary.gif" alt="Button to sort column First Name as the primary sort column." height="13" width="12" border="0" align="top" /></a></td>
+          </tr>
+      </table></th>
+      <th align="left" nowrap="nowrap" class="TblColHdr_sun4" scope="col"><table class="TblHdrTbl_sun4"border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="left"><a class="TblHdrLnk_sun4"  href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)"> Type </a></td>
+          <td><a  class="TblHdrImgLnk_sun4" href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)"><img id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortButton:_primarySortButton_image" src="../suntheme/images/table/sort_primary.gif" alt="Button to sort column First Name as the primary sort column." height="13" width="12" border="0" align="top" /></a></td>
+        </tr>
+      </table></th>
+      <th align="left" nowrap="nowrap" class="TblColHdr_sun4" scope="col"><table class="TblHdrTbl_sun4"border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="left"><a class="TblHdrLnk_sun4"  href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)"> Status</a></td>
+          <td><a class="TblHdrImgLnk_sun4" href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)"><img id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortButton:_primarySortButton_image" src="../suntheme/images/table/sort_primary.gif" alt="Button to sort column First Name as the primary sort column." height="13" width="12" border="0" align="top" /></a></td>
+        </tr>
+      </table></th>
+      <th align="left" nowrap="nowrap" class="TblColHdr_sun4" scope="col"><table class="TblHdrTbl_sun4"border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="left"><a  class="TblHdrLnk_sun4"  href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)">Server</a></td>
+            <td><a class="TblHdrImgLnk_sun4" href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)"><img id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortButton:_primarySortButton_image" src="../suntheme/images/table/sort_primary.gif" alt="Button to sort column First Name as the primary sort column." height="13" width="12" border="0" align="top" /></a></td>
+          </tr>
+      </table></th>
+      <th align="left" nowrap="nowrap" class="TblColHdr_sun4" scope="col"><table class="TblHdrTbl_sun4"border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="left"><a  class="TblHdrLnk_sun4"  href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)">Server Status</a></td>
+            <td><a class="TblHdrImgLnk_sun4" href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)"><img id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortButton:_primarySortButton_image" src="../suntheme/images/table/sort_primary.gif" alt="Button to sort column First Name as the primary sort column." height="13" width="12" border="0" align="top" /></a></td>
+          </tr>
+        </table></th>
+      <th align="left" nowrap="nowrap" class="TblColHdr_sun4" scope="col"><table class="TblHdrTbl_sun4"border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="left"><a id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortLink" class="TblHdrLnk_sun4"  href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)">Base DN</a></td>
+          <td><a id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortButton" class="TblHdrImgLnk_sun4" href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)"><img id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortButton:_primarySortButton_image" src="../suntheme/images/table/sort_primary.gif" alt="Button to sort column First Name as the primary sort column." height="13" width="12" border="0" align="top" /></a></td>
+        </tr>
+      </table></th>
+    </tr>
+    <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('dsmodhome.html', 'replex1-ds');" class="TblNavLnk_sun4">replex1-ds</a></th>
+      <td valign="top">Directory Database 
+        </td>
+      <td valign="top">Enabled
+      </td>
+      <td align="left" valign="top" scope="row"><a href="javascript:loadFile('serverhome.html', 'replex1');" class="TblNavLnk_sun4">replex1</a></td>
+      <td valign="top">Started</td>
+      <td valign="top">dc=replex, dc=com</td>
+    </tr>
+    <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+      </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('syncmodhome.html', 'replex2-sync');" class="TblNavLnk_sun4">replex2-sync</a></th>
+      <td valign="top">Directory Replicator </td>
+      <td valign="top"> Enabled</td>
+      <td align="left" valign="top" scope="row"><a href="javascript:loadFile('serverhome.html', 'replex2');" class="TblNavLnk_sun4">replex2</a></td>
+      <td valign="top">Started</td>
+      <td valign="top">dc=replex, dc=com</td>
+    </tr>
+  </table>
+</div>

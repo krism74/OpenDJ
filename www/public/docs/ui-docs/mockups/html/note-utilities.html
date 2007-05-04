@@ -1,0 +1,33 @@
+<!--
+ ! CDDL HEADER START
+ !
+ ! The contents of this file are subject to the terms of the
+ ! Common Development and Distribution License, Version 1.0 only
+ ! (the "License").  You may not use this file except in compliance
+ ! with the License.
+ !
+ ! You can obtain a copy of the license at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE
+ ! or https://OpenDS.dev.java.net/OpenDS.LICENSE.
+ ! See the License for the specific language governing permissions
+ ! and limitations under the License.
+ !
+ ! When distributing Covered Code, include this CDDL HEADER in each
+ ! file and include the License file at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE.  If applicable,
+ ! add the following below this CDDL HEADER, with the fields enclosed
+ ! by brackets "[]" replaced with your own identifying information:
+ !      Portions Copyright [yyyy] [name of copyright owner]
+ !
+ ! CDDL HEADER END
+ !
+ !
+ !      Portions Copyright 2007 Sun Microsystems, Inc.
+ ! -->
+<div class="content-inner">
+  <div class="designnote">
+    <h1>Utilities</h1>
+    <p>The idea here is to provide a top-level toolbox for console-specific stuff like preferences and managing administrative users as well as for &quot;support&quot; types of tools that are not part of the directory service per se. </p>
+    <p>I've included some things which in the end may not make sense, but sort of express the spirit of the sub-panel. These include things like task scheduling which are configured at the server level, but it might be useful in order to manage tasks in a multi-server way -- argument being that since functionally related servers  will likely be configured to perform identical tasks,  the user might want to schedule those tasks in a sequence (e.g., to limit performance impact schedule tasks to occur in sequence on a set of servers contingent upon success). This is most easily accomplished if the UI supports multiple servers. Likewise, it could be convenient to view and configure logger settings and certificates centrally, and so they've been included in this section as well. </p>
+  </div>
+  </div>

@@ -1,0 +1,842 @@
+<!--
+ ! CDDL HEADER START
+ !
+ ! The contents of this file are subject to the terms of the
+ ! Common Development and Distribution License, Version 1.0 only
+ ! (the "License").  You may not use this file except in compliance
+ ! with the License.
+ !
+ ! You can obtain a copy of the license at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE
+ ! or https://OpenDS.dev.java.net/OpenDS.LICENSE.
+ ! See the License for the specific language governing permissions
+ ! and limitations under the License.
+ !
+ ! When distributing Covered Code, include this CDDL HEADER in each
+ ! file and include the License file at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE.  If applicable,
+ ! add the following below this CDDL HEADER, with the fields enclosed
+ ! by brackets "[]" replaced with your own identifying information:
+ !      Portions Copyright [yyyy] [name of copyright owner]
+ !
+ ! CDDL HEADER END
+ !
+ !
+ !      Portions Copyright 2007 Sun Microsystems, Inc.
+ ! -->
+ <script>document.getElementById('pagetitletext').innerHTML=clicked;document.getElementById('username').value="cn="+clicked;document.getElementById('role').innerHTML=clicked;makeBcm();</script>
+
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+  <tr >
+    <td nowrap="nowrap" ><div class="TtlTxtDiv_sun4">
+        <h1 class="TtlTxt_sun4"><img src="../suntheme/images/bde-examples/adminuser.png" width="39" height="38"  style="margin-bottom:-10px;" alt="Administrative User " title="Administrative User "><span id="pagetitletext"></span> - Permissions </h1>
+      </div></td>
+    <td align="right" nowrap="nowrap" ><div class="TtlBtnDiv_sun4"><span id="mastheadForm:_id23:pageButtonsTopGroup">
+        <input id="mastheadForm:_id23:pageButtonsTopGroup:Save" name="mastheadForm:_id23:pageButtonsTopGroup:Save" class="Btn1_sun4"  type="submit" value="Save" title="Save your configuration changes to this Directory Database Module" onClick="alert('Saves the changes and leaves the user on this page with an inline alert message indicating the outcome of the change')"/>
+        <input id="mastheadForm:_id23:pageButtonsTopGroup:Reset" name="mastheadForm:_id23:pageButtonsTopGroup:Reset" class="Btn2_sun4"  type="submit" value="Save As..." title="Save as new user" />
+        <input id="mastheadForm:_id23:pageButtonsTopGroup:Reset" name="mastheadForm:_id23:pageButtonsTopGroup:Reset" class="Btn2_sun4"  type="submit" value="Reset" title="Reset this form to its original values" />
+        </span> </div></td>
+  </tr>
+</table>
+<div id="myForm:pageTitle:propSheetExample1" class="PrpSht">
+<div class="ConJmpScnDiv_sun4">
+  <table title="" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td><span class="ConJmpLnkDiv_sun4"><a id="myForm:pageTitle:propSheetExample1:basicSearch_jumpLink" class="JmpLnk_sun4" href="#_genInfo" title="Jump down to the section"><img id="myForm:pageTitle:propSheetExample1:basicSearch_jumpLink:basicSearch_jumpLink_image" src="../suntheme/images/href/to_anchor.gif" alt="Jump down to the section" height="10" width="16" border="0" />General</a></span></td>
+      <td><span class="ConJmpLnkDiv_sun4"><a id="myForm:pageTitle:propSheetExample1:advSearch_jumpLink" class="JmpLnk_sun4" href="#_advSearch" title="Jump down to the section"><img id="myForm:pageTitle:propSheetExample1:advSearch_jumpLink:advSearch_jumpLink_image" src="../suntheme/images/href/to_anchor.gif" alt="Jump down to the section" height="10" width="16" border="0" />Server Logging</a></span></td>
+      <td><span class="ConJmpLnkDiv_sun4"><a id="myForm:pageTitle:propSheetExample1:basicSearch_jumpLink" class="JmpLnk_sun4" href="#_genInfo" title="Jump down to the section"><img id="myForm:pageTitle:propSheetExample1:basicSearch_jumpLink:basicSearch_jumpLink_image" src="../suntheme/images/href/to_anchor.gif" alt="Jump down to the section" height="10" width="16" border="0" />Schema</a></span></td>
+      <td><span class="ConJmpLnkDiv_sun4"><a id="myForm:pageTitle:propSheetExample1:basicSearch_jumpLink" class="JmpLnk_sun4" href="#_genInfo" title="Jump down to the section"><img id="myForm:pageTitle:propSheetExample1:basicSearch_jumpLink:basicSearch_jumpLink_image" src="../suntheme/images/href/to_anchor.gif" alt="Jump down to the section" height="10" width="16" border="0" />Administrative Users</a></span></td>
+    </tr>
+    <tr>
+      <td><span class="ConJmpLnkDiv_sun4"><a id="myForm:pageTitle:propSheetExample1:basicSearch_jumpLink" class="JmpLnk_sun4" href="#_genInfo" title="Jump down to the section"><img id="myForm:pageTitle:propSheetExample1:basicSearch_jumpLink:basicSearch_jumpLink_image" src="../suntheme/images/href/to_anchor.gif" alt="Jump down to the section" height="10" width="16" border="0" />Server Monitoring</a></span></td>
+      <td><span class="ConJmpLnkDiv_sun4"><a id="myForm:pageTitle:propSheetExample1:advSearch_jumpLink" class="JmpLnk_sun4" href="#_advSearch" title="Jump down to the section"><img id="myForm:pageTitle:propSheetExample1:advSearch_jumpLink:advSearch_jumpLink_image" src="../suntheme/images/href/to_anchor.gif" alt="Jump down to the section" height="10" width="16" border="0" />Service Modules</a></span></td>
+      <td><span class="ConJmpLnkDiv_sun4"><a id="myForm:pageTitle:propSheetExample1:basicSearch_jumpLink" class="JmpLnk_sun4" href="#_genInfo" title="Jump down to the section"><img id="myForm:pageTitle:propSheetExample1:basicSearch_jumpLink:basicSearch_jumpLink_image" src="../suntheme/images/href/to_anchor.gif" alt="Jump down to the section" height="10" width="16" border="0" />Server Configuration</a></span></td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td><span class="ConJmpLnkDiv_sun4"><a id="myForm:pageTitle:propSheetExample1:basicSearch_jumpLink" class="JmpLnk_sun4" href="#_genInfo" title="Jump down to the section"><img id="myForm:pageTitle:propSheetExample1:basicSearch_jumpLink:basicSearch_jumpLink_image" src="../suntheme/images/href/to_anchor.gif" alt="Jump down to the section" height="10" width="16" border="0" />Server Backup and Restore</a></span></td>
+      <td><span class="ConJmpLnkDiv_sun4"><a id="myForm:pageTitle:propSheetExample1:advSearch_jumpLink" class="JmpLnk_sun4" href="#_advSearch" title="Jump down to the section"><img id="myForm:pageTitle:propSheetExample1:advSearch_jumpLink:advSearch_jumpLink_image" src="../suntheme/images/href/to_anchor.gif" alt="Jump down to the section" height="10" width="16" border="0" />Directory Data</a></span></td>
+      <td><span class="ConJmpLnkDiv_sun4"><a id="myForm:pageTitle:propSheetExample1:basicSearch_jumpLink" class="JmpLnk_sun4" href="#_genInfo" title="Jump down to the section"><img id="myForm:pageTitle:propSheetExample1:basicSearch_jumpLink:basicSearch_jumpLink_image" src="../suntheme/images/href/to_anchor.gif" alt="Jump down to the section" height="10" width="16" border="0" />Task Scheduling</a></span></td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+</div>
+<div class="ConLin_sun4"><img id="myForm:pageTitle:propSheetExample1:basicSearch:basicSearch_dot2" src="../suntheme/images/other/dot.gif" alt="" height="1" width="1" border="0" /></div>
+<div class="ConFldSet_sun4">
+  <div class="ConFldSetDiv_sun4">
+    <div class="ConFldSetLgdDiv_sun4">General </div>
+    <table border="0" cellspacing="0" cellpadding="0" title="">
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="usernamelb" for="username" class="LblLev2Txt_sun4"> User DN:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">
+            <input size="40" type="text" class="TxtFld_sun4" value=" " id="username"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="myForm:pageTitle:propSheetExample1:basicSearch:basicInfo:basicInfo_label" for="description" class="LblLev2Txt_sun4"> Description: </label>
+          </div></td>
+        <td><div class="ConTblCl2Div_sun4">
+            <input type="text" class="TxtFld_sun4" id="description" value="" size="60"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4"> Account Role:</label>
+          </div></td>
+        <td  ><div class="ConTblCl2Div_sun4" id="role"></div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4"> Account Status:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Enabled&nbsp;&nbsp;
+            <input type="button" class="Btn2Mni_sun4" value="Disable..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4"> Password:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">
+            <input type="password" class="TxtFld_sun4" value="************" id="pwd"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd2" class="LblLev2Txt_sun4"> Password (confirm):</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">
+            <input type="password" class="TxtFld_sun4" value="************" id="pwd2"/>
+          </div></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="ConLin_sun4"><img id="myForm:pageTitle:propSheetExample1:basicSearch:basicSearch_dot2" src="../suntheme/images/other/dot.gif" alt="" height="1" width="1" border="0" /></div>
+<div class="ConFldSet_sun4">
+  <div class="ConFldSetDiv_sun4">
+    <div class="ConFldSetLgdDiv_sun4">Server Monitoring </div>
+    <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom:10px">
+      <tr>
+        <td style="padding-right:10px"><input name="radiobutton0" type="radio" value="radiobutton">
+         Deny All Access</td>
+        <td style="padding-right:10px"><input name="radiobutton0" type="radio" value="radiobutton" >
+          Allow Full Access</td>
+        <td style="padding-right:10px"><input name="radiobutton0" type="radio" value="radiobutton"checked >
+          Specify Permissions Individually</td>
+      </tr>
+    </table>
+    <table border="0" cellspacing="0" cellpadding="0" title="">
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">View Service Dashboards:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2Mni_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">View Server Statistics:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2Mni_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Modify Monitoring Settings:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2Mni_sun4" value="Change..." id="disable" onClick="document.getElementById('permsettings').style.display='block'"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left" colspan="2"><div class="ConTblCl1Div_sun4">
+            <div id="permsettings" style="border:solid 1px #999;padding:10px;margin:5px 0px 0px 20px;background-color:#eeeeee;display:none">
+              <table border="0" cellspacing="3" cellpadding="0">
+                <tr>
+                  <td><div style="padding-bottom:5px">
+                      <input name="creatlmt1" type="radio" id="newnew" value="radiobutton" />
+                    </div></td>
+                  <td><div style="padding-bottom:5px"><span class="LblLev3Txt_sun4">Denied on All Servers</span></div></td>
+                </tr>
+                <tr>
+                  <td><div style="padding-bottom:5px">
+                      <input name="creatlmt1" type="radio" id="newnew" value="radiobutton" />
+                    </div></td>
+                  <td><div style="padding-bottom:5px"><span class="LblLev3Txt_sun4">Allowed on All Servers</span></div></td>
+                </tr>
+                <tr>
+                  <td><input name="creatlmt1" type="radio" id="newex" value="radiobutton" checked="checked" /></td>
+                  <td><span class="LblLev3Txt_sun4">Allowed Only on Servers in the Following Groups:</span></td>
+                </tr>
+                <tr>
+                  <td valign="top">&nbsp;</td>
+                  <td valign="top"><div style="padding-bottom:5px;padding-left:15px">
+                      <table>
+                        <tr>
+                          <td valign="top"><div class="AddRmvHrzDiv_sun4">
+                              <label class="AddRmvLbl2_sun4" for="availnodes">Available Groups</label>
+                              <select name="availnodes" id="availnodes" class="Lst_sun4" size="5" multiple="multiple" onChange="if (this.length != 1) { deselectAll(document.theform.selnodes); handleButtonsAvail(document.theform, document.theform.selnodes)}" ondblclick="if (this.length != 1) { shiftBetween(document.theform.availnodes, document.theform.selnodes,0); handleButtonsSel(document.theform, document.theform.availnodes);return false;}">
+                                <option class="LstOptSel_sun4" selected="selected">Austin Data Center</option>
+                                <option class="LstOpt_sun4">Cleveland Data Center</option>
+                                <option class="LstOpt_sun4">Grenoble Data Center</option>
+                                <option class="LstOptDis_sun4" value="ignoreMe" disabled="disabled"> ____________________</option>
+                              </select>
+                            </div>
+                          <td valign="top"><div class="AddRmvHrzDiv_sun4">
+                              <table class="AddRmvBtnTbl_sun4">
+                                <tr>
+                                  <td align="center" width="125px"><div class="AddRmvHrzWin_sun4">
+                                      <input class="Btn2_sun4" name="add" id="add" value="    Add      &gt;" 
+                    onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'" 
+                    onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" 
+                    onClick="shiftBetween(document.theform.availnodes, document.theform.selnodes,0); handleButtonsSel(document.theform, document.theform.availnodes);return false;" 
+                    type="submit">
+                                    </div>
+                                    <div class="AddRmvHrzBwn_sun4">
+                                      <input class="Btn2Dis_sun4" name="remove" id="remove" value="&lt;    Remove   " disabled="disabled" 
+                    onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'" 
+                    onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" 
+                    onClick="shiftBetween(document.theform.selnodes, document.theform.availnodes,0); handleButtonsAvail(document.theform, document.theform.selnodes);return false;" 
+                    type="submit">
+                                    </div></td>
+                                </tr>
+                              </table>
+                            </div></td>
+                          <td valign="top"><div class="AddRmvHrzDiv_sun4">
+                              <label class="AddRmvLbl2_sun4" for="selnodes">Chosen Groups</label>
+                              <select name="selnodes" id="selnodes" class="Lst_sun4" size="5" multiple="multiple" onChange="if (this.length != 1) { deselectAll(document.theform.availnodes);handleButtonsSel(document.theform, document.theform.availnodes);}" ondblclick="if (this.length != 1) { shiftBetween(document.theform.selnodes, document.theform.availnodes,0); handleButtonsAvail(document.theform, document.theform.selnodes);return false;}">
+                                <option class="LstOpt_sun4">Boulder Data Center</option>
+                                <option class="LstOptDis_sun4" value="ignoreMe" disabled="disabled"> ____________________</option>
+                              </select>
+                            </div></td>
+                        </tr>
+                      </table>
+                    </div></td>
+                </tr>
+                <tr>
+                  <td><input name="creatlmt1" type="radio" id="newnew" value="radiobutton" /></td>
+                  <td><span class="LblLev3Txt_sun4"> Allowed Only on Servers that are Part of the Following Services:</span></td>
+                </tr>
+                <tr>
+                  <td valign="top">&nbsp;</td>
+                  <td valign="top"><div style="padding-bottom:5px;padding-left:15px">
+                      <table>
+                        <tr>
+                          <td valign="top"><div class="AddRmvHrzDiv_sun4">
+                              <label class="AddRmvLbl2_sun4" for="availnodes">Available Services </label>
+                              <select name="availnodes" id="availnodes" class="LstDis_sun4" disabled="disabled" size="5" multiple="multiple" onChange="if (this.length != 1) { deselectAll(document.theform.selnodes); handleButtonsAvail(document.theform, document.theform.selnodes)}" ondblclick="if (this.length != 1) { shiftBetween(document.theform.availnodes, document.theform.selnodes,0); handleButtonsSel(document.theform, document.theform.availnodes);return false;}">
+                                <option class="LstOptDis_sun4" >dc=distribex,dc=com</option>
+                                <option class="LstOptDis_sun4">dc=joinex,dc=com</option>
+                                <option class="LstOptDis_sun4">dc=ldifex,dc=com</option>
+                                 <option class="LstOptDis_sun4">dc=proxyex,dc=com</option>
+                                <option class="LstOptDis_sun4">dc=replex,dc=com</option>
+                                <option class="LstOptDis_sun4">dc=syncadex,dc=com</option>
+                                <option class="LstOptDis_sun4">dc=virtex,dc=com</option>
+                                <option class="LstOptDis_sun4" value="ignoreMe" disabled="disabled"> ____________________</option>
+                             </select>
+                            </div>
+                          <td valign="top"><div class="AddRmvHrzDiv_sun4">
+                              <table class="AddRmvBtnTbl_sun4">
+                                <tr>
+                                  <td align="center" width="125px"><div class="AddRmvHrzWin_sun4">
+                                      <input class="Btn2Dis_sun4" disabled="disabled" name="add" id="add" value="    Add      &gt;" 
+                    onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'" 
+                    onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" 
+                    onClick="shiftBetween(document.theform.availnodes, document.theform.selnodes,0); handleButtonsSel(document.theform, document.theform.availnodes);return false;" 
+                    type="submit">
+                                    </div>
+                                    <div class="AddRmvHrzBwn_sun4">
+                                      <input class="Btn2Dis_sun4" name="remove" id="remove" value="&lt;    Remove   " disabled="disabled" 
+                    onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'" 
+                    onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" 
+                    onClick="shiftBetween(document.theform.selnodes, document.theform.availnodes,0); handleButtonsAvail(document.theform, document.theform.selnodes);return false;" 
+                    type="submit">
+                                    </div></td>
+                                </tr>
+                              </table>
+                            </div></td>
+                          <td valign="top"><div class="AddRmvHrzDiv_sun4">
+                              <label class="AddRmvLbl2_sun4" for="selnodes">Chosen Services</label>
+                              <select name="selnodes" id="selnodes" class="LstDis_sun4" disabled="disabled" size="5" multiple="multiple" onChange="if (this.length != 1) { deselectAll(document.theform.availnodes);handleButtonsSel(document.theform, document.theform.availnodes);}" ondblclick="if (this.length != 1) { shiftBetween(document.theform.selnodes, document.theform.availnodes,0); handleButtonsAvail(document.theform, document.theform.selnodes);return false;}">
+                                <option class="LstOptDis_sun4" value="ignoreMe" disabled="disabled"> ____________________</option>
+                              </select>
+                            </div></td>
+                        </tr>
+                      </table>
+                    </div></td>
+                </tr>
+                <tr>
+                  <td><input name="creatlmt1" type="radio" id="newnew" value="radiobutton" /></td>
+                  <td><span class="LblLev3Txt_sun4"> Allowed Only on the Following Servers:</span></td>
+                </tr>
+                <tr>
+                  <td valign="top">&nbsp;</td>
+                  <td valign="top"><div style="padding-bottom:5px;padding-left:15px">
+                      <table>
+                        <tr>
+                          <td valign="top"><div class="AddRmvHrzDiv_sun4">
+                              <label class="AddRmvLbl2_sun4" for="availnodes">Available Servers</label>
+                              <select name="availnodes" id="availnodes" class="LstDis_sun4" disabled="disabled" size="8" multiple="multiple" onChange="if (this.length != 1) { deselectAll(document.theform.selnodes); handleButtonsAvail(document.theform, document.theform.selnodes)}" ondblclick="if (this.length != 1) { shiftBetween(document.theform.availnodes, document.theform.selnodes,0); handleButtonsSel(document.theform, document.theform.availnodes);return false;}">
+                                <option class="LstOptDis_sun4" >distribex1</option>
+                                <option class="LstOptDis_sun4">distribex2</option>
+                                <option class="LstOptDis_sun4">distribex3</option>
+                                 <option class="LstOptDis_sun4">distribex4</option>
+                                <option class="LstOptDis_sun4">distribex5</option>
+                                <option class="LstOptDis_sun4">joinex1</option>
+                                <option class="LstOptDis_sun4">etc...</option>
+                                <option class="LstOptDis_sun4" value="ignoreMe" disabled="disabled"> ____________________</option>
+                             </select>
+                            </div>
+                          <td valign="top"><div class="AddRmvHrzDiv_sun4">
+                              <table class="AddRmvBtnTbl_sun4">
+                                <tr>
+                                  <td align="center" width="125px"><div class="AddRmvHrzWin_sun4">
+                                      <input class="Btn2Dis_sun4" disabled="disabled" name="add" id="add" value="    Add      &gt;" 
+                    onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'" 
+                    onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" 
+                    onClick="shiftBetween(document.theform.availnodes, document.theform.selnodes,0); handleButtonsSel(document.theform, document.theform.availnodes);return false;" 
+                    type="submit">
+                                    </div>
+                                    <div class="AddRmvHrzBwn_sun4">
+                                      <input class="Btn2Dis_sun4" name="remove" id="remove" value="&lt;    Remove   " disabled="disabled" 
+                    onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'" 
+                    onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" 
+                    onClick="shiftBetween(document.theform.selnodes, document.theform.availnodes,0); handleButtonsAvail(document.theform, document.theform.selnodes);return false;" 
+                    type="submit">
+                                    </div></td>
+                                </tr>
+                              </table>
+                            </div></td>
+                          <td valign="top"><div class="AddRmvHrzDiv_sun4">
+                              <label class="AddRmvLbl2_sun4" for="selnodes">Chosen Servers</label>
+                              <select name="selnodes" id="selnodes" class="LstDis_sun4" disabled="disabled" size="8" multiple="multiple" onChange="if (this.length != 1) { deselectAll(document.theform.availnodes);handleButtonsSel(document.theform, document.theform.availnodes);}" ondblclick="if (this.length != 1) { shiftBetween(document.theform.selnodes, document.theform.availnodes,0); handleButtonsAvail(document.theform, document.theform.selnodes);return false;}">
+                                <option class="LstOptDis_sun4" value="ignoreMe" disabled="disabled"> ____________________</option>
+                              </select>
+                            </div></td>
+                        </tr>
+                      </table>
+                    </div></td>
+                </tr>
+</table>
+              <div style="text-align:right;margin-top:15px">
+                <input type="button" class="Btn2Mni_sun4" value="Done" id="disable" onClick="document.getElementById('permsettings').style.display='none'"/>
+              </div>
+            </div>
+          </div></td>
+      </tr>
+    </table>
+    <!--<ul>
+      <li>View Service Dashboards</li>
+      <li>View Server Statistics </li>
+    </ul>
+	-->
+  </div>
+</div>
+<div class="ConJmpTopDiv_sun4"><a id="_id11" class="JmpTopLnk_sun4" href="#" title="Jump to top of page"><img id="_id11:_image" src="../suntheme/images/href/to_top.gif" alt="Jump to top of page" height="10" width="11" border="0" />&nbsp;Back to top</a></div>
+<div class="ConLin_sun4"><img id="myForm:pageTitle:propSheetExample1:basicSearch:basicSearch_dot2" src="../suntheme/images/other/dot.gif" alt="" height="1" width="1" border="0" /></div>
+<div class="ConFldSet_sun4">
+  <div class="ConFldSetDiv_sun4">
+    <div class="ConFldSetLgdDiv_sun4">Server Operation </div>
+    <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom:10px">
+      <tr>
+        <td style="padding-right:10px"><input name="radiobutton1" type="radio" value="radiobutton">
+      Deny All Access</td>
+        <td style="padding-right:10px"><input name="radiobutton1" type="radio" value="radiobutton" checked>
+      Allow Full Access</td>
+        <td style="padding-right:10px"><input name="radiobutton1" type="radio" value="radiobutton" >
+      Specify Permissions Individually</td>
+      </tr>
+    </table>
+    <table border="0" cellspacing="0" cellpadding="0" title="">
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Start/Stop/Restart Server:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Change Run Mode (Maintenance, Frozen, Read-Only):</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+    </table>
+    <!-- <ul>
+      <li>Start and Restart Server</li>
+      <li>Stop Server </li>
+      <li>Change Server Run Mode (Normal, Maintenance, Read-Only)</li>
+    </ul>-->
+  </div>
+</div>
+<div class="ConJmpTopDiv_sun4"><a id="_id11" class="JmpTopLnk_sun4" href="#" title="Jump to top of page"><img id="_id11:_image" src="../suntheme/images/href/to_top.gif" alt="Jump to top of page" height="10" width="11" border="0" />&nbsp;Back to top</a></div>
+<div class="ConLin_sun4"><img id="myForm:pageTitle:propSheetExample1:basicSearch:basicSearch_dot2" src="../suntheme/images/other/dot.gif" alt="" height="1" width="1" border="0" /></div>
+<div class="ConFldSet_sun4">
+  <div class="ConFldSetDiv_sun4">
+    <div class="ConFldSetLgdDiv_sun4">Server Backup and Restore</div>
+    <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom:10px">
+      <tr>
+        <td style="padding-right:10px"><input name="radiobutton2" type="radio" value="radiobutton">
+      Deny All Access</td>
+        <td style="padding-right:10px"><input name="radiobutton2" type="radio" value="radiobutton" checked>
+      Allow Full Access</td>
+        <td style="padding-right:10px"><input name="radiobutton2" type="radio" value="radiobutton" >
+      Specify Permissions Individually</td>
+      </tr>
+    </table>
+    <table border="0" cellspacing="0" cellpadding="0" title="">
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Initiate Server Backup:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Modify Backup Settings:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Delete Backup Files:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Initiate Server Restore:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+    </table>
+    <!--    <ul>
+      <li>Initiate Server Backup</li>
+      <li>Modify Backup Settings</li>
+      <li>Delete Backup Files </li>
+      <li>Initiate Server Restore</li>
+    </ul>
+	-->
+  </div>
+</div>
+<div class="ConJmpTopDiv_sun4"><a id="_id11" class="JmpTopLnk_sun4" href="#" title="Jump to top of page"><img id="_id11:_image" src="../suntheme/images/href/to_top.gif" alt="Jump to top of page" height="10" width="11" border="0" />&nbsp;Back to top</a></div>
+<div class="ConLin_sun4"><img id="myForm:pageTitle:propSheetExample1:basicSearch:basicSearch_dot2" src="../suntheme/images/other/dot.gif" alt="" height="1" width="1" border="0" /></div>
+<div class="ConFldSet_sun4">
+  <div class="ConFldSetDiv_sun4">
+    <div class="ConFldSetLgdDiv_sun4">Server Logging </div>
+    <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom:10px">
+      <tr>
+        <td style="padding-right:10px"><input name="radiobutton3" type="radio" value="radiobutton">
+      Deny All Access</td>
+        <td style="padding-right:10px"><input name="radiobutton3" type="radio" value="radiobutton" checked>
+      Allow Full Access</td>
+        <td style="padding-right:10px"><input name="radiobutton3" type="radio" value="radiobutton" >
+      Specify Permissions Individually</td>
+      </tr>
+    </table>
+    <table border="0" cellspacing="0" cellpadding="0" title="">
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">View Access Logs:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Modify Access Logging Settings:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Rotate Access Logs:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">View Error Logs:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Modify Error Logging Settings:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Rotate Error Logs:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">View Audit Logs:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Modify Audit Logging Settings:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      </tr>
+      
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Rotate Audit Logs:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="ConJmpTopDiv_sun4"><a id="_id11" class="JmpTopLnk_sun4" href="#" title="Jump to top of page"><img id="_id11:_image" src="../suntheme/images/href/to_top.gif" alt="Jump to top of page" height="10" width="11" border="0" />&nbsp;Back to top</a></div>
+<div class="ConLin_sun4"><img id="myForm:pageTitle:propSheetExample1:basicSearch:basicSearch_dot2" src="../suntheme/images/other/dot.gif" alt="" height="1" width="1" border="0" /></div>
+<div class="ConFldSet_sun4">
+  <div class="ConFldSetDiv_sun4">
+    <div class="ConFldSetLgdDiv_sun4">Service Modules ( probably break these out by type) </div>
+    <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom:10px">
+      <tr>
+        <td style="padding-right:10px"><input name="radiobutton4" type="radio" value="radiobutton" checked>
+      Deny All Access</td>
+        <td style="padding-right:10px"><input name="radiobutton4" type="radio" value="radiobutton" >
+      Allow Full Access</td>
+        <td style="padding-right:10px"><input name="radiobutton4" type="radio" value="radiobutton" >
+      Specify Permissions Individually</td>
+      </tr>
+    </table>
+    <table border="0" cellspacing="0" cellpadding="0" title="">
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Enable/Disable Service Modules:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Denied on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Create/Delete Service Modules:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Denied on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Modify Service Module Configuration:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Denied on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="ConJmpTopDiv_sun4"><a id="_id11" class="JmpTopLnk_sun4" href="#" title="Jump to top of page"><img id="_id11:_image" src="../suntheme/images/href/to_top.gif" alt="Jump to top of page" height="10" width="11" border="0" />&nbsp;Back to top</a></div>
+<div class="ConLin_sun4"><img id="myForm:pageTitle:propSheetExample1:basicSearch:basicSearch_dot2" src="../suntheme/images/other/dot.gif" alt="" height="1" width="1" border="0" /></div>
+<div class="ConFldSet_sun4">
+  <div class="ConFldSetDiv_sun4">
+    <div class="ConFldSetLgdDiv_sun4">Directory Data </div>
+    <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom:10px">
+      <tr>
+        <td style="padding-right:10px"><input name="radiobutton5" type="radio" value="radiobutton">
+      Deny All Access</td>
+        <td style="padding-right:10px"><input name="radiobutton5" type="radio" value="radiobutton" checked>
+      Allow Full Access</td>
+        <td style="padding-right:10px"><input name="radiobutton5" type="radio" value="radiobutton" >
+      Specify Permissions Individually</td>
+      </tr>
+    </table>
+    <table border="0" cellspacing="0" cellpadding="0" title="">
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4"><label id="username" for="pwd" class="LblLev2Txt_sun4">Search and Browse Directory Entries:</label></div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Create/Delete Directory Entries:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Edit Directory Entries:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Create/Delete/Edit Access Control Instructions:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Create/Delete/Edit Password Policies:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="ConJmpTopDiv_sun4"><a id="_id11" class="JmpTopLnk_sun4" href="#" title="Jump to top of page"><img id="_id11:_image" src="../suntheme/images/href/to_top.gif" alt="Jump to top of page" height="10" width="11" border="0" />&nbsp;Back to top</a></div>
+<div class="ConLin_sun4"><img id="myForm:pageTitle:propSheetExample1:basicSearch:basicSearch_dot2" src="../suntheme/images/other/dot.gif" alt="" height="1" width="1" border="0" /></div>
+<div class="ConFldSet_sun4">
+  <div class="ConFldSetDiv_sun4">
+    <div class="ConFldSetLgdDiv_sun4">Schema</div>
+    <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom:10px">
+      <tr>
+        <td style="padding-right:10px"><input name="radiobutton6" type="radio" value="radiobutton">
+      Deny All Access</td>
+        <td style="padding-right:10px"><input name="radiobutton6" type="radio" value="radiobutton" checked>
+      Allow Full Access</td>
+        <td style="padding-right:10px"><input name="radiobutton6" type="radio" value="radiobutton" >
+      Specify Permissions Individually</td>
+      </tr>
+    </table>
+    <table border="0" cellspacing="0" cellpadding="0" title="">
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">View Schema:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Create/Edit/Delete Object Classes and Attributes:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="ConJmpTopDiv_sun4"><a id="_id11" class="JmpTopLnk_sun4" href="#" title="Jump to top of page"><img id="_id11:_image" src="../suntheme/images/href/to_top.gif" alt="Jump to top of page" height="10" width="11" border="0" />&nbsp;Back to top</a></div>
+<div class="ConLin_sun4"><img id="myForm:pageTitle:propSheetExample1:basicSearch:basicSearch_dot2" src="../suntheme/images/other/dot.gif" alt="" height="1" width="1" border="0" /></div>
+<div class="ConFldSet_sun4">
+  <div class="ConFldSetDiv_sun4">
+    <div class="ConFldSetLgdDiv_sun4">Server Configuration </div>
+    <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom:10px">
+      <tr>
+        <td style="padding-right:10px"><input name="radiobutton7" type="radio" value="radiobutton">
+      Deny All Access</td>
+        <td style="padding-right:10px"><input name="radiobutton7" type="radio" value="radiobutton" checked>
+      Allow Full Access</td>
+        <td style="padding-right:10px"><input name="radiobutton7" type="radio" value="radiobutton" >
+      Specify Permissions Individually</td>
+      </tr>
+    </table>
+    <table border="0" cellspacing="0" cellpadding="0" title="">
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">View Server Configuration (read-only):</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Manage Certificates:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Manage Listeners (create, delete, edit):</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Modify Tuning Settings (cache, memory usage):</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Manage Server Plugins (add/delete/configure):</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Revert Server to Previous Configuration:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="ConJmpTopDiv_sun4"><a id="_id11" class="JmpTopLnk_sun4" href="#" title="Jump to top of page"><img id="_id11:_image" src="../suntheme/images/href/to_top.gif" alt="Jump to top of page" height="10" width="11" border="0" />&nbsp;Back to top</a></div>
+<div class="ConLin_sun4"><img id="myForm:pageTitle:propSheetExample1:basicSearch:basicSearch_dot2" src="../suntheme/images/other/dot.gif" alt="" height="1" width="1" border="0" /></div>
+<div class="ConFldSet_sun4">
+  <div class="ConFldSetDiv_sun4">
+    <div class="ConFldSetLgdDiv_sun4">Task Scheduling </div>
+    <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom:10px">
+      <tr>
+        <td style="padding-right:10px"><input name="radiobutton8" type="radio" value="radiobutton">
+      Deny All Access</td>
+        <td style="padding-right:10px"><input name="radiobutton8" type="radio" value="radiobutton" checked>
+      Allow Full Access</td>
+        <td style="padding-right:10px"><input name="radiobutton8" type="radio" value="radiobutton" >
+      Specify Permissions Individually</td>
+      </tr>
+    </table>
+    <table border="0" cellspacing="0" cellpadding="0" title="">
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">View Scheduled Tasks:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Create/Delete Scheduled Tasks:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Allowed on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="ConJmpTopDiv_sun4"><a id="_id11" class="JmpTopLnk_sun4" href="#" title="Jump to top of page"><img id="_id11:_image" src="../suntheme/images/href/to_top.gif" alt="Jump to top of page" height="10" width="11" border="0" />&nbsp;Back to top</a></div>
+<div class="ConLin_sun4"><img id="myForm:pageTitle:propSheetExample1:basicSearch:basicSearch_dot2" src="../suntheme/images/other/dot.gif" alt="" height="1" width="1" border="0" /></div>
+<div class="ConFldSet_sun4">
+  <div class="ConFldSetDiv_sun4">
+    <div class="ConFldSetLgdDiv_sun4">Administrative Users </div>
+    <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom:10px">
+      <tr>
+        <td style="padding-right:10px"><input name="radiobutton9" type="radio" value="radiobutton" checked>
+      Deny All Access</td>
+        <td style="padding-right:10px"><input name="radiobutton9" type="radio" value="radiobutton" >
+      Allow Full Access</td>
+        <td style="padding-right:10px"><input name="radiobutton9" type="radio" value="radiobutton" >
+      Specify Permissions Individually</td>
+      </tr>
+    </table>
+    <table border="0" cellspacing="0" cellpadding="0" title="">
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">View Administrative User Accounts:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Denied on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Enable/Disable Administrative User Accounts:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Denied on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+      <tr>
+        <td valign="top" nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+            <label id="username" for="pwd" class="LblLev2Txt_sun4">Create/Delete/Edit Administrative User Accounts:</label>
+          </div></td>
+        <td ><div class="ConTblCl2Div_sun4">Denied on All Servers&nbsp;&nbsp;
+            <input type="button" class="Btn2MniDis_sun4" value="Change..." id="disable"/>
+          </div></td>
+      </tr>
+    </table>
+  </div>
+  <div class="ConJmpTopDiv_sun4"><a id="_id11" class="JmpTopLnk_sun4" href="#" title="Jump to top of page"><img id="_id11:_image" src="../suntheme/images/href/to_top.gif" alt="Jump to top of page" height="10" width="11" border="0" />&nbsp;Back to top</a></div>
+  <!-- </div><div class="ConLin_sun4"><img id="myForm:pageTitle:propSheetExample1:basicSearch:basicSearch_dot2" src="../suntheme/images/other/dot.gif" alt="" height="1" width="1" border="0" /></div>
+<div class="ConFldSet_sun4">
+  <div class="ConFldSetDiv_sun4">
+    <div class="ConFldSetLgdDiv_sun4">Service Modules </div>
+    <table border="0" cellspacing="0" cellpadding="5">
+      <tr>
+        <td><input name="radiobutton10" type="radio" value="radiobutton">
+&nbsp;Deny All Access&nbsp;</td>
+        <td><input name="radiobutton10" type="radio" value="radiobutton">
+          Allow Full Access&nbsp;</td>
+        <td><input name="radiobutton10" type="radio" value="radiobutton" checked>
+          Specify Custom Settings&nbsp;</td>
+      </tr>
+    </table>
+    <p>View Service Dashboards</p>
+    <p>View Server Statistics  </p>
+  </div>
+ </div>
+ -->
+  <div class="ConLin_sun4"><img id="myForm:pageTitle:propSheetExample1:basicSearch:basicSearch_dot2" src="../suntheme/images/other/dot.gif" alt="" height="1" width="1" border="0" /></div>
+  <table border="0" width="100%" cellpadding="0" cellspacing="0">
+    <tr >
+      <td align="right" nowrap="nowrap" ><div class="TtlBtnDiv_sun4"><span id="mastheadForm:_id23:pageButtonsTopGroup">
+          <input id="mastheadForm:_id23:pageButtonsTopGroup:Save" name="mastheadForm:_id23:pageButtonsTopGroup:Save" class="Btn1_sun4"  type="submit" value="Save" title="Save your configuration changes to this Directory Database Module" onClick="alert('Saves the changes and leaves the user on this page with an inline alert message indicating the outcome of the change')"/>
+          <input id="mastheadForm:_id23:pageButtonsTopGroup:Reset" name="mastheadForm:_id23:pageButtonsTopGroup:Reset" class="Btn2_sun4"  type="submit" value="Save As..." title="Save as new user" />
+          <input id="mastheadForm:_id23:pageButtonsTopGroup:Reset" name="mastheadForm:_id23:pageButtonsTopGroup:Reset" class="Btn2_sun4"  type="submit" value="Reset" title="Reset this form to its original values" />
+          </span> </div></td>
+    </tr>
+  </table>
+</div>
+<p>&nbsp;</p>

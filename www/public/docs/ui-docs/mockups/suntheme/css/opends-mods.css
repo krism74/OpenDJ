@@ -1,0 +1,67 @@
+/*
+ * CDDL HEADER START
+ *
+ * The contents of this file are subject to the terms of the
+ * Common Development and Distribution License, Version 1.0 only
+ * (the "License").  You may not use this file except in compliance
+ * with the License.
+ *
+ * You can obtain a copy of the license at
+ * trunk/opends/resource/legal-notices/OpenDS.LICENSE
+ * or https://OpenDS.dev.java.net/OpenDS.LICENSE.
+ * See the License for the specific language governing permissions
+ * and limitations under the License.
+ *
+ * When distributing Covered Code, include this CDDL HEADER in each
+ * file and include the License file at
+ * trunk/opends/resource/legal-notices/OpenDS.LICENSE.  If applicable,
+ * add the following below this CDDL HEADER, with the fields enclosed
+ * by brackets "[]" replaced with your own identifying information:
+ *      Portions Copyright [yyyy] [name of copyright owner]
+ *
+ * CDDL HEADER END
+ *
+ *
+ *      Portions Copyright 2007 Sun Microsystems, Inc.
+ * */
+
+/* This file contains overrides to the standard woodstock style sheets and also styles for non-woodstock elements, such as the left navigation panel */
+
+/* Relative Base Font Override */
+body {font-family:Arial, Helvetica, sans-serif;font-size:11px;}
+.commonTask_4_sun4 .TskScnTskPdng_sun4, .commonTask_4_sun4 .infoPanel_sun4 .content_sun4,.commonTask_4_sun4 .infoPanel_sun4 .more_sun4 a:link,
+.commonTask_4_sun4 .infoPanel_sun4 .more_sun4 a:visited, .commonTask_4_sun4 .infoPanel_sun4 .more_sun4 a:hover {font-size:11px;} 
+
+/* Common Tasks Page */
+.commonTaskSection_4_sun4 {	height: 100%; }
+
+/* Prototype-Specific Stuff */
+.designnotelink { font-style:italic }
+.designnote { border: double 3px #e1e1a7;padding:0px 10px 10px;background-color:#FFFFCC;}
+#nav {position:fixed;width:25%;height:auto;top:97px;right:auto;bottom:0px;left:0px;overflow:auto; border-right:solid 1px #ccc;border-left:solid 1px #ccc;background-color:#FAFAFB;font-size:11px; z-index:1} /*F4F6F7 */
+#content {position:fixed;width:auto;height:auto;top:97px;right:0px;bottom:0px;left:25%;overflow:auto;padding:0px;font-size:11px}
+.content-inner {padding:10px;}
+
+/* Navigation Panel */
+.navconpanel {background:#5B87A5 url(../images/bde-examples/closepanel_background.png) top left repeat-x;width:100%;cursor:pointer;color:#FFF;font-weight:normal; text-align:right;border-bottom:solid 1px #3E637E;} 
+.navconpanellabel {padding:3px 5px;}
+.navdomainpanel {border-color:#81939B;background:#f8f8f9  url(../images/bde-examples/domaincontrol_background.jpg) left bottom repeat-x;width:100%;color:#333;font-weight:bold;padding:5px 0px;border-bottom:1px solid #999;}
+.menu {width:100%; border-top:1px solid #E5E9ED;border-bottom:1px solid #CAD0D2; cursor: pointer; color:#333; font-weight:bold; background: #fff url(../images/bde-examples/navitems_background.gif) left bottom repeat-x;;}
+.menulabel {padding:5px 10px 4px;}
+.option {width:100%; cursor:pointer; font-weight:normal;}
+.optionlabel {padding:4px 15px 2px;}
+.optionlabelsel {padding:4px 15px 2px;background-color:#90b7d0;}
+.options {width:100%; cursor:pointer; font-weight:normal;}
+a.AdnLnk_sun4:link, a.AdnLn_sun4k:visited {color:#003399; text-decoration:none;}
+a.AdnLnk_sun4:hover {color:#003399;text-decoration:underline;}
+a.AdnSelLnk_sun4:link, a.AdnSelLnk_sun4:visited {color:#000; text-decoration:none;font-weight:bold}
+a.AdnSelLnk_sun4:hover {color:#000;text-decoration:underline;}
+
+/* Content Area */
+.ScvGrpSrvr_sun4 {margin:0px 0px 2px; padding: 2px 0px 3px; border-bottom: 1px dotted #BEC7CC; white-space:nowrap}
+.ScvGrpSrvrLst_sun4 {margin:0px 0px 2px; padding: 2px 0px 3px; white-space:nowrap}
+.ConLin_sun4 {width:98%;}
+
+
+
+

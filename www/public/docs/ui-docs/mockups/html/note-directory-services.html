@@ -1,0 +1,36 @@
+<!--
+ ! CDDL HEADER START
+ !
+ ! The contents of this file are subject to the terms of the
+ ! Common Development and Distribution License, Version 1.0 only
+ ! (the "License").  You may not use this file except in compliance
+ ! with the License.
+ !
+ ! You can obtain a copy of the license at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE
+ ! or https://OpenDS.dev.java.net/OpenDS.LICENSE.
+ ! See the License for the specific language governing permissions
+ ! and limitations under the License.
+ !
+ ! When distributing Covered Code, include this CDDL HEADER in each
+ ! file and include the License file at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE.  If applicable,
+ ! add the following below this CDDL HEADER, with the fields enclosed
+ ! by brackets "[]" replaced with your own identifying information:
+ !      Portions Copyright [yyyy] [name of copyright owner]
+ !
+ ! CDDL HEADER END
+ !
+ !
+ !      Portions Copyright 2007 Sun Microsystems, Inc.
+ ! -->
+<div class="content-inner">
+  <div class="designnote">
+    <h1>Directory Services</h1>
+    <p>A <strong>Directory Service</strong> is  identified by a Base DN and comprises all of the OpenDS components that work to service  read and write requests on data under that Base DN. This object serves primarily to organize the directory stuff into logical, functionally-related units, and so will not require much in the way of direct management and configuration. Rather, the "workhorse" OpenDS components responsible for providing the service, and therefore will require most of the management and configuration, are <strong>Servers</strong> and <strong>Service Modules</strong> . The expectation is that in order to manage the directory service, users will drill in through the directory service objects listed in this panel. </p>
+    <p><strong>Servers</strong> host <strong>Service Modules</strong> and provide logistical support in that they are responsible for listening on ports, logging, certificate management, etc. Service Modules provide the specialized Directory services, such as serving up LDAP Data, LDAP Directory Replicator, Load Balancer, Data Distributor, JDBC Connector, and Active Directory Connector. Although there is a strict containment relationship between Servers and Service Modules (whereby the modules are contained in one and only one server), there is no such strict relationship of Directory Services to Servers and Service Modules. Service Modules could  participate in  more than one Directory Service and by extension Servers could also participate in more than one Directory Service, although in the for standard replicated LDAP data  scenario that does not involve virtualization or distribution, this would not be the case. In sum, this particular one-to-many relationship is not expected to be all that common. </p>
+    <p>One extension to the Directory Service concept we might consider is assigning Services a &quot;type&quot;. This could range from a simple description to  a template that specifies number of servers, number, type and  location  of modules and so forth. An example of the former might be &quot;LDAP Replication Topology&quot; and an example of the latter might be &quot;Two Masters, Local Directory Replicator&quot;, exemplified by the dc=replex, dc=com replication topology view. Such a template would dictate that there be two servers and that the replication and directory service modules share the two servers. The latter style of typing could be used at configuration time such that a user chooses the template for the service to be created and then we step them through the process. It is also an opportunity to build in some best-practice recommendations to help guide the users on the best configurations for them. </p>
+    <p>At the core of the proposal, and probably the trickiest part to work out, is separating out what actions and configuration attributes belong to servers vs. service modules, and also which configuration attributes belong to which service module types. One of the risks of breaking the service down into little component parts is that it won't be clear to users which component part they need to configure to achieve the desired result, and so we need to make sure that the breakdown is logical and consistent. If we can do that, then the main benefit of the modular approach is that users can easily ignore the functions they don't use to focus on the ones that they do use. For example, if users don't intend to ever virtualize a SQL database through ldap or distribexute their topology, then they never need to see (or navigate through) the screens that provide this functionality; they can just deal with the server and directory/replication modules. This same argument goes for the CLI, if we break down the commands by module type, then we can avoid overloading commands with too many subcommands and options. </p>
+    <p>It is possible to provide two distinct views of a particular directory service: A Server View and a Service View. The Server View shows the Servers and the Service Modules they host. The Service View abstracts away the Server layer and only shows the Service Modules in a topology view. This can be seen in the topology views for the directory service examples below. </p>
+  </div>
+</div>

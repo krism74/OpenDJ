@@ -1,0 +1,539 @@
+<!--
+ ! CDDL HEADER START
+ !
+ ! The contents of this file are subject to the terms of the
+ ! Common Development and Distribution License, Version 1.0 only
+ ! (the "License").  You may not use this file except in compliance
+ ! with the License.
+ !
+ ! You can obtain a copy of the license at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE
+ ! or https://OpenDS.dev.java.net/OpenDS.LICENSE.
+ ! See the License for the specific language governing permissions
+ ! and limitations under the License.
+ !
+ ! When distributing Covered Code, include this CDDL HEADER in each
+ ! file and include the License file at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE.  If applicable,
+ ! add the following below this CDDL HEADER, with the fields enclosed
+ ! by brackets "[]" replaced with your own identifying information:
+ !      Portions Copyright [yyyy] [name of copyright owner]
+ !
+ ! CDDL HEADER END
+ !
+ !
+ !      Portions Copyright 2007 Sun Microsystems, Inc.
+ ! -->
+<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<script language='javascript' src='../suntheme/javascript/opends-utilities.js'></script>
+<link href='../suntheme/css/css_master.css' type='text/css' rel='stylesheet'>
+<link rel="SHORTCUT ICON" href="../suntheme/images/bde-examples/opends_favicon.gif">
+<script language="JavaScript" type="text/javascript">
+
+var leftsel;
+var leftsellnk;
+var clicked;
+	
+function navControl (doc, arg	) {
+ navdmn = doc.getElementById('domaincontrols');
+ navdiv = doc.getElementById('nav');
+ condiv = doc.getElementById('content');
+ paneldiv = doc.getElementById('nav-conpanel');
+ lefttog = doc.getElementById('toggle-left');
+ righttog = doc.getElementById('toggle-right');
+ colleft = doc.getElementById('collapse-left');
+ expleft = doc.getElementById('expand-left');
+ colright = doc.getElementById('collapse-right');
+ expright = doc.getElementById('expand-right');
+ expall = doc.getElementById('expand-all');
+ colall = doc.getElementById('collapse-all');
+ menus = doc.getElementById('menus');
+
+switch (arg) {
+case 'mr':
+ navdmn.style.display='block';
+ righttog.style.display='none';
+ lefttog.style.display='inline';
+ colleft.style.display='none';
+ colright.style.display='inline';
+ paneldiv.style.textAlign='left';
+ condiv.style.left='0px';
+ condiv.style.width='75%';
+ navdiv.style.left='75%';
+ break;
+case 'ml':
+ navdmn.style.display='block';
+ righttog.style.display='inline';
+ lefttog.style.display='none';
+ colleft.style.display='inline';
+ colright.style.display='none';
+ paneldiv.style.textAlign='right';
+ condiv.style.left='25%';
+ condiv.style.width='75%';
+ navdiv.style.left='0px';
+break;
+case 'lc':
+ navdmn.style.display='none';
+ colleft.style.display='none';
+ expleft.style.display='inline';
+ righttog.style.display='none';
+ expall.style.display='none';
+ colall.style.display='none';
+ condiv.style.left='18px';
+ condiv.style.width='auto';
+ navdiv.style.width='18px';
+ menus.style.display='none';
+break;
+case 'le':
+ navdmn.style.display='block';
+ colleft.style.display='inline';
+ expleft.style.display='none';
+ righttog.style.display='inline';
+ expall.style.display='inline';
+ colall.style.display='inline';
+ condiv.style.left='25%';
+ condiv.style.width='auto';
+ navdiv.style.width='25%';
+ menus.style.display='block';
+break;
+case 'rc':
+ navdmn.style.display='none';
+ colright.style.display='none';
+ expright.style.display='inline';
+ lefttog.style.display='none';
+ expall.style.display='none';
+ colall.style.display='none';
+ condiv.style.width='auto';
+ condiv.style.right='18px';
+ navdiv.style.width='18px';
+ navdiv.style.left='98%';
+ menus.style.display='none';
+break;
+case 're':
+ navdmn.style.display='block';
+ colright.style.display='inline';
+ expright.style.display='none';
+ lefttog.style.display='inline';
+ expall.style.display='inline';
+ colall.style.display='inline';
+ condiv.style.width='auto';
+ condiv.style.width='75%';
+ navdiv.style.left='75%';
+ navdiv.style.width='25%';
+ menus.style.display='block';
+break;
+ }
+}	
+	
+ 
+	 
+//-->
+</script>
+<title>OpenDS Control Center [Mockup]</title>
+</head>
+<body class="DefBdy">
+<form action="#" method="post">
+  <div class="MstDiv_sun4">
+    <div class="SkpMedGry1_sun4"><a href="#form2:masthead_skipUtility" alt="Jump to Status Area of Masthead"><img id="form2:masthead:skipUtility_icon" src="../suntheme/images/other/dot.gif" alt="" border="0" height="1" width="1"></a></div>
+    <table class="MstTblTop_sun4" title="" border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tbody>
+        <tr>
+          <td nowrap="nowrap"><div class="mastheadButton_4_sun4"><a id="form2:masthead:hyp1" onblur="window.status=''; return true;" onfocus="window.status='Return to Applications Page'; return true; " onmouseout="window.status=''; return true;" onmouseover="window.status='Return to Applications Page'; return true; " onclick="alert('Return to list of applications');" href="#" title="Console Link">Applications</a></div><img id="form2:masthead:_utilPad" src="../suntheme/images/other/dot.gif" alt="" border="0" height="1" width="8"><div class="mastheadButton_4_sun4"><a id="form2:masthead:hyp2" onblur="window.status=''; return true;" onfocus="window.status='Product Version (Opens a New Window)'; return true; " onmouseout="window.status=''; return true;" onmouseover="window.status='Product Version (Opens a New Window)'; return true; " onclick="javascript: var versionWin = window.open('version-window.html', 'VersionWindow','scrollbars,resizable,                                  width=650,height=500,top='+((screen.height - (screen.height/1.618)) - (500/2))+',left='+((screen.width-650)/2) ); versionWin.focus();                                  if(window.focus){versionWin.focus();} ;return webui.suntheme.hyperlink.submit(this, 'form2', null);" href="#" title="Display Product Version.(Open a new window)">Version</a></div></td>
+          <td align="right" valign="bottom">
+            <img id="form2:masthead:_lp0" src="../suntheme/images/other/dot.gif" alt="" border="0" height="1" width="8"><div class="mastheadButton_4_sun4"><a id="form2:masthead:j_id2" onclick="alert('Reload the Page');" href="#" title="Click to Refresh Page">Refresh</a></div><img id="form2:masthead:_lp1" src="../suntheme/images/other/dot.gif" alt="" border="0" height="1" width="8"><div class="mastheadButton_4_sun4"><a id="form2:masthead:hyp3" onblur="window.status=''; return true;" onfocus="window.status='Log out of the Web Console and all its applications'; return true; " onmouseout="window.status=''; return true;" onmouseover="window.status='Log out of the Web Console and all its applications'; return true; " onclick="alert('Logs out of Console')" href="#" title="Logout of this session">Log Out</a></div><img id="form2:masthead:_logoutPad" src="../suntheme/images/other/dot.gif" alt="" border="0" height="1" width="8"><div class="mastheadButton_4_sun4"><a id="form2:masthead:hyp4" onblur="window.status=''; return true;" onfocus="window.status='Help'; return true; " onmouseout="window.status=''; return true;" onmouseover="window.status='Help'; return true; " onclick="alert('Launches Help');" href="#" title="Help Link">Help</a></div>
+            <img id="form2:masthead:_helpPad" src="../suntheme/images/other/dot.gif" alt="" border="0" height="1" width="8"></td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="MstTblBot_sun4" title="" border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tbody>
+        <tr>
+          <td class="MstTdTtl_sun4" width="99%"><div class="MstDivUsr_sun4">
+		  <span class="MstLbl_sun4">User:</span>&nbsp;<span class="MstTxt_sun4">rizzo</span><img src="../suntheme/images/masthead/masthead-separator.gif" alt=" " height="14" width="12"><span class="MstLbl_sun4">Role:</span>&nbsp;<span class="MstTxt_sun4">Directory Service Administrator</span><img src="../suntheme/images/masthead/masthead-separator.gif" alt=" " height="14" width="12"><span class="MstLbl_sun4">Server:</span>&nbsp;<span class="MstTxt_sun4">sansjambon </span></div>
+            <div class="MstDivTtl_sun4">
+            <div style="color:#fff; font-size:20px;"> OpenDS Control Center [Mockup]</div>
+			
+</td>
+          <td class="MstTdLogo_sun4" align="right" nowrap="nowrap" width="1%"><img id="form2:masthead:_logoSep_sun4" src="../suntheme/images/other/dot.gif" alt="" border="0" height="37" width="2"></td>
+        </tr>
+        <tr>
+          <td colspan="2"><div class="hrule_sun4"><img id="form2:masthead:_mhrule" src="../suntheme/images/other/dot.gif" alt="" border="0" height="1" width="1"></div></td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="MstTblEnd_sun4" title="" border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tbody>
+        <tr>
+          <td class="MstTblEnd_sun4"><img id="form2:masthead:masthead_notificationInfo" src="../suntheme/images/masthead/status_icon.gif" alt="Information" align="top" border="0" height="12" width="12">&nbsp;<span class="MstLbl_sun4">Task Completed</span></td>
+          <td valign="middle"><img id="searchSeparator" src="../suntheme/images/masthead/masthead-separator-status.gif" alt="" align="top" border="0" height="14" width="14"></td>
+          <td class="MstStatDiv_sun4"><img id="masthead_jobStatusImage" src="../suntheme/images/masthead/status_icon.gif" alt="Jobs Running Icon" align="top" border="0" height="12" width="12">&nbsp;<a id="form2:masthead:masthead_jobCountHyperlink" class="MstPrgLnk_sun4" onclick="return webui.suntheme.hyperlink.submit(this, 'form2', null);" href="#">Jobs Running: 0</a></td>
+          <td valign="middle"><img id="searchSeparator" src="../suntheme/images/masthead/masthead-separator-status.gif" alt="" align="top" border="0" height="14" width="14"></td>
+          <td class="MstTmeDiv_sun4"><span class="MstLbl_sun4">Last Update:</span>&nbsp;<span class="MstTxt_sun4">May 4, 2007 8:48:41 AM MDT</span>&nbsp;</td>
+          <td valign="middle"><img id="searchSeparator" src="../suntheme/images/masthead/masthead-separator-status.gif" alt="" align="top" border="0" height="14" width="14"></td>
+          <td class="MstAlmDiv_sun4"><span class="MstLbl_sun4">Current Alarms:</span>&nbsp;&nbsp;<img id="ALARM_MASTHEAD_DOWN_MEDIUM" src="../suntheme/images/alarms/masthead_down_medium.gif" alt="[Alarm: Down]" border="0" height="13" width="13"><span class="MstAlmDwnTxt_sun4">&nbsp;1&nbsp;&nbsp;&nbsp;</span><img id="ALARM_MASTHEAD_CRITICAL_MEDIUM" src="../suntheme/images/alarms/masthead_critical_medium.gif" alt="[Alarm: Critical]" border="0" height="13" width="13"><span class="MstAlmCrtTxt_sun4">&nbsp;2&nbsp;&nbsp;&nbsp;</span><img id="ALARM_MASTHEAD_MAJOR_MEDIUM" src="../suntheme/images/alarms/masthead_major_medium.gif" alt="[Alarm: Major]" border="0" height="13" width="13"><span class="MstAlmMajTxt_sun4">&nbsp;3&nbsp;&nbsp;&nbsp;</span><img id="ALARM_MASTHEAD_MINOR_MEDIUM" src="../suntheme/images/alarms/masthead_minor_medium.gif" alt="[Alarm: Minor]" border="0" height="13" width="13"><span class="MstAlmMinTxt_sun4">&nbsp;4&nbsp;&nbsp;&nbsp;</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</form>
+<div id="nav">
+  <div id='nav-conpanel' class='navconpanel'>
+    <div class="navconpanellabel">
+      <input class="Btn2Mni_sun4" type="submit"
+name="right" id="toggle-left" style="display:none;width:18px" value="&lt;"
+onmouseover="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onfocus="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onmouseout="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onblur="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onclick="navControl(document, 'ml')" title="Move Navigation Pane to Left" />
+      <input class="Btn2Mni_sun4" style="width:18px;display:none" type="submit"
+name="collapse" id="collapse-right" value="&gt;"
+onmouseover="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onfocus="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onmouseout="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onblur="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onclick="navControl(document, 'rc')" title="Collapse Right" />
+      <input class="Btn2Mni_sun4" style="width:18px;display:none;margin-left:-5px" type="submit"
+name="expand-right" id="expand-right" value="&lt;"
+onmouseover="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onfocus="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onmouseout="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onblur="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onclick="navControl(document, 're')" title="Expand Navigation Pane" />
+      <input class="Btn2Mni_sun4" type="submit"
+name="right" id="expand-all" style="width:18px;margin-left:5px;" value="="
+onmouseover="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onfocus="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onmouseout="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onblur="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onclick="showhide('nav', 'show')" title="Expand All Categories" />
+      <input class="Btn2Mni_sun4" type="submit"
+name="right" id="collapse-all" style="width:18px;margin-right:5px" value="-"
+onmouseover="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onfocus="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onmouseout="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onblur="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onclick="showhide('nav', 'hide')" title="Collapse All Categories" />
+      <input class="Btn2Mni_sun4" style="width:18px" type="submit"
+name="collapse" id="collapse-left" value="&lt;"
+onmouseover="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onfocus="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onmouseout="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onblur="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onclick="navControl(document, 'lc')" title="Collapse Left" />
+      <input class="Btn2Mni_sun4" style="width:18px;display:none;margin-left:-5px" type="submit"
+name="expand-right" id="expand-left" value="&gt;"
+onmouseover="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onfocus="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onmouseout="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onblur="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onclick="navControl(document, 'le')" title="Expand Navigation Pane" />
+      <input class="Btn2Mni_sun4" type="submit"
+name="right" id="toggle-right" value="&gt;" style="width:18px"
+onmouseover="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onfocus="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onmouseout="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onblur="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onclick="navControl(document, 'mr')" title="Move Navigation Pane to Right" />
+    </div>
+  </div>
+  <div class="navdomainpanel" id="domaincontrols">&nbsp;&nbsp;&nbsp;Domain:
+    <select class="MnuJmp_sun4">
+      <option class="MnuJmpOpt_sun4">U.S. Domain</option>
+      <option class="MnuJmpOpt_sun4">EMEA Domain</option>
+      <option class="MnuJmpOptDis_sun4">-----------------</option>
+      <option class="MnuJmpOpt_sun4">Manage Domains...</option>
+    </select>
+  </div>
+  <div id="menus">
+    <div class='menu' onclick="TrocaMenu('sub0')">
+      <div class="menulabel">Quick Start</div>
+    </div>
+    <div class='options' id='sub0'>
+      <div class='option'>
+        <div class="optionlabel"><a class="designnotelink" href="javascript:loadFile('note-navpanel.html')"><img src="../suntheme/images/alerts/info_small.gif" width="11" height="11" border="0" align="absmiddle" />&nbsp;&nbsp;Design Note - Navigation Panel</a></div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><a id="ctlink" class="AdnLnk_sun4" href="javascript:loadFile('common-tasks.html');" onclick="handleSelection(this); clearBcm();" ><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" align="absmiddle" border="0" />&nbsp;&nbsp;Common Tasks</a></div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Tutorials</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Documentation</div>
+      </div>
+    </div>
+    <div class='menu' onclick="TrocaMenu('sub1')">
+      <div class="menulabel">Dashboards</div>
+    </div>
+    <div class='options' id='sub1'>
+      <div class='option'>
+        <div class="optionlabel"><a class="designnotelink" href="javascript:loadFile('note-dashboards.html')" ><img src="../suntheme/images/alerts/info_small.gif" width="11" height="11" border="0" align="absmiddle" />&nbsp; Design Note - Dashboards</a></div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Server Health</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Synchronization Monitor</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Security Alerts</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Reports</div>
+      </div>
+    </div>
+    <div class='menu' onclick="TrocaMenu('sub4')">
+      <div class="menulabel">Directory Services</div>
+    </div>
+    <div class='options' id='sub4'>
+      <div class='option'>
+        <div class="optionlabel"><a class="designnotelink" href="javascript:loadFile('note-directory-services.html')" ><img src="../suntheme/images/alerts/info_small.gif" width="11" height="11" border="0" align="absmiddle" />&nbsp;&nbsp;Design Note - Directory Services</a></div>
+      </div>
+      <!--<div class='option'>
+        <div class="optionlabel" style="font-weight:bold;color:#333333;margin-left:-3px;padding-top:8px;cursor:default">U.S. Domain</div>
+      </div>-->
+      <div class='option'>
+        <div class="optionlabel"><a class="AdnLnk_sun4" href="javascript:loadFile('service-example-allsvcs.html')" title="All Directory Services Example"  onclick="handleSelection(this); clearBcm(); clearBcm();"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" align="absmiddle" border="0" />&nbsp;&nbsp;Directory Services Central</a></div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><a id="ds-example-dist.html" class="AdnLnk_sun4" href="javascript:loadFile('ds-example-dist.html')" title="Distribution Example"  onclick="handleSelection(this); clearBcm();"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" align="absmiddle" border="0" />&nbsp;&nbsp;dc=distribex, dc=com</a> </div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><a  id="ds-example-join.html" class="AdnLnk_sun4" href="javascript:loadFile('ds-example-join.html')" title="Join Example"  onclick="handleSelection(this); clearBcm();"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" align="absmiddle" border="0" />&nbsp;&nbsp;dc=joinex, dc=com</a> </div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><a id="ds-example-ldif.html" class="AdnLnk_sun4" href="javascript:loadFile('ds-example-ldif.html')" title="LDIF Example" onclick="handleSelection(this); clearBcm();" ><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" align="absmiddle" border="0" />&nbsp;&nbsp;dc=ldifex, dc=com</a> </div>
+      </div>
+      <!--  <div class='option'>
+        <div class="optionlabel" style="font-weight:bold;color:#333333;margin-left:-3px;padding-top:8px;cursor:default">EMEA Domain</div>
+      </div>-->
+      <div class='option'>
+        <div class="optionlabel"><a id="ds-example-proxy.html" class="AdnLnk_sun4" href="javascript:loadFile('ds-example-proxy.html')" title="Proxy/Load Balancing Example"  onclick="handleSelection(this); clearBcm();"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" align="absmiddle" border="0" />&nbsp;&nbsp;dc=proxyex, dc=com</a> </div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><a id="ds-example-repl.html" class="AdnLnk_sun4" href="javascript:loadFile('ds-example-repl.html')" title="Replication Example"  onclick="handleSelection(this); clearBcm();"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" align="absmiddle" border="0" />&nbsp;&nbsp;dc=replex, dc=com</a> </div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><a id="ds-example-sync.html" class="AdnLnk_sun4" href="javascript:loadFile('ds-example-sync.html')" title="AD Synchronization Example"  onclick="handleSelection(this); clearBcm();"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" align="absmiddle" border="0" />&nbsp;&nbsp;dc=syncadex, dc=com</a> </div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><a id="ds-example-virt.html" class="AdnLnk_sun4" href="javascript:loadFile('ds-example-virt.html')" title="JDBC Connector Example"  onclick="handleSelection(this); clearBcm();"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" align="absmiddle" border="0" />&nbsp;&nbsp;dc=virtex, dc=com</a> </div>
+      </div>
+    </div>
+    <div class='menu' onclick="TrocaMenu('sub2')">
+      <div class="menulabel">OpenDS Servers</div>
+    </div>
+    <div class='options' id='sub2'>
+      <div class='option'>
+        <div class="optionlabel"><a class="designnotelink" href="javascript:loadFile('note-servers.html')" ><img src="../suntheme/images/alerts/info_small.gif" width="11" height="11" border="0" align="absmiddle" />&nbsp;&nbsp;Design Note - Servers</a></div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><a id="server-example-allsrvs.html" class="AdnLnk_sun4" href="javascript:loadFile('server-example-allsrvs.html')"  onclick="handleSelection(this); clearBcm();" ><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" align="absmiddle" border="0" />&nbsp;&nbsp;List All Servers</a> </div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel" style="font-weight:bold; color:#333333;margin-left:-3px;padding-top:8px;cursor:default">Server Groups</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Austin Data Center</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Boulder Data Center</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Cleveland Data Center</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Grenoble Data Center</div>
+      </div>
+    </div>
+    <div class='menu' onclick="TrocaMenu('sub3')">
+      <div class="menulabel">Service Modules</div>
+    </div>
+    <div class='options' id='sub3'>
+      <div class='option'>
+        <div class="optionlabel"><a class="designnotelink" href="javascript:loadFile('note-modules.html')" ><img src="../suntheme/images/alerts/info_small.gif" width="11" height="11" border="0" align="absmiddle" />&nbsp;&nbsp;Design Note - Service Modules</a></div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><a class="AdnLnk_sun4" href="javascript:loadFile('mod-example-allmods.html')"  onclick="handleSelection(this); clearBcm();" ><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" align="absmiddle" border="0" />&nbsp;&nbsp;List All Service Modules</a> </div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel" style="font-weight:bold; color:#333333;margin-left:-3px;padding-top:8px;cursor:default">Directory Modules</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><a class="AdnLnk_sun4" href="javascript:loadFile('mod-example-dss.html')"  onclick="handleSelection(this); clearBcm();" ><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" align="absmiddle" border="0" />&nbsp;&nbsp;Directory Databases</a></div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Directory Replicators </div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel" style="font-weight:bold;color:#333333;margin-left:-3px;padding-top:8px;cursor:default">Routing Workflow Modules</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Access Control Instructions</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Active Directory Connectors</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Connection Managers</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Data Distributors</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Data Joiners</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Data Transformers</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Directory Schema</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;JDBC Connectors</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;LDIF Connectors</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Load Balancers</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel" style="font-weight:bold;color:#333333;margin-left:-3px;padding-top:8px;cursor:default">Administrative Modules</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Remote Administration Module</div>
+      </div>
+    </div>
+    <div class='menu' onclick="TrocaMenu('sub6')">
+      <div class="menulabel">Global Logs</div>
+    </div>
+    <div class='options' id='sub6'>
+      <div class='option'>
+        <div class="optionlabel"><a class="designnotelink" href="javascript:loadFile('note-logs.html')" ><img src="../suntheme/images/alerts/info_small.gif" width="11" height="11" border="0" align="absmiddle" />&nbsp;&nbsp;Design Note - Logs</a></div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Error Logs </div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Access Logs</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Audit Logs</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;My Custom Logs 1</div>
+      </div>
+    </div>
+    <div class='menu' onclick="TrocaMenu('sub7')">
+      <div class="menulabel">Directory Data</div>
+    </div>
+    <div class='options' id='sub7'>
+      <div class='option'>
+        <div class="optionlabel"><a class="designnotelink" href="javascript:loadFile('note-data.html')" ><img src="../suntheme/images/alerts/info_small.gif" width="11" height="11" border="0" align="absmiddle" />&nbsp;&nbsp;Design Note - Directory Data</a></div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Search</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Browse </div>
+      </div>
+    </div>
+<!--    <div class='menu' onclick="TrocaMenu('sub5')">
+      <div class="menulabel">Configuration Archive</div>
+    </div>
+    <div class='options' id='sub5'>
+      <div class='option'>
+        <div class="optionlabel"><a class="designnotelink" href="javascript:loadFile('note-profiles.html')" ><img src="../suntheme/images/alerts/info_small.gif" width="11" height="11" border="0" align="absmiddle" />&nbsp;&nbsp;Design Note - Configuration Archives</a></div>
+      </div>
+          <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;All Configuration Profiles</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Active Directory Connectors </div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Directory Databases </div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Data Distributors </div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Directory Replicators </div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;JDBC Connectors </div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Load Balancers </div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Servers</div>
+      </div>
+    </div>
+	-->
+    <div class='menu' onclick="TrocaMenu('sub8')">
+      <div class="menulabel">Utilities</div>
+    </div>
+    <div class='options' id='sub8'>
+      <div class='option'>
+        <div class="optionlabel"><a class="designnotelink" href="javascript:loadFile('note-utilities.html')" ><img src="../suntheme/images/alerts/info_small.gif" width="11" height="11" border="0" align="absmiddle" />&nbsp;&nbsp;Design Note - Utilities</a></div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><a class="AdnLnk_sun4" href="javascript:loadFile('adminuser-example.html')"  onclick="handleSelection(this); clearBcm();" ><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" align="absmiddle" border="0" />&nbsp;&nbsp;Administrative User Accounts</a></div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Task Administration</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Logger Administration</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Configuration Archives</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Administrative Alerts</div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Certificates </div>
+      </div>
+      <div class='option'>
+        <div class="optionlabel"><img src="../suntheme/images/tree/tree_document.gif" width="19" height="19" border="0" align="absmiddle" />&nbsp;&nbsp;Console Preferences</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="content">
+  <div id="bcm"></div>
+  <div id="content-inner">
+    <table width="100%"  border="1" cellspacing="0" cellpadding="5">
+      <tr>
+        <th scope="col">&nbsp;</th>
+        <th scope="col">&nbsp;</th>
+        <th scope="col">&nbsp;</th>
+        <th scope="col">&nbsp;</th>
+        <th scope="col">&nbsp;</th>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+    </table>
+  </div>
+</div>
+</body>
+<script language="JavaScript" type="text/javascript">
+TrocaMenu('sub0');
+TrocaMenu('sub4');
+loadFile('note-about.html');
+// handleSelection(document.getElementById('ctlink'));
+var lastfile = 'note-about.html;'
+</script>
+</html>

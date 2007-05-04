@@ -1,0 +1,36 @@
+<!--
+ ! CDDL HEADER START
+ !
+ ! The contents of this file are subject to the terms of the
+ ! Common Development and Distribution License, Version 1.0 only
+ ! (the "License").  You may not use this file except in compliance
+ ! with the License.
+ !
+ ! You can obtain a copy of the license at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE
+ ! or https://OpenDS.dev.java.net/OpenDS.LICENSE.
+ ! See the License for the specific language governing permissions
+ ! and limitations under the License.
+ !
+ ! When distributing Covered Code, include this CDDL HEADER in each
+ ! file and include the License file at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE.  If applicable,
+ ! add the following below this CDDL HEADER, with the fields enclosed
+ ! by brackets "[]" replaced with your own identifying information:
+ !      Portions Copyright [yyyy] [name of copyright owner]
+ !
+ ! CDDL HEADER END
+ !
+ !
+ !      Portions Copyright 2007 Sun Microsystems, Inc.
+ ! -->
+<div class="content-inner">
+  <div class="designnote">
+    <h1>Navigation Panel </h1>
+    <p>One of the disadvantages of the tab-centric approach taken in DSCC6 is that it sometimes required quite a few clicks and drilling to get to particular parts of the UI. We used a &quot;tab-swapping&quot; method in which, as the user drilled into objects (e.g., the replication agreements on a particular suffix on a particular server) entire tab sets were swapped out and then represented by a link in a breadcrumb that appeared above the new tab set. This method seemed to work OK from a usability standpoint, but it would be very nice to reduce the number of clicks and increase the stability of the visible navigation elements. This is especially important for OpenDS because it will support even more functionality than was in DSCC and may well require a deeper and wider navigation hierarchy.</p>
+    <p>The approach taken here is to include an always-available, vertically-oriented, collapsible top-level navigation panel that would allow users to return to a &quot;home base&quot; in a single click no matter where they happened to be in the UI at the time. The contents of the panel are mostly views or categories of objects rather than objects themselves. One of the reasons for this is that the number of objects is essentially unbounded whereas we can limit the number of categories. If we overload this navigation with too many objects it will take a long time to load and a long time to read, thus reducing its value. Another restriction of this navigation panel is that it only have two levels: one top level with only a category name (and no view associated with it) and then a single-level list of links beneath -- no trees, no form elements, just a list of links. The vertical orientation of the panel will allow us to add more categories than we could if there were presented as a horizontally-oriented tab set, which limited us to 7 tabs (per UI guidelines). </p>
+    <p>The panel can appear to the left or right side of the content area, it can be collapsed to an 18px wide bar at the edge of the window, and it includes buttons to expand and collapse all of the categories at one time. All of this behavior happens in a client-side manner so that users can quickly explore their navigation options without incurring a round trip to the server each time (another benefit over the tab approach where 2nd level tabs can only be seen if the parent tab has been clicked. </p>
+    <p>The current panel design does specify some objects to  appear in the subpanels. One of the exceptions to the no-objects restriction is &quot;Directory Service&quot; objects. Since these are the primary objects of interest to present to users, and the bulk of users' tasks will require drilling in to manage the components  of that service, the potential usefulness of showing these in the navigation panel outweighs the potential downsides. Besides, it seems unlikely that there will be a large number of directory services and so there likely won't be a scale problem. Another exception is the Server Groups that are listed in the OpenDS Servers section. Individual servers are not listed in this section, but rather a catch-all item &quot;All Servers&quot; as well as any user-defined Server Groups. Here, since users are defining the groups and it seems unlikely that there will be an especially large number of them the potential usefulness outweighed the downsides. </p>
+    <p>Note that there will still be some drill-down into the console's navigation scheme, and we may still need to fall back on the tab-swappng model, but adding this mechanism as the top-level navigation item will reduce the number of tab levels we'll need.</p>
+  </div>
+  </div>

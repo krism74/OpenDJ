@@ -1,0 +1,333 @@
+<!--
+ ! CDDL HEADER START
+ !
+ ! The contents of this file are subject to the terms of the
+ ! Common Development and Distribution License, Version 1.0 only
+ ! (the "License").  You may not use this file except in compliance
+ ! with the License.
+ !
+ ! You can obtain a copy of the license at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE
+ ! or https://OpenDS.dev.java.net/OpenDS.LICENSE.
+ ! See the License for the specific language governing permissions
+ ! and limitations under the License.
+ !
+ ! When distributing Covered Code, include this CDDL HEADER in each
+ ! file and include the License file at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE.  If applicable,
+ ! add the following below this CDDL HEADER, with the fields enclosed
+ ! by brackets "[]" replaced with your own identifying information:
+ !      Portions Copyright [yyyy] [name of copyright owner]
+ !
+ ! CDDL HEADER END
+ !
+ !
+ !      Portions Copyright 2007 Sun Microsystems, Inc.
+ ! -->
+<!--<div class="BcmGryDiv_sun4"><strong>Directory Service:</strong> dc=baconbits, dc=com</div>
+<div class="Tab1Div_sun4">
+  <table class="Tab1TblNew_sun4" title="" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="Tab1TblSelTd_sun4"><div class="Tab1SelTxtLeft_sun4"></div>
+          <div class="Tab1SelTxtNew_sun4" title="Current Selection: Details View">Components</div></td>
+        <td><a id="topovw" class="Tab1Lnk_sun4" href="javascript:loadFile('ds-example-proxy2.html');">Topology</a></td>
+        <td><a id="topovw" class="Tab1Lnk_sun4" href="javascript:loadFile('ds-example-proxy3.html');">Properties</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>-->
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="bottom">
+    <td nowrap="nowrap" valign="bottom"><div class="TtlTxtDiv_sun4">
+        <div class="TtlTxt_sun4">OpenDS Servers </div>
+      </div></td>
+  </tr>
+</table>
+		<table border="0" width="100%" cellpadding="0" cellspacing="0">
+			<tr>
+				<td><div class="TtlHlpDiv_sun4">
+						<div class="inlineHelp">Below are all servers known to the administrative console.</div>
+					</div></td>
+			</tr>
+		</table>
+<div><img src="../suntheme/images/other/dot.gif" alt="" width="1" height="15" border="0" align="top" /></div>
+<div class="TblMgn_sun4">
+  <table width="98%" border="1" cellpadding="0" cellspacing="0" class="Tbl_sun4" title="" summary="This table allows you to view and manage Server Groups.">
+    <caption class="TblTtlTxt_sun4">
+    OpenDS Servers  (20 items)
+    </caption>
+    <tr>
+      <td class="TblActTd_sun4" colspan="6" nowrap="nowrap" align="left"><input class="Btn2_sun4" type="submit" name="newButton" id="newButton" value="New Server..." onFocus="if (this.disabled==0) this.className='Btn2Hov_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'" onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" onBlur="if (this.disabled==0) this.className='Btn2_sun4'" onClick="alert('Launches New Serve Wizard');" title="New Server" />
+        <input class="Btn2_sun4" type="submit" name="openButton" id="openButton" value="Start" onFocus="if (this.disabled==0) this.className='Btn2Hov_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'" onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" onBlur="if (this.disabled==0) this.className='Btn2_sun4'" onClick="alert('Starts Servers');" title="Start Servers" />
+        <input class="Btn2_sun4" type="submit" name="openButton" id="openButton" value="Stop" onFocus="if (this.disabled==0) this.className='Btn2Hov_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'" onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" onBlur="if (this.disabled==0) this.className='Btn2_sun4'" onClick="alert('Allows Removal of Server or Service ');" title="Remove Component from Service" />
+        <select class="MnuJmp_sun4" id="actionMenu1" onChange="MM_jumpMenu('parent',this,1)">
+          <option selected="selected" class="MnuJmpOpt_sun4">&#8212;&nbsp;More Server Actions&nbsp;&#8212;</option>
+          <option class="MnuJmpOptDis_sun4" disabled="disabled">&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;</option>
+          <option id="fn" class="MnuJmpOpt_sun4" value="alert('Server Group Wiz')">New Server Group...</option>
+          <option id="fn" class="MnuJmpOpt_sun4" value="alert('Deletion Conf')">Delete Server Group</option>
+          <option id="fn" class="MnuJmpOpt_sun4" value="popConfirm('Confirm Restart Servers\nAre you sure you want to restart all of the servers in the service group?','restart-server.html',700,500)">item3...</option>
+        </select>
+        <img src="../suntheme/images/table/actions_separator.gif" alt="" width="18" height="18" border="0" align="top" />
+        <label for="filterMenu"><span class="LblLev2Txt_sun4">Filter:</span></label>
+        <select name="filterMenu" class="MnuJmp_sun4" id="filterMenu" onChange="MM_jumpMenu('parent',this,0)">
+          <option class="MnuJmpOpt_sun4" value="top-servers.html" selected="selected" >All Items</option>
+          <optgroup class="MnuJmpOptGrp_sun4" label="Server Groups">
+          <option id="fn" class="MnuJmpOpt_sun4" value="alert('shows table with only servers in the selected group')">Austin Data Center</option>
+          <option id="fn" class="MnuJmpOpt_sun4" value="alert('shows table with only servers in the selected group')">Boulder Data Center</option>
+          <option id="fn" class="MnuJmpOpt_sun4" value="alert('shows table with only servers in the selected group')">Cleveland Data Center</option>
+          <option id="fn" class="MnuJmpOpt_sun4" value="alert('shows table with only servers in the selected group')">Grenoble Data Center</option>
+          </optgroup>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <th id="form1:table1:rowGroup1:col0:_columnHeader" class="TblColHdrSel_sun4" nowrap="nowrap" align="left" scope="col" width="3%"> <table class="TblHdrTbl_sun4" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td align="left"><a id="form1:table1:rowGroup1:col0:_columnHeader:_selectSortButton" class="TblHdrLnk_sun4" onClick="return webuijsf.suntheme.hyperlink.submit(this, 'form1', null);" href="#" title="Click to Make This the Primary Sort Column - Ascending (Selected Items First)"><img id="form1:table1:rowGroup1:col0:_columnHeader:_selectSortButton:_selectSortButton_image" src="../suntheme/images/table/sort_select.gif" alt="Button to sort column selection column as the primary sort column." height="13" width="11" border="0" align="top" /></a></td>
+          </tr>
+      </table></th>
+      <th align="left" nowrap="nowrap" class="TblColHdrSrt_sun4" scope="col"><table class="TblHdrTbl_sun4" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="left"><a id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortLink" class="TblHdrLnk_sun4"  href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)">Server Name</a></td>
+            <td><a id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortButton" class="TblHdrImgLnk_sun4" href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)"><img id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortButton:_primarySortButton_image" src="../suntheme/images/table/sort_primary.gif" alt="Button to sort column First Name as the primary sort column." height="13" width="12" border="0" align="top" /></a></td>
+          </tr>
+      </table></th>
+      <th align="left" nowrap="nowrap" class="TblColHdr_sun4" scope="col"><table class="TblHdrTbl_sun4" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="left"><a id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortLink" class="TblHdrLnk_sun4"  href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)">Detailed Status</a></td>
+            <td><a id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortButton" class="TblHdrImgLnk_sun4" href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)"><img id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortButton:_primarySortButton_image" src="../suntheme/images/table/sort_primary.gif" alt="Button to sort column First Name as the primary sort column." height="13" width="12" border="0" align="top" /></a></td>
+          </tr>
+        </table></th>
+      <th align="left" nowrap="nowrap" class="TblColHdr_sun4" scope="col"><table class="TblHdrTbl_sun4" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="left"><a id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortLink" class="TblHdrLnk_sun4"  href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)">Server Group</a></td>
+            <td><a id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortButton" class="TblHdrImgLnk_sun4" href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)"><img id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortButton:_primarySortButton_image" src="../suntheme/images/table/sort_primary.gif" alt="Button to sort column First Name as the primary sort column." height="13" width="12" border="0" align="top" /></a></td>
+          </tr>
+        </table></th>
+      <th align="left" nowrap="nowrap" class="TblColHdr_sun4" scope="col"><table class="TblHdrTbl_sun4" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="left"><a id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortLink" class="TblHdrLnk_sun4"  href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)">Description</a></td>
+            <td><a id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortButton" class="TblHdrImgLnk_sun4" href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)"><img id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortButton:_primarySortButton_image" src="../suntheme/images/table/sort_primary.gif" alt="Button to sort column First Name as the primary sort column." height="13" width="12" border="0" align="top" /></a></td>
+          </tr>
+        </table></th>
+      <th align="left" nowrap="nowrap" class="TblColHdr_sun4" scope="col"><table class="TblHdrTbl_sun4" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="left"><a id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortLink" class="TblHdrLnk_sun4"  href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)">Directory Services</a></td>
+            <td><a id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortButton" class="TblHdrImgLnk_sun4" href="#" title="Click to Make This the Primary Sort Column - Ascending (Least Severe First)"><img id="form1:table1:rowGroup1:col2:_columnHeader:_primarySortButton:_primarySortButton_image" src="../suntheme/images/table/sort_primary.gif" alt="Button to sort column First Name as the primary sort column." height="13" width="12" border="0" align="top" /></a></td>
+          </tr>
+        </table></th>
+    </tr>
+     <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'distribex1');"  class="TblNavLnk_sun4">distribex1</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Cleveland Data Center</td>
+      <td valign="top">Data Distributor  in distribex service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-dist.html', 'dc=distribex, dc=com');"  class="TblNavLnk_sun4">dc=distribex, dc=com</a></td>
+    </tr>
+     <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'distribex2');"  class="TblNavLnk_sun4">distribex2</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Cleveland Data Center</td>
+      <td valign="top">Master/Sync  in distribex service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-dist.html', 'dc=distribex, dc=com');"  class="TblNavLnk_sun4">dc=distribex, dc=com</a></td>
+    </tr>
+   <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'distribex3');"  class="TblNavLnk_sun4">distribex3</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Cleveland Data Center</td>
+      <td valign="top">Master/Sync  in distribex service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-dist.html', 'dc=distribex, dc=com');"  class="TblNavLnk_sun4">dc=distribex, dc=com</a></td>
+    </tr>
+    <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'distribex4');"  class="TblNavLnk_sun4">distribex4</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Cleveland Data Center</td>
+      <td valign="top">Master/Sync  in distribex service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-dist.html', 'dc=distribex, dc=com');"  class="TblNavLnk_sun4">dc=distribex, dc=com</a></td>
+    </tr>
+    <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'distribex5');"  class="TblNavLnk_sun4">distribex5</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Boulder Data Center</td>
+      <td valign="top">Master/Sync  in distribex service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-dist.html', 'dc=distribex, dc=com');"  class="TblNavLnk_sun4">dc=distribex, dc=com</a></td>
+    </tr>
+      <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'joinex1');"  class="TblNavLnk_sun4">joinex1</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Cleveland Data Center</td>
+      <td valign="top">Data Joiner  in joinex service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-join.html', 'dc=joinex, dc=com');"  class="TblNavLnk_sun4">dc=joinex, dc=com</a></td>
+    </tr>
+     <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'joinex2');"  class="TblNavLnk_sun4">joinex2</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Cleveland Data Center</td>
+      <td valign="top">Master/Sync  in joinex service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-join.html', 'dc=joinex, dc=com');"  class="TblNavLnk_sun4">dc=joinex, dc=com</a></td>
+    </tr>
+   <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'joinex3');"  class="TblNavLnk_sun4">joinex3</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Cleveland Data Center</td>
+      <td valign="top">Master/Sync  in joinex service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-join.html', 'dc=joinex, dc=com');"  class="TblNavLnk_sun4">dc=joinex, dc=com</a></td>
+    </tr>
+    <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'joinex4');"  class="TblNavLnk_sun4">joinex4</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Cleveland Data Center</td>
+      <td valign="top">Master/Sync  in joinex service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-join.html', 'dc=joinex, dc=com');"  class="TblNavLnk_sun4">dc=joinex, dc=com</a></td>
+    </tr>
+    <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'joinex5');"  class="TblNavLnk_sun4">joinex5</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Boulder Data Center</td>
+      <td valign="top">Master/Sync  in joinex service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-join.html', 'dc=joinex, dc=com');"  class="TblNavLnk_sun4">dc=joinex, dc=com</a></td>
+    </tr>
+   <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'ldifex0');"  class="TblNavLnk_sun4">ldifex0</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Austin Data Center</td>
+      <td valign="top">LDIF Connector in ldifex service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-ldif.html', 'dc=ldifex, dc=com');"  class="TblNavLnk_sun4">dc=ldifex, dc=com</a></td>
+    </tr>
+    <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'proxyex0');"  class="TblNavLnk_sun4">proxyex0</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Austin Data Center</td>
+      <td valign="top">Load Balancer  in proxyex service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-proxy.html', 'dc=proxyex, dc=com');"  class="TblNavLnk_sun4">dc=proxyex, dc=com</a></td>
+    </tr>
+     <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'proxyex1');"  class="TblNavLnk_sun4">proxyex1</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Austin Data Center</td>
+      <td valign="top">Sync  in proxyex service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-proxy.html', 'dc=proxyex, dc=com');"  class="TblNavLnk_sun4">dc=proxyex, dc=com</a></td>
+    </tr>
+   <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'proxyex2');"  class="TblNavLnk_sun4">proxyex2</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Austin Data Center</td>
+      <td valign="top">Master  in proxyex service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-proxy.html', 'dc=proxyex, dc=com');"  class="TblNavLnk_sun4">dc=proxyex, dc=com</a></td>
+    </tr>
+    <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'proxyex3');"  class="TblNavLnk_sun4">proxyex3</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Austin Data Center</td>
+      <td valign="top">Master  in proxyex service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-proxy.html', 'dc=proxyex, dc=com');"  class="TblNavLnk_sun4">dc=proxyex, dc=com</a></td>
+    </tr>
+    <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'proxyex4');"  class="TblNavLnk_sun4">proxyex4</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Boulder Data Center</td>
+      <td valign="top">Master/Sync  in proxyex service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-proxy.html', 'dc=proxyex, dc=com');"  class="TblNavLnk_sun4">dc=proxyex, dc=com</a></td>
+    </tr>
+    <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'replex1');"  class="TblNavLnk_sun4">replex1</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Grenoble Data Center</td>
+      <td valign="top">Master/Sync in example service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-repl.html', 'dc=replex, dc=com');"  class="TblNavLnk_sun4">dc=replex, dc=com</a></td>
+    </tr>
+    <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'replex2');"  class="TblNavLnk_sun4">replex2</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Grenoble Data Center</td>
+      <td valign="top">Master/Sync in example service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-repl.html', 'dc=replex, dc=com');"  class="TblNavLnk_sun4">dc=replex, dc=com</a></td>
+    </tr>
+	    <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'syncadex1');"  class="TblNavLnk_sun4">syncadex1</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Grenoble Data Center</td>
+      <td valign="top">Master/Sync in ad sync service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-sync.html', 'dc=syncadex, dc=com');"  class="TblNavLnk_sun4">dc=syncadex, dc=com</a></td>
+    </tr>
+    <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'syncadex2');"  class="TblNavLnk_sun4">syncadex2</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Grenoble Data Center</td>
+      <td valign="top">Master/Sync in ad sync service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-sync.html', 'dc=syncadex, dc=com');"  class="TblNavLnk_sun4">dc=syncadex, dc=com</a></td>
+    </tr>
+    <tr>
+      <td class="TblTdSel_sun4"><div style="text-align: center;">
+          <input type="checkbox" name="checkbox1" id="checkbox1" value="checkbox" onClick="updateItems(document)" />
+        </div></td>
+      <th align="left" valign="top" class="TblTdSrt_sun4" scope="row"><a href="javascript:loadFile('serverhome.html', 'virtex0');"  class="TblNavLnk_sun4">virtex0</a></th>
+      <td valign="top">Started</td>
+      <td valign="top">Grenoble Data Center</td>
+      <td valign="top">JDBC Connector in virtex service</td>
+      <td valign="top"><a href="javascript:loadFile('ds-example-virt.html', 'dc=virtex, dc=com');"  class="TblNavLnk_sun4">dc=virtex, dc=com</a></td>
+    </tr>
+
+</table>
+</div>

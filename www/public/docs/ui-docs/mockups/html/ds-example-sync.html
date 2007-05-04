@@ -1,0 +1,112 @@
+<!--
+ ! CDDL HEADER START
+ !
+ ! The contents of this file are subject to the terms of the
+ ! Common Development and Distribution License, Version 1.0 only
+ ! (the "License").  You may not use this file except in compliance
+ ! with the License.
+ !
+ ! You can obtain a copy of the license at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE
+ ! or https://OpenDS.dev.java.net/OpenDS.LICENSE.
+ ! See the License for the specific language governing permissions
+ ! and limitations under the License.
+ !
+ ! When distributing Covered Code, include this CDDL HEADER in each
+ ! file and include the License file at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE.  If applicable,
+ ! add the following below this CDDL HEADER, with the fields enclosed
+ ! by brackets "[]" replaced with your own identifying information:
+ !      Portions Copyright [yyyy] [name of copyright owner]
+ !
+ ! CDDL HEADER END
+ !
+ !
+ !      Portions Copyright 2007 Sun Microsystems, Inc.
+ ! -->
+<!--<div class="BcmGryDiv_sun4"><strong>Directory Service:</strong> dc=syncadex, dc=com</div>-->
+<div class="Tab1Div_sun4">
+  <table class="Tab1TblNew_sun4" title="" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="Tab1TblSelTd_sun4"><div class="Tab1SelTxtLeft_sun4"></div>
+          <div class="Tab1SelTxtNew_sun4" title="Current Selection: Topology View">Topology View</div></td>
+         <td><a id="topovw" class="Tab1Lnk_sun4" href="javascript:loadFile('ds-example-sync1.html');">Details View</a></td>
+ <!--       <td><a id="topovw" class="Tab1Lnk_sun4" href="javascript:loadFile('ds-example-syncad.html');">Service  View</a></td> -->
+         <td><a id="topovw" class="Tab1Lnk_sun4" href="javascript:loadFile('ds-example-sync3.html');">Properties</a></td>
+     </tr>
+    </tbody>
+  </table>
+</div>
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="bottom">
+    <td nowrap="nowrap" valign="bottom"><div class="TtlTxtDiv_sun4">
+        <div class="TtlTxt_sun4">dc=syncadex, dc=com - Topology View</div>
+      </div></td>
+  </tr>
+</table>
+<!--<table border="0" cellpadding="0" cellspacing="0" width="100%">
+ <tr valign="bottom">
+    <td align="left" nowrap="nowrap" valign="bottom"><div class="TtlActDiv_sun4">
+<input class="Btn2_sun4" type="submit" name="newButton" id="newButton" value="Expand Service..." onFocus="if (this.disabled==0) this.className='Btn2Hov_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'" onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" onBlur="if (this.disabled==0) this.className='Btn2_sun4'" onClick="alert('Launches Extend Service Wizard, which is a high-level wizard that supports the following:\n - adding module to existing server\n - adding module and a server\n - cloning a module from another server to an existing server\n - cloning a module from another server to a new server\n - cloning an entire server and one or more modules ');" title="Extend Directory Service by adding Servers or Modules" />
+        <input class="Btn2_sun4" type="submit" name="openButton" id="openButton" value="Modify Service..." onFocus="if (this.disabled==0) this.className='Btn2Hov_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'" onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" onBlur="if (this.disabled==0) this.className='Btn2_sun4'" onClick="alert('Allows Removal of Server or Service  from Service');" title="Remove Component from Service" />      </div></td>
+  </tr>
+</table> -->
+<div><img src="../suntheme/images/other/dot.gif" alt="" width="1" height="15" border="0" align="top" /></div>
+<div style="font-size:14px;margin-left:10px"><strong>Service Status:</strong> <img src="../suntheme/images/alerts/ok_medium.gif" alt="OK" width="17" height="17" align="absmiddle">&nbsp;OK</div>
+<div><img src="../suntheme/images/other/dot.gif" alt="" width="1" height="5" border="0" align="top" /></div>
+<div class="ConLin_sun4"><img id="myForm:pageTitle:propSheetExample1:basicSearch:basicSearch_dot2" src="../suntheme/images/other/dot.gif" alt="" height="1" width="1" border="0" /></div>
+<div class="ConFldSet_sun4">
+  <div class="ConFldSetDiv_sun4">
+    <div class="ConFldSetLgdDiv_sun4">Service Modules</div>
+	<div align="right" style="margin-top:-24px">
+		<input class="Btn2Mni_sun4" type="submit"
+name="show" id="show-legend" value="Show Legend" onMouseOver="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onFocus="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onMouseOut="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onBlur="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onClick="toggleLegend('show');" title="Show Legend" />
+		<input class="Btn2Mni_sun4" type="submit" style="display:none"
+name="show" id="hide-legend" value="Hide Legend" onMouseOver="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onFocus="if (this.disabled==0) this.className='Btn2MniHov_sun4'"
+onMouseOut="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onBlur="if (this.disabled==0) this.className='Btn2Mni_sun4'"
+onClick="toggleLegend('hide');" title="Hide Legend" />
+	</div>
+    <table width="100%"  border="0" cellspacing="0" cellpadding="5">
+      <tr valign="top">
+        <td><img src="../suntheme/images/bde-examples/ds-syncad-svc.png" alt="Replication Topology - Service  View" width="430" height="352" border="0" usemap="#Map">&nbsp;</td>
+        <td align="right"><div id="topo-legend" style="display:none"> <img  src="../suntheme/images/bde-examples/legend.png" alt="Service  Legend" width="254" height="482"></div></td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+<div class="ConLin_sun4"><img id="myForm:pageTitle:propSheetExample1:basicSearch:basicSearch_dot2" src="../suntheme/images/other/dot.gif" alt="" height="1" width="1" border="0" /></div>
+<div class="ConFldSet_sun4">
+  <div class="ConFldSetDiv_sun4">
+    <div class="ConFldSetLgdDiv_sun4">Servers</div>
+<table width="100%"  border="0" cellspacing="0" cellpadding="5">
+  <tr>
+    <td><img src="../suntheme/images/bde-examples/ds-syncad-svr.png" alt="Replication Topology - Server View" width="324" height="331" border="0" usemap="#Map2"></td>
+  </tr>
+</table>
+  </div>
+</div>
+</div>
+<map name="Map">
+  <area shape="rect" coords="7,10,119,113" href="javascript:loadFile('dsmodhome.html', 'syncadex1-ds');" alt="Directory Database: syncadex1-ds" title="Directory Database: syncadex1-ds">
+  <area shape="rect" coords="160,15,276,116" href="javascript:loadFile('dsmodhome.html', 'syncadex2-ds');"  alt="Directory Database: syncadex2-ds" title="Directory Database: syncadex2-ds">
+  <area shape="rect" coords="7,169,122,272" href="javascript:loadFile('syncmodhome.html', 'syncadex1-sync);"  alt="Directory Replicator: syncadex1-sync" title="Directory Replicator: syncadex1-sync">
+  <area shape="rect" coords="163,173,274,276" href="javascript:loadFile('syncmodhome.html', 'syncadex2-sync');"  alt="Directory Replicator: syncadex2-sync" title="Directory Replicator: syncadex2-sync">
+  <area shape="rect" coords="308,131,420,231" href="javascript:loadFile('admodhome.html', 'syncadex2-ad');"  alt="Active Directory Connector: syncadex2-ad" title="Active Directory Connector: syncadex2-ad">
+</map>
+<map name="Map2">
+  <area shape="rect" coords="44,65,81,98" href="javascript:loadFile('dsmodhome.html', 'syncadex1-ds');" alt="Directory Database: syncadex1-ds" title="Directory Database: syncadex1-ds">
+  <area shape="rect" coords="58,93,97,128" href="javascript:loadFile('syncmodhome.html', 'syncadex1-sync');" alt="Directory Replicator: syncadex1-sync" title="Directory Replicator: syncadex1-sync">
+  <area shape="rect" coords="13,16,125,147" href="javascript:loadFile('serverhome.html', 'syncadex1');" alt="OpenDS Server: syncadex1" title="OpenDS Server: syncadex1">
+  <area shape="rect" coords="206,59,249,95" href="javascript:loadFile('dsmodhome.html', 'syncadex2-ds');" alt="Directory Database: syncadex2-ds" title="Directory Database: syncadex2-ds">
+  <area shape="rect" coords="192,91,232,124" href="javascript:loadFile('syncmodhome.html', 'syncadex2-sync');" alt="Directory Replicator: syncadex2-sync" title="Directory Replicator: syncadex2-sync">
+  <area shape="rect" coords="230,87,263,123"  href="javascript:loadFile('admodhome.html', 'syncadex2-ad');"  alt="Active Directory Connector: syncadex2-ad" title="Active Directory Connector: syncadex2-ad">
+  <area shape="rect" coords="170,16,285,153" href="javascript:loadFile('serverhome.html', 'syncadex2');" alt="OpenDS Server: syncadex2" title="OpenDS Server: syncadex2">
+</map>
