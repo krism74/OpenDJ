@@ -1,7 +1,7 @@
 
 Lightweight Directory Access Protocol (LDAP) Parameters per [RFC4520]
  
-(last updated 2007-03-14) 
+(last updated 2007-03-26) 
  
 Registries included below:
 - Protocol Mechanism
@@ -91,10 +91,13 @@ associatedInternetGateway             A  1.3.6.1.4.1.453.7.2.8        [RFC2164]
 associatedName                        A  0.9.2342.19200300.100.1.38   [RFC4524]
 associatedORAddress                   A  1.3.6.1.4.1.453.7.2.6        [RFC2164]
 associatedX400Gateway                 A  1.3.6.1.4.1.453.7.2.3        [RFC2164]
+attributeMap                          A  1.3.6.1.4.1.11.1.3.1.1.9     [RFC-joslin-config-schema-17.txt]
 attributeTypes                        A  2.5.21.5                     [RFC4512]
 audio                                 A  0.9.2342.19200300.100.1.55   [RFC1274]
+authenticationMethod                  A  1.3.6.1.4.1.11.1.3.1.1.6     [RFC-joslin-config-schema-17.txt]
 authorityRevocationList               A  2.5.4.38                     [RFC4523] 
 autonomousArea                        R  2.5.23.1                     [RFC3672] 
+bindTimeLimit                         A  1.3.6.1.4.1.11.1.3.1.1.4     [RFC-joslin-config-schema-17.txt]
 bitStringMatch                        M  2.5.13.16                    [RFC4517]
 booleanMatch                          M  2.5.13.13                    [RFC4517]
 buildingName                          A  0.9.2342.19200300.100.1.48   [RFC4524]
@@ -159,14 +162,19 @@ country                               O  2.5.6.2                      [RFC4519]
 countryName                           A  2.5.4.6                      [RFC4519]
 createTimestamp                       A  2.5.18.1                     [RFC4512]
 creatorsName                          A  2.5.18.3                     [RFC4512]
+credentialLevel                       A  1.3.6.1.4.1.11.1.3.1.1.10    [RFC-joslin-config-schema-17.txt]
 cRLDistributionPoint                  O  2.5.6.19                     [RFC4523]
 crossCertificatePair                  A  2.5.4.40                     [RFC4523]
 DC                                    A  0.9.2342.19200300.100.1.25   [RFC4519]
 dcObject                              O  1.3.6.1.4.1.1466.344         [RFC4519]
+defaultServerList                     A  1.3.6.1.4.1.11.1.3.1.1.0     [RFC-joslin-config-schema-17.txt]
+defaultSearchBase                     A  1.3.6.1.4.1.11.1.3.1.1.1     [RFC-joslin-config-schema-17.txt]
+defaultSearchScope                    A  1.3.6.1.4.1.11.1.3.1.1.12    [RFC-joslin-config-schema-17.txt]
 delete                                A  Reserved for LDIF            [RFC2849]
 deleteoldrdn                          A  Reserved for LDIF            [RFC2849]
 deltaCRL                              O  2.5.6.23                     [RFC4523]
 deltaRevocationList                   A  2.5.4.53                     [RFC4523]
+dereferenceAliases                    A  1.3.6.1.4.1.11.1.3.1.1.16    [RFC-joslin-config-schema-17.txt]
 description                           A  2.5.4.13                     [RFC4519]
 destinationIndicator                  A  2.5.4.27                     [RFC4519]
 device                                O  2.5.6.14                     [RFC4519]
@@ -199,6 +207,7 @@ domainRelatedObject                   O  0.9.2342.19200300.100.4.17   [RFC4524]
 drink                                 A  0.9.2342.19200300.100.1.5    [RFC4524]
 dSA                                   O  2.5.6.13                     [RFC2256]
 dSAQuality                            A  0.9.2342.19200300.100.1.49   [RFC1274]
+DUAConfigProfile                      O  1.3.6.1.4.1.11.1.3.1.2.5     [RFC-joslin-config-schema-17.txt]
 dynamicObject                         O  1.3.6.1.4.1.1466.101.119.2   [RFC2589]
 dynamicSubtrees                       A  1.3.6.1.4.1.1466.101.119.4   [RFC2589]
 enhancedSearchGuide                   A  2.5.4.47                     [RFC4519]
@@ -207,6 +216,7 @@ entryUUID                             A  1.3.6.1.1.16.4               [RFC4530]
 extensibleObject                      O  1.3.6.1.4.1.1466.101.120.111 [RFC4512]
 facsimileTelephoneNumber              A  2.5.4.23                     [RFC4519]
 favouriteDrink                        A* 0.9.2342.19200300.100.1.5    [RFC4524]
+followReferrals                       A  1.3.6.1.4.1.11.1.3.1.1.5     [RFC-joslin-config-schema-17.txt]
 friendlyCountry                       O  0.9.2342.19200300.100.4.18   [RFC4524]
 friendlyCountryName                   A* 0.9.2342.19200300.100.1.43   [RFC4524]
 generalizedTimeMatch                  M  2.5.13.27                    [RFC4517]
@@ -270,6 +280,7 @@ numericStringSubstringsMatch          M  2.5.13.10                    [RFC4517]
 o                                     A  2.5.4.10                     [RFC4519]
 objectClass                           A  2.5.4.0                      [RFC4512]
 objectClasses                         A  2.5.21.6                     [RFC4512]
+objectclassMap                        A  1.3.6.1.4.1.11.1.3.1.1.11    [RFC-joslin-config-schema-17.txt]
 objectIdentifierFirstComponentMatch   M  2.5.13.30                    [RFC4517]
 objectIdentifierMatch                 M  2.5.13.0                     [RFC4517]
 octetStringMatch                      M  2.5.13.17                    [RFC4517]
@@ -482,6 +493,7 @@ postalAddress                         A  2.5.4.16                     [RFC4519]
 postalCode                            A  2.5.4.17                     [RFC4519]
 postOfficeBox                         A  2.5.4.18                     [RFC4519]
 preferredDeliveryMethod               A  2.5.4.28                     [RFC4519]
+preferredServerList                   A  1.3.6.1.4.1.11.1.3.1.1.2     [RFC-joslin-config-schema-17.txt]
 presentationAddress                   A  2.5.4.29                     [RFC2256]
 presentationAddressMatch              M  2.5.13.22                    [RFC2252]
 presentMatch                          M  1.2.36.79672281.1.13.5       [RFC3687]
@@ -524,6 +536,7 @@ printerIPP                            O  1.3.18.0.2.6.256             [RFC3712]
 printerLPR                            O  1.3.18.0.2.6.253             [RFC3712]
 printerService                        O  1.3.18.0.2.6.255             [RFC3712]
 printerServiceAuxClass                O  1.3.18.0.2.6.257             [RFC3712]
+profileTTL                            A  1.3.6.1.4.1.11.1.3.1.1.7     [RFC-joslin-config-schema-17.txt]
 protocolInformation                   A  2.5.4.48                     [RFC2256]
 protocolInformationMatch              M  2.5.13.24                    [RFC2252]
 qualityLabelledData                   O  0.9.2342.19200300.100.4.22   [RFC1274]
@@ -540,9 +553,13 @@ roleOccupant                          A  2.5.4.33                     [RFC4519]
 room                                  O  0.9.2342.19200300.100.4.7    [RFC4524]
 roomNumber                            A  0.9.2342.19200300.100.1.6    [RFC4524]
 searchGuide                           A  2.5.4.14                     [RFC4519]
+searchTimeLimit                       A  1.3.6.1.4.1.11.1.3.1.1.3     [RFC-joslin-config-schema-17.txt]
 secretary                             A  0.9.2342.19200300.100.1.21   [RFC4524]
 seeAlso                               A  2.5.4.34                     [RFC4519]
 serialNumber                          A  2.5.4.5                      [RFC4519]
+serviceAuthenticationMethod           A  1.3.6.1.4.1.11.1.3.1.1.15    [RFC-joslin-config-schema-17.txt]
+serviceCredentialLevel                A  1.3.6.1.4.1.11.1.3.1.1.13    [RFC-joslin-config-schema-17.txt]
+serviceSearchDescriptor               A  1.3.6.1.4.1.11.1.3.1.1.14    [RFC-joslin-config-schema-17.txt]
 simpleSecurityObject                  O  0.9.2342.19200300.100.4.19   [RFC4524]
 singleLevelQuality                    A  0.9.2342.19200300.100.1.50   [RFC4524]
 slpServicePrinter                     O  1.3.18.0.2.6.254             [RFC3712]
@@ -1022,16 +1039,21 @@ References
 
 [RFC4511]  Sermersheim, J., "LDAP: The Protocol", RFC 4511, June 2006.
 
+[RFC-joslin-config-schema-17.txt]
+            B. Neal-Joslin, Ed., L. Howard, M. Ansari, "A Configuration 
+            Profile Schema for LDAP-based agents", RFC XXXX, Month Year.
+
+
 [LDAPURL]  Smith, M. (editor), "LDAP: Uniform Resource Locator",
            draft-ietf-ldapbis-url-xx.txt, a work in progress.
 
 People
 ------
-[JHC]      Jong Hyuk Choi, <jongchoi@us.ibm.com>, April 2005.
+[JHC]      Jong Hyuk Choi, <jongchoi&us.ibm.com>, April 2005.
 
-[KDZ]      Kurt Zeilenga, <Kurt@OpenLDAP.org>, April 2005.
+[KDZ]      Kurt Zeilenga, <Kurt&OpenLDAP.org>, April 2005.
 
-[Wahl]     Mark Wahl, <Mark.Wahl@informed-control.com>, 10 November 2006.
+[Wahl]     Mark Wahl, <Mark.Wahl&informed-control.com>, 10 November 2006.
 
 
 (registry created 27 August 2003) 
