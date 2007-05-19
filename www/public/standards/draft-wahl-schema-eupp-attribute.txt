@@ -3,12 +3,12 @@
 
 Network Working Group                                            M. Wahl
 Internet-Draft                                     Informed Control Inc.
-Intended status: Standards Track                       February 27, 2007
-Expires: August 31, 2007
+Intended status: Standards Track                             May 8, 2007
+Expires: November 9, 2007
 
 
                 Enrolled User Policy Profiles Attribute
-                  draft-wahl-schema-eupp-attribute-00
+                  draft-wahl-schema-eupp-attribute-01
 
 Status of this Memo
 
@@ -33,7 +33,7 @@ Status of this Memo
    The list of Internet-Draft Shadow Directories can be accessed at
    http://www.ietf.org/shadow.html.
 
-   This Internet-Draft will expire on August 31, 2007.
+   This Internet-Draft will expire on November 9, 2007.
 
 Copyright Notice
 
@@ -52,9 +52,9 @@ Copyright Notice
 
 
 
-Wahl                     Expires August 31, 2007                [Page 1]
+Wahl                    Expires November 9, 2007                [Page 1]
 
-Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
+Internet-Draft   Enrolled User Policy Profiles Attribute        May 2007
 
 
 Abstract
@@ -108,9 +108,9 @@ Abstract
 
 
 
-Wahl                     Expires August 31, 2007                [Page 2]
+Wahl                    Expires November 9, 2007                [Page 2]
 
-Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
+Internet-Draft   Enrolled User Policy Profiles Attribute        May 2007
 
 
 1.  Introduction
@@ -164,9 +164,9 @@ Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
 
 
 
-Wahl                     Expires August 31, 2007                [Page 3]
+Wahl                    Expires November 9, 2007                [Page 3]
 
-Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
+Internet-Draft   Enrolled User Policy Profiles Attribute        May 2007
 
 
    services to user community that includes multiple, potentially
@@ -220,9 +220,9 @@ Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
 
 
 
-Wahl                     Expires August 31, 2007                [Page 4]
+Wahl                    Expires November 9, 2007                [Page 4]
 
-Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
+Internet-Draft   Enrolled User Policy Profiles Attribute        May 2007
 
 
    The words "MUST", "SHOULD" and "MAY" are used as defined in RFC 2119
@@ -276,9 +276,9 @@ Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
 
 
 
-Wahl                     Expires August 31, 2007                [Page 5]
+Wahl                    Expires November 9, 2007                [Page 5]
 
-Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
+Internet-Draft   Enrolled User Policy Profiles Attribute        May 2007
 
 
 2.  Attribute definition
@@ -332,9 +332,9 @@ Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
 
 
 
-Wahl                     Expires August 31, 2007                [Page 6]
+Wahl                    Expires November 9, 2007                [Page 6]
 
-Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
+Internet-Draft   Enrolled User Policy Profiles Attribute        May 2007
 
 
    of any scheme, the identity provider SHOULD use URIs that are either
@@ -388,9 +388,9 @@ Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
 
 
 
-Wahl                     Expires August 31, 2007                [Page 7]
+Wahl                    Expires November 9, 2007                [Page 7]
 
-Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
+Internet-Draft   Enrolled User Policy Profiles Attribute        May 2007
 
 
 3.  Representing the attribute in an identity metasystem
@@ -444,9 +444,9 @@ Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
 
 
 
-Wahl                     Expires August 31, 2007                [Page 8]
+Wahl                    Expires November 9, 2007                [Page 8]
 
-Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
+Internet-Draft   Enrolled User Policy Profiles Attribute        May 2007
 
 
 3.2.  Representation as a SAML 1.1 attribute
@@ -500,18 +500,18 @@ Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
 
 
 
-Wahl                     Expires August 31, 2007                [Page 9]
+Wahl                    Expires November 9, 2007                [Page 9]
 
-Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
+Internet-Draft   Enrolled User Policy Profiles Attribute        May 2007
 
 
    The attribute type identifier URI is
 
-      http://www.ldap.com/1/schema/eupp/enrolledUserPolicyProfiles
+   http://www.ldap.com/1/schema/eupp/eupp.rdf#EnrolledUserPolicyProfiles
 
    The data format URI is
 
-      http://www.ldap.com/1/schema/eupp/spaceSeparatedUriList
+   http://www.ldap.com/1/schema/eupp/eupp.xml#spaceSeparatedUriList
 
    The data type is
 
@@ -526,7 +526,7 @@ Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
 
    The claim type URI is
 
-      http://www.ldap.com/1/schema/eupp/enrolledUserPolicyProfiles
+   http://www.ldap.com/1/schema/eupp/eupp.rdf#EnrolledUserPolicyProfiles
 
    The data type is "xs:string".
 
@@ -556,9 +556,9 @@ Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
 
 
 
-Wahl                     Expires August 31, 2007               [Page 10]
+Wahl                    Expires November 9, 2007               [Page 10]
 
-Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
+Internet-Draft   Enrolled User Policy Profiles Attribute        May 2007
 
 
 4.  Sample identifiers
@@ -612,9 +612,9 @@ Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
 
 
 
-Wahl                     Expires August 31, 2007               [Page 11]
+Wahl                    Expires November 9, 2007               [Page 11]
 
-Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
+Internet-Draft   Enrolled User Policy Profiles Attribute        May 2007
 
 
 5.  Security Considerations
@@ -668,9 +668,9 @@ Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
 
 
 
-Wahl                     Expires August 31, 2007               [Page 12]
+Wahl                    Expires November 9, 2007               [Page 12]
 
-Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
+Internet-Draft   Enrolled User Policy Profiles Attribute        May 2007
 
 
 6.  IANA Considerations
@@ -724,9 +724,9 @@ Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
 
 
 
-Wahl                     Expires August 31, 2007               [Page 13]
+Wahl                    Expires November 9, 2007               [Page 13]
 
-Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
+Internet-Draft   Enrolled User Policy Profiles Attribute        May 2007
 
 
 7.  References
@@ -780,9 +780,9 @@ Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
 
 
 
-Wahl                     Expires August 31, 2007               [Page 14]
+Wahl                    Expires November 9, 2007               [Page 14]
 
-Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
+Internet-Draft   Enrolled User Policy Profiles Attribute        May 2007
 
 
 7.2.  Informative References
@@ -836,9 +836,9 @@ Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
 
 
 
-Wahl                     Expires August 31, 2007               [Page 15]
+Wahl                    Expires November 9, 2007               [Page 15]
 
-Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
+Internet-Draft   Enrolled User Policy Profiles Attribute        May 2007
 
 
 Appendix A.  Copyright
@@ -892,9 +892,9 @@ Appendix A.  Copyright
 
 
 
-Wahl                     Expires August 31, 2007               [Page 16]
+Wahl                    Expires November 9, 2007               [Page 16]
 
-Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
+Internet-Draft   Enrolled User Policy Profiles Attribute        May 2007
 
 
 Author's Address
@@ -948,9 +948,9 @@ Author's Address
 
 
 
-Wahl                     Expires August 31, 2007               [Page 17]
+Wahl                    Expires November 9, 2007               [Page 17]
 
-Internet-Draft   Enrolled User Policy Profiles Attribute   February 2007
+Internet-Draft   Enrolled User Policy Profiles Attribute        May 2007
 
 
 Full Copyright Statement
@@ -1004,5 +1004,5 @@ Acknowledgment
 
 
 
-Wahl                     Expires August 31, 2007               [Page 18]
+Wahl                    Expires November 9, 2007               [Page 18]
 

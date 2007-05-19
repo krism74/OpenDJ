@@ -3,12 +3,12 @@
 
 Network Working Group                                            M. Wahl
 Internet-Draft                                     Informed Control Inc.
-Intended status: Standards Track                       February 25, 2007
-Expires: August 29, 2007
+Intended status: Standards Track                             May 9, 2007
+Expires: November 10, 2007
 
 
                      LDAP Session Tracking Control
-                       draft-wahl-ldap-session-02
+                       draft-wahl-ldap-session-03
 
 Status of this Memo
 
@@ -33,7 +33,7 @@ Status of this Memo
    The list of Internet-Draft Shadow Directories can be accessed at
    http://www.ietf.org/shadow.html.
 
-   This Internet-Draft will expire on August 29, 2007.
+   This Internet-Draft will expire on November 10, 2007.
 
 Copyright Notice
 
@@ -52,9 +52,9 @@ Copyright Notice
 
 
 
-Wahl                     Expires August 29, 2007                [Page 1]
+Wahl                    Expires November 10, 2007               [Page 1]
 
-Internet-Draft        LDAP Session Tracking Control        February 2007
+Internet-Draft        LDAP Session Tracking Control             May 2007
 
 
 Abstract
@@ -108,9 +108,9 @@ Abstract
 
 
 
-Wahl                     Expires August 29, 2007                [Page 2]
+Wahl                    Expires November 10, 2007               [Page 2]
 
-Internet-Draft        LDAP Session Tracking Control        February 2007
+Internet-Draft        LDAP Session Tracking Control             May 2007
 
 
 1.  Introduction
@@ -164,9 +164,9 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
 
 
 
-Wahl                     Expires August 29, 2007                [Page 3]
+Wahl                    Expires November 10, 2007               [Page 3]
 
-Internet-Draft        LDAP Session Tracking Control        February 2007
+Internet-Draft        LDAP Session Tracking Control             May 2007
 
 
       enough to be able to correlate based on time: the server's logs
@@ -196,9 +196,7 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
    The words "MUST", "SHOULD" and "MAY" are used as defined in RFC 2119
    [2].
 
-   Please send comments to the author at mark.wahl@informed-control.com.
-
-1.1.  Example for session tracking
+1.1.  Motivation for session tracking
 
    A typical enterprise deployment with an application indirectly
    relying upon the directory might resemble:
@@ -217,16 +215,16 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
    external authentication provider in order to check the user's
    authentication credentials, or might use an identity provider to
    obtain profile information about the user.  This request might be
-
-
-
-Wahl                     Expires August 29, 2007                [Page 4]
-
-Internet-Draft        LDAP Session Tracking Control        February 2007
-
-
    made through an API or a protocol other than LDAP, e.g.  RADIUS,
    Kerberos, SMB, etc.  The authentication/identity provider (C) would
+
+
+
+Wahl                    Expires November 10, 2007               [Page 4]
+
+Internet-Draft        LDAP Session Tracking Control             May 2007
+
+
    generate one or more LDAP requests and send them to an LDAP server
    (D).
 
@@ -276,9 +274,11 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
 
 
 
-Wahl                     Expires August 29, 2007                [Page 5]
+
+
+Wahl                    Expires November 10, 2007               [Page 5]
 
-Internet-Draft        LDAP Session Tracking Control        February 2007
+Internet-Draft        LDAP Session Tracking Control             May 2007
 
 
 2.  Control definition
@@ -332,9 +332,9 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
 
 
 
-Wahl                     Expires August 29, 2007                [Page 6]
+Wahl                    Expires November 10, 2007               [Page 6]
 
-Internet-Draft        LDAP Session Tracking Control        February 2007
+Internet-Draft        LDAP Session Tracking Control             May 2007
 
 
    For example, the session identifier might be a simple string encoding
@@ -353,8 +353,10 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
 
       LDAP-Session-Identifier-Control
       DEFINITIONS IMPLICIT TAGS ::=
-
       BEGIN
+
+      LDAPString ::= OCTET STRING -- UTF-8 encoded
+      LDAPOID ::= OCTET STRING -- Constrained to numericoid
 
       SessionIdentifierControlValue ::= SEQUENCE {
            sessionSourceIp                 LDAPString,
@@ -366,15 +368,15 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
       END
 
    The sessionSourceIp element SHOULD NOT be longer than 42 characters
-   (necessary for a string representation of an IPv6 address), and MUST
-   NOT be longer than 128 characters.  Each character will be encoded
-   into a single byte.  If the IP address of the system which generated
-   the session tracking identifier is not known, the sessionSourceIp
-   element SHOULD be of zero length.
+   (the length necessary for a string representation of an IPv6
+   address), and MUST NOT be longer than 128 characters.  Each character
+   will be encoded into a single byte.  If the IP address of the system
+   which generated the session tracking identifier is not known, the
+   sessionSourceIp element SHOULD be of zero length.
 
    The sessionSourceName element SHOULD NOT be longer than 1024
-   characters, and MUST NOT be longer than 65536 characters.  Note that
-   in the UTF-8 encoding a character MAY be encoded into more than one
+   characters, and MUST NOT be longer than 65536 bytes.  Note that in
+   the UTF-8 encoding a character MAY be encoded into more than one
    byte.  If no other addressing information about that system is known
    or relevant to the format, the sessionSourceName element SHOULD be of
    zero length.
@@ -384,15 +386,14 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
    (0x2E, 0x30-0x39).  The formatOID element MUST NOT be of zero length,
    and SHOULD NOT be longer than 1024 characters.
 
-   The sessionTrackingIdentifier field MAY be of zero length (although
 
 
-
-Wahl                     Expires August 29, 2007                [Page 7]
+Wahl                    Expires November 10, 2007               [Page 7]
 
-Internet-Draft        LDAP Session Tracking Control        February 2007
+Internet-Draft        LDAP Session Tracking Control             May 2007
 
 
+   The sessionTrackingIdentifier field MAY be of zero length (although
    this might not be useful).  There is no upper bound on the
    sessionTrackingIdentifier, but it is suggested that values SHOULD NOT
    be longer than 65536 characters without prior agreement with the
@@ -416,7 +417,7 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
    generates one or more requests to other LDAP servers, the service
    SHOULD include any controls of this type that it received from
    clients in requests it generates, without modification.  A service
-   MAY silently remove controls if the control would violate security
+   MAY silently remove a control if that control would violate security
    policy.  If the service has its own session state identifier, it
    SHOULD include the session identifier control it generates in the
    Controls SEQUENCE after any session identifier controls received by
@@ -440,15 +441,15 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
    represent session tracking identifiers already implemented.
 
    An application developer or server developer who wishes to transfer
-   their implementation's format for session tracking identifier within
 
 
 
-Wahl                     Expires August 29, 2007                [Page 8]
+Wahl                    Expires November 10, 2007               [Page 8]
 
-Internet-Draft        LDAP Session Tracking Control        February 2007
+Internet-Draft        LDAP Session Tracking Control             May 2007
 
 
+   their implementation's format for session tracking identifier within
    an LDAP control MUST choose a new, unique, OBJECT IDENTIFIER to
    represent this format.
 
@@ -499,17 +500,17 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
 
 
 
-
-Wahl                     Expires August 29, 2007                [Page 9]
+Wahl                    Expires November 10, 2007               [Page 9]
 
-Internet-Draft        LDAP Session Tracking Control        February 2007
+Internet-Draft        LDAP Session Tracking Control             May 2007
 
 
 3.  Session tracking format definitions
 
    This section defines three session tracking formats that can be used
    within the session tracking control: two for RADIUS accounting, and
-   one based on usernames.
+   one based on usernames.  Other formats can be defined in other
+   documents.
 
 3.1.  Formats for use with RADIUS accounting
 
@@ -521,13 +522,14 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
    value, the sessionTrackingIdentifier SHOULD contain the value of the
    Acct-Session-Id RADIUS attribute (type 44), as defined in RFC 2866
    [8].  (RFC 2866 section 5.5 states that the Acct-Session-Id SHOULD
-   contain UTF-8 encoded 10646 characters.)
+   contain UTF-8 encoded ISO 10646 characters.)
 
    With formatOID set to 1.3.6.1.4.1.21008.108.63.1.2 within the control
    value, the sessionTrackingIdentifier SHOULD contain the value of the
    Acct-Multi-Session-Id RADIUS attribute (type 50), as defined in RFC
    2866 [8].  (RFC 2866 section 5.11 states that the
-   Acct-Multi-Session-Id SHOULD contain UTF-8 encoded 10646 characters.)
+   Acct-Multi-Session-Id SHOULD contain UTF-8 encoded ISO 10646
+   characters.)
 
    In both of these two formats, the value of the sessionSourceIp field
    SHOULD contain either a string encoding value of the IPv4 address
@@ -551,16 +553,16 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
    the session.  This format SHOULD NOT be used for purported names,
    where the application has not verified that the username is valid.
 
+
+
+
+Wahl                    Expires November 10, 2007              [Page 10]
+
+Internet-Draft        LDAP Session Tracking Control             May 2007
+
+
    The sessionSourceName field SHOULD contain the hostname where that
    application is running, or be of zero length if the hostname is not
-
-
-
-Wahl                     Expires August 29, 2007               [Page 10]
-
-Internet-Draft        LDAP Session Tracking Control        February 2007
-
-
    known.
 
    The username SHOULD be a SASL authorization identity string, as
@@ -586,14 +588,15 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
    generated, even if the user might not even be represented in the
    directory where the operations are being performed.
 
+3.2.1.  Example
+
    For example, if an application server "app.example.com" with IPv4
    address "192.0.2.1" had authenticated an user with name "bloggs", and
    then sent a search request to the LDAP directory in order to obtain
    some public information on service configuration intending to provide
    it to that user, the application might include a session identifier
-   control, with controlType 1.3.6.1.4.1.21008.108.63.1, criticality
-   FALSE, and the controlValue the BER encoding of the following ASN.1
-   value:
+   control.  The SessionIdentifierControlValue would have the following
+   ASN.1 value prior to encoding:
 
 
       {  -- SEQUENCE
@@ -609,12 +612,65 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
 
 
 
-
-
-
-Wahl                     Expires August 29, 2007               [Page 11]
+Wahl                    Expires November 10, 2007              [Page 11]
 
-Internet-Draft        LDAP Session Tracking Control        February 2007
+Internet-Draft        LDAP Session Tracking Control             May 2007
+
+
+   The session identifier control would be sent with controlType
+   1.3.6.1.4.1.21008.108.63.1, criticality FALSE, and the controlValue
+   the BER encoding of the SessionIdentifierControlValue.  The control
+   included with the LDAP request would resemble:
+
+
+      {  -- SEQUENCE
+         "1.3.6.1.4.1.21008.108.63.1", -- controlType
+         FALSE,                        -- criticality
+         '304204093139322e302e322e31040f6170702e6578616d706c652e636f6d
+          041c312e332e362e312e342e312e32313030382e3130382e36332e312e33
+          0406626c6f676773'H           -- controlValue
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wahl                    Expires November 10, 2007              [Page 12]
+
+Internet-Draft        LDAP Session Tracking Control             May 2007
 
 
 4.  Security Considerations
@@ -631,12 +687,12 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
    servers which implement this control SHOULD permit the administrator
    of the directory server to configure that this control is ignored
    unless the request containing the control was received from a client
-   that authenticated.  LDAP servers which implement this control SHOULD
-   permit the administrator of the directory server to configure that
-   this control is ignored unless the client is authorized to use this
-   or related controls, such as the Proxied Authorization Control [11].
-   Session identifier information from clients which do not meet the
-   server's access check requirement SHOULD be silently discarded.
+   that been authenticated.  LDAP servers which implement this control
+   SHOULD permit the administrator of the directory server to configure
+   that this control is ignored unless the client is authorized to use
+   this or related controls, such as the Proxied Authorization Control
+   [11].  Session identifier information from clients which do not meet
+   the server's access check requirement SHOULD be silently discarded.
 
    In some formats, session tracking identifiers may contain personal-
    identifiable information, such as usernames or client IP addresses.
@@ -645,9 +701,9 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
    network segments across which this information is being transmitted.
    Implementations of LDAP clients which include this control in
    requests sent to directory servers SHOULD support the use of
-   underlying security services that provide connection confidentiality,
-   such as a SASL mechanism that negotiates a security layer, or the
-   Start TLS operation.
+   underlying security services that establish connection
+   confidentiality before the control is sent, such as a SASL mechanism
+   that negotiates a security layer, or the Start TLS operation.
 
    Correlation of activities across multiple servers can enable
    administrators and monitoring tools to construct a more accurate
@@ -668,9 +724,9 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
 
 
 
-Wahl                     Expires August 29, 2007               [Page 12]
+Wahl                    Expires November 10, 2007              [Page 13]
 
-Internet-Draft        LDAP Session Tracking Control        February 2007
+Internet-Draft        LDAP Session Tracking Control             May 2007
 
 
    security enclave from itself.  A network service that is an LDAP
@@ -724,9 +780,9 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
 
 
 
-Wahl                     Expires August 29, 2007               [Page 13]
+Wahl                    Expires November 10, 2007              [Page 14]
 
-Internet-Draft        LDAP Session Tracking Control        February 2007
+Internet-Draft        LDAP Session Tracking Control             May 2007
 
 
 5.  IANA Considerations
@@ -780,9 +836,9 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
 
 
 
-Wahl                     Expires August 29, 2007               [Page 14]
+Wahl                    Expires November 10, 2007              [Page 15]
 
-Internet-Draft        LDAP Session Tracking Control        February 2007
+Internet-Draft        LDAP Session Tracking Control             May 2007
 
 
 6.  Acknowledgments
@@ -836,9 +892,9 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
 
 
 
-Wahl                     Expires August 29, 2007               [Page 15]
+Wahl                    Expires November 10, 2007              [Page 16]
 
-Internet-Draft        LDAP Session Tracking Control        February 2007
+Internet-Draft        LDAP Session Tracking Control             May 2007
 
 
 7.  References
@@ -892,9 +948,9 @@ Internet-Draft        LDAP Session Tracking Control        February 2007
 
 
 
-Wahl                     Expires August 29, 2007               [Page 16]
+Wahl                    Expires November 10, 2007              [Page 17]
 
-Internet-Draft        LDAP Session Tracking Control        February 2007
+Internet-Draft        LDAP Session Tracking Control             May 2007
 
 
 Appendix A.  Copyright
@@ -948,9 +1004,9 @@ Appendix A.  Copyright
 
 
 
-Wahl                     Expires August 29, 2007               [Page 17]
+Wahl                    Expires November 10, 2007              [Page 18]
 
-Internet-Draft        LDAP Session Tracking Control        February 2007
+Internet-Draft        LDAP Session Tracking Control             May 2007
 
 
 Author's Address
@@ -1004,9 +1060,9 @@ Author's Address
 
 
 
-Wahl                     Expires August 29, 2007               [Page 18]
+Wahl                    Expires November 10, 2007              [Page 19]
 
-Internet-Draft        LDAP Session Tracking Control        February 2007
+Internet-Draft        LDAP Session Tracking Control             May 2007
 
 
 Full Copyright Statement
@@ -1060,5 +1116,5 @@ Acknowledgment
 
 
 
-Wahl                     Expires August 29, 2007               [Page 19]
+Wahl                    Expires November 10, 2007              [Page 20]
 
