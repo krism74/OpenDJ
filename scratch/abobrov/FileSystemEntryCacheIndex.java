@@ -22,40 +22,42 @@
  * CDDL HEADER END
  *
  *
- *      Portions Copyright 2006-2007 Sun Microsystems, Inc.
+ *      Portions Copyright 2007 Sun Microsystems, Inc.
  */
 
 package org.opends.server.extensions;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- *
+ * This class represents serializable entry cache index structures
+ * and supporting data types used for the entry cache persistence.
+ * Structurally it should be an inner class of FileSystemEntryCache
+ * however due to serialization constraints it has been separated. 
  */
-public class FileSystemEntryCacheIndex implements Serializable {
+class FileSystemEntryCacheIndex implements Serializable {
     static final long serialVersionUID = 4537634108673038611L;
-    // Backend to Checksum/id map for offline state;
-    /**
-     * 
-     */
-    public ConcurrentHashMap<String,Long> offlineState;
-    
-    // The mapping between entry backends/IDs and DNs.
-    /**
-     * 
-     */
-    public LinkedHashMap<String,LinkedHashMap<Long,String>> backendMap;
-    
-    // The mapping between DNs and IDs.
-    /**
-     * 
-     */
-    public LinkedHashMap<String,Long> dnMap;
     
     /**
-     * 
+     * Backend to Checksum/id map for offline state.
+     */
+    public Map<String,Long> offlineState;
+    
+    /**
+     * The mapping between entry backends/IDs and DNs.
+     */
+    public Map<String,Map<Long,String>> backendMap;
+    
+    /**
+     * The mapping between DNs and IDs.
+     */
+    public Map<String,Long> dnMap;
+    
+    /**
+     * Default constructor.
      */
     public FileSystemEntryCacheIndex() {
       offlineState =
@@ -63,7 +65,7 @@ public class FileSystemEntryCacheIndex implements Serializable {
           new ConcurrentHashMap<String,Long>();
       backendMap =
           //               <Backend,Map<Long,DN>>
-          new LinkedHashMap<String,LinkedHashMap<Long,String>>();
+          new LinkedHashMap<String,Map<Long,String>>();
       dnMap      =
           //               <DN,Long>
           new LinkedHashMap<String,Long>();

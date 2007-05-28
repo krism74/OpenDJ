@@ -22,40 +22,49 @@
  * CDDL HEADER END
  *
  *
- *      Portions Copyright 2006-2007 Sun Microsystems, Inc.
+ *      Portions Copyright 2007 Sun Microsystems, Inc.
  */
 package org.opends.server.extensions;
 
-import com.sleepycat.bind.EntryBinding;
-import com.sleepycat.bind.serial.SerialBinding;
-import com.sleepycat.bind.serial.StoredClassCatalog;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import java.io.File;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import com.sleepycat.bind.EntryBinding;
+import com.sleepycat.bind.serial.SerialBinding;
+import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
 import com.sleepycat.je.EnvironmentMutableConfig;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseEntry;
+import com.sleepycat.je.DatabaseNotFoundException;
+import com.sleepycat.je.DbInternal;
 import com.sleepycat.je.LockMode;
 import com.sleepycat.je.OperationStatus;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import com.sleepycat.je.cleaner.UtilizationProfile;
+import com.sleepycat.je.dbi.EnvironmentImpl;
+import java.util.SortedMap;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicLong;
 import org.opends.server.api.Backend;
-import org.opends.server.api.ConfigurableComponent;
 import org.opends.server.api.EntryCache;
+import org.opends.server.admin.std.server.FileSystemEntryCacheCfg;
+import org.opends.server.admin.server.ConfigurationChangeListener;
+import org.opends.server.config.BooleanConfigAttribute;
 import org.opends.server.config.ConfigAttribute;
-import org.opends.server.config.ConfigEntry;
 import org.opends.server.config.ConfigException;
 import org.opends.server.config.IntegerConfigAttribute;
 import org.opends.server.config.IntegerWithUnitConfigAttribute;
@@ -75,106 +84,170 @@ import org.opends.server.types.InitializationException;
 import org.opends.server.types.LockType;
 import org.opends.server.types.ResultCode;
 import org.opends.server.types.SearchFilter;
-import static org.opends.server.config.ConfigConstants.*;
-import static org.opends.server.loggers.debug.DebugLogger.debugCaught;
-import static org.opends.server.loggers.debug.DebugLogger.debugEnabled;
 import org.opends.server.types.DebugLogLevel;
+import org.opends.server.types.FilePermission;
 import org.opends.server.types.LockManager;
 import org.opends.server.types.ObjectClass;
-import static org.opends.server.loggers.Error.*;
+import org.opends.server.types.DebugLogLevel;
+import org.opends.server.loggers.debug.DebugTracer;
+import static org.opends.server.loggers.debug.DebugLogger.*;
+import static org.opends.server.loggers.ErrorLogger.logError;
+import static org.opends.server.config.ConfigConstants.*;
 import static org.opends.server.messages.ExtensionsMessages.*;
 import static org.opends.server.messages.MessageHandler.*;
 import static org.opends.server.util.ServerConstants.*;
 import static org.opends.server.util.StaticUtils.*;
 
 /**
- * This class defines a Directory Server entry cache that uses a FIFO to keep
- * track of the entries.  Entries that have been in the cache the longest are
- * the most likely candidates for purging if space is needed.  In contrast to
- * other cache structures, the selection of entries to purge is not based on
- * how frequently or recently the entries have been accessed.  This requires
- * significantly less locking (it will only be required when an entry is added
- * or removed from the cache, rather than each time an entry is accessed).
+ * This class defines a Directory Server entry cache that uses JE database to
+ * keep track of the entries. Intended use is when JE database resides in the
+ * memory based file system which has obvious performance benefits, although 
+ * any file system will do for this cache to function. Entries are maintained
+ * either by FIFO (default) or LRU (configurable) based list implementation. 
  * <BR><BR>
- * Cache sizing is based on the percentage of free memory within the JVM, such
- * that if enough memory is free, then adding an entry to the cache will not
- * require purging, but if more than a specified percentage of the available
- * memory within the JVM is already consumed, then one or more entries will need
- * to be removed in order to make room for a new entry.  It is also possible to
- * configure a maximum number of entries for the cache.  If this is specified,
- * then the number of entries will not be allowed to exceed this value, but it
- * may not be possible to hold this many entries if the available memory fills
- * up first.
+ * Cache sizing is based on the size or percentage of free space availble in 
+ * the file system, such that if enough memory is free, then adding an entry 
+ * to the cache will not require purging, but if more than a specified 
+ * percentage of the file system available space is already consumed, then 
+ * one or more entries will need to be removed in order to make room for a 
+ * new entry.  It is also possible to configure a maximum number of entries 
+ * for the cache. If this is specified, then the number of entries will not 
+ * be allowed to exceed this value, but it may not be possible to hold this 
+ * many entries if the available memory fills up first.
  * <BR><BR>
  * Other configurable parameters for this cache include the maximum length of
  * time to block while waiting to acquire a lock, and a set of filters that may
  * be used to define criteria for determining which entries are stored in the
- * cache.  If a filter list is provided, then only entries matching at least one
- * of the given filters will be stored in the cache.
+ * cache.  If a filter list is provided, then only entries matching at least 
+ * one of the given filters will be stored in the cache.
+ * <BR><BR>
+ * JE environment cache size can also be configured either as percentage of
+ * the free memory available in the JVM or as explicit size in bytes.  
+ * <BR><BR>
+ * This cache has a persistence property which, if enabled, allows for the 
+ * contents of the cache to stay persistent across server or cache restarts. 
  */
 public class FileSystemEntryCache
-        extends EntryCache
-        implements ConfigurableComponent {
+        extends EntryCache <FileSystemEntryCacheCfg>
+        implements ConfigurationChangeListener <FileSystemEntryCacheCfg> {
+  /**
+   * The tracer object for the debug logger.
+   */
+  private static final DebugTracer TRACER = getTracer();
+  
   /**
    * The set of time units that will be used for expressing the task retention
    * time.
    */
-  private static final LinkedHashMap<String,Double> timeUnits =
-          new LinkedHashMap<String,Double>();
+  private static final LinkedHashMap<String, Double> timeUnits =
+          new LinkedHashMap<String, Double>();
+  
+  /**
+    * The set of units and their multipliers for configuration attributes
+    * representing a number of bytes.
+    */
+  private static HashMap<String, Double> memoryUnits = 
+      new HashMap<String, Double>();
+  
+  // Permissions for cache db environment.
+  private static final FilePermission CACHE_HOME_PERMISSIONS = 
+      new FilePermission(0700);
   
   // The DN of the configuration entry for this entry cache.
   private DN configEntryDN;
   
   // The set of filters that define the entries that should be excluded from the
   // cache.
-  private HashSet<SearchFilter> excludeFilters;
+  private Set<SearchFilter> excludeFilters;
   
   // The set of filters that define the entries that should be included in the
   // cache.
-  private HashSet<SearchFilter> includeFilters;
+  private Set<SearchFilter> includeFilters;
   
-  // The maximum percentage of JVM memory that should be used by the cache.
-  private int maxMemoryPercent;
-  
-  // The maximum amount of memory in bytes that the JVM will be allowed to use
+  // The maximum amount of space in bytes that can be consumed in the filesystem
   // before we need to start purging entries.
   private long maxAllowedMemory;
   
   // The maximum number of entries that may be held in the cache.
-  private long maxEntries;
+  // Atomic for additional safely and in case we decide to push
+  // some locks further down later. Does not inhere in additional
+  // overhead, via blocking on synchronization primitive, on most 
+  // modern platforms being implemented via cpu instruction set.
+  private AtomicLong maxEntries;
   
-  // The reference to the Java runtime to use to determine the amount of memory
-  // currently in use.
-  private Runtime runtime;
+  // The maximum percentage of memory dedicated to JE cache.
+  private int jeCachePercent;
   
-  // The lock used to provide threadsafe access when changing the contents of
-  // the cache.
+  // The maximum amount of memory in bytes dedicated to JE cache.
+  private long jeCacheSize;
+  
+  // The entry cache home folder to host db environment.
+  private String cacheHome;
+  
+  // The type of this cache. 
+  // It can be either FIFO (default) or LRU (configurable).
+  private String cacheType;
+  
+  // This regulates whether we persist the cache across restarts or not.
+  private boolean persistentCache;
+  
+  // The lock used to provide threadsafe access when changing the contents 
+  // of the cache maps.
   private ReentrantReadWriteLock cacheLock;
   private Lock cacheReadLock;
   private Lock cacheWriteLock;
 
   // The maximum length of time to try to obtain a lock before giving up.
   private long lockTimeout;
+
+  // The mapping between DNs and IDs. This is the main index map for this
+  // cache, keyed to the underlying JE database where entries are stored. 
+  private Map<DN,Long> dnMap;
   
-  // The mapping between entry backends/IDs and DNs.
-  private LinkedHashMap<Backend,LinkedHashMap<Long,DN>> backendMap;
+  // The mapping between entry backends/IDs and DNs to identify all
+  // entries that belong to given backend since entry ID is only
+  // per backend unique.
+  private Map<Backend,Map<Long,DN>> backendMap;
+
+  // Access order for this cache. FIFO by default.
+  boolean accessOrder = false;
   
-  // The mapping between DNs and IDs.
-  private LinkedHashMapRotator<DN,Long> dnMap;
-  
-  // BDB JE environment and database related fields for this cache.
+  // JE environment and database related fields for this cache.
   private Environment entryCacheEnv;
   private EnvironmentConfig entryCacheEnvConfig;
   private EnvironmentMutableConfig entryCacheEnvMutableConfig;
   private DatabaseConfig entryCacheDBConfig;
+  
+  // The main entry cache database.
   private Database entryCacheDB;
+  
+  // Class database, catalog and binding for serialization.
   private Database entryCacheClassDB;
   private StoredClassCatalog classCatalog;
   private EntryBinding entryCacheDataBinding;
   
+  // JE naming constants.
   private static final String ENTRYCACHEDBNAME = "EntryCacheDB";
   private static final String INDEXCLASSDBNAME = "IndexClassDB";
   private static final String INDEXKEY = "EntryCacheIndex";
+  
+  // JE config constants.
+  // TODO: All hardcoded for now but we need to use a common 
+  // ds-cfg-je-property like multi-valued attribute for this, see Issue 1481.
+  private static final Long JEBYTESINTERVAL = new Long(10485760);
+  private static final Long JELOGFILEMAX = new Long(10485760);
+  private static final Integer JEMINFILEUTILIZATION = new Integer(50);
+  private static final Integer JEMINUTILIZATION = new Integer(90);
+  private static final Integer JEMAXBATCHFILES = new Integer(1);
+  private static final Integer JEMINAGE = new Integer(1);
+  
+  // The number of milliseconds between persistent state save/restore
+  // progress reports.
+  private long progressInterval = 5000;
+  
+  // Persistent state save/restore progress report counters.
+  private long persistentEntriesSaved    = 0;
+  private long persistentEntriesRestored = 0;
   
   static
   {
@@ -182,28 +255,37 @@ public class FileSystemEntryCache
     timeUnits.put(TIME_UNIT_MILLISECONDS_FULL, 1D);
     timeUnits.put(TIME_UNIT_SECONDS_ABBR, 1000D);
     timeUnits.put(TIME_UNIT_SECONDS_FULL, 1000D);
+    
+    memoryUnits.put(SIZE_UNIT_BYTES_ABBR, 1D);
+    memoryUnits.put(SIZE_UNIT_BYTES_FULL, 1D);
+    memoryUnits.put(SIZE_UNIT_KILOBYTES_ABBR, 1000D);
+    memoryUnits.put(SIZE_UNIT_KILOBYTES_FULL, 1000D);
+    memoryUnits.put(SIZE_UNIT_MEGABYTES_ABBR, 1000000D);
+    memoryUnits.put(SIZE_UNIT_MEGABYTES_FULL, 1000000D);
+    memoryUnits.put(SIZE_UNIT_GIGABYTES_ABBR, 1000000000D);
+    memoryUnits.put(SIZE_UNIT_GIGABYTES_FULL, 1000000000D);
+    memoryUnits.put(SIZE_UNIT_KIBIBYTES_ABBR, 1024D);
+    memoryUnits.put(SIZE_UNIT_KIBIBYTES_FULL, 1024D);
+    memoryUnits.put(SIZE_UNIT_MEBIBYTES_ABBR, (double) (1024 * 1024));
+    memoryUnits.put(SIZE_UNIT_MEBIBYTES_FULL, (double) (1024 * 1024));
+    memoryUnits.put(SIZE_UNIT_GIBIBYTES_ABBR, (double) (1024 * 1024 * 1024));
+    memoryUnits.put(SIZE_UNIT_GIBIBYTES_FULL, (double) (1024 * 1024 * 1024));
   }
-  
-  
   
   /**
-   * Creates a new instance of this FIFO entry cache.
+   * Creates a new instance of this entry cache.
    */
   public FileSystemEntryCache() {
-    super();
-    
-    
+    super();  
     // All initialization should be performed in the initializeEntryCache.
   }
-  
-  
   
   /**
    * Initializes this entry cache implementation so that it will be available
    * for storing and retrieving entries.
    *
-   * @param  configEntry  The configuration entry containing the settings to use
-   *                      for this entry cache.
+   * @param  configuration  The configuration entry containing the settings to 
+   *                        use for this entry cache.
    *
    * @throws  ConfigException  If there is a problem with the provided
    *                           configuration entry that would prevent this
@@ -213,43 +295,160 @@ public class FileSystemEntryCache
    *                                   initialization process that is not
    *                                   related to the configuration.
    */
-  public void initializeEntryCache(ConfigEntry configEntry)
+  public void initializeEntryCache(FileSystemEntryCacheCfg configuration)
           throws ConfigException, InitializationException {
-    configEntryDN = configEntry.getDN();
     
-    // Initialize the cache structures.
-    backendMap = new LinkedHashMap<Backend,LinkedHashMap<Long,DN>>();
-    // TODO: FIFO by default, add cfg and args to allow for LRU.
-    dnMap = new LinkedHashMapRotator<DN,Long>();
-    cacheLock = new ReentrantReadWriteLock();
-    cacheReadLock = cacheLock.readLock();
+    configuration.addFileSystemChangeListener (this);
+    configEntryDN = configuration.dn();
+    
+    // Read and apply configuration.
+    boolean applyChanges = true;
+    EntryCacheCommon.ConfigErrorHandler errorHandler =
+      EntryCacheCommon.getConfigErrorHandler (
+          EntryCacheCommon.ConfigPhase.PHASE_INIT, null, null
+          );
+    processEntryCacheConfig(configuration, applyChanges, errorHandler);
+    
+    // Set the cache type.
+    if (cacheType.equalsIgnoreCase("LRU")) {
+      accessOrder = true;
+    } else {
+      // Admin framework should only allow for either FIFO or LRU but
+      // we set the type to default here explicitly if it is not LRU.
+      cacheType = DEFAULT_FSCACHE_TYPE;
+      accessOrder = false;
+    }
+
+    // Initialize the cache maps and locks.
+    backendMap = new LinkedHashMap<Backend,Map<Long,DN>>();
+    dnMap = new LinkedHashMapRotator<DN,Long>((int) 16, (float) 0.75, 
+        (boolean) accessOrder);
+
+    cacheLock = new ReentrantReadWriteLock();   
+    if (accessOrder) {
+      // In access-ordered linked hash maps, merely querying the map 
+      // with get() is a structural modification.
+      cacheReadLock = cacheLock.writeLock();
+    } else {
+      cacheReadLock = cacheLock.readLock();
+    }
     cacheWriteLock = cacheLock.writeLock();
-    runtime = Runtime.getRuntime();
     
-    // Open JE environment and primary database.
+    // Setup the cache home.
+    try {
+      checkAndSetupCacheHome(cacheHome);
+    } catch (Exception e) {
+      if (debugEnabled()) {
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
+      }
+      
+      // Log an error message.
+      logError(ErrorLogCategory.CONFIGURATION,
+          ErrorLogSeverity.SEVERE_ERROR,
+          MSGID_FSCACHE_INVALID_HOME,
+          String.valueOf(configEntryDN), stackTraceToSingleLineString(e),
+          cacheHome, DEFAULT_FSCACHE_HOME);
+      
+      // User specified home is no good, reset to default.
+      cacheHome = DEFAULT_FSCACHE_HOME;
+      
+      // Try again.
+      try {
+        checkAndSetupCacheHome(cacheHome);
+      } catch (Exception e2) {
+        // Not having any home for the cache db environment at this point is a
+        // fatal error as we are unable to continue any further without it.
+        if (debugEnabled()) {
+          TRACER.debugCaught(DebugLogLevel.ERROR, e2);
+        }
+        
+        int msgID = MSGID_FSCACHE_HOMELESS;
+        String message = getMessage(msgID, stackTraceToSingleLineString(e2));
+        throw new InitializationException(msgID, message, e2);
+      }
+    }
     
+    // Open JE environment and cache database.    
     try {
       entryCacheEnvConfig = new EnvironmentConfig();
-      entryCacheEnvConfig.setConfigParam("je.log.fileMax", "10485760");
-      entryCacheEnvConfig.setConfigParam("je.cleaner.minUtilization", "90");
-      entryCacheEnvConfig.setConfigParam("je.cleaner.maxBatchFiles", "1");
-      entryCacheEnvConfig.setConfigParam("je.cleaner.minAge", "1");
-      entryCacheEnvConfig.setConfigParam("je.cleaner.minFileUtilization", "50");
+      
+      // All these environment properties are cranked up to their extreme 
+      // values, either max or min, to get the smallest space consumption, 
+      // which turns into memory consumption for memory based filesystems, 
+      // possible. This will negate the performance somewhat but preserves
+      // the memory to a much greater extent. 
+      //
+      // TODO: All these options should be configurable, see Issue 1481.
+      //
+      entryCacheEnvConfig.setConfigParam("je.log.fileMax",
+          JELOGFILEMAX.toString());
+      entryCacheEnvConfig.setConfigParam("je.cleaner.minUtilization", 
+          JEMINUTILIZATION.toString());
+      entryCacheEnvConfig.setConfigParam("je.cleaner.maxBatchFiles", 
+          JEMAXBATCHFILES.toString());
+      entryCacheEnvConfig.setConfigParam("je.cleaner.minAge", 
+          JEMINAGE.toString());
+      entryCacheEnvConfig.setConfigParam("je.cleaner.minFileUtilization", 
+          JEMINFILEUTILIZATION.toString());
       entryCacheEnvConfig.setConfigParam("je.checkpointer.bytesInterval", 
-                                         "10485760");
-      // TODO: add cfg and logic stuff for persistent cache.
+          JEBYTESINTERVAL.toString());
+      
       entryCacheEnvConfig.setAllowCreate(true);
-      entryCacheEnv =
-              // TODO: add cfg property for this.
-              //new Environment(new File("/Volumes/RamDisk"),
-              new Environment(new File("/tmp"),
-              entryCacheEnvConfig);
+      entryCacheEnv = new Environment(new File(cacheHome), entryCacheEnvConfig);       
+      
+      // Set JE cache percent and size where the size value will prevail if set.
       entryCacheEnvMutableConfig = new EnvironmentMutableConfig();
-      // set JE cache size.
-      // entryCacheEnvMutableConfig.setCacheSize(8388608);
-      // entryCacheEnv.setMutableConfig(entryCacheEnvMutableConfig);
+      if (jeCachePercent != 0) {
+        try {
+          entryCacheEnvMutableConfig.setCachePercent(jeCachePercent);
+        } catch (IllegalArgumentException e) {
+          if (debugEnabled()) {
+            TRACER.debugCaught(DebugLogLevel.ERROR, e);
+          }
+          
+          // Its safe to ignore and continue here, JE will use its default
+          // value for this however we have to let the user know about it
+          // so just log an error message.
+          logError(ErrorLogCategory.CONFIGURATION, 
+              ErrorLogSeverity.SEVERE_ERROR,
+              MSGID_FSCACHE_INVALID_JE_CACHE_PCT,
+              String.valueOf(configEntryDN), stackTraceToSingleLineString(e),
+              jeCachePercent);
+        }
+      }
+      if (jeCacheSize != 0) {
+        try {
+          entryCacheEnvMutableConfig.setCacheSize(jeCacheSize);
+        } catch (IllegalArgumentException e) {
+          if (debugEnabled()) {
+            TRACER.debugCaught(DebugLogLevel.ERROR, e);
+          }
+          
+          // Its safe to ignore and continue here, JE will use its default
+          // value for this however we have to let the user know about it
+          // so just log an error message.
+          logError(ErrorLogCategory.CONFIGURATION, 
+              ErrorLogSeverity.SEVERE_ERROR,
+              MSGID_FSCACHE_INVALID_JE_CACHE_SIZE,
+              String.valueOf(configEntryDN), stackTraceToSingleLineString(e),
+              jeCacheSize);
+        }
+      }
+      
+      entryCacheEnv.setMutableConfig(entryCacheEnvMutableConfig);
       entryCacheDBConfig = new DatabaseConfig();
       entryCacheDBConfig.setAllowCreate(true);
+      
+      // Remove old cache databases if this cache is not persistent.    
+      if ( !persistentCache ) {
+        try {
+          entryCacheEnv.removeDatabase(null, INDEXCLASSDBNAME);
+        } catch (DatabaseNotFoundException e) {}
+        try {
+          entryCacheEnv.removeDatabase(null, ENTRYCACHEDBNAME);
+        } catch (DatabaseNotFoundException e) {}
+      }
+      
       entryCacheDB = entryCacheEnv.openDatabase(null,
               ENTRYCACHEDBNAME, entryCacheDBConfig);
       entryCacheClassDB = 
@@ -259,374 +458,275 @@ public class FileSystemEntryCache
       entryCacheDataBinding = 
           new SerialBinding(classCatalog, FileSystemEntryCacheIndex.class);
       
-      // Retrieve index.
-      FileSystemEntryCacheIndex entryCacheIndex = 
-          new FileSystemEntryCacheIndex();
-      DatabaseEntry indexData = new DatabaseEntry();
-      DatabaseEntry indexKey = new DatabaseEntry(INDEXKEY.getBytes());
-      
-      OperationStatus jdbStatus = null;
-      jdbStatus = entryCacheDB.get(null, indexKey, indexData, LockMode.DEFAULT);
-      
-      if (jdbStatus == OperationStatus.SUCCESS) {
-        entryCacheIndex =
-          (FileSystemEntryCacheIndex) 
-            entryCacheDataBinding.entryToObject(indexData);
-      }
-      // Check index state.
-      if ((entryCacheIndex.dnMap.isEmpty()) ||
-          (entryCacheIndex.backendMap.isEmpty()) ||
-          (entryCacheIndex.offlineState.isEmpty())) {
-        // Truncate entry cache db.
-        clear();
-      } else {
-        // Restore entry cache maps.
-        maxEntries = DEFAULT_FIFOCACHE_MAX_ENTRIES;
-        // Convert cache index maps to entry cache maps.
-        Set backendSet = entryCacheIndex.backendMap.keySet();
-        Iterator backendIterator = backendSet.iterator();
-        while (backendIterator.hasNext()) {
-          String backend = (String) backendIterator.next();
-          LinkedHashMap<Long,String> entriesMap = 
-              entryCacheIndex.backendMap.get(backend);
-          Set entriesSet = entriesMap.keySet();
-          Iterator entriesIterator = entriesSet.iterator();
-          LinkedHashMap<Long,DN> entryMap = new LinkedHashMap<Long,DN>();
-          while (entriesIterator.hasNext()) {
-            Long entryID = (Long) entriesIterator.next();
-            String entryStringDN = entriesMap.get(entryID);
-            DN entryDN = DN.decode(entryStringDN);
-            dnMap.put(entryDN, entryID);
-            entryMap.put(entryID, entryDN);
+      // Restoration is static and not subject to the current configuration
+      // constraints so that the persistent state is truly preserved and
+      // restored to the exact same state where we left off when the cache
+      // has been made persistent. The only exception to this is the backend 
+      // offline state matching where entries that belong to backend which
+      // we cannot match offline state for are discarded from the cache.
+      if ( persistentCache ) {
+        // Retrieve cache index.
+        try {
+          FileSystemEntryCacheIndex entryCacheIndex =
+              new FileSystemEntryCacheIndex();
+          DatabaseEntry indexData = new DatabaseEntry();
+          DatabaseEntry indexKey = new DatabaseEntry(
+              INDEXKEY.getBytes("UTF-8"));
+          
+          if (OperationStatus.SUCCESS == 
+              entryCacheDB.get(null, indexKey, indexData, LockMode.DEFAULT)) {
+            entryCacheIndex =
+                (FileSystemEntryCacheIndex)
+                entryCacheDataBinding.entryToObject(indexData);
+          } else {
+            // This one will get caught further down with error message logged.
+            throw new Exception();
           }
-          backendMap.put(DirectoryServer.getBackend(backend), entryMap);
-        }
-
-        // Compare last known offline states to offline states on startup.
-        ConcurrentHashMap currentBackendsState = 
-            DirectoryServer.getOfflineBackendsStateIDs();      
-        Set offlineBackendSet = entryCacheIndex.offlineState.keySet();
-        Iterator offlineBackendIterator = offlineBackendSet.iterator();
-        while (offlineBackendIterator.hasNext()) {
-          String backend = (String) offlineBackendIterator.next();
-          Long offlineId = entryCacheIndex.offlineState.get(backend);
-          Long currentId = (Long) currentBackendsState.get(backend);
-          if ( !(offlineId.equals(currentId)) ) {
-            // Remove cache entries specific to this backend.
-            clearBackend(DirectoryServer.getBackend(backend));
+          // Check cache index state.
+          if ((entryCacheIndex.dnMap.isEmpty()) ||
+              (entryCacheIndex.backendMap.isEmpty()) ||
+              (entryCacheIndex.offlineState.isEmpty())) {
+            // This one will get caught further down with error message logged.
+            throw new Exception();
+          } else {
+            // Restore entry cache maps from this index.
+            
+            // Push maxEntries and make it unlimited til restoration complete.
+            AtomicLong currentMaxEntries = maxEntries;
+            maxEntries.set(DEFAULT_FSCACHE_MAX_ENTRIES);
+            
+            // Convert cache index maps to entry cache maps.
+            Set backendSet = entryCacheIndex.backendMap.keySet();
+            Iterator backendIterator = backendSet.iterator();
+            
+            // Start a timer for the progress report.
+            final long persistentEntriesTotal = entryCacheIndex.dnMap.size();
+            Timer timer = new Timer();
+            TimerTask progressTask = new TimerTask() {
+              // Persistent state restore progress report.
+              public void run() {
+                if ((persistentEntriesRestored > 0) &&
+                    (persistentEntriesRestored < persistentEntriesTotal)) {
+                  int msgID = MSGID_FSCACHE_RESTORE_PROGRESS_REPORT;
+                  String message = getMessage(msgID, persistentEntriesRestored,
+                      persistentEntriesTotal);
+                  logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.NOTICE,
+                      message, msgID);
+                }
+              }
+            };
+            timer.scheduleAtFixedRate(progressTask, progressInterval,
+                                      progressInterval);
+            try {
+              while (backendIterator.hasNext()) {
+                String backend = (String) backendIterator.next();
+                Map<Long,String> entriesMap =
+                    entryCacheIndex.backendMap.get(backend);
+                Set entriesSet = entriesMap.keySet();
+                Iterator entriesIterator = entriesSet.iterator();
+                LinkedHashMap<Long,DN> entryMap = new LinkedHashMap<Long,DN>();
+                while (entriesIterator.hasNext()) {
+                  Long entryID = (Long) entriesIterator.next();
+                  String entryStringDN = entriesMap.get(entryID);
+                  DN entryDN = DN.decode(entryStringDN);
+                  dnMap.put(entryDN, entryID);
+                  entryMap.put(entryID, entryDN);
+                  persistentEntriesRestored++;
+                }
+                backendMap.put(DirectoryServer.getBackend(backend), entryMap);
+              }
+            } finally {
+              // Stop persistent state restore progress report timer. 
+              timer.cancel();
+              
+              // Final persistent state restore progress report.
+              int msgID = MSGID_FSCACHE_RESTORE_PROGRESS_REPORT;
+              String message = getMessage(msgID, persistentEntriesRestored,
+                      persistentEntriesTotal);
+              logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.NOTICE,
+                      message, msgID);
+            }
+            
+            // Compare last known offline states to offline states on startup.
+            Map currentBackendsState = 
+                DirectoryServer.getOfflineBackendsStateIDs();
+            Set offlineBackendSet = entryCacheIndex.offlineState.keySet();
+            Iterator offlineBackendIterator = offlineBackendSet.iterator();
+            while (offlineBackendIterator.hasNext()) {
+              String backend = (String) offlineBackendIterator.next();
+              Long offlineId = entryCacheIndex.offlineState.get(backend);
+              Long currentId = (Long) currentBackendsState.get(backend);
+              if ( !(offlineId.equals(currentId)) ) {
+                // Remove cache entries specific to this backend.
+                clearBackend(DirectoryServer.getBackend(backend));
+                // Log an error message.
+                logError(ErrorLogCategory.EXTENSIONS, 
+                    ErrorLogSeverity.SEVERE_WARNING,
+                    MSGID_FSCACHE_OFFLINE_STATE_FAIL,
+                    backend);
+              }
+            }
+            // Pop max entries limit.
+            maxEntries = currentMaxEntries;
           }
-        }
-      }
-      
-      System.out.printf("<<<DEBUG>>> initializeEntryCache: index get: %s\n",
-          jdbStatus.toString());
-      
-    } catch (Exception e) {
-      e.printStackTrace();
-      // TODO: disable this cache.
-      if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
-      }
-      
-      // Log an error message.
-      logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.SEVERE_ERROR,
-              /* TODO: */ 0, "Failed to initialize FS entry cache",
+        } catch (Exception e) {
+          if (debugEnabled()) {
+            TRACER.debugCaught(DebugLogLevel.ERROR, e);
+          }
+          
+          // Log an error message.
+          logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.SEVERE_ERROR,
+              MSGID_FSCACHE_CANNOT_LOAD_PERSISTENT_DATA,
               stackTraceToSingleLineString(e));
-    }
-    
-    // Determine the maximum memory usage as a percentage of the total JVM
-    // memory.
-    maxMemoryPercent = DEFAULT_FIFOCACHE_MAX_MEMORY_PCT;
-    int msgID = MSGID_FIFOCACHE_DESCRIPTION_MAX_MEMORY_PCT;
-    IntegerConfigAttribute maxMemoryPctStub =
-            new IntegerConfigAttribute(ATTR_FIFOCACHE_MAX_MEMORY_PCT,
-            getMessage(msgID), true, false, false, true,
-            1, true, 100);
-    try {
-      IntegerConfigAttribute maxMemoryPctAttr =
-              (IntegerConfigAttribute)
-              configEntry.getConfigAttribute(maxMemoryPctStub);
-      if (maxMemoryPctAttr == null) {
-        // This is fine -- we'll just use the default.
-      } else {
-        maxMemoryPercent = maxMemoryPctAttr.activeIntValue();
-      }
-    } catch (Exception e) {
-      if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
-      }
-      
-      // Log an error message.
-      logError(ErrorLogCategory.CONFIGURATION, ErrorLogSeverity.SEVERE_ERROR,
-              MSGID_FIFOCACHE_CANNOT_DETERMINE_MAX_MEMORY_PCT,
-              String.valueOf(configEntryDN), stackTraceToSingleLineString(e),
-              maxMemoryPercent);
-    }
-    
-    maxAllowedMemory = runtime.maxMemory() / 100 * maxMemoryPercent;
-    
-    
-    // Determine the maximum number of entries that we will allow in the cache.
-    maxEntries = DEFAULT_FIFOCACHE_MAX_ENTRIES;
-    msgID = MSGID_FIFOCACHE_DESCRIPTION_MAX_ENTRIES;
-    IntegerConfigAttribute maxEntriesStub =
-            new IntegerConfigAttribute(ATTR_FIFOCACHE_MAX_ENTRIES,
-            getMessage(msgID), true, false, false,
-            true, 0, false, 0);
-    try {
-      IntegerConfigAttribute maxEntriesAttr =
-              (IntegerConfigAttribute)
-              configEntry.getConfigAttribute(maxEntriesStub);
-      if (maxEntriesAttr == null) {
-        // This is fine -- we'll just use the default.
-      } else {
-        maxEntries = maxEntriesAttr.activeValue();
-      }
-    } catch (Exception e) {
-      if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
-      }
-      
-      // Log an error message.
-      logError(ErrorLogCategory.CONFIGURATION, ErrorLogSeverity.SEVERE_ERROR,
-              MSGID_FIFOCACHE_CANNOT_DETERMINE_MAX_ENTRIES,
-              String.valueOf(configEntryDN), stackTraceToSingleLineString(e));
-    }
-
-    // Determine the lock timeout to use when interacting with the lock manager.
-    lockTimeout = DEFAULT_FIFOCACHE_LOCK_TIMEOUT;
-    msgID = MSGID_FIFOCACHE_DESCRIPTION_LOCK_TIMEOUT;
-    IntegerWithUnitConfigAttribute lockTimeoutStub =
-         new IntegerWithUnitConfigAttribute(ATTR_FIFOCACHE_LOCK_TIMEOUT,
-                                            getMessage(msgID), false, timeUnits,
-                                            true, 0, false, 0);
-    try
-    {
-      IntegerWithUnitConfigAttribute lockTimeoutAttr =
-             (IntegerWithUnitConfigAttribute)
-             configEntry.getConfigAttribute(lockTimeoutStub);
-      if (lockTimeoutAttr == null)
-      {
-        // This is fine -- we'll just use the default.
-      }
-      else
-      {
-        lockTimeout = lockTimeoutAttr.activeCalculatedValue();
-      }
-    }
-    catch (Exception e)
-    {
-      if (debugEnabled())
-      {
-        debugCaught(DebugLogLevel.ERROR, e);
-      }
-
-      // Log an error message.
-      logError(ErrorLogCategory.CONFIGURATION, ErrorLogSeverity.SEVERE_ERROR,
-               MSGID_FIFOCACHE_CANNOT_DETERMINE_LOCK_TIMEOUT,
-               String.valueOf(configEntryDN), stackTraceToSingleLineString(e),
-               lockTimeout);
-    }
-    
-    // Determine the set of cache filters that can be used to control the
-    // entries that should be included in the cache.
-    includeFilters = new HashSet<SearchFilter>();
-    msgID = MSGID_FIFOCACHE_DESCRIPTION_INCLUDE_FILTERS;
-    StringConfigAttribute includeStub =
-            new StringConfigAttribute(ATTR_FIFOCACHE_INCLUDE_FILTER,
-            getMessage(msgID), false, true, false);
-    try {
-      StringConfigAttribute includeAttr =
-              (StringConfigAttribute) configEntry.getConfigAttribute(includeStub);
-      if (includeAttr == null) {
-        // This is fine -- we'll just use the default.
-      } else {
-        List<String> filterStrings = includeAttr.activeValues();
-        if ((filterStrings == null) || filterStrings.isEmpty()) {
-          // There are no include filters, so we'll allow anything by default.
-        } else {
-          for (String filterString : filterStrings) {
-            try {
-              includeFilters.add(
-                      SearchFilter.createFilterFromString(filterString));
-            } catch (Exception e) {
-              if (debugEnabled()) {
-                debugCaught(DebugLogLevel.ERROR, e);
-              }
-              
-              // We couldn't decode this filter.  Log a warning and continue.
-              logError(ErrorLogCategory.CONFIGURATION,
-                      ErrorLogSeverity.SEVERE_WARNING,
-                      MSGID_FIFOCACHE_CANNOT_DECODE_INCLUDE_FILTER,
-                      String.valueOf(configEntryDN), filterString,
-                      stackTraceToSingleLineString(e));
-            }
-          }
           
-          if (includeFilters.isEmpty()) {
-            logError(ErrorLogCategory.CONFIGURATION,
-                    ErrorLogSeverity.SEVERE_ERROR,
-                    MSGID_FIFOCACHE_CANNOT_DECODE_ANY_INCLUDE_FILTERS,
-                    String.valueOf(configEntryDN));
-          }
+          // Clear the entry cache.
+          clear();        
         }
       }
     } catch (Exception e) {
+      // If we got here it means we have failed to have a proper backend
+      // for this entry cache and there is absolutely no point going any
+      // farther from here.
       if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
       
-      // Log an error message.
-      logError(ErrorLogCategory.CONFIGURATION, ErrorLogSeverity.SEVERE_ERROR,
-              MSGID_FIFOCACHE_CANNOT_DETERMINE_INCLUDE_FILTERS,
-              String.valueOf(configEntryDN), stackTraceToSingleLineString(e));
+      int msgID = MSGID_FSCACHE_CANNOT_INITIALIZE;
+      String message = getMessage(msgID, stackTraceToSingleLineString(e));
+      throw new InitializationException(msgID, message, e);
     }
     
-    
-    // Determine the set of cache filters that can be used to control the
-    // entries that should be excluded from the cache.
-    excludeFilters = new HashSet<SearchFilter>();
-    msgID = MSGID_FIFOCACHE_DESCRIPTION_EXCLUDE_FILTERS;
-    StringConfigAttribute excludeStub =
-            new StringConfigAttribute(ATTR_FIFOCACHE_EXCLUDE_FILTER,
-            getMessage(msgID), false, true, false);
-    try {
-      StringConfigAttribute excludeAttr =
-              (StringConfigAttribute) configEntry.getConfigAttribute(excludeStub);
-      if (excludeAttr == null) {
-        // This is fine -- we'll just use the default.
-      } else {
-        List<String> filterStrings = excludeAttr.activeValues();
-        if ((filterStrings == null) || filterStrings.isEmpty()) {
-          // There are no exclude filters, so we'll allow anything by default.
-        } else {
-          for (String filterString : filterStrings) {
-            try {
-              excludeFilters.add(
-                      SearchFilter.createFilterFromString(filterString));
-            } catch (Exception e) {
-              if (debugEnabled()) {
-                debugCaught(DebugLogLevel.ERROR, e);
-              }
-              
-              // We couldn't decode this filter.  Log a warning and continue.
-              logError(ErrorLogCategory.CONFIGURATION,
-                      ErrorLogSeverity.SEVERE_WARNING,
-                      MSGID_FIFOCACHE_CANNOT_DECODE_EXCLUDE_FILTER,
-                      String.valueOf(configEntryDN), filterString,
-                      stackTraceToSingleLineString(e));
-            }
-          }
-          
-          if (excludeFilters.isEmpty()) {
-            logError(ErrorLogCategory.CONFIGURATION,
-                    ErrorLogSeverity.SEVERE_ERROR,
-                    MSGID_FIFOCACHE_CANNOT_DECODE_ANY_EXCLUDE_FILTERS,
-                    String.valueOf(configEntryDN));
-          }
-        }
-      }
-    } catch (Exception e) {
-      if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
-      }
-      
-      // Log an error message.
-      logError(ErrorLogCategory.CONFIGURATION, ErrorLogSeverity.SEVERE_ERROR,
-              MSGID_FIFOCACHE_CANNOT_DETERMINE_EXCLUDE_FILTERS,
-              String.valueOf(configEntryDN), stackTraceToSingleLineString(e));
-    }
   }
-  
-  
-  
+    
   /**
    * Performs any necessary cleanup work (e.g., flushing all cached entries and
    * releasing any other held resources) that should be performed when the
    * server is to be shut down or the entry cache destroyed or replaced.
    */
   public void finalizeEntryCache() {
-    // Release all memory currently in use by this cache.
     
     cacheWriteLock.lock();
     
-    // Check if the main Directory database environment is closed.
-    // If not do not persist this cache, just clean up everything.
-    
-    FileSystemEntryCacheIndex entryCacheIndex = new FileSystemEntryCacheIndex();
-    // There must be at least one backend at this stage.
-    entryCacheIndex.offlineState = 
-        DirectoryServer.getOfflineBackendsStateIDs();
-    
-    // Convert entry cache maps to serializable maps for cache index. 
-    Set backendSet = backendMap.keySet();
-    Iterator backendIterator = backendSet.iterator();
-    while (backendIterator.hasNext()) {
-      Backend backend = (Backend) backendIterator.next();
-      LinkedHashMap<Long,DN> entriesMap = backendMap.get(backend);
-      Set entriesSet = entriesMap.keySet();
-      Iterator entriesIterator = entriesSet.iterator();
-      LinkedHashMap<Long,String> entryMap = new LinkedHashMap<Long,String>();
-      while (entriesIterator.hasNext()) {
-        Long entryID = (Long) entriesIterator.next();
-        DN entryDN = entriesMap.get(entryID);
-        entryCacheIndex.dnMap.put(entryDN.toString(), entryID);
-        entryMap.put(entryID, entryDN.toString());
-      }
-      entryCacheIndex.backendMap.put(backend.getBackendID(), entryMap);
-    }
+    // Store index/maps in case of persistent cache. Since the cache database
+    // already exist at this point all we have to do is to serialize cache
+    // index maps @see FileSystemEntryCacheIndex and put them under indexkey
+    // allowing for the index to be restored and cache contents reused upon
+    // the next initialization.
+    if (persistentCache) {
+      FileSystemEntryCacheIndex entryCacheIndex = 
+          new FileSystemEntryCacheIndex();
+      // There must be at least one backend at this stage.
+      entryCacheIndex.offlineState =
+          DirectoryServer.getOfflineBackendsStateIDs();
+      
+      // Convert entry cache maps to serializable maps for the cache index.
+      Set backendSet = backendMap.keySet();
+      Iterator backendIterator = backendSet.iterator();
+      
+      // Start a timer for the progress report.
+      final long persistentEntriesTotal = dnMap.size();
+      Timer timer = new Timer();
+      TimerTask progressTask = new TimerTask() {
+        // Persistent state save progress report.
+        public void run() {
+          if ((persistentEntriesSaved > 0) &&
+              (persistentEntriesSaved < persistentEntriesTotal)) {
+            int msgID = MSGID_FSCACHE_SAVE_PROGRESS_REPORT;
+            String message = getMessage(msgID, persistentEntriesSaved,
+                persistentEntriesTotal);
+            logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.NOTICE,
+                message, msgID);
+          }
+        }
+      };
+      timer.scheduleAtFixedRate(progressTask, progressInterval,
+          progressInterval);
+      
+      try {
+        while (backendIterator.hasNext()) {
+          Backend backend = (Backend) backendIterator.next();
+          Map<Long,DN> entriesMap = backendMap.get(backend);
+          Set entriesSet = entriesMap.keySet();
+          Iterator entriesIterator = entriesSet.iterator();
+          Map<Long,String> entryMap = new LinkedHashMap<Long,String>();
+          while (entriesIterator.hasNext()) {
+            Long entryID = (Long) entriesIterator.next();
+            DN entryDN = entriesMap.get(entryID);
+            entryCacheIndex.dnMap.put(entryDN.toNormalizedString(), entryID);
+            entryMap.put(entryID, entryDN.toNormalizedString());
+            persistentEntriesSaved++;
+          }
+          entryCacheIndex.backendMap.put(backend.getBackendID(), entryMap);
+        }
+      } finally {
+        // Stop persistent state save progress report timer.
+        timer.cancel();
         
-    OperationStatus jdbStatus = null;
-    // Store index.
-    try {
-      DatabaseEntry indexData = new DatabaseEntry();
-      entryCacheDataBinding.objectToEntry(entryCacheIndex, indexData);
-      DatabaseEntry indexKey = new DatabaseEntry(INDEXKEY.getBytes());
-      jdbStatus = entryCacheDB.put(null, indexKey, indexData);
-    } catch (Exception e) {
-      e.printStackTrace();
-      if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
-      }   
-      // Log an error message.
-      logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.SEVERE_ERROR,
-              /* TODO: */ 0, "Failed to store FS entry cache index",
-              stackTraceToSingleLineString(e));
+        // Final persistent state save progress report.
+        int msgID = MSGID_FSCACHE_SAVE_PROGRESS_REPORT;
+        String message = getMessage(msgID, persistentEntriesSaved,
+            persistentEntriesTotal);
+        logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.NOTICE,
+            message, msgID);
+      }
+      
+      // Store the index.
+      try {
+        DatabaseEntry indexData = new DatabaseEntry();
+        entryCacheDataBinding.objectToEntry(entryCacheIndex, indexData);
+        DatabaseEntry indexKey = new DatabaseEntry(INDEXKEY.getBytes("UTF-8"));
+        if (OperationStatus.SUCCESS != 
+            entryCacheDB.put(null, indexKey, indexData)) {
+          throw new Exception();
+        }
+      } catch (Exception e) {
+        if (debugEnabled()) {
+          TRACER.debugCaught(DebugLogLevel.ERROR, e);
+        }
+        
+        // Log an error message.
+        logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.SEVERE_ERROR,
+            MSGID_FSCACHE_CANNOT_STORE_PERSISTENT_DATA,
+            stackTraceToSingleLineString(e));
+      }
     }
     
-    System.out.printf("<<<DEBUG>>> finalizeEntryCache: index put status: %s\n", 
-        jdbStatus.toString());
-    
-    // Close JE database and environment.
-    // TODO: check for persistent cache cfg option, 
-    // close & remove if not set, simple close otherwise.
+    // Close JE databases and environment and clear all the maps.
     try {
       backendMap.clear();
       dnMap.clear();
-
       if (entryCacheDB != null) {
-        entryCacheDB.close();
+        entryCacheDB.close();       
+      }
+      if (entryCacheClassDB != null) {
+        entryCacheClassDB.close();
       }
       if (entryCacheEnv != null) {
+        // Remove cache and index dbs if this cache is not persistent.
+        if ( !persistentCache ) {
+          try {
+            entryCacheEnv.removeDatabase(null, INDEXCLASSDBNAME);
+          } catch (DatabaseNotFoundException e) {}
+          try {
+            entryCacheEnv.removeDatabase(null, ENTRYCACHEDBNAME);
+          } catch (DatabaseNotFoundException e) {}
+        }
         entryCacheEnv.cleanLog();
         entryCacheEnv.close();
       }
     } catch (Exception e) {
       if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
       
-      // Log an error message.
-      logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.SEVERE_ERROR,
-              /* TODO: */ 0, "Failed to close FS entry cache",
-              stackTraceToSingleLineString(e));
+      // That is ok, JE verification and repair on startup should take care of
+      // this so if there are any unrecoverable errors during next startup
+      // and we are unable to handle and cleanup them we will log errors then.
     } finally {
       cacheWriteLock.unlock();
     }
   }
-  
-  
-  
+   
   /**
    * Indicates whether the entry cache currently contains the entry with the
    * specified DN.  This method may be called without holding any locks if a
@@ -649,9 +749,7 @@ public class FileSystemEntryCache
     }
     return containsEntry;
   }
-  
-  
-  
+   
   /**
    * Retrieves the entry with the specified DN from the cache.  The caller
    * should have already acquired a read or write lock for the entry if such
@@ -669,7 +767,6 @@ public class FileSystemEntryCache
     cacheReadLock.lock();
     try {
       if (dnMap.containsKey(entryDN)) {
-        //System.out.printf("<<<DEBUG>>> getEntry: cache hit for: %s\n", entryDN);
         entry = getEntryFromDB(entryDN);
       }
     } finally {
@@ -677,8 +774,6 @@ public class FileSystemEntryCache
     }
     return entry;
   }
-  
-  
   
   /**
    * Retrieves the entry ID for the entry with the specified DN from the cache.
@@ -694,14 +789,15 @@ public class FileSystemEntryCache
     long entryID = -1;
     cacheReadLock.lock();
     try {
-      entryID = dnMap.get(entryDN);
+      Long eid = dnMap.get(entryDN);
+      if (eid != null) {
+        entryID = eid.longValue();
+      }
     } finally {
       cacheReadLock.unlock();
     }
     return entryID;
   }
-  
-  
   
   /**
    * Retrieves the entry with the specified DN from the cache, obtaining a lock
@@ -750,7 +846,7 @@ public class FileSystemEntryCache
           {
             if (debugEnabled())
             {
-              debugCaught(DebugLogLevel.ERROR, e);
+              TRACER.debugCaught(DebugLogLevel.ERROR, e);
             }
 
             // The attempt to add the lock to the list failed, so we need to
@@ -763,7 +859,7 @@ public class FileSystemEntryCache
             {
               if (debugEnabled())
               {
-                debugCaught(DebugLogLevel.ERROR, e2);
+                TRACER.debugCaught(DebugLogLevel.ERROR, e2);
               }
             }
 
@@ -790,7 +886,7 @@ public class FileSystemEntryCache
           {
             if (debugEnabled())
             {
-              debugCaught(DebugLogLevel.ERROR, e);
+              TRACER.debugCaught(DebugLogLevel.ERROR, e);
             }
 
             // The attempt to add the lock to the list failed, so we need to
@@ -803,7 +899,7 @@ public class FileSystemEntryCache
             {
               if (debugEnabled())
               {
-                debugCaught(DebugLogLevel.ERROR, e2);
+                TRACER.debugCaught(DebugLogLevel.ERROR, e2);
               }
             }
 
@@ -836,16 +932,15 @@ public class FileSystemEntryCache
     Entry entry = null;
     cacheReadLock.lock();
     try {
-      // Get the hash map for the provided backend.  If it isn't present, then
+      // Get the map for the provided backend.  If it isn't present, then
       // return null.
-      LinkedHashMap map = backendMap.get(backend);
+      Map map = backendMap.get(backend);
       if ( !(map == null) ) {
         // Get the entry from the map by its ID.  If it isn't present, then 
         // return null.
         DN dn = (DN) map.get(entryID);
         if ( !(dn == null) ) {
           if (dnMap.containsKey(dn)) {
-            //System.out.printf("<<<DEBUG>>> getEntry: cache hit for: %d\n", entryID);
             entry = getEntryFromDB(dn);
           }
         }
@@ -906,7 +1001,7 @@ public class FileSystemEntryCache
           {
             if (debugEnabled())
             {
-              debugCaught(DebugLogLevel.ERROR, e);
+              TRACER.debugCaught(DebugLogLevel.ERROR, e);
             }
 
             // The attempt to add the lock to the list failed, so we need to
@@ -919,7 +1014,7 @@ public class FileSystemEntryCache
             {
               if (debugEnabled())
               {
-                debugCaught(DebugLogLevel.ERROR, e2);
+                TRACER.debugCaught(DebugLogLevel.ERROR, e2);
               }
             }
 
@@ -946,7 +1041,7 @@ public class FileSystemEntryCache
           {
             if (debugEnabled())
             {
-              debugCaught(DebugLogLevel.ERROR, e);
+              TRACER.debugCaught(DebugLogLevel.ERROR, e);
             }
 
             // The attempt to add the lock to the list failed, so we need to
@@ -959,7 +1054,7 @@ public class FileSystemEntryCache
             {
               if (debugEnabled())
               {
-                debugCaught(DebugLogLevel.ERROR, e2);
+                TRACER.debugCaught(DebugLogLevel.ERROR, e2);
               }
             }
 
@@ -976,9 +1071,7 @@ public class FileSystemEntryCache
         return null;
     }
   }
-  
-  
-  
+ 
   /**
    * Stores the provided entry in the cache.  Note that the mechanism that it
    * uses to achieve this is implementation-dependent, and it is acceptable for
@@ -1001,7 +1094,7 @@ public class FileSystemEntryCache
           }
         } catch (Exception e) {
           if (debugEnabled()) {
-            debugCaught(DebugLogLevel.ERROR, e);
+            TRACER.debugCaught(DebugLogLevel.ERROR, e);
           }
           
           // This shouldn't happen, but if it does then we can't be sure whether
@@ -1023,7 +1116,7 @@ public class FileSystemEntryCache
           }
         } catch (Exception e) {
           if (debugEnabled()) {
-            debugCaught(DebugLogLevel.ERROR, e);
+            TRACER.debugCaught(DebugLogLevel.ERROR, e);
           }
           
           // This shouldn't happen, but if it does, then just ignore it.
@@ -1037,25 +1130,20 @@ public class FileSystemEntryCache
     
     // Obtain a lock on the cache.  If this fails, then don't do anything.
     try {
-      if (! cacheWriteLock.tryLock(lockTimeout, TimeUnit.MILLISECONDS)) {
-        // We can't rule out the possibility of a conflict, so return false.
+      if (!cacheWriteLock.tryLock(lockTimeout, TimeUnit.MILLISECONDS)) {
         return;
       }
       putEntryToDB(entry, backend, entryID);
     } catch (Exception e) {
       if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
-      
-      // We can't rule out the possibility of a conflict, so return false.
       return;
     } finally {
       cacheWriteLock.unlock();
     }
   }
-  
-  
-  
+   
   /**
    * Stores the provided entry in the cache only if it does not conflict with an
    * entry that already exists.  Note that the mechanism that it uses to achieve
@@ -1086,7 +1174,7 @@ public class FileSystemEntryCache
           }
         } catch (Exception e) {
           if (debugEnabled()) {
-            debugCaught(DebugLogLevel.ERROR, e);
+            TRACER.debugCaught(DebugLogLevel.ERROR, e);
           }
           
           // This shouldn't happen, but if it does then we can't be sure whether
@@ -1108,7 +1196,7 @@ public class FileSystemEntryCache
           }
         } catch (Exception e) {
           if (debugEnabled()) {
-            debugCaught(DebugLogLevel.ERROR, e);
+            TRACER.debugCaught(DebugLogLevel.ERROR, e);
           }
           
           // This shouldn't happen, but if it does, then just ignore it.
@@ -1134,7 +1222,7 @@ public class FileSystemEntryCache
       return putEntryToDB(entry, backend, entryID);
     } catch (Exception e) {
       if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }  
       // We can't rule out the possibility of a conflict, so return false.
       return false;
@@ -1143,41 +1231,42 @@ public class FileSystemEntryCache
     }
   }
   
-  
-  
   /**
    * Removes the specified entry from the cache.
    *
    * @param  entryDN  The DN of the entry to remove from the cache.
    */
   public void removeEntry(DN entryDN) {
+    
     cacheWriteLock.lock();
     
     try {
-      long entryID = dnMap.get(entryDN);
+      Long entryID = dnMap.get(entryDN);
+      if (entryID == null) {
+        return;
+      }
       Set backendSet = backendMap.keySet();
       
       Iterator backendIterator = backendSet.iterator();
       while (backendIterator.hasNext()) {
-        LinkedHashMap map = backendMap.get(backendIterator.next());
-        map.remove(entryID);
+        Map map = backendMap.get(backendIterator.next());
+        if ((map.get(entryID) != null) && 
+            (map.get(entryID).equals(entryDN))) {
+          map.remove(entryID);
+        }
       }
       
       dnMap.remove(entryDN);
       entryCacheDB.delete(null, 
-        new DatabaseEntry(entryDN.toString().getBytes()));
+        new DatabaseEntry(entryDN.toNormalizedString().getBytes("UTF-8")));
     } catch (Exception e) {
-      e.printStackTrace();
       if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
     } finally {
       cacheWriteLock.unlock();
     }
-
   }
-  
-  
   
   /**
    * Removes all entries from the cache.  The cache should still be available
@@ -1191,28 +1280,30 @@ public class FileSystemEntryCache
 
     try {
       if ((entryCacheDB != null) && (entryCacheEnv != null) && 
-          (entryCacheDBConfig != null)) {
+          (entryCacheClassDB != null) && (entryCacheDBConfig != null)) {
+        entryCacheDBConfig = entryCacheDB.getConfig();
         entryCacheDB.close();
+        entryCacheClassDB.close();
         entryCacheEnv.truncateDatabase(null, ENTRYCACHEDBNAME, false);
-        entryCacheEnv.cleanLog();
+        entryCacheEnv.truncateDatabase(null, INDEXCLASSDBNAME, false);
+        entryCacheEnv.cleanLog();       
         entryCacheDB = entryCacheEnv.openDatabase(null,
-              ENTRYCACHEDBNAME, entryCacheDBConfig);
+            ENTRYCACHEDBNAME, entryCacheDBConfig);
+        entryCacheClassDB = entryCacheEnv.openDatabase(null,
+            INDEXCLASSDBNAME, entryCacheDBConfig);
+        // Instantiate the class catalog
+        classCatalog = new StoredClassCatalog(entryCacheClassDB);
+        entryCacheDataBinding =
+            new SerialBinding(classCatalog, FileSystemEntryCacheIndex.class);
       }
     } catch (Exception e) {
       if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
-      
-      // Log an error message.
-      logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.SEVERE_ERROR,
-              /* TODO: */ 0, "Failed to clear FS entry cache",
-              stackTraceToSingleLineString(e));
     } finally {
       cacheWriteLock.unlock();
     }
   }
-  
-  
   
   /**
    * Removes all entries from the cache that are associated with the provided
@@ -1221,40 +1312,42 @@ public class FileSystemEntryCache
    * @param  backend  The backend for which to flush the associated entries.
    */
   public void clearBackend(Backend backend) {
-    // Might take awhile to complete on a relatively large cache.
     
     cacheWriteLock.lock();
     
-    LinkedHashMap backendEntriesMap = backendMap.get(backend);
+    Map backendEntriesMap = backendMap.get(backend);
     
     try {
+      int entriesExamined = 0;
       Set entriesSet = backendEntriesMap.keySet();
-      
       Iterator backendEntriesIterator = entriesSet.iterator();
       while (backendEntriesIterator.hasNext()) {
         long entryID = (Long) backendEntriesIterator.next();
         DN entryDN = (DN) backendEntriesMap.get(entryID);
         entryCacheDB.delete(null,
-            new DatabaseEntry(entryDN.toString().getBytes()));
+            new DatabaseEntry(entryDN.toNormalizedString().getBytes("UTF-8")));
         dnMap.remove(entryDN);
+        
+        // This can take a while, so we'll periodically release and re-acquire 
+        // the lock in case anyone else is waiting on it so this doesn't become 
+        // a stop-the-world event as far as the cache is concerned.
+        entriesExamined++;
+        if ((entriesExamined % 1000) == 0) {
+          cacheWriteLock.unlock();
+          Thread.currentThread().yield();
+          cacheWriteLock.lock();
+        }
       }
       
     } catch (Exception e) {
       if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
-      
-      // Log an error message.
-      logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.SEVERE_ERROR,
-          /* TODO: */ 0, "FS entry cache: failed to clear backend",
-          stackTraceToSingleLineString(e));
     } finally {
       backendMap.remove(backend);
       cacheWriteLock.unlock();
     }
   }
-  
-  
   
   /**
    * Removes all entries from the cache that are below the provided DN.
@@ -1284,9 +1377,8 @@ public class FileSystemEntryCache
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
-
       // This shouldn't happen, but there's not much that we can do if it does.
     }
     finally
@@ -1294,8 +1386,6 @@ public class FileSystemEntryCache
       cacheWriteLock.unlock();
     }
   }
-  
-  
   
   /**
    * Clears all entries at or below the specified base DN that are associated
@@ -1307,7 +1397,7 @@ public class FileSystemEntryCache
   private void clearSubtree(DN baseDN, Backend backend) {
     // See if there are any entries for the provided backend in the cache.  If
     // not, then return.
-    LinkedHashMap<Long,DN> map = backendMap.get(backend);
+    Map<Long,DN> map = backendMap.get(backend);
     if (map == null)
     {
       // No entries were in the cache for this backend, so we can return without
@@ -1330,8 +1420,17 @@ public class FileSystemEntryCache
       {
         iterator.remove();
         dnMap.remove(entryDN);
+        try {
+          entryCacheDB.delete(null,
+              new DatabaseEntry(
+              entryDN.toNormalizedString().getBytes("UTF-8")));
+        } catch (Exception e) {
+          if (debugEnabled()) {
+            TRACER.debugCaught(DebugLogLevel.ERROR, e);
+          }
+        }
       }
-
+      
       entriesExamined++;
       if ((entriesExamined % 1000) == 0)
       {
@@ -1361,9 +1460,7 @@ public class FileSystemEntryCache
       }
     }
   }
-  
-  
-  
+   
   /**
    * Attempts to react to a scenario in which it is determined that the system
    * is running low on available memory.  In this case, the entry cache should
@@ -1371,17 +1468,20 @@ public class FileSystemEntryCache
    * errors.
    */
   public void handleLowMemory() {
-    // If this cache db is tmpfs based and tmpfs is not explicitly limited 
-    // [ which it isnt by default ] truncate all to prevent swapping that
-    // is already taking place at this point. removing oldest or lru items
-    // one by one or in chunks will not have desired effect. it is better
-    // to loose this cache than be in constantly swapping state, perf wise.
-    // TODO: revisit this and maybe introduce cfg parameter for non tmpfs
-    // based storage or tmpfs that is explicitly limited by administrator.
-    clear();
+    // This is about all we can do.
+    if (entryCacheEnv != null) {
+      try {
+        // Free some JVM memory.
+        entryCacheEnv.evictMemory();
+        // Free some main memory/space.
+        entryCacheEnv.cleanLog();
+      } catch (Exception e) {
+        if (debugEnabled()) {
+          TRACER.debugCaught(DebugLogLevel.ERROR, e);
+        }
+      }
+    }
   }
-  
-  
   
   /**
    * Retrieves the DN of the configuration entry with which this component is
@@ -1393,9 +1493,7 @@ public class FileSystemEntryCache
   public DN getConfigurableComponentEntryDN() {
     return configEntryDN;
   }
-  
-  
-  
+   
   /**
    * Retrieves the set of configuration attributes that are associated with this
    * configurable component.
@@ -1404,256 +1502,148 @@ public class FileSystemEntryCache
    *          configurable component.
    */
   public List<ConfigAttribute> getConfigurationAttributes() {
+    
     LinkedList<ConfigAttribute> attrList = new LinkedList<ConfigAttribute>();
     
-    
-    int msgID = MSGID_FIFOCACHE_DESCRIPTION_MAX_MEMORY_PCT;
-    IntegerConfigAttribute maxMemoryPctAttr =
-            new IntegerConfigAttribute(ATTR_FIFOCACHE_MAX_MEMORY_PCT,
-            getMessage(msgID), true, false, false, true,
-            1, true, 100, maxMemoryPercent);
-    attrList.add(maxMemoryPctAttr);
-    
-    
-    msgID = MSGID_FIFOCACHE_DESCRIPTION_MAX_ENTRIES;
+    int msgID = MSGID_FSCACHE_DESCRIPTION_MAX_ENTRIES;
     IntegerConfigAttribute maxEntriesAttr =
-            new IntegerConfigAttribute(ATTR_FIFOCACHE_MAX_ENTRIES,
+            new IntegerConfigAttribute(ATTR_FSCACHE_MAX_ENTRIES,
             getMessage(msgID), true, false, false,
-            true, 0, false, 0, maxEntries);
+            true, 0, false, 0, maxEntries.longValue());
     attrList.add(maxEntriesAttr);
 
-    msgID = MSGID_FIFOCACHE_DESCRIPTION_LOCK_TIMEOUT;
+    msgID = MSGID_FSCACHE_DESCRIPTION_LOCK_TIMEOUT;
     IntegerWithUnitConfigAttribute lockTimeoutAttr =
-         new IntegerWithUnitConfigAttribute(ATTR_FIFOCACHE_LOCK_TIMEOUT,
+         new IntegerWithUnitConfigAttribute(ATTR_FSCACHE_LOCK_TIMEOUT,
                                             getMessage(msgID), false, timeUnits,
                                             true, 0, false, 0, lockTimeout,
                                             TIME_UNIT_MILLISECONDS_FULL);
     attrList.add(lockTimeoutAttr);
     
-    msgID = MSGID_FIFOCACHE_DESCRIPTION_INCLUDE_FILTERS;
+    msgID = MSGID_FSCACHE_DESCRIPTION_INCLUDE_FILTERS;
     ArrayList<String> includeStrings =
             new ArrayList<String>(includeFilters.size());
     for (SearchFilter f : includeFilters) {
       includeStrings.add(f.toString());
     }
     StringConfigAttribute includeAttr =
-            new StringConfigAttribute(ATTR_FIFOCACHE_INCLUDE_FILTER,
+            new StringConfigAttribute(ATTR_FSCACHE_INCLUDE_FILTER,
             getMessage(msgID), false, true, false,
             includeStrings);
     attrList.add(includeAttr);
     
     
-    msgID = MSGID_FIFOCACHE_DESCRIPTION_EXCLUDE_FILTERS;
+    msgID = MSGID_FSCACHE_DESCRIPTION_EXCLUDE_FILTERS;
     ArrayList<String> excludeStrings =
             new ArrayList<String>(excludeFilters.size());
     for (SearchFilter f : excludeFilters) {
       excludeStrings.add(f.toString());
     }
     StringConfigAttribute excludeAttr =
-            new StringConfigAttribute(ATTR_FIFOCACHE_EXCLUDE_FILTER,
+            new StringConfigAttribute(ATTR_FSCACHE_EXCLUDE_FILTER,
             getMessage(msgID), false, true, false,
             excludeStrings);
     attrList.add(excludeAttr);
     
     
+    msgID = MSGID_FSCACHE_DESCRIPTION_TYPE;
+    StringConfigAttribute cacheTypeAttr =
+            new StringConfigAttribute(ATTR_FSCACHE_TYPE,
+            getMessage(msgID), true, false, false, cacheType);
+    attrList.add(cacheTypeAttr);
+    
+
+    msgID = MSGID_FSCACHE_DESCRIPTION_HOME;
+    StringConfigAttribute cacheHomeAttr =
+            new StringConfigAttribute(ATTR_FSCACHE_HOME,
+            getMessage(msgID), true, false, false, cacheHome);
+    attrList.add(cacheHomeAttr);
+     
+
+    msgID = MSGID_FSCACHE_DESCRIPTION_JE_CACHE_PCT;
+    IntegerConfigAttribute jeCachePercentAttr =
+        new IntegerConfigAttribute(ATTR_FSCACHE_JE_CACHE_PCT,
+        getMessage(msgID), true, false, false, true,
+        0, true, 100, jeCachePercent);
+    attrList.add(jeCachePercentAttr);
+    
+
+    msgID = MSGID_FSCACHE_DESCRIPTION_JE_CACHE_SIZE;
+    IntegerWithUnitConfigAttribute jeCacheSizeAttr =
+            new IntegerWithUnitConfigAttribute(ATTR_FSCACHE_JE_CACHE_SIZE,
+            getMessage(msgID), false, memoryUnits, true, 0, false, 0, 
+            jeCacheSize, SIZE_UNIT_BYTES_FULL);
+    attrList.add(jeCacheSizeAttr);
+    
+    
+    msgID = MSGID_FSCACHE_IS_PERSISTENT_DESCRIPTION;
+    BooleanConfigAttribute persistentCacheAttr =
+        new BooleanConfigAttribute(ATTR_FSCACHE_IS_PERSISTENT,
+        getMessage(msgID), false, persistentCache);
+    attrList.add(persistentCacheAttr);
+    
+    
+    msgID = MSGID_FSCACHE_DESCRIPTION_MAX_MEMORY_SIZE;
+    IntegerWithUnitConfigAttribute maxAllowedMemoryAttr =
+            new IntegerWithUnitConfigAttribute(ATTR_FSCACHE_MAX_MEMORY_SIZE,
+            getMessage(msgID), false, memoryUnits, true, 0, false, 0, 
+            maxAllowedMemory, SIZE_UNIT_BYTES_FULL);
+    attrList.add(maxAllowedMemoryAttr);
+    
     return attrList;
   }
-  
+    
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isConfigurationChangeAcceptable(
+      FileSystemEntryCacheCfg configuration,
+      List<String>      unacceptableReasons
+      ) 
+  {
+    // Make sure that we can process the defined character sets.  If so, then
+    // we'll accept the new configuration.
+    boolean applyChanges = false;
+    EntryCacheCommon.ConfigErrorHandler errorHandler =
+      EntryCacheCommon.getConfigErrorHandler (
+          EntryCacheCommon.ConfigPhase.PHASE_ACCEPTABLE,
+          unacceptableReasons,
+          null
+        );
+    processEntryCacheConfig (configuration, applyChanges, errorHandler);
+
+    return errorHandler.getIsAcceptable();
+  }
   
   
   /**
-   * Indicates whether the provided configuration entry has an acceptable
-   * configuration for this component.  If it does not, then detailed
-   * information about the problem(s) should be added to the provided list.
-   *
-   * @param  configEntry          The configuration entry for which to make the
-   *                              determination.
-   * @param  unacceptableReasons  A list that can be used to hold messages about
-   *                              why the provided entry does not have an
-   *                              acceptable configuration.
-   *
-   * @return  <CODE>true</CODE> if the provided entry has an acceptable
-   *          configuration for this component, or <CODE>false</CODE> if not.
+   * {@inheritDoc}
    */
-  public boolean hasAcceptableConfiguration(ConfigEntry configEntry,
-          List<String> unacceptableReasons) {
-    // Start out assuming that the configuration is valid.
-    boolean configIsAcceptable = true;
-    
-    
-    // Determine the maximum memory usage as a percentage of the total JVM
-    // memory.
-    int msgID = MSGID_FIFOCACHE_DESCRIPTION_MAX_MEMORY_PCT;
-    IntegerConfigAttribute maxMemoryPctStub =
-            new IntegerConfigAttribute(ATTR_FIFOCACHE_MAX_MEMORY_PCT,
-            getMessage(msgID), true, false, false, true,
-            1, true, 100);
-    try {
-      IntegerConfigAttribute maxMemoryPctAttr =
-              (IntegerConfigAttribute)
-              configEntry.getConfigAttribute(maxMemoryPctStub);
-    } catch (Exception e) {
-      if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
-      }
-      
-      // An error occurred, so the provided value must not be valid.
-      msgID = MSGID_FIFOCACHE_INVALID_MAX_MEMORY_PCT;
-      unacceptableReasons.add(getMessage(msgID, String.valueOf(configEntryDN),
-              stackTraceToSingleLineString(e)));
-      configIsAcceptable = false;
-    }
-    
-    
-    // Determine the maximum number of entries that we will allow in the cache.
-    msgID = MSGID_FIFOCACHE_DESCRIPTION_MAX_ENTRIES;
-    IntegerConfigAttribute maxEntriesStub =
-            new IntegerConfigAttribute(ATTR_FIFOCACHE_MAX_ENTRIES,
-            getMessage(msgID), true, false, false,
-            true, 0, false, 0);
-    try {
-      IntegerConfigAttribute maxEntriesAttr =
-              (IntegerConfigAttribute)
-              configEntry.getConfigAttribute(maxEntriesStub);
-    } catch (Exception e) {
-      if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
-      }
-      
-      // An error occurred, so the provided value must not be valid.
-      msgID = MSGID_FIFOCACHE_INVALID_MAX_ENTRIES;
-      unacceptableReasons.add(getMessage(msgID, String.valueOf(configEntryDN),
-              stackTraceToSingleLineString(e)));
-      configIsAcceptable = false;
-    }
+  public ConfigChangeResult applyConfigurationChange(
+      FileSystemEntryCacheCfg configuration
+      )
+  {
+    // Make sure that we can process the defined character sets.  If so, then
+    // activate the new configuration.
+    boolean applyChanges = false;
+    ArrayList<String> errorMessages = new ArrayList<String>();
+    EntryCacheCommon.ConfigErrorHandler errorHandler =
+      EntryCacheCommon.getConfigErrorHandler (
+          EntryCacheCommon.ConfigPhase.PHASE_APPLY, null, errorMessages
+          );
+    processEntryCacheConfig (configuration, applyChanges, errorHandler);
 
-    // Determine the lock timeout to use when interacting with the lock manager.
-    msgID = MSGID_FIFOCACHE_DESCRIPTION_LOCK_TIMEOUT;
-    IntegerWithUnitConfigAttribute lockTimeoutStub =
-         new IntegerWithUnitConfigAttribute(ATTR_FIFOCACHE_LOCK_TIMEOUT,
-                                            getMessage(msgID), false, timeUnits,
-                                            true, 0, false, 0);
-    try
-    {
-      IntegerWithUnitConfigAttribute lockTimeoutAttr =
-             (IntegerWithUnitConfigAttribute)
-             configEntry.getConfigAttribute(lockTimeoutStub);
-    }
-    catch (Exception e)
-    {
-      if (debugEnabled())
-      {
-        debugCaught(DebugLogLevel.ERROR, e);
-      }
 
-      // An error occurred, so the provided value must not be valid.
-      msgID = MSGID_FIFOCACHE_INVALID_LOCK_TIMEOUT;
-      unacceptableReasons.add(getMessage(msgID, String.valueOf(configEntryDN),
-                                         stackTraceToSingleLineString(e)));
-      configIsAcceptable = false;
-    }
+    boolean adminActionRequired = false;
+    ConfigChangeResult changeResult = new ConfigChangeResult(
+        errorHandler.getResultCode(),
+        adminActionRequired,
+        errorHandler.getErrorMessages()
+        );
 
-    // Determine the set of cache filters that can be used to control the
-    // entries that should be included in the cache.
-    msgID = MSGID_FIFOCACHE_DESCRIPTION_INCLUDE_FILTERS;
-    StringConfigAttribute includeStub =
-            new StringConfigAttribute(ATTR_FIFOCACHE_INCLUDE_FILTER,
-            getMessage(msgID), false, true, false);
-    try {
-      StringConfigAttribute includeAttr =
-              (StringConfigAttribute) configEntry.getConfigAttribute(includeStub);
-      if (includeAttr == null) {
-        // This is fine -- we'll just use the default.
-      } else {
-        List<String> filterStrings = includeAttr.activeValues();
-        if ((filterStrings == null) || filterStrings.isEmpty()) {
-          // There are no include filters, so we'll allow anything by default.
-        } else {
-          for (String filterString : filterStrings) {
-            try {
-              SearchFilter.createFilterFromString(filterString);
-            } catch (Exception e) {
-              if (debugEnabled()) {
-                debugCaught(DebugLogLevel.ERROR, e);
-              }
-              
-              // We couldn't decode this filter, so it isn't valid.
-              msgID = MSGID_FIFOCACHE_INVALID_INCLUDE_FILTER;
-              unacceptableReasons.add(getMessage(msgID,
-                      String.valueOf(configEntryDN),
-                      filterString,
-                      stackTraceToSingleLineString(e)));
-              configIsAcceptable = false;
-            }
-          }
-        }
-      }
-    } catch (Exception e) {
-      if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
-      }
-      
-      // An error occurred, so the provided value must not be valid.
-      msgID = MSGID_FIFOCACHE_INVALID_INCLUDE_FILTERS;
-      unacceptableReasons.add(getMessage(msgID, String.valueOf(configEntryDN),
-              stackTraceToSingleLineString(e)));
-      configIsAcceptable = false;
-    }
-    
-    
-    // Determine the set of cache filters that can be used to control the
-    // entries that should be excluded from the cache.
-    msgID = MSGID_FIFOCACHE_DESCRIPTION_EXCLUDE_FILTERS;
-    StringConfigAttribute excludeStub =
-            new StringConfigAttribute(ATTR_FIFOCACHE_EXCLUDE_FILTER,
-            getMessage(msgID), false, true, false);
-    try {
-      StringConfigAttribute excludeAttr =
-              (StringConfigAttribute) configEntry.getConfigAttribute(excludeStub);
-      if (excludeAttr == null) {
-        // This is fine -- we'll just use the default.
-      } else {
-        List<String> filterStrings = excludeAttr.activeValues();
-        if ((filterStrings == null) || filterStrings.isEmpty()) {
-          // There are no exclude filters, so we'll allow anything by default.
-        } else {
-          for (String filterString : filterStrings) {
-            try {
-              SearchFilter.createFilterFromString(filterString);
-            } catch (Exception e) {
-              if (debugEnabled()) {
-                debugCaught(DebugLogLevel.ERROR, e);
-              }
-              
-              // We couldn't decode this filter, so it isn't valid.
-              msgID = MSGID_FIFOCACHE_INVALID_EXCLUDE_FILTER;
-              unacceptableReasons.add(getMessage(msgID,
-                      String.valueOf(configEntryDN),
-                      filterString,
-                      stackTraceToSingleLineString(e)));
-              configIsAcceptable = false;
-            }
-          }
-        }
-      }
-    } catch (Exception e) {
-      if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
-      }
-      
-      // An error occurred, so the provided value must not be valid.
-      msgID = MSGID_FIFOCACHE_INVALID_EXCLUDE_FILTERS;
-      unacceptableReasons.add(getMessage(msgID, String.valueOf(configEntryDN),
-              stackTraceToSingleLineString(e)));
-      configIsAcceptable = false;
-    }
-    
-    
-    return configIsAcceptable;
+    return changeResult;
   }
-  
-  
-  
+   
   /**
    * Makes a best-effort attempt to apply the configuration contained in the
    * provided entry.  Information about the result of this processing should be
@@ -1663,298 +1653,268 @@ public class FileSystemEntryCache
    * successfully (and optionally about parameters that were not changed) should
    * also be included.
    *
-   * @param  configEntry      The entry containing the new configuration to
+   * @param  configuration    The entry containing the new configuration to
    *                          apply for this component.
    * @param  detailedResults  Indicates whether detailed information about the
    *                          processing should be added to the list.
    *
    * @return  Information about the result of the configuration update.
    */
-  public ConfigChangeResult applyNewConfiguration(ConfigEntry configEntry,
-          boolean detailedResults) {
-    // Create a set of variables to use for the result.
-    ResultCode        resultCode          = ResultCode.SUCCESS;
-    boolean           adminActionRequired = false;
-    ArrayList<String> messages            = new ArrayList<String>();
-    boolean           configIsAcceptable  = true;
-    
-    
-    // Determine the maximum memory usage as a percentage of the total JVM
-    // memory.
-    int newMaxMemoryPercent = DEFAULT_FIFOCACHE_MAX_MEMORY_PCT;
-    int msgID = MSGID_FIFOCACHE_DESCRIPTION_MAX_MEMORY_PCT;
-    IntegerConfigAttribute maxMemoryPctStub =
-            new IntegerConfigAttribute(ATTR_FIFOCACHE_MAX_MEMORY_PCT,
-            getMessage(msgID), true, false, false, true,
-            1, true, 100);
-    try {
-      IntegerConfigAttribute maxMemoryPctAttr =
-              (IntegerConfigAttribute)
-              configEntry.getConfigAttribute(maxMemoryPctStub);
-      if (maxMemoryPctAttr != null) {
-        newMaxMemoryPercent = maxMemoryPctAttr.pendingIntValue();
-      }
-    } catch (Exception e) {
-      if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
-      }
-      
-      // An error occurred, so the provided value must not be valid.
-      msgID = MSGID_FIFOCACHE_INVALID_MAX_MEMORY_PCT;
-      messages.add(getMessage(msgID, String.valueOf(configEntryDN),
-              stackTraceToSingleLineString(e)));
-      resultCode = ResultCode.CONSTRAINT_VIOLATION;
-      configIsAcceptable = false;
-    }
-    
-    
-    // Determine the maximum number of entries that we will allow in the cache.
-    long newMaxEntries = DEFAULT_FIFOCACHE_MAX_ENTRIES;
-    msgID = MSGID_FIFOCACHE_DESCRIPTION_MAX_ENTRIES;
-    IntegerConfigAttribute maxEntriesStub =
-            new IntegerConfigAttribute(ATTR_FIFOCACHE_MAX_ENTRIES,
-            getMessage(msgID), true, false, false,
-            true, 0, false, 0);
-    try {
-      IntegerConfigAttribute maxEntriesAttr =
-              (IntegerConfigAttribute)
-              configEntry.getConfigAttribute(maxEntriesStub);
-      if (maxEntriesAttr != null) {
-        newMaxEntries = maxEntriesAttr.pendingValue();
-      }
-    } catch (Exception e) {
-      if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
-      }
-      
-      // An error occurred, so the provided value must not be valid.
-      msgID = MSGID_FIFOCACHE_INVALID_MAX_ENTRIES;
-      messages.add(getMessage(msgID, String.valueOf(configEntryDN),
-              stackTraceToSingleLineString(e)));
-      
-      if (resultCode == ResultCode.SUCCESS) {
-        resultCode = ResultCode.CONSTRAINT_VIOLATION;
-      }
-      
-      configIsAcceptable = false;
-    }
+  public ConfigChangeResult applyNewConfiguration(
+      FileSystemEntryCacheCfg configuration,
+      boolean           detailedResults
+      ) 
+  {
+    // Store the current value to detect changes.
+    long                  prevLockTimeout      = lockTimeout;
+    long                  prevMaxEntries       = maxEntries.longValue();
+    Set<SearchFilter>     prevIncludeFilters   = includeFilters;
+    Set<SearchFilter>     prevExcludeFilters   = excludeFilters;
+    long                  prevMaxAllowedMemory = maxAllowedMemory;
+    int                   prevJECachePercent   = jeCachePercent;
+    long                  prevJECacheSize      = jeCacheSize;
+    boolean               prevPersistentCache  = persistentCache;
 
-    // Determine the lock timeout to use when interacting with the lock manager.
-    long newLockTimeout = DEFAULT_FIFOCACHE_LOCK_TIMEOUT;
-    msgID = MSGID_FIFOCACHE_DESCRIPTION_LOCK_TIMEOUT;
-    IntegerWithUnitConfigAttribute lockTimeoutStub =
-         new IntegerWithUnitConfigAttribute(ATTR_FIFOCACHE_LOCK_TIMEOUT,
-                                            getMessage(msgID), false, timeUnits,
-                                            true, 0, false, 0);
-    try
+    // Activate the new configuration.
+    ConfigChangeResult changeResult = applyConfigurationChange(configuration);
+    
+    // Add detailed messages if needed.
+    ResultCode resultCode = changeResult.getResultCode();
+    boolean configIsAcceptable = (resultCode == ResultCode.SUCCESS);
+    if (detailedResults && configIsAcceptable)
     {
-      IntegerWithUnitConfigAttribute lockTimeoutAttr =
-             (IntegerWithUnitConfigAttribute)
-             configEntry.getConfigAttribute(lockTimeoutStub);
-      if (lockTimeoutAttr != null)
+      if (maxEntries.longValue() != prevMaxEntries)
       {
-        newLockTimeout = lockTimeoutAttr.pendingCalculatedValue();
+        changeResult.addMessage(
+            getMessage (MSGID_FSCACHE_UPDATED_MAX_ENTRIES, maxEntries));
+      }
+
+      if (lockTimeout != prevLockTimeout)
+      {
+        changeResult.addMessage(
+            getMessage (MSGID_FSCACHE_UPDATED_LOCK_TIMEOUT, lockTimeout));
+      }
+
+      if (!includeFilters.equals(prevIncludeFilters))
+      {
+        changeResult.addMessage(
+            getMessage (MSGID_FSCACHE_UPDATED_INCLUDE_FILTERS));
+      }
+
+      if (!excludeFilters.equals(prevExcludeFilters))
+      {
+        changeResult.addMessage(
+            getMessage (MSGID_FSCACHE_UPDATED_EXCLUDE_FILTERS));
+      }
+      
+      if (maxAllowedMemory != prevMaxAllowedMemory)
+      {
+        changeResult.addMessage(
+            getMessage (MSGID_FSCACHE_UPDATED_MAX_MEMORY_SIZE, 
+            maxAllowedMemory));
+      }
+      
+      if (jeCachePercent != prevJECachePercent)
+      {
+        changeResult.addMessage(
+            getMessage (MSGID_FSCACHE_UPDATED_JE_MEMORY_PCT, jeCachePercent));
+      }
+      
+      if (jeCacheSize != prevJECacheSize)
+      {
+        changeResult.addMessage(
+            getMessage (MSGID_FSCACHE_UPDATED_JE_MEMORY_SIZE, jeCacheSize));
+      }
+      
+      if (persistentCache != prevPersistentCache)
+      {
+        changeResult.addMessage(
+            getMessage (MSGID_FSCACHE_UPDATED_IS_PERSISTENT, persistentCache));
       }
     }
-    catch (Exception e)
+
+    return changeResult;
+  }
+   
+  /**
+   * Parses the provided configuration and configure the entry cache.
+   *
+   * @param configuration  The new configuration containing the changes.
+   * @param applyChanges   If true then take into account the new configuration.
+   * @param errorHandler   An handler used to report errors.
+   *
+   * @return  The mapping between strings of character set values and the
+   *          minimum number of characters required from those sets.
+   */
+  public boolean processEntryCacheConfig(
+      FileSystemEntryCacheCfg             configuration,
+      boolean                             applyChanges,
+      EntryCacheCommon.ConfigErrorHandler errorHandler
+      )
+  {
+    // Local variables to read configuration.
+    DN                    newConfigEntryDN;
+    long                  newLockTimeout;
+    long                  newMaxEntries;
+    long                  newMaxAllowedMemory;
+    HashSet<SearchFilter> newIncludeFilters = null;
+    HashSet<SearchFilter> newExcludeFilters = null;
+    int                   newJECachePercent;
+    long                  newJECacheSize;
+    boolean               newPersistentCache;
+    String                newCacheType = DEFAULT_FSCACHE_TYPE;
+    String                newCacheHome = DEFAULT_FSCACHE_HOME;
+
+    // Read configuration.
+    newConfigEntryDN = configuration.dn();
+    newLockTimeout   = configuration.getLockTimeout();
+    newMaxEntries    = configuration.getMaxEntries();
+
+    // Maximum memory/space this cache can utilize.
+    newMaxAllowedMemory = configuration.getMaxMemorySize();
+    
+    // Determine JE cache percent.
+    newJECachePercent = configuration.getDatabaseCachePercent();
+    
+    // Determine JE cache size.
+    newJECacheSize = configuration.getDatabaseCacheSize();
+    
+    // Check if this cache is persistent.
+    newPersistentCache = configuration.isPersistentCache();
+    
+    switch (errorHandler.getConfigPhase())
     {
-      if (debugEnabled())
-      {
-        debugCaught(DebugLogLevel.ERROR, e);
-      }
-
-      // An error occurred, so the provided value must not be valid.
-      msgID = MSGID_FIFOCACHE_INVALID_LOCK_TIMEOUT;
-      messages.add(getMessage(msgID, String.valueOf(configEntryDN),
-                              stackTraceToSingleLineString(e)));
-
-      if (resultCode == ResultCode.SUCCESS)
-      {
-        resultCode = ResultCode.CONSTRAINT_VIOLATION;
-      }
-
-      configIsAcceptable = false;
+    case PHASE_INIT:
+      // Determine the cache type.
+      newCacheType = configuration.getCacheType().toString();
+      
+      // Determine the cache home.
+      newCacheHome = configuration.getCacheDirectory();
+      
+      newIncludeFilters = EntryCacheCommon.getFilters(
+          configuration.getIncludeFilter(),
+          MSGID_FIFOCACHE_INVALID_INCLUDE_FILTER,
+          MSGID_FIFOCACHE_CANNOT_DECODE_ANY_INCLUDE_FILTERS,
+          errorHandler,
+          configEntryDN
+          );
+      newExcludeFilters = EntryCacheCommon.getFilters (
+          configuration.getExcludeFilter(),
+          MSGID_FIFOCACHE_CANNOT_DECODE_EXCLUDE_FILTER,
+          MSGID_FIFOCACHE_CANNOT_DECODE_ANY_EXCLUDE_FILTERS,
+          errorHandler,
+          configEntryDN
+          );
+      break;
+    case PHASE_ACCEPTABLE:  // acceptable and apply are using the same
+    case PHASE_APPLY:       // error ID codes
+      newIncludeFilters = EntryCacheCommon.getFilters (
+          configuration.getIncludeFilter(),
+          MSGID_FIFOCACHE_INVALID_INCLUDE_FILTER,
+          0,
+          errorHandler,
+          configEntryDN
+          );
+      newExcludeFilters = EntryCacheCommon.getFilters (
+          configuration.getExcludeFilter(),
+          MSGID_FIFOCACHE_INVALID_EXCLUDE_FILTER,
+          0,
+          errorHandler,
+          configEntryDN
+          );
+      break;
     }
 
-    // Determine the set of cache filters that can be used to control the
-    // entries that should be included in the cache.
-    HashSet<SearchFilter> newIncludeFilters = new HashSet<SearchFilter>();
-    msgID = MSGID_FIFOCACHE_DESCRIPTION_INCLUDE_FILTERS;
-    StringConfigAttribute includeStub =
-            new StringConfigAttribute(ATTR_FIFOCACHE_INCLUDE_FILTER,
-            getMessage(msgID), false, true, false);
-    try {
-      StringConfigAttribute includeAttr =
-           (StringConfigAttribute) configEntry.getConfigAttribute(includeStub);
-      if (includeAttr != null) {
-        List<String> filterStrings = includeAttr.activeValues();
-        if ((filterStrings == null) || filterStrings.isEmpty()) {
-          // There are no include filters, so we'll allow anything by default.
-        } else {
-          for (String filterString : filterStrings) {
-            try {
-              newIncludeFilters.add(
-                      SearchFilter.createFilterFromString(filterString));
-            } catch (Exception e) {
-              if (debugEnabled()) {
-                debugCaught(DebugLogLevel.ERROR, e);
-              }
-              
-              // We couldn't decode this filter, so it isn't valid.
-              msgID = MSGID_FIFOCACHE_INVALID_INCLUDE_FILTER;
-              messages.add(getMessage(msgID, String.valueOf(configEntryDN),
-                      filterString,
-                      stackTraceToSingleLineString(e)));
-              
-              if (resultCode == ResultCode.SUCCESS) {
-                resultCode = ResultCode.INVALID_ATTRIBUTE_SYNTAX;
-              }
-              
-              configIsAcceptable = false;
+    if (applyChanges && errorHandler.getIsAcceptable()) 
+    {
+      switch (errorHandler.getConfigPhase()) {     
+      case PHASE_INIT:
+        cacheType      = newCacheType;
+        cacheHome      = newCacheHome;
+        jeCachePercent = newJECachePercent;
+        jeCacheSize    = newJECacheSize;
+        break;     
+      case PHASE_APPLY:
+        jeCachePercent = newJECachePercent;
+        try {
+            EnvironmentConfig envConfig = entryCacheEnv.getConfig();
+            envConfig.setCachePercent(jeCachePercent);
+            entryCacheEnv.setMutableConfig(envConfig);
+            entryCacheEnv.evictMemory();
+        } catch (Exception e) {
+            if (debugEnabled()) {
+              TRACER.debugCaught(DebugLogLevel.ERROR, e);
             }
-          }
+            errorHandler.reportError(
+              ErrorLogCategory.CONFIGURATION,
+              ErrorLogSeverity.SEVERE_WARNING,
+              MSGID_FSCACHE_CANNOT_SET_JE_MEMORY_PCT,
+              String.valueOf(configEntryDN),
+              stackTraceToSingleLineString(e),
+              null,
+              false,
+              ResultCode.OPERATIONS_ERROR
+              );
         }
-      }
-    } catch (Exception e) {
-      if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
-      }
-      
-      // An error occurred, so the provided value must not be valid.
-      msgID = MSGID_FIFOCACHE_INVALID_INCLUDE_FILTERS;
-      messages.add(getMessage(msgID, String.valueOf(configEntryDN),
-              stackTraceToSingleLineString(e)));
-      
-      if (resultCode == ResultCode.SUCCESS) {
-        resultCode = ResultCode.CONSTRAINT_VIOLATION;
-      }
-      
-      configIsAcceptable = false;
-    }
-    
-    
-    // Determine the set of cache filters that can be used to control the
-    // entries that should be exclude from the cache.
-    HashSet<SearchFilter> newExcludeFilters = new HashSet<SearchFilter>();
-    msgID = MSGID_FIFOCACHE_DESCRIPTION_EXCLUDE_FILTERS;
-    StringConfigAttribute excludeStub =
-            new StringConfigAttribute(ATTR_FIFOCACHE_EXCLUDE_FILTER,
-            getMessage(msgID), false, true, false);
-    try {
-      StringConfigAttribute excludeAttr =
-              (StringConfigAttribute) configEntry.getConfigAttribute(excludeStub);
-      if (excludeAttr != null) {
-        List<String> filterStrings = excludeAttr.activeValues();
-        if ((filterStrings == null) || filterStrings.isEmpty()) {
-          // There are no exclude filters, so we'll allow anything by default.
-        } else {
-          for (String filterString : filterStrings) {
-            try {
-              newExcludeFilters.add(
-                      SearchFilter.createFilterFromString(filterString));
-            } catch (Exception e) {
-              if (debugEnabled()) {
-                debugCaught(DebugLogLevel.ERROR, e);
-              }
-              
-              // We couldn't decode this filter, so it isn't valid.
-              msgID = MSGID_FIFOCACHE_INVALID_EXCLUDE_FILTER;
-              messages.add(getMessage(msgID, String.valueOf(configEntryDN),
-                      filterString,
-                      stackTraceToSingleLineString(e)));
-              
-              if (resultCode == ResultCode.SUCCESS) {
-                resultCode = ResultCode.INVALID_ATTRIBUTE_SYNTAX;
-              }
-              
-              configIsAcceptable = false;
+        jeCacheSize = newJECacheSize;
+        try {
+            EnvironmentConfig envConfig = entryCacheEnv.getConfig();
+            envConfig.setCacheSize(jeCacheSize);
+            entryCacheEnv.setMutableConfig(envConfig);
+            entryCacheEnv.evictMemory();
+        } catch (Exception e) {
+            if (debugEnabled()) {
+              TRACER.debugCaught(DebugLogLevel.ERROR, e);
             }
-          }
-        }
-      }
-    } catch (Exception e) {
-      if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
-      }
-      
-      // An error occurred, so the provided value must not be valid.
-      msgID = MSGID_FIFOCACHE_INVALID_EXCLUDE_FILTERS;
-      messages.add(getMessage(msgID, String.valueOf(configEntryDN),
-              stackTraceToSingleLineString(e)));
-      
-      if (resultCode == ResultCode.SUCCESS) {
-        resultCode = ResultCode.CONSTRAINT_VIOLATION;
+            errorHandler.reportError(
+              ErrorLogCategory.CONFIGURATION,
+              ErrorLogSeverity.SEVERE_WARNING,
+              MSGID_FSCACHE_CANNOT_SET_JE_MEMORY_SIZE,
+              String.valueOf(configEntryDN),
+              stackTraceToSingleLineString(e),
+              null,
+              false,
+              ResultCode.OPERATIONS_ERROR
+              );
+        }        
+        break;
       }
       
-      configIsAcceptable = false;
+      configEntryDN    = newConfigEntryDN;
+      lockTimeout      = newLockTimeout;
+      maxEntries       = new AtomicLong(newMaxEntries);
+      maxAllowedMemory = newMaxAllowedMemory;
+      includeFilters   = newIncludeFilters;
+      excludeFilters   = newExcludeFilters;
+      persistentCache  = newPersistentCache;    
     }
-    
-    
-    if (configIsAcceptable) {
-      if (maxMemoryPercent != newMaxMemoryPercent) {
-        maxMemoryPercent = newMaxMemoryPercent;
-        maxAllowedMemory = runtime.maxMemory() / 100 * maxMemoryPercent;
-        
-        if (detailedResults) {
-          messages.add(getMessage(MSGID_FIFOCACHE_UPDATED_MAX_MEMORY_PCT,
-                  maxMemoryPercent, maxAllowedMemory));
-        }
-      }
-      
-      if (maxEntries != newMaxEntries) {
-        maxEntries = newMaxEntries;
-        
-        if (detailedResults) {
-          messages.add(getMessage(MSGID_FIFOCACHE_UPDATED_MAX_ENTRIES,
-                  maxEntries));
-        }
-      }
-      
-      if (lockTimeout != newLockTimeout)
-      {
-        lockTimeout = newLockTimeout;
 
-        if (detailedResults)
-        {
-          messages.add(getMessage(MSGID_FIFOCACHE_UPDATED_LOCK_TIMEOUT,
-                                  lockTimeout));
-        }
-      }
-
-      if (!includeFilters.equals(newIncludeFilters)) {
-        includeFilters = newIncludeFilters;
-        
-        if (detailedResults) {
-          messages.add(getMessage(MSGID_FIFOCACHE_UPDATED_INCLUDE_FILTERS));
-        }
-      }
-      
-      if (!excludeFilters.equals(newExcludeFilters)) {
-        excludeFilters = newExcludeFilters;
-        
-        if (detailedResults) {
-          messages.add(getMessage(MSGID_FIFOCACHE_UPDATED_EXCLUDE_FILTERS));
-        }
-      }
-    }
-    
-    
-    return new ConfigChangeResult(resultCode, adminActionRequired, messages);
+    return errorHandler.getIsAcceptable();
   }
   
+  /**
+   * Retrieves and decodes the entry with the specified DN from JE backend db.
+   *
+   * @param  entryDN   The DN of the entry to retrieve.
+   *
+   * @return  The requested entry if it is present in the cache, or
+   *          <CODE>null</CODE> if it is not present.
+   */
   private Entry getEntryFromDB(DN entryDN)
   {
     DatabaseEntry cacheEntryKey = new DatabaseEntry();
-    cacheEntryKey.setData(entryDN.toString().getBytes());
     DatabaseEntry primaryData = new DatabaseEntry();
     
     try {
       // Get the primary key and data.
+      cacheEntryKey.setData(entryDN.toNormalizedString().getBytes("UTF-8"));
       if (entryCacheDB.get(null, cacheEntryKey,
               primaryData,
               LockMode.DEFAULT) == OperationStatus.SUCCESS) {
         
         // Decode cache entry.
+        // TODO: Custom decoding used here due to performance and space 
+        // considerations. Should use Entry.decode(), see Issue 1675.
         byte[] entryBytes = primaryData.getData();
         
         int pos = 0;
@@ -2200,131 +2160,170 @@ public class FileSystemEntryCache
         // entry.
         return new
           Entry(entryDN, objectClasses, userAttributes, operationalAttributes);
+      } else {
+        throw new Exception();
       }
     } catch (Exception e) {
       if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
       
       // Log an error message.
       logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.SEVERE_ERROR,
-              /* TODO: */ 0, "getEntry by ID",
+              MSGID_FSCACHE_CANNOT_RETRIEVE_ENTRY,
               stackTraceToSingleLineString(e));
     }
     return null;
   }
   
-  private boolean putEntryToDB(Entry entry, Backend backend, long entryID)
-  {
+  
+  /**
+   * Encodes and stores the entry in the JE backend db.
+   *
+   * @param  entry    The entry to store in the cache.
+   * @param  backend  The backend with which the entry is associated.
+   * @param  entryID  The entry ID within the provided backend that uniquely
+   *                  identifies the specified entry.
+   *
+   * @return  <CODE>false</CODE> if some problem prevented the method from 
+   *          completing successfully, or <CODE>true</CODE> if the entry 
+   *          was either stored or the cache determined that this entry 
+   *          should never be cached for some reason.
+   */
+  private boolean putEntryToDB(Entry entry, Backend backend, long entryID) {
     try {
-      // See if the current memory usage is within acceptable constraints.  If
+      // See if the current fs space usage is within acceptable constraints. If
       // so, then add the entry to the cache (or replace it if it is already
       // present).  If not, then remove an existing entry and don't add the new
       // entry.
-      long usedMemory = runtime.totalMemory() - runtime.freeMemory();
-      if (usedMemory > maxAllowedMemory) {
-        // TODO:
-      } else {
-        // Add the entry to the cache.
-        dnMap.put(entry.getDN(), entryID);
-        
-        LinkedHashMap<Long,DN> map = backendMap.get(backend);
-        if (map == null) {
-          map = new LinkedHashMap<Long,DN>();
-          map.put(entryID, entry.getDN());
-          backendMap.put(backend, map);
-        } else {
-          map.put(entryID, entry.getDN());
+      long usedMemory = 0;
+
+      // Zero means unlimited here.
+      if (maxAllowedMemory != 0) {
+        // TODO: This should be done using JE public API 
+        // EnvironmentStats.getTotalLogSize() when JE 3.2.28 is available.
+        EnvironmentImpl envImpl = 
+              DbInternal.envGetEnvironmentImpl(entryCacheEnv);
+        UtilizationProfile utilProfile = envImpl.getUtilizationProfile();
+        SortedMap map = utilProfile.getFileSummaryMap(false);
+          
+        // This calculation is not exactly precise as the last JE logfile
+        // will always be less than JELOGFILEMAX however in the interest
+        // of performance and the fact that JE environment is always a
+        // moving target we will allow for that margin of error here.
+        usedMemory = map.size() * JELOGFILEMAX.longValue();
+
+        // TODO: Check and log a warning if usedMemory hits default or 
+        // configurable watermark, see Issue 1735.
+
+        if (usedMemory > maxAllowedMemory) {
+          long savedMaxEntries = maxEntries.longValue();
+          // Cap maxEntries artificially but dont let it go negative under
+          // any circumstances.
+          maxEntries.set((dnMap.isEmpty() ? 0 : dnMap.size() - 1));
+          // Add the entry to the map to trigger remove of the eldest entry.
+          // @see LinkedHashMapRotator.removeEldestEntry() for more details. 
+          dnMap.put(entry.getDN(), entryID);
+          // Restore the map and maxEntries.
+          dnMap.remove(entry.getDN());
+          maxEntries.set(savedMaxEntries);
+          // We'll always return true in this case, even tho we didn't actually
+          // add the entry due to memory constraints.
+          return true;
         }
-        
-        // Create key.
-        DatabaseEntry cacheEntryKey = new DatabaseEntry();
-        cacheEntryKey.setData(entry.getDN().toString().getBytes());
-        
-        // Create data.
-        int totalBytes = 0;
-        
-        // The object classes will be encoded as one-to-five byte length
-        // followed by a zero-delimited UTF-8 byte representation of the
-        // names (e.g., top\0person\0organizationalPerson\0inetOrgPerson).
-        int i=0;
-        int totalOCBytes = entry.getObjectClasses().size() - 1;
-        byte[][] ocBytes = new byte[entry.getObjectClasses().size()][];
-        for (String ocName : entry.getObjectClasses().values()) {
-          ocBytes[i] = getBytes(ocName);
-          totalOCBytes += ocBytes[i++].length;
-        }
-        byte[] ocLength = ASN1Element.encodeLength(totalOCBytes);
-        totalBytes += totalOCBytes + ocLength.length;
-        
-        
-        // The user attributes will be encoded as a one-to-five byte
-        // number of attributes followed by a sequence of:
-        // - A UTF-8 byte representation of the attribute name.
-        // - A zero delimiter
-        // - A one-to-five byte number of values for the attribute
-        // - A sequence of:
-        //   - A one-to-five byte length for the value
-        //   - A UTF-8 byte representation for the value
-        i=0;
-        int numUserAttributes = 0;
-        int totalUserAttrBytes = 0;
-        LinkedList<byte[]> userAttrBytes = new LinkedList<byte[]>();
-        for (List<Attribute> attrList : entry.getUserAttributes().values()) {
-          for (Attribute a : attrList) {
-            if (a.isVirtual() || (! a.hasValue())) {
-              continue;
-            }
-            
-            numUserAttributes++;
-            
-            byte[] nameBytes = getBytes(a.getNameWithOptions());
-            
-            int numValues = 0;
-            int totalValueBytes = 0;
-            LinkedList<byte[]> valueBytes = new LinkedList<byte[]>();
-            for (AttributeValue v : a.getValues()) {
-              numValues++;
-              byte[] vBytes = v.getValueBytes();
-              byte[] vLength = ASN1Element.encodeLength(vBytes.length);
-              valueBytes.add(vLength);
-              valueBytes.add(vBytes);
-              totalValueBytes += vLength.length + vBytes.length;
-            }
-            byte[] numValuesBytes = ASN1Element.encodeLength(numValues);
-            
-            byte[] attrBytes = new byte[nameBytes.length +
-                numValuesBytes.length +
-                totalValueBytes + 1];
-            System.arraycopy(nameBytes, 0, attrBytes, 0,
-                nameBytes.length);
-            
-            int pos = nameBytes.length+1;
-            System.arraycopy(numValuesBytes, 0, attrBytes, pos,
-                numValuesBytes.length);
-            pos += numValuesBytes.length;
-            for (byte[] b : valueBytes) {
-              System.arraycopy(b, 0, attrBytes, pos, b.length);
-              pos += b.length;
-            }
-            
-            userAttrBytes.add(attrBytes);
-            totalUserAttrBytes += attrBytes.length;
+      }
+
+      // Create key.
+      DatabaseEntry cacheEntryKey = new DatabaseEntry();
+      cacheEntryKey.setData(
+          entry.getDN().toNormalizedString().getBytes("UTF-8"));
+      
+      // Create data by encoding cache entry.
+      // TODO: Custom encoding used here due to performance and space 
+      // considerations. Should use Entry.encode(), see Issue 1675.
+      int totalBytes = 0;
+      
+      // The object classes will be encoded as one-to-five byte length
+      // followed by a zero-delimited UTF-8 byte representation of the
+      // names (e.g., top\0person\0organizationalPerson\0inetOrgPerson).
+      int i=0;
+      int totalOCBytes = entry.getObjectClasses().size() - 1;
+      byte[][] ocBytes = new byte[entry.getObjectClasses().size()][];
+      for (String ocName : entry.getObjectClasses().values()) {
+        ocBytes[i] = getBytes(ocName);
+        totalOCBytes += ocBytes[i++].length;
+      }
+      byte[] ocLength = ASN1Element.encodeLength(totalOCBytes);
+      totalBytes += totalOCBytes + ocLength.length;
+      
+      
+      // The user attributes will be encoded as a one-to-five byte
+      // number of attributes followed by a sequence of:
+      // - A UTF-8 byte representation of the attribute name.
+      // - A zero delimiter
+      // - A one-to-five byte number of values for the attribute
+      // - A sequence of:
+      //   - A one-to-five byte length for the value
+      //   - A UTF-8 byte representation for the value
+      i=0;
+      int numUserAttributes = 0;
+      int totalUserAttrBytes = 0;
+      LinkedList<byte[]> userAttrBytes = new LinkedList<byte[]>();
+      for (List<Attribute> attrList : entry.getUserAttributes().values()) {
+        for (Attribute a : attrList) {
+          if (a.isVirtual() || (! a.hasValue())) {
+            continue;
           }
+          
+          numUserAttributes++;
+          
+          byte[] nameBytes = getBytes(a.getNameWithOptions());
+          
+          int numValues = 0;
+          int totalValueBytes = 0;
+          LinkedList<byte[]> valueBytes = new LinkedList<byte[]>();
+          for (AttributeValue v : a.getValues()) {
+            numValues++;
+            byte[] vBytes = v.getValueBytes();
+            byte[] vLength = ASN1Element.encodeLength(vBytes.length);
+            valueBytes.add(vLength);
+            valueBytes.add(vBytes);
+            totalValueBytes += vLength.length + vBytes.length;
+          }
+          byte[] numValuesBytes = ASN1Element.encodeLength(numValues);
+          
+          byte[] attrBytes = new byte[nameBytes.length +
+              numValuesBytes.length +
+              totalValueBytes + 1];
+          System.arraycopy(nameBytes, 0, attrBytes, 0,
+              nameBytes.length);
+          
+          int pos = nameBytes.length+1;
+          System.arraycopy(numValuesBytes, 0, attrBytes, pos,
+              numValuesBytes.length);
+          pos += numValuesBytes.length;
+          for (byte[] b : valueBytes) {
+            System.arraycopy(b, 0, attrBytes, pos, b.length);
+            pos += b.length;
+          }
+          
+          userAttrBytes.add(attrBytes);
+          totalUserAttrBytes += attrBytes.length;
         }
-        byte[] userAttrCount =
-            ASN1OctetString.encodeLength(numUserAttributes);
-        totalBytes += totalUserAttrBytes + userAttrCount.length;
-        
-        // The operational attributes will be encoded in the same way as
-        // the user attributes.
-        i=0;
-        int numOperationalAttributes = 0;
-        int totalOperationalAttrBytes = 0;
-        LinkedList<byte[]> operationalAttrBytes =
-            new LinkedList<byte[]>();
-        for (List<Attribute> attrList : 
-          entry.getOperationalAttributes().values()) {
+      }
+      byte[] userAttrCount =
+          ASN1OctetString.encodeLength(numUserAttributes);
+      totalBytes += totalUserAttrBytes + userAttrCount.length;
+      
+      // The operational attributes will be encoded in the same way as
+      // the user attributes.
+      i=0;
+      int numOperationalAttributes = 0;
+      int totalOperationalAttrBytes = 0;
+      LinkedList<byte[]> operationalAttrBytes =
+          new LinkedList<byte[]>();
+      for (List<Attribute> attrList :
+        entry.getOperationalAttributes().values()) {
           for (Attribute a : attrList) {
             if (a.isVirtual() || (! a.hasValue())) {
               continue;
@@ -2371,7 +2370,7 @@ public class FileSystemEntryCache
         totalBytes += totalOperationalAttrBytes +
             operationalAttrCount.length;
         
-   
+        
         // Now we've got all the data that we need.  Create a big byte
         // array to hold it all and pack it in.
         byte[] entryBytes = new byte[totalBytes];
@@ -2410,61 +2409,126 @@ public class FileSystemEntryCache
           pos += b.length;
         }
         
-        // Put this cache entry into JE.
-        entryCacheDB.put(null, cacheEntryKey, new DatabaseEntry(entryBytes));
-        //long count = entryCacheDB.count();
-        //System.out.printf("<<<DEBUG>>> Entry: %s put to FSCACHE Entry Count: %d, Used Memory: %d\n",
-          //      entry.getDN().toString(), count, usedMemory);
-      }
-      // We'll always return true in this case, even if we didn't actually add
-      // the entry due to memory constraints.
-      return true;
+        // Put this cache entry into the database.
+        if (entryCacheDB.put(null, cacheEntryKey,
+            new DatabaseEntry(entryBytes)) == OperationStatus.SUCCESS) {
+          
+          // Add the entry to the cache maps.
+          dnMap.put(entry.getDN(), entryID);        
+          Map<Long,DN> map = backendMap.get(backend);
+          if (map == null) {
+            map = new LinkedHashMap<Long,DN>();
+            map.put(entryID, entry.getDN());
+            backendMap.put(backend, map);
+          } else {
+            map.put(entryID, entry.getDN());
+          }
+        }
+        
+        // We'll always return true in this case, even if we didn't actually add
+        // the entry due to memory constraints.
+        return true;
     } catch (Exception e) {
-      // e.printStackTrace();
       if (debugEnabled()) {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
       
       // Log an error message.
       logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.SEVERE_ERROR,
-              /* TODO: */ 0, "putEntryIfAbsent",
+              MSGID_FSCACHE_CANNOT_STORE_ENTRY,
               stackTraceToSingleLineString(e));
-      // We can't be sure there wasn't a conflict, so return false.
+
       return false;
     }
   }
-
+  
+ /** 
+  * Checks if the cache home exist and if not tries to recursively create it.
+  * If either is successful adjusts cache home access permissions accordingly
+  * to allow only process owner or the superuser to access JE environment.
+  * 
+  * @param  cacheHome  String representation of complete file system path.
+  * 
+  * @throws Exception  If failed to establish cache home.  
+  */
+  private void checkAndSetupCacheHome(String cacheHome) throws Exception {
+    
+    boolean cacheHasHome = false;
+    File cacheHomeDir = new File(cacheHome);
+    if (cacheHomeDir.exists() && 
+        cacheHomeDir.canRead() && 
+        cacheHomeDir.canWrite()) {
+      cacheHasHome = true;
+    } else {
+      try {
+        cacheHasHome = cacheHomeDir.mkdirs();
+      } catch (SecurityException e) {
+        cacheHasHome = false;
+      }
+    }
+    if ( cacheHasHome ) {
+      if(FilePermission.canSetPermissions()) {
+        try {
+          if(!FilePermission.setPermissions(cacheHomeDir, 
+              CACHE_HOME_PERMISSIONS)) {
+            throw new Exception();
+          }
+        } catch(Exception e) {
+          // Log an warning that the permissions were not set.
+          int msgID = MSGID_FSCACHE_SET_PERMISSIONS_FAILED;
+          String message = getMessage(msgID, cacheHome);
+          logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.SEVERE_WARNING,
+              message, msgID);
+        }
+      }
+    } else {
+      throw new Exception();
+    }
+  }
+  
+ /**
+  * This inner class exist solely to override <CODE>removeEldestEntry()</CODE>
+  * method of the LinkedHashMap.
+  * 
+  * @see  java.util.LinkedHashMap<K,V>  
+  */
   private class LinkedHashMapRotator<K,V> extends LinkedHashMap<K,V> {
     
     static final long serialVersionUID = 5271482121415968435L;
     
-    public LinkedHashMapRotator() {
-      super();
+    public LinkedHashMapRotator(int initialCapacity, 
+                                float loadFactor, 
+                                boolean accessOrder) {
+      super(initialCapacity, loadFactor, accessOrder);
     }
+    
+    // This method will get called each time we add a new key/value
+    // pair to the map. The eldest entry will be selected by the
+    // underlying LinkedHashMap implementation based on the access
+    // order configured and will follow either FIFO implementation
+    // by default or LRU implementation if configured so explicitly.
     @Override protected boolean removeEldestEntry(Map.Entry eldest) {
-      if (size() > maxEntries) {
+      // Check if we hit the limit on max entries and if so remove
+      // the eldest entry otherwise do nothing.
+      if (size() > maxEntries.longValue()) {
         DatabaseEntry cacheEntryKey = new DatabaseEntry();
         cacheWriteLock.lock();
-        cacheEntryKey.setData(eldest.getKey().toString().getBytes());
-        //System.out.printf("<<<DEBUG>>> removeEldestEntry Rotating DN: %s, ID: %d,",
-          //      eldest.getKey().toString(), eldest.getValue());
         try {
+          // Remove the the eldest entry from supporting maps.
+          cacheEntryKey.setData(eldest.getKey().toString().getBytes("UTF-8"));
           long entryID = (long) ((Long) eldest.getValue()).longValue();
-          // DN entryDN = idMap.get(entryID);
           Set backendSet = backendMap.keySet();
           
           Iterator backendIterator = backendSet.iterator();
           while (backendIterator.hasNext()) {
-            LinkedHashMap map = backendMap.get(backendIterator.next());
+            Map map = backendMap.get(backendIterator.next());
             map.remove(entryID);
           }
-          
+          // Remove the the eldest entry from the database.
           entryCacheDB.delete(null, cacheEntryKey);
-          //System.out.printf(" removed: %s\n", entryDN.toString());
         } catch (Exception e) {
-          e.printStackTrace();
           if (debugEnabled()) {
-            debugCaught(DebugLogLevel.ERROR, e);
+            TRACER.debugCaught(DebugLogLevel.ERROR, e);
           }
         } finally {
           cacheWriteLock.unlock();

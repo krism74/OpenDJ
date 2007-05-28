@@ -29,8 +29,11 @@ package org.opends.server.core;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.InetAddress;
+import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -48,7 +51,11 @@ import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 
 import org.opends.server.admin.ClassLoaderProvider;
+import org.opends.server.admin.server.ServerManagementContext;
 import org.opends.server.admin.std.server.PasswordValidatorCfg;
+import org.opends.server.admin.std.server.SynchronizationProviderCfg;
+import org.opends.server.admin.std.server.RootDSEBackendCfg;
+import org.opends.server.admin.std.server.RootCfg;
 import org.opends.server.api.*;
 import org.opends.server.api.plugin.PluginType;
 import org.opends.server.api.plugin.StartupPluginResult;
@@ -59,7 +66,10 @@ import org.opends.server.config.StringConfigAttribute;
 import org.opends.server.config.JMXMBean;
 import org.opends.server.extensions.ConfigFileHandler;
 import org.opends.server.extensions.JMXAlertHandler;
-import org.opends.server.loggers.StartupErrorLogger;
+import org.opends.server.loggers.TextErrorLogPublisher;
+import org.opends.server.loggers.TextWriter;
+import org.opends.server.loggers.RetentionPolicy;
+import org.opends.server.loggers.RotationPolicy;
 import org.opends.server.monitors.BackendMonitor;
 import org.opends.server.monitors.ConnectionHandlerMonitor;
 import org.opends.server.schema.*;
@@ -75,10 +85,11 @@ import org.opends.server.util.args.BooleanArgument;
 import org.opends.server.util.args.StringArgument;
 
 import static org.opends.server.config.ConfigConstants.*;
-import static org.opends.server.loggers.Access.*;
-import static org.opends.server.loggers.debug.DebugLogger.debugCaught;
-import static org.opends.server.loggers.debug.DebugLogger.debugEnabled;
-import static org.opends.server.loggers.Error.*;
+import static org.opends.server.loggers.AccessLogger.*;
+import org.opends.server.loggers.debug.TextDebugLogPublisher;
+import static org.opends.server.loggers.ErrorLogger.*;
+import static org.opends.server.loggers.debug.DebugLogger.*;
+import org.opends.server.loggers.debug.DebugTracer;
 import static org.opends.server.messages.CoreMessages.*;
 import static org.opends.server.messages.MessageHandler.*;
 import static org.opends.server.schema.SchemaConstants.*;
@@ -86,6 +97,7 @@ import static org.opends.server.util.DynamicConstants.*;
 import static org.opends.server.util.ServerConstants.*;
 import static org.opends.server.util.StaticUtils.*;
 import static org.opends.server.util.Validator.*;
+import com.sleepycat.je.JEVersion;
 
 
 
@@ -97,6 +109,11 @@ import static org.opends.server.util.Validator.*;
 public class DirectoryServer
        implements Thread.UncaughtExceptionHandler, AlertGenerator
 {
+  /**
+   * The tracer object for the debug logger.
+   */
+  private static final DebugTracer TRACER = getTracer();
+
     /**
     * The fully-qualified name of this class.
     */
@@ -272,6 +289,16 @@ public class DirectoryServer
   // The set of trust manager providers registered with the server.
   private ConcurrentHashMap<DN,TrustManagerProvider> trustManagerProviders;
 
+  // The set of log rotation policies registered with the Directory Server, as
+  // a mapping between the DN of the associated configuration entry and the
+  // policy implementation.
+  private ConcurrentHashMap<DN, RotationPolicy> rotationPolicies;
+
+  // The set of log retention policies registered with the Directory Server, as
+  // a mapping between the DN of the associated configuration entry and the
+  // policy implementation.
+  private ConcurrentHashMap<DN, RetentionPolicy> retentionPolicies;
+
   // The set of extended operation handlers registered with the server (mapped
   // between the OID of the extended operation and the handler).
   private ConcurrentHashMap<String,ExtendedOperationHandler>
@@ -334,7 +361,8 @@ public class DirectoryServer
 
   // The set of synchronization providers that have been registered with the
   // Directory Server.
-  private CopyOnWriteArrayList<SynchronizationProvider>
+  private
+    CopyOnWriteArrayList<SynchronizationProvider<SynchronizationProviderCfg>>
                synchronizationProviders;
 
   // The set of virtual attributes defined in the server.
@@ -404,6 +432,12 @@ public class DirectoryServer
   // with the server offline.
   private List<Modification> offlineSchemaChanges;
 
+  // The log rotation policy config manager for the Directory Server.
+  private LogRotationPolicyConfigManager rotationPolicyConfigManager;
+
+  // The log retention policy config manager for the Directory Server.
+  private LogRetentionPolicyConfigManager retentionPolicyConfigManager;
+
   // The logger configuration manager for the Directory Server.
   private LoggerConfigManager loggerConfigManager;
 
@@ -467,9 +501,11 @@ public class DirectoryServer
   // The schema configuration manager for the Directory Server.
   private SchemaConfigManager schemaConfigManager;
 
+  // The debug logger that will be used during the Directory Server startup.
+  private TextDebugLogPublisher startupDebugLogPublisher;
 
   // The error logger that will be used during the Directory Server startup.
-  private StartupErrorLogger startupErrorLogger;
+  private TextErrorLogPublisher startupErrorLogPublisher;
 
   // The fully-qualified name of the configuration handler class.
   private String configClass;
@@ -614,6 +650,10 @@ public class DirectoryServer
          new ConcurrentHashMap<DN,KeyManagerProvider>();
     directoryServer.trustManagerProviders =
          new ConcurrentHashMap<DN,TrustManagerProvider>();
+    directoryServer.rotationPolicies =
+         new ConcurrentHashMap<DN, RotationPolicy>();
+    directoryServer.retentionPolicies =
+         new ConcurrentHashMap<DN, RetentionPolicy>();
     directoryServer.certificateMappers =
          new ConcurrentHashMap<DN,CertificateMapper>();
     directoryServer.passwordPolicies =
@@ -639,7 +679,8 @@ public class DirectoryServer
     directoryServer.shutdownListeners =
          new CopyOnWriteArrayList<ServerShutdownListener>();
     directoryServer.synchronizationProviders =
-         new CopyOnWriteArrayList<SynchronizationProvider>();
+         new CopyOnWriteArrayList<SynchronizationProvider
+                                 <SynchronizationProviderCfg>>();
     directoryServer.supportedControls = new TreeSet<String>();
     directoryServer.supportedFeatures = new TreeSet<String>();
     directoryServer.virtualAttributes =
@@ -716,17 +757,21 @@ public class DirectoryServer
     // Install default debug and error loggers for use until enough of the
     // configuration has been read to allow the real loggers to be installed.
 
-    removeAllErrorLoggers(true);
-    startupErrorLogger = new StartupErrorLogger();
-    startupErrorLogger.initializeErrorLogger(null);
-    addErrorLogger(startupErrorLogger);
+    startupErrorLogPublisher =
+        TextErrorLogPublisher.getStartupTextErrorPublisher(
+            new TextWriter.STDOUT());
+    addErrorLogPublisher(DN.NULL_DN, startupErrorLogPublisher);
 
+    startupDebugLogPublisher =
+        TextDebugLogPublisher.getStartupTextDebugPublisher(
+            new TextWriter.STDOUT());
+    addDebugLogPublisher(DN.NULL_DN, startupDebugLogPublisher);
 
     // Create the MBean server that we will use for JMX interaction.
     initializeJMX();
 
 
-    logError(ErrorLogCategory.CORE_SERVER, ErrorLogSeverity.STARTUP_DEBUG,
+    logError(ErrorLogCategory.STARTUP, ErrorLogSeverity.INFORMATIONAL,
              MSGID_DIRECTORY_BOOTSTRAPPING, getVersionString());
     logError(ErrorLogCategory.CORE_SERVER, ErrorLogSeverity.INFORMATIONAL,
              MSGID_DIRECTORY_BOOTSTRAPPING, getVersionString());
@@ -785,7 +830,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_CREATE_MBEAN_SERVER;
@@ -836,7 +881,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_LOAD_CONFIG_HANDLER_CLASS;
@@ -852,7 +897,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_INSTANTIATE_CONFIG_HANDLER;
@@ -870,7 +915,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, ie);
+        TRACER.debugCaught(DebugLogLevel.ERROR, ie);
       }
 
       throw ie;
@@ -879,7 +924,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_INITIALIZE_CONFIG_HANDLER;
@@ -965,7 +1010,7 @@ public class DirectoryServer
         {
           if (debugEnabled())
           {
-            debugCaught(DebugLogLevel.ERROR, e);
+            TRACER.debugCaught(DebugLogLevel.ERROR, e);
           }
 
           int    msgID   = MSGID_CANNOT_ACQUIRE_EXCLUSIVE_SERVER_LOCK;
@@ -997,9 +1042,17 @@ public class DirectoryServer
       initializeCryptoManager();
 
 
+      // Initialize the log rotation policies.
+      rotationPolicyConfigManager = new LogRotationPolicyConfigManager();
+      rotationPolicyConfigManager.initializeLogRotationPolicyConfig();
+
+      // Initialize the log retention policies.
+      retentionPolicyConfigManager = new LogRetentionPolicyConfigManager();
+      retentionPolicyConfigManager.initializeLogRetentionPolicyConfig();
+
       // Initialize the server loggers.
       loggerConfigManager = new LoggerConfigManager();
-      loggerConfigManager.initializeLoggers();
+      loggerConfigManager.initializeLoggerConfig();
 
 
 
@@ -1011,7 +1064,7 @@ public class DirectoryServer
       // Initialize the server alert handlers.
       initializeAlertHandlers();
 
-
+      
       // Initialize the key manager provider.
       keyManagerProviderConfigManager = new KeyManagerProviderConfigManager();
       keyManagerProviderConfigManager.initializeKeyManagerProviders();
@@ -1049,6 +1102,9 @@ public class DirectoryServer
       // Initialize the entry cache.
       entryCacheConfigManager = new EntryCacheConfigManager();
       entryCacheConfigManager.initializeEntryCache();
+      
+      // Reset the map as we can no longer guarantee offline state.  
+      directoryServer.offlineBackendsStateIDs.clear();
 
       // Register the supported controls and supported features.
       initializeSupportedControls();
@@ -1110,14 +1166,9 @@ public class DirectoryServer
       }
 
 
-      // At this point, we should be ready to go.  Start all the connection
-      // handlers.
       if (startConnectionHandlers)
       {
-        for (ConnectionHandler c : connectionHandlers)
-        {
-          c.start();
-        }
+        startConnectionHandlers();
       }
 
 
@@ -1134,7 +1185,8 @@ public class DirectoryServer
       sendAlertNotification(this, ALERT_TYPE_SERVER_STARTED, msgID, message);
 
 
-      removeErrorLogger(startupErrorLogger);
+      removeDebugLogPublisher(DN.NULL_DN);
+      removeErrorLogPublisher(DN.NULL_DN);
 
 
       // If a server.starting file exists, then remove it.
@@ -1168,7 +1220,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1190,7 +1242,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1212,7 +1264,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1235,7 +1287,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1257,7 +1309,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1280,7 +1332,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1303,7 +1355,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1326,7 +1378,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1348,7 +1400,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1370,7 +1422,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1393,7 +1445,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1417,7 +1469,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1440,7 +1492,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1462,7 +1514,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1485,7 +1537,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1507,7 +1559,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1529,7 +1581,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1551,7 +1603,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1574,7 +1626,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1597,7 +1649,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1620,7 +1672,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1643,7 +1695,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1666,7 +1718,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_MATCHING_RULE;
@@ -1698,7 +1750,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_SYNTAX;
@@ -1719,7 +1771,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_SYNTAX;
@@ -1740,7 +1792,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_SYNTAX;
@@ -1762,7 +1814,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_SYNTAX;
@@ -1783,7 +1835,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_SYNTAX;
@@ -1805,7 +1857,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_SYNTAX;
@@ -1826,7 +1878,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_SYNTAX;
@@ -1847,7 +1899,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_SYNTAX;
@@ -1868,7 +1920,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_SYNTAX;
@@ -1889,7 +1941,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_SYNTAX;
@@ -1910,7 +1962,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_BOOTSTRAP_SYNTAX;
@@ -2062,7 +2114,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
     }
 
@@ -2074,7 +2126,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, ie);
+        TRACER.debugCaught(DebugLogLevel.ERROR, ie);
       }
 
       throw ie;
@@ -2083,7 +2135,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_INITIALIZE_CONFIG_HANDLER;
@@ -2159,17 +2211,18 @@ public class DirectoryServer
 
     // Make sure to initialize the root DSE backend separately after all other
     // backends.
-    ConfigEntry rootDSEConfigEntry;
+    RootDSEBackendCfg rootDSECfg;
     try
     {
-      DN rootDSEConfigDN = DN.decode(DN_ROOT_DSE_CONFIG);
-      rootDSEConfigEntry = configHandler.getConfigEntry(rootDSEConfigDN);
+      RootCfg root =
+           ServerManagementContext.getInstance().getRootConfiguration();
+      rootDSECfg = root.getRootDSEBackend();
     }
     catch (Exception e)
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_GET_ROOT_DSE_CONFIG_ENTRY;
@@ -2177,9 +2230,9 @@ public class DirectoryServer
       throw new InitializationException(msgID, message, e);
     }
 
-    DN[] baseDNs   = { DN.nullDN() };
     rootDSEBackend = new RootDSEBackend();
-    rootDSEBackend.initializeBackend(rootDSEConfigEntry, baseDNs);
+    rootDSEBackend.configureBackend(rootDSECfg);
+    rootDSEBackend.initializeBackend();
   }
 
 
@@ -3346,7 +3399,7 @@ public class DirectoryServer
           {
             if (debugEnabled())
             {
-              debugCaught(DebugLogLevel.ERROR, e);
+              TRACER.debugCaught(DebugLogLevel.ERROR, e);
             }
           }
         }
@@ -3371,7 +3424,7 @@ public class DirectoryServer
           // This should never happen.
           if (debugEnabled())
           {
-            debugCaught(DebugLogLevel.ERROR, e);
+            TRACER.debugCaught(DebugLogLevel.ERROR, e);
           }
         }
       }
@@ -4204,8 +4257,11 @@ public class DirectoryServer
           baseName = "___NAME___";
         }
 
-        lines.add("  <adm:property name=\"" + baseName + "\" mandatory=\"" +
-                  String.valueOf(attr.isRequired()) + "\">");
+        lines.add("  <adm:property name=\"" + baseName + "\"");
+        lines.add("    mandatory=\""
+             + String.valueOf(attr.isRequired()) + "\"");
+        lines.add("    multi-valued=\""
+             + String.valueOf(attr.isMultiValued()) + "\">");
         lines.add("    <adm:synopsis>");
         lines.add("      ___SYNOPSIS___");
         lines.add("    </adm:synopsis>");
@@ -4246,6 +4302,18 @@ public class DirectoryServer
         }
 
         lines.add("    </adm:description>");
+        if (attr.requiresAdminAction())
+        {
+          lines.add("    <adm:requires-admin-action>");
+          lines.add("      <adm:server-restart/>");
+          lines.add("    </adm:requires-admin-action>");
+        }
+        if (!attr.isRequired())
+        {
+          lines.add("    <adm:default-behavior>");
+          lines.add("      <adm:undefined/>");
+          lines.add("    </adm:default-behavior>");
+        }
         lines.add("    <adm:syntax>");
 
         if (attr instanceof org.opends.server.config.BooleanConfigAttribute)
@@ -4546,7 +4614,7 @@ public class DirectoryServer
         {
           if (debugEnabled())
           {
-            debugCaught(DebugLogLevel.ERROR, e);
+            TRACER.debugCaught(DebugLogLevel.ERROR, e);
           }
         }
       }
@@ -4921,6 +4989,24 @@ public class DirectoryServer
   }
 
 
+  /**
+   * Retrieves the password policy registered for the provided configuration
+   * entry.
+   *
+   * @param  configEntryDN  The DN of the configuration entry for which to
+   *                        retrieve the associated password policy.
+   *
+   * @return  The password policy config registered for the provided
+   *          configuration entry, or <CODE>null</CODE> if there is
+   *          no such policy.
+   */
+  public static PasswordPolicyConfig getPasswordPolicyConfig(DN configEntryDN)
+  {
+    Validator.ensureNotNull(configEntryDN);
+
+    return directoryServer.passwordPolicies.get(configEntryDN);
+  }
+
 
   /**
    * Registers the provided password policy with the Directory Server.  If a
@@ -4929,14 +5015,13 @@ public class DirectoryServer
    *
    * @param  configEntryDN  The DN of the configuration entry that defines the
    *                        password policy.
-   * @param  policy         The password policy to register with the server.
+   * @param  config         The password policy config to register with the
+   *                        server.
    */
   public static void registerPasswordPolicy(DN configEntryDN,
-                                            PasswordPolicy policy)
+                                            PasswordPolicyConfig config)
   {
-    Validator.ensureNotNull(configEntryDN, policy);
-
-    PasswordPolicyConfig config = new PasswordPolicyConfig(policy);
+    Validator.ensureNotNull(configEntryDN, config);
 
     directoryServer.passwordPolicies.put(configEntryDN, config);
   }
@@ -4961,7 +5046,6 @@ public class DirectoryServer
 
     PasswordPolicyConfig config
             = directoryServer.passwordPolicies.remove(configEntryDN);
-    if (null != config) config.finalizePasswordPolicyConfig();
   }
 
 
@@ -5028,6 +5112,105 @@ public class DirectoryServer
   }
 
 
+  /**
+   * Retrieves the log rotation policy registered for the provided configuration
+   * entry.
+   *
+   * @param  configEntryDN  The DN of the configuration entry for which to
+   *                        retrieve the associated rotation policy.
+   *
+   * @return  The rotation policy registered for the provided configuration
+   *          entry, or <CODE>null</CODE> if there is no such policy.
+   */
+  public static RotationPolicy getRotationPolicy(DN configEntryDN)
+  {
+    Validator.ensureNotNull(configEntryDN);
+
+    return directoryServer.rotationPolicies.get(configEntryDN);
+  }
+
+    /**
+   * Registers the provided log rotation policy with the Directory Server.  If a
+   * policy is already registered for the provided configuration entry DN, then
+   * it will be replaced.
+   *
+   * @param  configEntryDN  The DN of the configuration entry that defines the
+   *                        password policy.
+   * @param  policy         The rotation policy to register with the server.
+   */
+  public static void registerRotationPolicy(DN configEntryDN,
+                                            RotationPolicy policy)
+  {
+    Validator.ensureNotNull(configEntryDN, policy);
+
+    directoryServer.rotationPolicies.put(configEntryDN, policy);
+  }
+
+
+
+  /**
+   * Deregisters the provided log rotation policy with the Directory Server.
+   * If no such policy is registered, then no action will be taken.
+   *
+   * @param  configEntryDN  The DN of the configuration entry that defines the
+   *                        rotation policy to deregister.
+   */
+  public static void deregisterRotationPolicy(DN configEntryDN)
+  {
+    Validator.ensureNotNull(configEntryDN);
+
+    directoryServer.rotationPolicies.remove(configEntryDN);
+  }
+
+  /**
+   * Retrieves the log retention policy registered for the provided
+   * configuration entry.
+   *
+   * @param  configEntryDN  The DN of the configuration entry for which to
+   *                        retrieve the associated retention policy.
+   *
+   * @return  The retention policy registered for the provided configuration
+   *          entry, or <CODE>null</CODE> if there is no such policy.
+   */
+  public static RetentionPolicy getRetentionPolicy(DN configEntryDN)
+  {
+    Validator.ensureNotNull(configEntryDN);
+
+    return directoryServer.retentionPolicies.get(configEntryDN);
+  }
+
+  /**
+   * Registers the provided log retention policy with the Directory Server.
+   * If a policy is already registered for the provided configuration entry DN,
+   * then it will be replaced.
+   *
+   * @param  configEntryDN  The DN of the configuration entry that defines the
+   *                        password policy.
+   * @param  policy         The retention policy to register with the server.
+   */
+  public static void registerRetentionPolicy(DN configEntryDN,
+                                            RetentionPolicy policy)
+  {
+    Validator.ensureNotNull(configEntryDN, policy);
+
+    directoryServer.retentionPolicies.put(configEntryDN, policy);
+  }
+
+
+
+  /**
+   * Deregisters the provided log retention policy with the Directory Server.
+   * If no such policy is registered, then no action will be taken.
+   *
+   * @param  configEntryDN  The DN of the configuration entry that defines the
+   *                        retention policy to deregister.
+   */
+  public static void deregisterRetentionPolicy(DN configEntryDN)
+  {
+    Validator.ensureNotNull(configEntryDN);
+
+    directoryServer.retentionPolicies.remove(configEntryDN);
+  }
 
   /**
    * Retrieves the set of monitor providers that have been registered with the
@@ -5094,7 +5277,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
     }
   }
@@ -5130,7 +5313,7 @@ public class DirectoryServer
       {
         if (debugEnabled())
         {
-          debugCaught(DebugLogLevel.ERROR, e);
+          TRACER.debugCaught(DebugLogLevel.ERROR, e);
         }
       }
     }
@@ -5788,6 +5971,16 @@ public class DirectoryServer
         newBackends.put(backendID, backend);
         directoryServer.backends = newBackends;
 
+        for (String oid : backend.getSupportedControls())
+        {
+          registerSupportedControl(oid);
+        }
+
+        for (String oid : backend.getSupportedFeatures())
+        {
+          registerSupportedFeature(oid);
+        }
+
         BackendMonitor monitor = new BackendMonitor(backend);
         monitor.initializeMonitorProvider(null);
         backend.setBackendMonitor(monitor);
@@ -5832,20 +6025,25 @@ public class DirectoryServer
 
 
   /**
-   * TODO:
+   * This method returns a map that contains a unique offline state id,
+   * such as checksum, for every server backend that has registered one.
    *
-   * @return  Map
+   * @return  <CODE>Map<String,Long></CODE> Backend to 
+   *                Checksum/id map for offline state.
    */
-  public static ConcurrentHashMap<String,Long> getOfflineBackendsStateIDs() {
-    return directoryServer.offlineBackendsStateIDs;
+  public static Map<String,Long> getOfflineBackendsStateIDs() {
+    return Collections.unmodifiableMap(directoryServer.offlineBackendsStateIDs);
   }
 
   /**
-   * TODO:
+   * This method allows any server backend to register its unique offline
+   * state, such as checksum, in a global map other server components can
+   * access to determine if any changes were made to given backend while
+   * offline.
    *
-   * @param  backend
+   * @param  backend  As returned by <CODE>getBackendID()</CODE> method.
    *
-   * @param  id
+   * @param  id       Unique offline state identifier such as checksum.
    */
   public static void registerOfflineBackendStateID(String backend, long id) {
     directoryServer.offlineBackendsStateIDs.put(backend, id);
@@ -6902,7 +7100,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_WORKQ_CANNOT_PARSE_DN;
@@ -6946,7 +7144,7 @@ public class DirectoryServer
       {
         if (debugEnabled())
         {
-          debugCaught(DebugLogLevel.ERROR, e);
+          TRACER.debugCaught(DebugLogLevel.ERROR, e);
         }
 
         msgID = MSGID_WORKQ_CANNOT_LOAD;
@@ -6963,7 +7161,7 @@ public class DirectoryServer
       {
         if (debugEnabled())
         {
-          debugCaught(DebugLogLevel.ERROR, e);
+          TRACER.debugCaught(DebugLogLevel.ERROR, e);
         }
 
         msgID = MSGID_WORKQ_CANNOT_INSTANTIATE;
@@ -6976,7 +7174,69 @@ public class DirectoryServer
     }
   }
 
+  /**
+   * Starts the connection handlers defined in the Directory Server
+   * Configuration.
+   *
+   * @throws  ConfigException If there are more than one connection handlers
+   *                          using the same host port or no connection handler
+   *                          are enabled or we could not bind to any of the
+   *                          listeners.
+   */
+  private void startConnectionHandlers() throws ConfigException
+  {
+    LinkedHashSet<HostPort> usedListeners = new LinkedHashSet<HostPort>();
+    LinkedHashSet<String> errorMessages = new LinkedHashSet<String>();
+    // Check that the port specified in the connection handlers is
+    // available.
+    for (ConnectionHandler<?> c : connectionHandlers)
+    {
+      for (HostPort listener : c.getListeners())
+      {
+        if (usedListeners.contains(listener))
+        {
+          // The port was already specified: this is a configuration error,
+          // log a message.
+          int msgID = MSGID_HOST_PORT_ALREADY_SPECIFIED;
+          String message = getMessage(msgID, c.getConnectionHandlerName(),
+              listener.toString());
+          logError(ErrorLogCategory.CONNECTION_HANDLING,
+              ErrorLogSeverity.SEVERE_ERROR, message, msgID);
+          errorMessages.add(message);
 
+        }
+        else
+        {
+          usedListeners.add(listener);
+        }
+      }
+    }
+
+    if (errorMessages.size() > 0)
+    {
+      throw new ConfigException(MSGID_ERROR_STARTING_CONNECTION_HANDLERS,
+          getMessage(MSGID_ERROR_STARTING_CONNECTION_HANDLERS));
+    }
+
+
+    // If there are no connection handlers log a message.
+    if (connectionHandlers.isEmpty())
+    {
+      int msgID = MSGID_NOT_AVAILABLE_CONNECTION_HANDLERS;
+      String message = getMessage(msgID);
+      logError(ErrorLogCategory.CONNECTION_HANDLING,
+          ErrorLogSeverity.SEVERE_ERROR, message, msgID);
+      throw new ConfigException(MSGID_ERROR_STARTING_CONNECTION_HANDLERS,
+          getMessage(MSGID_ERROR_STARTING_CONNECTION_HANDLERS));
+    }
+
+    // At this point, we should be ready to go.  Start all the connection
+    // handlers.
+    for (ConnectionHandler c : connectionHandlers)
+    {
+      c.start();
+    }
+  }
 
   /**
    * Retrieves a reference to the Directory Server work queue.
@@ -7202,8 +7462,9 @@ public class DirectoryServer
    * @return  The set of synchronization providers that have been registered
    *          with the Directory Server.
    */
-  public static CopyOnWriteArrayList<SynchronizationProvider>
-              getSynchronizationProviders()
+  public static
+    CopyOnWriteArrayList<SynchronizationProvider<SynchronizationProviderCfg>>
+      getSynchronizationProviders()
   {
     return directoryServer.synchronizationProviders;
   }
@@ -7215,8 +7476,8 @@ public class DirectoryServer
    *
    * @param  provider  The synchronization provider to register.
    */
-  public static void registerSynchronizationProvider(SynchronizationProvider
-                                                          provider)
+  public static void registerSynchronizationProvider(
+      SynchronizationProvider<SynchronizationProviderCfg> provider)
   {
     directoryServer.synchronizationProviders.add(provider);
   }
@@ -7282,7 +7543,7 @@ public class DirectoryServer
       {
         if (debugEnabled())
         {
-          debugCaught(DebugLogLevel.ERROR, e);
+          TRACER.debugCaught(DebugLogLevel.ERROR, e);
         }
       }
     }
@@ -7311,7 +7572,7 @@ public class DirectoryServer
       {
         if (debugEnabled())
         {
-          debugCaught(DebugLogLevel.ERROR, e);
+          TRACER.debugCaught(DebugLogLevel.ERROR, e);
         }
       }
     }
@@ -7365,7 +7626,7 @@ public class DirectoryServer
       {
         if (debugEnabled())
         {
-          debugCaught(DebugLogLevel.ERROR, e);
+          TRACER.debugCaught(DebugLogLevel.ERROR, e);
         }
       }
     }
@@ -7394,7 +7655,7 @@ public class DirectoryServer
       {
         if (debugEnabled())
         {
-          debugCaught(DebugLogLevel.ERROR, e);
+          TRACER.debugCaught(DebugLogLevel.ERROR, e);
         }
       }
     }
@@ -7449,7 +7710,7 @@ public class DirectoryServer
       {
         if (debugEnabled())
         {
-          debugCaught(DebugLogLevel.ERROR, e);
+          TRACER.debugCaught(DebugLogLevel.ERROR, e);
         }
       }
     }
@@ -7478,7 +7739,7 @@ public class DirectoryServer
       {
         if (debugEnabled())
         {
-          debugCaught(DebugLogLevel.ERROR, e);
+          TRACER.debugCaught(DebugLogLevel.ERROR, e);
         }
       }
     }
@@ -7533,7 +7794,7 @@ public class DirectoryServer
       {
         if (debugEnabled())
         {
-          debugCaught(DebugLogLevel.ERROR, e);
+          TRACER.debugCaught(DebugLogLevel.ERROR, e);
         }
       }
     }
@@ -7562,7 +7823,7 @@ public class DirectoryServer
       {
         if (debugEnabled())
         {
-          debugCaught(DebugLogLevel.ERROR, e);
+          TRACER.debugCaught(DebugLogLevel.ERROR, e);
         }
       }
     }
@@ -7645,7 +7906,7 @@ public class DirectoryServer
       {
         if (debugEnabled())
         {
-          debugCaught(DebugLogLevel.ERROR, e);
+          TRACER.debugCaught(DebugLogLevel.ERROR, e);
         }
       }
     }
@@ -7699,7 +7960,7 @@ public class DirectoryServer
       {
         if (debugEnabled())
         {
-          debugCaught(DebugLogLevel.ERROR, e);
+          TRACER.debugCaught(DebugLogLevel.ERROR, e);
         }
       }
     }
@@ -7729,7 +7990,7 @@ public class DirectoryServer
           {
             if (debugEnabled())
             {
-              debugCaught(DebugLogLevel.ERROR, e);
+              TRACER.debugCaught(DebugLogLevel.ERROR, e);
             }
           }
         }
@@ -7749,7 +8010,7 @@ public class DirectoryServer
       {
         if (debugEnabled())
         {
-          debugCaught(DebugLogLevel.ERROR, e);
+          TRACER.debugCaught(DebugLogLevel.ERROR, e);
         }
       }
     }
@@ -7767,7 +8028,7 @@ public class DirectoryServer
       {
         if (debugEnabled())
         {
-          debugCaught(DebugLogLevel.ERROR, e);
+          TRACER.debugCaught(DebugLogLevel.ERROR, e);
         }
       }
     }
@@ -7802,7 +8063,7 @@ public class DirectoryServer
       {
         if (debugEnabled())
         {
-          debugCaught(DebugLogLevel.ERROR, e);
+          TRACER.debugCaught(DebugLogLevel.ERROR, e);
         }
       }
     }
@@ -7842,7 +8103,7 @@ public class DirectoryServer
         {
           if (debugEnabled())
           {
-            debugCaught(DebugLogLevel.ERROR, e2);
+            TRACER.debugCaught(DebugLogLevel.ERROR, e2);
           }
 
           msgID = MSGID_SHUTDOWN_CANNOT_RELEASE_SHARED_BACKEND_LOCK;
@@ -7857,27 +8118,13 @@ public class DirectoryServer
       {
         if (debugEnabled())
         {
-          debugCaught(DebugLogLevel.ERROR, e);
+          TRACER.debugCaught(DebugLogLevel.ERROR, e);
         }
       }
     }
 
     // Finalize the entry cache.
     DirectoryServer.getEntryCache().finalizeEntryCache();
-
-    // Shut down all the access loggers.
-    try
-    {
-      removeAllAccessLoggers(true);
-    }
-    catch (Exception e)
-    {
-      if (debugEnabled())
-      {
-        debugCaught(DebugLogLevel.ERROR, e);
-      }
-    }
-
 
     // Release the exclusive lock for the Directory Server process.
     String lockFile = LockFileManager.getServerLockFileName();
@@ -7896,7 +8143,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       msgID   = MSGID_CANNOT_RELEASE_EXCLUSIVE_SERVER_LOCK;
@@ -7912,31 +8159,9 @@ public class DirectoryServer
     logError(ErrorLogCategory.CORE_SERVER, ErrorLogSeverity.NOTICE,
              MSGID_SERVER_STOPPED);
 
-    try
-    {
-      removeAllErrorLoggers(true);
-    }
-    catch (Exception e)
-    {
-      if (debugEnabled())
-      {
-        debugCaught(DebugLogLevel.ERROR, e);
-      }
-    }
-
-
-    // The JDK logger doesn't allow you to deregister things, so we have to
-    // reset it.  This is necessary to avoid exceptions if you perform an
-    // in-core restart or stop the server and start a new instance in the same
-    // JVM (which currently isn't possible through any means other than an
-    // in-core restart but might be exposed at some point).
-    //
-    // FIXME -- This could cause problems with an application that's embedding
-    //          OpenDS and also using the JDK logger.  The solution for this
-    //          will come once we have rewritten the loggers so that we no
-    //          longer use the JDK logging framework.
-    java.util.logging.LogManager.getLogManager().reset();
-
+    removeAllAccessLogPublishers();
+    removeAllErrorLogPublishers();
+    removeAllDebugLogPublishers();
 
     // Just in case there's something that isn't shut down properly, wait for
     // the monitor to give the OK to stop.
@@ -7963,13 +8188,8 @@ public class DirectoryServer
   {
     try
     {
-      String configClass = directoryServer.configClass;
-      String configFile  = directoryServer.configFile;
-
       shutDown(className, reason);
-      getNewInstance();
-      directoryServer.bootstrapServer();
-      directoryServer.initializeConfiguration(configClass, configFile);
+      reinitialize();
       directoryServer.startServer();
     }
     catch (Exception e)
@@ -7983,7 +8203,22 @@ public class DirectoryServer
     }
   }
 
-
+  /**
+   * Reinitializes the server following a shutdown, preparing it for
+   * a call to <code>startServer</code>.
+   *
+   * @throws  InitializationException  If a problem occurs while trying to
+   *                                   initialize the config handler or
+   *                                   bootstrap that server.
+   */
+  public static void reinitialize() throws InitializationException
+  {
+    String configClass = directoryServer.configClass;
+    String configFile  = directoryServer.configFile;
+    getNewInstance();
+    directoryServer.bootstrapServer();
+    directoryServer.initializeConfiguration(configClass, configFile);
+  }
 
   /**
    * Retrieves the maximum number of concurrent client connections that may be
@@ -8120,24 +8355,25 @@ public class DirectoryServer
    */
   public static String getVersionString()
   {
-    StringBuilder buffer = new StringBuilder();
-    buffer.append(PRODUCT_NAME);
-    buffer.append(" ");
-    buffer.append(MAJOR_VERSION);
-    buffer.append(".");
-    buffer.append(MINOR_VERSION);
-    if ((VERSION_QUALIFIER == null) || (VERSION_QUALIFIER.length() == 0))
-    {
-      buffer.append(".");
-      buffer.append(POINT_VERSION);
-    }
-    else
-    {
-      buffer.append(VERSION_QUALIFIER);
-    }
-    return buffer.toString();
+    return FULL_VERSION_STRING;
   }
 
+  /**
+   * Prints out the version string for the Directory Server.
+   *
+   *
+   * @param  outputStream  The output stream to which the version information
+   *                       should be written.
+   *
+   * @throws  IOException  If a problem occurs while attempting to write the
+   *                       version information to the provided output stream.
+   */
+  public static void printVersion(OutputStream outputStream)
+  throws IOException
+  {
+    outputStream.write(getBytes(PRINTABLE_VERSION_STRING));
+    return;
+  }
 
 
   /**
@@ -8334,7 +8570,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       // This could theoretically happen if an alert needs to be sent before the
@@ -8396,7 +8632,7 @@ public class DirectoryServer
   {
     if (debugEnabled())
     {
-      debugCaught(DebugLogLevel.ERROR, exception);
+      TRACER.debugCaught(DebugLogLevel.ERROR, exception);
     }
 
     int    msgID   = MSGID_UNCAUGHT_THREAD_EXCEPTION;
@@ -8424,7 +8660,6 @@ public class DirectoryServer
     BooleanArgument fullVersion       = null;
     BooleanArgument noDetach          = null;
     BooleanArgument systemInfo        = null;
-    BooleanArgument version           = null;
     StringArgument  configClass       = null;
     StringArgument  configFile        = null;
 
@@ -8467,11 +8702,6 @@ public class DirectoryServer
                               MSGID_DSCORE_DESCRIPTION_WINDOWS_NET_START);
       windowsNetStart.setHidden(true);
       argParser.addArgument(windowsNetStart);
-
-
-      version = new BooleanArgument("version", 'V', "version",
-                                    MSGID_DSCORE_DESCRIPTION_VERSION);
-      argParser.addArgument(version);
 
 
       fullVersion = new BooleanArgument("fullversion", 'F', "fullVersion",
@@ -8549,13 +8779,13 @@ public class DirectoryServer
       //   that is something other than NOTHING_TO_DO, SERVER_ALREADY_STARTED,
       //   START_AS_DETACH, START_AS_NON_DETACH, START_AS_WINDOWS_SERVICE to
       //   indicate that a problem occurred.
-      if (argParser.usageDisplayed())
+      if (argParser.usageOrVersionDisplayed())
       {
         // We're just trying to display usage, and that's already been done so
         // exit with a code of zero.
         System.exit(NOTHING_TO_DO);
       }
-      else if (fullVersion.isPresent() || version.isPresent() ||
+      else if (fullVersion.isPresent() ||
                systemInfo.isPresent() || dumpMessages.isPresent())
       {
         // We're not really trying to start, so rebuild the argument list
@@ -8579,7 +8809,7 @@ public class DirectoryServer
         System.exit(checkStartability(argParser));
       }
     }
-    else if (argParser.usageDisplayed())
+    else if (argParser.usageOrVersionDisplayed())
     {
       System.exit(0);
     }
@@ -8591,6 +8821,13 @@ public class DirectoryServer
       System.out.println("Minor Version:       " + MINOR_VERSION);
       System.out.println("Point Version:       " + POINT_VERSION);
       System.out.println("Version Qualifier:   " + VERSION_QUALIFIER);
+
+      if (BUILD_NUMBER > 0)
+      {
+        System.out.println("Build Number:        " +
+                           new DecimalFormat("000").format(BUILD_NUMBER));
+      }
+
       System.out.println("Revision Number:     " + REVISION_NUMBER);
       System.out.println("Fix IDs:             " + FIX_IDS);
       System.out.println("Debug Build:         " + DEBUG_BUILD);
@@ -8600,18 +8837,6 @@ public class DirectoryServer
       System.out.println("Build Java Vendor:   " + BUILD_JAVA_VENDOR);
       System.out.println("Build JVM Version:   " + BUILD_JVM_VERSION);
       System.out.println("Build JVM Vendor:    " + BUILD_JVM_VENDOR);
-
-      return;
-    }
-    else if (version.isPresent())
-    {
-      System.out.println(getVersionString());
-      System.out.println("Build " + BUILD_ID);
-
-      if ((FIX_IDS != null) && (FIX_IDS.length() > 0))
-      {
-        System.out.println("Fix IDs:  " + FIX_IDS);
-      }
 
       return;
     }
@@ -8631,6 +8856,8 @@ public class DirectoryServer
                          System.getProperty("java.home"));
       System.out.println("Class Path:             " +
                          System.getProperty("java.class.path"));
+      System.out.println("JE Version:             " +
+                         JEVersion.CURRENT_VERSION.toString());
       System.out.println("Current Directory:      " +
                          System.getProperty("user.dir"));
       System.out.println("Operating System:       " +
@@ -8690,7 +8917,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, e);
+        TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
 
       int    msgID   = MSGID_CANNOT_ACQUIRE_EXCLUSIVE_SERVER_LOCK;
@@ -8826,7 +9053,7 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, ie);
+        TRACER.debugCaught(DebugLogLevel.ERROR, ie);
       }
 
       int    msgID   = MSGID_DSCORE_CANNOT_BOOTSTRAP;
@@ -8850,20 +9077,18 @@ public class DirectoryServer
     {
       if (debugEnabled())
       {
-        debugCaught(DebugLogLevel.ERROR, ie);
+        TRACER.debugCaught(DebugLogLevel.ERROR, ie);
       }
 
       int    msgID   = MSGID_DSCORE_CANNOT_START;
       String message = getMessage(msgID, ie.getMessage());
-      System.err.println(message);
-      System.exit(1);
+      shutDown(directoryServer.getClass().getName(), message);
     }
     catch (Exception e)
     {
       int    msgID   = MSGID_DSCORE_CANNOT_START;
       String message = getMessage(msgID, stackTraceToSingleLineString(e));
-      System.err.println(message);
-      System.exit(1);
+      shutDown(directoryServer.getClass().getName(), message);
     }
   }
 
@@ -8994,7 +9219,7 @@ public class DirectoryServer
       // be able to start it anyway.
       int msgID = MSGID_CANNOT_ACQUIRE_EXCLUSIVE_SERVER_LOCK;
       String message = getMessage(msgID, lockFile,
-          stackTraceToSingleLineString(e));
+          getExceptionMessage(e));
       System.err.println(message);
       isServerRunning = true;
     }
