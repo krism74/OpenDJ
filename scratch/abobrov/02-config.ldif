@@ -1821,8 +1821,8 @@ objectClasses: ( 1.3.6.1.4.1.26027.1.2.113
   X-ORIGIN 'OpenDS Directory Server' )
 objectClasses: ( 1.3.6.1.4.1.26027.1.2.110 NAME 'ds-cfg-file-system-entry-cache'
   SUP ds-cfg-entry-cache STRUCTURAL MAY ( ds-cfg-max-entries $
-  ds-cfg-max-memory-percent $ ds-cfg-max-memory-size $ ds-cfg-lock-timeout $
-  ds-cfg-exclude-filter $ ds-cfg-include-filter $ ds-cfg-cache-directory $
-  ds-cfg-cache-type $ ds-cfg-persistent-cache $ ds-cfg-database-cache-percent $
+  ds-cfg-max-memory-size $ ds-cfg-lock-timeout $ ds-cfg-exclude-filter $
+  ds-cfg-include-filter $ ds-cfg-cache-directory $ ds-cfg-cache-type $
+  ds-cfg-persistent-cache $ ds-cfg-database-cache-percent $
   ds-cfg-database-cache-size ) X-ORIGIN 'OpenDS Directory Server' )
 

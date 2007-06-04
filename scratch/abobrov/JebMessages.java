@@ -1149,13 +1149,6 @@ public class JebMessages
    */
   public static final int MSGID_JEB_SEARCH_UNINDEXED_INSUFFICIENT_PRIVILEGES =
       CATEGORY_MASK_JEB | SEVERITY_MASK_MILD_ERROR | 145;
-  
-  /**
-   * The message ID to use when we have failed to checksum db environment. 
-   * This takes one argument which is the backend ID.
-   */
-  public static final int MSGID_JEB_BACKEND_CHECKSUM_FAIL =
-      CATEGORY_MASK_JEB | SEVERITY_MASK_SEVERE_WARNING | 146;
 
   /**
    * The message ID of an error indicating that setting file permissions
@@ -1163,6 +1156,14 @@ public class JebMessages
    */
   public static final int MSGID_JEB_UNABLE_SET_PERMISSIONS =
       CATEGORY_MASK_JEB | SEVERITY_MASK_SEVERE_WARNING | 146;
+
+  /**
+   * The message ID to use when we have failed to checksum db environment.
+   * This takes one argument which is the backend ID.
+   */
+  public static final int MSGID_JEB_BACKEND_CHECKSUM_FAIL =
+      CATEGORY_MASK_JEB | SEVERITY_MASK_SEVERE_WARNING | 147;
+
 
   /**
    * Associates a set of generic messages with the message IDs defined in this
@@ -1474,8 +1475,8 @@ public class JebMessages
                     "Rebuilding system index(es) must be done with the " +
                     "backend containing the base DN disabled");
     registerMessage(MSGID_JEB_BACKEND_CHECKSUM_FAIL,
-                    "Failed to checksum the database environment for %s " +
-                    "backend.");
+                    "Failed to checksum the database environment for " +
+                    "backend %s");
     registerMessage(MSGID_ENTRYIDSORTER_CANNOT_EXAMINE_ENTRY,
                     "Unable to examine the entry with ID %s for sorting " +
                     "purposes:  %s");

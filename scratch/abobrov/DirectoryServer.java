@@ -232,6 +232,9 @@ public class DirectoryServer
   // Indicates whether the server is currently online.
   private boolean isRunning;
 
+  // Indicates whether the server is currently in "lockdown mode".
+  private boolean lockdownMode;
+
   // Indicates whether the server should send a response to operations that have
   // been abandoned.
   private boolean notifyAbandonedOperations;
@@ -536,10 +539,10 @@ public class DirectoryServer
 
   // The set of backends registered with the server.
   private TreeMap<String,Backend> backends;
-  
+
   // The mapping between backends and their unique indentifiers for their
-  // offline state, representing either checksum or other uniqie value to
-  // be used for detecting any offline modifications to a given backend. 
+  // offline state, representing either checksum or other unique value to
+  // be used for detecting any offline modifications to a given backend.
   private ConcurrentHashMap<String,Long> offlineBackendsStateIDs;
 
   // The set of supported controls registered with the Directory Server.
@@ -572,6 +575,7 @@ public class DirectoryServer
     isBootstrapped        = false;
     isRunning             = false;
     shuttingDown          = false;
+    lockdownMode          = false;
     serverErrorResultCode = ResultCode.OTHER;
 
     operatingSystem = OperatingSystem.forName(System.getProperty("os.name"));
@@ -663,10 +667,10 @@ public class DirectoryServer
     directoryServer.monitorProviders =
          new ConcurrentHashMap<String,MonitorProvider>();
     directoryServer.backends = new TreeMap<String,Backend>();
-    
-    directoryServer.offlineBackendsStateIDs = 
+
+    directoryServer.offlineBackendsStateIDs =
          new ConcurrentHashMap<String,Long>();
-    
+
     directoryServer.backendInitializationListeners =
          new CopyOnWriteArraySet<BackendInitializationListener>();
     directoryServer.baseDNs = new TreeMap<DN,Backend>();
@@ -1064,7 +1068,7 @@ public class DirectoryServer
       // Initialize the server alert handlers.
       initializeAlertHandlers();
 
-      
+
       // Initialize the key manager provider.
       keyManagerProviderConfigManager = new KeyManagerProviderConfigManager();
       keyManagerProviderConfigManager.initializeKeyManagerProviders();
@@ -1098,12 +1102,12 @@ public class DirectoryServer
 
       // Initialize all the backends and their associated suffixes.
       initializeBackends();
-      
+
       // Initialize the entry cache.
       entryCacheConfigManager = new EntryCacheConfigManager();
       entryCacheConfigManager.initializeEntryCache();
-      
-      // Reset the map as we can no longer guarantee offline state.  
+
+      // Reset the map as we can no longer guarantee offline state.
       directoryServer.offlineBackendsStateIDs.clear();
 
       // Register the supported controls and supported features.
@@ -6028,12 +6032,13 @@ public class DirectoryServer
    * This method returns a map that contains a unique offline state id,
    * such as checksum, for every server backend that has registered one.
    *
-   * @return  <CODE>Map<String,Long></CODE> Backend to 
-   *                Checksum/id map for offline state.
+   * @return  <CODE>Map</CODE> backend to checksum map for offline state.
    */
   public static Map<String,Long> getOfflineBackendsStateIDs() {
     return Collections.unmodifiableMap(directoryServer.offlineBackendsStateIDs);
   }
+
+
 
   /**
    * This method allows any server backend to register its unique offline
@@ -6046,7 +6051,10 @@ public class DirectoryServer
    * @param  id       Unique offline state identifier such as checksum.
    */
   public static void registerOfflineBackendStateID(String backend, long id) {
-    directoryServer.offlineBackendsStateIDs.put(backend, id);
+    // Zero means failed checksum so just skip it.
+    if (id != 0) {
+      directoryServer.offlineBackendsStateIDs.put(backend, id);
+    }
   }
 
 
@@ -7277,7 +7285,8 @@ public class DirectoryServer
 
     //Reject or accept the unauthenticated requests based on the configuration
     // settings.
-    if(directoryServer.rejectUnauthenticatedRequests &&
+    if ((directoryServer.rejectUnauthenticatedRequests ||
+         directoryServer.lockdownMode) &&
         !clientConnection.getAuthenticationInfo().isAuthenticated())
     {
       switch(operation.getOperationType())
@@ -7288,20 +7297,41 @@ public class DirectoryServer
         case SEARCH:
         case MODIFY:
         case MODIFY_DN:
-         int msgID = MSGID_REJECT_UNAUTHENTICATED_OPERATION;
-         String message = getMessage(msgID);
-         throw new DirectoryException(
-         ResultCode.UNWILLING_TO_PERFORM,message,msgID);
+          if (directoryServer.lockdownMode)
+          {
+            int msgID = MSGID_REJECT_OPERATION_IN_LOCKDOWN_MODE;
+            String message = getMessage(msgID);
+            throw new DirectoryException(ResultCode.UNWILLING_TO_PERFORM,
+                                         message, msgID);
+          }
+          else
+          {
+            int msgID = MSGID_REJECT_UNAUTHENTICATED_OPERATION;
+            String message = getMessage(msgID);
+            throw new DirectoryException(ResultCode.UNWILLING_TO_PERFORM,
+                                         message, msgID);
+          }
+
         case EXTENDED:
          ExtendedOperation extOp      = (ExtendedOperation) operation;
          String   requestOID = extOp.getRequestOID();
          if (!((requestOID != null) &&
                  requestOID.equals(OID_START_TLS_REQUEST)))
          {
-            msgID = MSGID_REJECT_UNAUTHENTICATED_OPERATION;
-            message = getMessage(msgID);
-            throw new DirectoryException(
-              ResultCode.UNWILLING_TO_PERFORM,message,msgID);
+           if (directoryServer.lockdownMode)
+           {
+             int msgID = MSGID_REJECT_OPERATION_IN_LOCKDOWN_MODE;
+             String message = getMessage(msgID);
+             throw new DirectoryException(ResultCode.UNWILLING_TO_PERFORM,
+                                          message, msgID);
+           }
+           else
+           {
+             int msgID = MSGID_REJECT_UNAUTHENTICATED_OPERATION;
+             String message = getMessage(msgID);
+             throw new DirectoryException(ResultCode.UNWILLING_TO_PERFORM,
+                                          message, msgID);
+           }
          }
          break;
 
@@ -8271,6 +8301,15 @@ public class DirectoryServer
   {
     synchronized (directoryServer.establishedConnections)
     {
+      if (directoryServer.lockdownMode)
+      {
+        InetAddress remoteAddress = clientConnection.getRemoteAddress();
+        if ((remoteAddress != null) && (! remoteAddress.isLoopbackAddress()))
+        {
+          return -1;
+        }
+      }
+
       if ((directoryServer.maxAllowedConnections > 0) &&
           (directoryServer.currentConnections >=
                directoryServer.maxAllowedConnections))
@@ -8547,6 +8586,55 @@ public class DirectoryServer
 
 
   /**
+   * Indicates whether the Directory Server is currently configured to operate
+   * in the lockdown mode, in which all non-root requests will be rejected and
+   * all connection attempts from non-loopback clients will be rejected.
+   *
+   * @return  {@code true} if the Directory Server is currently configured to
+   *          operate in the lockdown mode, or {@code false} if not.
+   */
+  public static boolean lockdownMode()
+  {
+    return directoryServer.lockdownMode;
+  }
+
+
+
+  /**
+   * Specifies whether the server should operate in lockdown mode.
+   *
+   * @param  lockdownMode  Indicates whether the Directory Server should operate
+   *                       in lockdown mode.
+   */
+  public static void setLockdownMode(boolean lockdownMode)
+  {
+    directoryServer.lockdownMode = lockdownMode;
+
+    if (lockdownMode)
+    {
+      int    msgID   = MSGID_DIRECTORY_SERVER_ENTERING_LOCKDOWN_MODE;
+      String message = getMessage(msgID);
+      logError(ErrorLogCategory.CORE_SERVER, ErrorLogSeverity.NOTICE, message,
+               msgID);
+
+      sendAlertNotification(directoryServer, ALERT_TYPE_ENTERING_LOCKDOWN_MODE,
+                            msgID, message);
+    }
+    else
+    {
+      int    msgID   = MSGID_DIRECTORY_SERVER_LEAVING_LOCKDOWN_MODE;
+      String message = getMessage(msgID);
+      logError(ErrorLogCategory.CORE_SERVER, ErrorLogSeverity.NOTICE, message,
+               msgID);
+
+      sendAlertNotification(directoryServer, ALERT_TYPE_LEAVING_LOCKDOWN_MODE,
+                            msgID, message);
+    }
+  }
+
+
+
+  /**
    * Retrieves the DN of the configuration entry with which this alert generator
    * is associated.
    *
@@ -8613,6 +8701,10 @@ public class DirectoryServer
     alerts.put(ALERT_TYPE_SERVER_SHUTDOWN, ALERT_DESCRIPTION_SERVER_SHUTDOWN);
     alerts.put(ALERT_TYPE_UNCAUGHT_EXCEPTION,
                ALERT_DESCRIPTION_UNCAUGHT_EXCEPTION);
+    alerts.put(ALERT_TYPE_ENTERING_LOCKDOWN_MODE,
+               ALERT_DESCRIPTION_ENTERING_LOCKDOWN_MODE);
+    alerts.put(ALERT_TYPE_LEAVING_LOCKDOWN_MODE,
+               ALERT_DESCRIPTION_LEAVING_LOCKDOWN_MODE);
 
     return alerts;
   }

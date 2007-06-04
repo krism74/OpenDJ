@@ -36,26 +36,26 @@ import java.util.concurrent.ConcurrentHashMap;
  * This class represents serializable entry cache index structures
  * and supporting data types used for the entry cache persistence.
  * Structurally it should be an inner class of FileSystemEntryCache
- * however due to serialization constraints it has been separated. 
+ * however due to serialization constraints it has been separated.
  */
 class FileSystemEntryCacheIndex implements Serializable {
     static final long serialVersionUID = 4537634108673038611L;
-    
+
     /**
      * Backend to Checksum/id map for offline state.
      */
     public Map<String,Long> offlineState;
-    
+
     /**
      * The mapping between entry backends/IDs and DNs.
      */
     public Map<String,Map<Long,String>> backendMap;
-    
+
     /**
      * The mapping between DNs and IDs.
      */
     public Map<String,Long> dnMap;
-    
+
     /**
      * Default constructor.
      */

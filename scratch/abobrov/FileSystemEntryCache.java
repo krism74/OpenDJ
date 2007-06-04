@@ -37,9 +37,14 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.io.File;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.SortedMap;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicLong;
+import java.io.UnsupportedEncodingException;
+import java.io.File;
 import com.sleepycat.bind.EntryBinding;
 import com.sleepycat.bind.serial.SerialBinding;
 import com.sleepycat.bind.serial.StoredClassCatalog;
@@ -55,20 +60,11 @@ import com.sleepycat.je.LockMode;
 import com.sleepycat.je.OperationStatus;
 import com.sleepycat.je.cleaner.UtilizationProfile;
 import com.sleepycat.je.dbi.EnvironmentImpl;
-import java.util.SortedMap;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicLong;
 import org.opends.server.api.Backend;
 import org.opends.server.api.EntryCache;
 import org.opends.server.admin.std.server.FileSystemEntryCacheCfg;
 import org.opends.server.admin.server.ConfigurationChangeListener;
-import org.opends.server.config.BooleanConfigAttribute;
-import org.opends.server.config.ConfigAttribute;
 import org.opends.server.config.ConfigException;
-import org.opends.server.config.IntegerConfigAttribute;
-import org.opends.server.config.IntegerWithUnitConfigAttribute;
-import org.opends.server.config.StringConfigAttribute;
 import org.opends.server.core.DirectoryServer;
 import org.opends.server.protocols.asn1.ASN1Element;
 import org.opends.server.protocols.asn1.ASN1OctetString;
@@ -84,7 +80,6 @@ import org.opends.server.types.InitializationException;
 import org.opends.server.types.LockType;
 import org.opends.server.types.ResultCode;
 import org.opends.server.types.SearchFilter;
-import org.opends.server.types.DebugLogLevel;
 import org.opends.server.types.FilePermission;
 import org.opends.server.types.LockManager;
 import org.opends.server.types.ObjectClass;
@@ -101,31 +96,31 @@ import static org.opends.server.util.StaticUtils.*;
 /**
  * This class defines a Directory Server entry cache that uses JE database to
  * keep track of the entries. Intended use is when JE database resides in the
- * memory based file system which has obvious performance benefits, although 
+ * memory based file system which has obvious performance benefits, although
  * any file system will do for this cache to function. Entries are maintained
- * either by FIFO (default) or LRU (configurable) based list implementation. 
+ * either by FIFO (default) or LRU (configurable) based list implementation.
  * <BR><BR>
- * Cache sizing is based on the size or percentage of free space availble in 
- * the file system, such that if enough memory is free, then adding an entry 
- * to the cache will not require purging, but if more than a specified 
- * percentage of the file system available space is already consumed, then 
- * one or more entries will need to be removed in order to make room for a 
- * new entry.  It is also possible to configure a maximum number of entries 
- * for the cache. If this is specified, then the number of entries will not 
- * be allowed to exceed this value, but it may not be possible to hold this 
+ * Cache sizing is based on the size or percentage of free space availble in
+ * the file system, such that if enough memory is free, then adding an entry
+ * to the cache will not require purging, but if more than a specified
+ * percentage of the file system available space is already consumed, then
+ * one or more entries will need to be removed in order to make room for a
+ * new entry.  It is also possible to configure a maximum number of entries
+ * for the cache. If this is specified, then the number of entries will not
+ * be allowed to exceed this value, but it may not be possible to hold this
  * many entries if the available memory fills up first.
  * <BR><BR>
  * Other configurable parameters for this cache include the maximum length of
  * time to block while waiting to acquire a lock, and a set of filters that may
  * be used to define criteria for determining which entries are stored in the
- * cache.  If a filter list is provided, then only entries matching at least 
+ * cache.  If a filter list is provided, then only entries matching at least
  * one of the given filters will be stored in the cache.
  * <BR><BR>
  * JE environment cache size can also be configured either as percentage of
- * the free memory available in the JVM or as explicit size in bytes.  
+ * the free memory available in the JVM or as explicit size in bytes.
  * <BR><BR>
- * This cache has a persistence property which, if enabled, allows for the 
- * contents of the cache to stay persistent across server or cache restarts. 
+ * This cache has a persistence property which, if enabled, allows for the
+ * contents of the cache to stay persistent across server or cache restarts.
  */
 public class FileSystemEntryCache
         extends EntryCache <FileSystemEntryCacheCfg>
@@ -134,64 +129,64 @@ public class FileSystemEntryCache
    * The tracer object for the debug logger.
    */
   private static final DebugTracer TRACER = getTracer();
-  
+
   /**
    * The set of time units that will be used for expressing the task retention
    * time.
    */
   private static final LinkedHashMap<String, Double> timeUnits =
           new LinkedHashMap<String, Double>();
-  
+
   /**
     * The set of units and their multipliers for configuration attributes
     * representing a number of bytes.
     */
-  private static HashMap<String, Double> memoryUnits = 
+  private static HashMap<String, Double> memoryUnits =
       new HashMap<String, Double>();
-  
+
   // Permissions for cache db environment.
-  private static final FilePermission CACHE_HOME_PERMISSIONS = 
+  private static final FilePermission CACHE_HOME_PERMISSIONS =
       new FilePermission(0700);
-  
+
   // The DN of the configuration entry for this entry cache.
   private DN configEntryDN;
-  
+
   // The set of filters that define the entries that should be excluded from the
   // cache.
   private Set<SearchFilter> excludeFilters;
-  
+
   // The set of filters that define the entries that should be included in the
   // cache.
   private Set<SearchFilter> includeFilters;
-  
+
   // The maximum amount of space in bytes that can be consumed in the filesystem
   // before we need to start purging entries.
   private long maxAllowedMemory;
-  
+
   // The maximum number of entries that may be held in the cache.
   // Atomic for additional safely and in case we decide to push
   // some locks further down later. Does not inhere in additional
-  // overhead, via blocking on synchronization primitive, on most 
+  // overhead, via blocking on synchronization primitive, on most
   // modern platforms being implemented via cpu instruction set.
   private AtomicLong maxEntries;
-  
+
   // The maximum percentage of memory dedicated to JE cache.
   private int jeCachePercent;
-  
+
   // The maximum amount of memory in bytes dedicated to JE cache.
   private long jeCacheSize;
-  
+
   // The entry cache home folder to host db environment.
   private String cacheHome;
-  
-  // The type of this cache. 
+
+  // The type of this cache.
   // It can be either FIFO (default) or LRU (configurable).
   private String cacheType;
-  
+
   // This regulates whether we persist the cache across restarts or not.
   private boolean persistentCache;
-  
-  // The lock used to provide threadsafe access when changing the contents 
+
+  // The lock used to provide threadsafe access when changing the contents
   // of the cache maps.
   private ReentrantReadWriteLock cacheLock;
   private Lock cacheReadLock;
@@ -201,9 +196,9 @@ public class FileSystemEntryCache
   private long lockTimeout;
 
   // The mapping between DNs and IDs. This is the main index map for this
-  // cache, keyed to the underlying JE database where entries are stored. 
+  // cache, keyed to the underlying JE database where entries are stored.
   private Map<DN,Long> dnMap;
-  
+
   // The mapping between entry backends/IDs and DNs to identify all
   // entries that belong to given backend since entry ID is only
   // per backend unique.
@@ -211,96 +206,61 @@ public class FileSystemEntryCache
 
   // Access order for this cache. FIFO by default.
   boolean accessOrder = false;
-  
+
   // JE environment and database related fields for this cache.
   private Environment entryCacheEnv;
   private EnvironmentConfig entryCacheEnvConfig;
   private EnvironmentMutableConfig entryCacheEnvMutableConfig;
   private DatabaseConfig entryCacheDBConfig;
-  
+
   // The main entry cache database.
   private Database entryCacheDB;
-  
+
   // Class database, catalog and binding for serialization.
   private Database entryCacheClassDB;
   private StoredClassCatalog classCatalog;
   private EntryBinding entryCacheDataBinding;
-  
+
   // JE naming constants.
   private static final String ENTRYCACHEDBNAME = "EntryCacheDB";
   private static final String INDEXCLASSDBNAME = "IndexClassDB";
   private static final String INDEXKEY = "EntryCacheIndex";
-  
+
   // JE config constants.
-  // TODO: All hardcoded for now but we need to use a common 
+  // TODO: All hardcoded for now but we need to use a common
   // ds-cfg-je-property like multi-valued attribute for this, see Issue 1481.
-  private static final Long JEBYTESINTERVAL = new Long(10485760);
-  private static final Long JELOGFILEMAX = new Long(10485760);
-  private static final Integer JEMINFILEUTILIZATION = new Integer(50);
-  private static final Integer JEMINUTILIZATION = new Integer(90);
-  private static final Integer JEMAXBATCHFILES = new Integer(1);
-  private static final Integer JEMINAGE = new Integer(1);
-  
+  private static final Long JEBYTESINTERVAL = 10485760L;
+  private static final Long JELOGFILEMAX = 10485760L;
+  private static final Integer JEMINFILEUTILIZATION = 50;
+  private static final Integer JEMINUTILIZATION = 90;
+  private static final Integer JEMAXBATCHFILES = 1;
+  private static final Integer JEMINAGE = 1;
+
   // The number of milliseconds between persistent state save/restore
   // progress reports.
   private long progressInterval = 5000;
-  
+
   // Persistent state save/restore progress report counters.
   private long persistentEntriesSaved    = 0;
   private long persistentEntriesRestored = 0;
-  
-  static
-  {
-    timeUnits.put(TIME_UNIT_MILLISECONDS_ABBR, 1D);
-    timeUnits.put(TIME_UNIT_MILLISECONDS_FULL, 1D);
-    timeUnits.put(TIME_UNIT_SECONDS_ABBR, 1000D);
-    timeUnits.put(TIME_UNIT_SECONDS_FULL, 1000D);
-    
-    memoryUnits.put(SIZE_UNIT_BYTES_ABBR, 1D);
-    memoryUnits.put(SIZE_UNIT_BYTES_FULL, 1D);
-    memoryUnits.put(SIZE_UNIT_KILOBYTES_ABBR, 1000D);
-    memoryUnits.put(SIZE_UNIT_KILOBYTES_FULL, 1000D);
-    memoryUnits.put(SIZE_UNIT_MEGABYTES_ABBR, 1000000D);
-    memoryUnits.put(SIZE_UNIT_MEGABYTES_FULL, 1000000D);
-    memoryUnits.put(SIZE_UNIT_GIGABYTES_ABBR, 1000000000D);
-    memoryUnits.put(SIZE_UNIT_GIGABYTES_FULL, 1000000000D);
-    memoryUnits.put(SIZE_UNIT_KIBIBYTES_ABBR, 1024D);
-    memoryUnits.put(SIZE_UNIT_KIBIBYTES_FULL, 1024D);
-    memoryUnits.put(SIZE_UNIT_MEBIBYTES_ABBR, (double) (1024 * 1024));
-    memoryUnits.put(SIZE_UNIT_MEBIBYTES_FULL, (double) (1024 * 1024));
-    memoryUnits.put(SIZE_UNIT_GIBIBYTES_ABBR, (double) (1024 * 1024 * 1024));
-    memoryUnits.put(SIZE_UNIT_GIBIBYTES_FULL, (double) (1024 * 1024 * 1024));
-  }
-  
+
   /**
    * Creates a new instance of this entry cache.
    */
   public FileSystemEntryCache() {
-    super();  
+    super();
     // All initialization should be performed in the initializeEntryCache.
   }
-  
+
   /**
-   * Initializes this entry cache implementation so that it will be available
-   * for storing and retrieving entries.
-   *
-   * @param  configuration  The configuration entry containing the settings to 
-   *                        use for this entry cache.
-   *
-   * @throws  ConfigException  If there is a problem with the provided
-   *                           configuration entry that would prevent this
-   *                           entry cache from being used.
-   *
-   * @throws  InitializationException  If a problem occurs during the
-   *                                   initialization process that is not
-   *                                   related to the configuration.
+   * {@inheritDoc}
    */
   public void initializeEntryCache(FileSystemEntryCacheCfg configuration)
           throws ConfigException, InitializationException {
-    
+
     configuration.addFileSystemChangeListener (this);
     configEntryDN = configuration.dn();
-    
+
     // Read and apply configuration.
     boolean applyChanges = true;
     EntryCacheCommon.ConfigErrorHandler errorHandler =
@@ -308,7 +268,7 @@ public class FileSystemEntryCache
           EntryCacheCommon.ConfigPhase.PHASE_INIT, null, null
           );
     processEntryCacheConfig(configuration, applyChanges, errorHandler);
-    
+
     // Set the cache type.
     if (cacheType.equalsIgnoreCase("LRU")) {
       accessOrder = true;
@@ -321,19 +281,19 @@ public class FileSystemEntryCache
 
     // Initialize the cache maps and locks.
     backendMap = new LinkedHashMap<Backend,Map<Long,DN>>();
-    dnMap = new LinkedHashMapRotator<DN,Long>((int) 16, (float) 0.75, 
+    dnMap = new LinkedHashMapRotator<DN,Long>((int) 16, (float) 0.75,
         (boolean) accessOrder);
 
-    cacheLock = new ReentrantReadWriteLock();   
+    cacheLock = new ReentrantReadWriteLock();
     if (accessOrder) {
-      // In access-ordered linked hash maps, merely querying the map 
+      // In access-ordered linked hash maps, merely querying the map
       // with get() is a structural modification.
       cacheReadLock = cacheLock.writeLock();
     } else {
       cacheReadLock = cacheLock.readLock();
     }
     cacheWriteLock = cacheLock.writeLock();
-    
+
     // Setup the cache home.
     try {
       checkAndSetupCacheHome(cacheHome);
@@ -341,17 +301,17 @@ public class FileSystemEntryCache
       if (debugEnabled()) {
         TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
-      
+
       // Log an error message.
       logError(ErrorLogCategory.CONFIGURATION,
           ErrorLogSeverity.SEVERE_ERROR,
           MSGID_FSCACHE_INVALID_HOME,
           String.valueOf(configEntryDN), stackTraceToSingleLineString(e),
           cacheHome, DEFAULT_FSCACHE_HOME);
-      
+
       // User specified home is no good, reset to default.
       cacheHome = DEFAULT_FSCACHE_HOME;
-      
+
       // Try again.
       try {
         checkAndSetupCacheHome(cacheHome);
@@ -361,41 +321,41 @@ public class FileSystemEntryCache
         if (debugEnabled()) {
           TRACER.debugCaught(DebugLogLevel.ERROR, e2);
         }
-        
+
         int msgID = MSGID_FSCACHE_HOMELESS;
         String message = getMessage(msgID, stackTraceToSingleLineString(e2));
         throw new InitializationException(msgID, message, e2);
       }
     }
-    
-    // Open JE environment and cache database.    
+
+    // Open JE environment and cache database.
     try {
       entryCacheEnvConfig = new EnvironmentConfig();
-      
-      // All these environment properties are cranked up to their extreme 
-      // values, either max or min, to get the smallest space consumption, 
-      // which turns into memory consumption for memory based filesystems, 
+
+      // All these environment properties are cranked up to their extreme
+      // values, either max or min, to get the smallest space consumption,
+      // which turns into memory consumption for memory based filesystems,
       // possible. This will negate the performance somewhat but preserves
-      // the memory to a much greater extent. 
+      // the memory to a much greater extent.
       //
       // TODO: All these options should be configurable, see Issue 1481.
       //
       entryCacheEnvConfig.setConfigParam("je.log.fileMax",
           JELOGFILEMAX.toString());
-      entryCacheEnvConfig.setConfigParam("je.cleaner.minUtilization", 
+      entryCacheEnvConfig.setConfigParam("je.cleaner.minUtilization",
           JEMINUTILIZATION.toString());
-      entryCacheEnvConfig.setConfigParam("je.cleaner.maxBatchFiles", 
+      entryCacheEnvConfig.setConfigParam("je.cleaner.maxBatchFiles",
           JEMAXBATCHFILES.toString());
-      entryCacheEnvConfig.setConfigParam("je.cleaner.minAge", 
+      entryCacheEnvConfig.setConfigParam("je.cleaner.minAge",
           JEMINAGE.toString());
-      entryCacheEnvConfig.setConfigParam("je.cleaner.minFileUtilization", 
+      entryCacheEnvConfig.setConfigParam("je.cleaner.minFileUtilization",
           JEMINFILEUTILIZATION.toString());
-      entryCacheEnvConfig.setConfigParam("je.checkpointer.bytesInterval", 
+      entryCacheEnvConfig.setConfigParam("je.checkpointer.bytesInterval",
           JEBYTESINTERVAL.toString());
-      
+
       entryCacheEnvConfig.setAllowCreate(true);
-      entryCacheEnv = new Environment(new File(cacheHome), entryCacheEnvConfig);       
-      
+      entryCacheEnv = new Environment(new File(cacheHome), entryCacheEnvConfig);
+
       // Set JE cache percent and size where the size value will prevail if set.
       entryCacheEnvMutableConfig = new EnvironmentMutableConfig();
       if (jeCachePercent != 0) {
@@ -405,15 +365,14 @@ public class FileSystemEntryCache
           if (debugEnabled()) {
             TRACER.debugCaught(DebugLogLevel.ERROR, e);
           }
-          
+
           // Its safe to ignore and continue here, JE will use its default
           // value for this however we have to let the user know about it
           // so just log an error message.
-          logError(ErrorLogCategory.CONFIGURATION, 
+          logError(ErrorLogCategory.CONFIGURATION,
               ErrorLogSeverity.SEVERE_ERROR,
-              MSGID_FSCACHE_INVALID_JE_CACHE_PCT,
-              String.valueOf(configEntryDN), stackTraceToSingleLineString(e),
-              jeCachePercent);
+              MSGID_FSCACHE_CANNOT_SET_JE_MEMORY_PCT,
+              String.valueOf(configEntryDN), stackTraceToSingleLineString(e));
         }
       }
       if (jeCacheSize != 0) {
@@ -423,23 +382,22 @@ public class FileSystemEntryCache
           if (debugEnabled()) {
             TRACER.debugCaught(DebugLogLevel.ERROR, e);
           }
-          
+
           // Its safe to ignore and continue here, JE will use its default
           // value for this however we have to let the user know about it
           // so just log an error message.
-          logError(ErrorLogCategory.CONFIGURATION, 
+          logError(ErrorLogCategory.CONFIGURATION,
               ErrorLogSeverity.SEVERE_ERROR,
-              MSGID_FSCACHE_INVALID_JE_CACHE_SIZE,
-              String.valueOf(configEntryDN), stackTraceToSingleLineString(e),
-              jeCacheSize);
+              MSGID_FSCACHE_CANNOT_SET_JE_MEMORY_SIZE,
+              String.valueOf(configEntryDN), stackTraceToSingleLineString(e));
         }
       }
-      
+
       entryCacheEnv.setMutableConfig(entryCacheEnvMutableConfig);
       entryCacheDBConfig = new DatabaseConfig();
       entryCacheDBConfig.setAllowCreate(true);
-      
-      // Remove old cache databases if this cache is not persistent.    
+
+      // Remove old cache databases if this cache is not persistent.
       if ( !persistentCache ) {
         try {
           entryCacheEnv.removeDatabase(null, INDEXCLASSDBNAME);
@@ -448,57 +406,54 @@ public class FileSystemEntryCache
           entryCacheEnv.removeDatabase(null, ENTRYCACHEDBNAME);
         } catch (DatabaseNotFoundException e) {}
       }
-      
+
       entryCacheDB = entryCacheEnv.openDatabase(null,
               ENTRYCACHEDBNAME, entryCacheDBConfig);
-      entryCacheClassDB = 
+      entryCacheClassDB =
         entryCacheEnv.openDatabase(null, INDEXCLASSDBNAME, entryCacheDBConfig);
       // Instantiate the class catalog
       classCatalog = new StoredClassCatalog(entryCacheClassDB);
-      entryCacheDataBinding = 
+      entryCacheDataBinding =
           new SerialBinding(classCatalog, FileSystemEntryCacheIndex.class);
-      
+
       // Restoration is static and not subject to the current configuration
       // constraints so that the persistent state is truly preserved and
       // restored to the exact same state where we left off when the cache
-      // has been made persistent. The only exception to this is the backend 
+      // has been made persistent. The only exception to this is the backend
       // offline state matching where entries that belong to backend which
       // we cannot match offline state for are discarded from the cache.
       if ( persistentCache ) {
         // Retrieve cache index.
         try {
-          FileSystemEntryCacheIndex entryCacheIndex =
-              new FileSystemEntryCacheIndex();
+          FileSystemEntryCacheIndex entryCacheIndex;
           DatabaseEntry indexData = new DatabaseEntry();
           DatabaseEntry indexKey = new DatabaseEntry(
               INDEXKEY.getBytes("UTF-8"));
-          
-          if (OperationStatus.SUCCESS == 
+
+          if (OperationStatus.SUCCESS ==
               entryCacheDB.get(null, indexKey, indexData, LockMode.DEFAULT)) {
             entryCacheIndex =
                 (FileSystemEntryCacheIndex)
                 entryCacheDataBinding.entryToObject(indexData);
           } else {
-            // This one will get caught further down with error message logged.
-            throw new Exception();
+            throw new CacheIndexNotFoundException();
           }
           // Check cache index state.
           if ((entryCacheIndex.dnMap.isEmpty()) ||
               (entryCacheIndex.backendMap.isEmpty()) ||
               (entryCacheIndex.offlineState.isEmpty())) {
-            // This one will get caught further down with error message logged.
-            throw new Exception();
+            throw new CacheIndexImpairedException();
           } else {
             // Restore entry cache maps from this index.
-            
+
             // Push maxEntries and make it unlimited til restoration complete.
             AtomicLong currentMaxEntries = maxEntries;
             maxEntries.set(DEFAULT_FSCACHE_MAX_ENTRIES);
-            
+
             // Convert cache index maps to entry cache maps.
-            Set backendSet = entryCacheIndex.backendMap.keySet();
-            Iterator backendIterator = backendSet.iterator();
-            
+            Set<String> backendSet = entryCacheIndex.backendMap.keySet();
+            Iterator<String> backendIterator = backendSet.iterator();
+
             // Start a timer for the progress report.
             final long persistentEntriesTotal = entryCacheIndex.dnMap.size();
             Timer timer = new Timer();
@@ -519,14 +474,14 @@ public class FileSystemEntryCache
                                       progressInterval);
             try {
               while (backendIterator.hasNext()) {
-                String backend = (String) backendIterator.next();
+                String backend = backendIterator.next();
                 Map<Long,String> entriesMap =
                     entryCacheIndex.backendMap.get(backend);
-                Set entriesSet = entriesMap.keySet();
-                Iterator entriesIterator = entriesSet.iterator();
+                Set<Long> entriesSet = entriesMap.keySet();
+                Iterator<Long> entriesIterator = entriesSet.iterator();
                 LinkedHashMap<Long,DN> entryMap = new LinkedHashMap<Long,DN>();
                 while (entriesIterator.hasNext()) {
-                  Long entryID = (Long) entriesIterator.next();
+                  Long entryID = entriesIterator.next();
                   String entryStringDN = entriesMap.get(entryID);
                   DN entryDN = DN.decode(entryStringDN);
                   dnMap.put(entryDN, entryID);
@@ -536,9 +491,9 @@ public class FileSystemEntryCache
                 backendMap.put(DirectoryServer.getBackend(backend), entryMap);
               }
             } finally {
-              // Stop persistent state restore progress report timer. 
+              // Stop persistent state restore progress report timer.
               timer.cancel();
-              
+
               // Final persistent state restore progress report.
               int msgID = MSGID_FSCACHE_RESTORE_PROGRESS_REPORT;
               String message = getMessage(msgID, persistentEntriesRestored,
@@ -546,21 +501,23 @@ public class FileSystemEntryCache
               logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.NOTICE,
                       message, msgID);
             }
-            
+
             // Compare last known offline states to offline states on startup.
-            Map currentBackendsState = 
+            Map<String,Long> currentBackendsState =
                 DirectoryServer.getOfflineBackendsStateIDs();
-            Set offlineBackendSet = entryCacheIndex.offlineState.keySet();
-            Iterator offlineBackendIterator = offlineBackendSet.iterator();
+            Set<String> offlineBackendSet =
+                entryCacheIndex.offlineState.keySet();
+            Iterator<String> offlineBackendIterator =
+                offlineBackendSet.iterator();
             while (offlineBackendIterator.hasNext()) {
-              String backend = (String) offlineBackendIterator.next();
+              String backend = offlineBackendIterator.next();
               Long offlineId = entryCacheIndex.offlineState.get(backend);
-              Long currentId = (Long) currentBackendsState.get(backend);
+              Long currentId = currentBackendsState.get(backend);
               if ( !(offlineId.equals(currentId)) ) {
                 // Remove cache entries specific to this backend.
                 clearBackend(DirectoryServer.getBackend(backend));
                 // Log an error message.
-                logError(ErrorLogCategory.EXTENSIONS, 
+                logError(ErrorLogCategory.EXTENSIONS,
                     ErrorLogSeverity.SEVERE_WARNING,
                     MSGID_FSCACHE_OFFLINE_STATE_FAIL,
                     backend);
@@ -569,18 +526,40 @@ public class FileSystemEntryCache
             // Pop max entries limit.
             maxEntries = currentMaxEntries;
           }
+        } catch (CacheIndexNotFoundException e) {
+          if (debugEnabled()) {
+            TRACER.debugCaught(DebugLogLevel.ERROR, e);
+          }
+
+          // Log an error message.
+          logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.NOTICE,
+              MSGID_FSCACHE_INDEX_NOT_FOUND);
+
+          // Clear the entry cache.
+          clear();
+        } catch (CacheIndexImpairedException e) {
+          if (debugEnabled()) {
+            TRACER.debugCaught(DebugLogLevel.ERROR, e);
+          }
+
+          // Log an error message.
+          logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.SEVERE_ERROR,
+              MSGID_FSCACHE_INDEX_IMPAIRED);
+
+          // Clear the entry cache.
+          clear();
         } catch (Exception e) {
           if (debugEnabled()) {
             TRACER.debugCaught(DebugLogLevel.ERROR, e);
           }
-          
+
           // Log an error message.
           logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.SEVERE_ERROR,
               MSGID_FSCACHE_CANNOT_LOAD_PERSISTENT_DATA,
               stackTraceToSingleLineString(e));
-          
+
           // Clear the entry cache.
-          clear();        
+          clear();
         }
       }
     } catch (Exception e) {
@@ -590,39 +569,37 @@ public class FileSystemEntryCache
       if (debugEnabled()) {
         TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
-      
+
       int msgID = MSGID_FSCACHE_CANNOT_INITIALIZE;
       String message = getMessage(msgID, stackTraceToSingleLineString(e));
       throw new InitializationException(msgID, message, e);
     }
-    
+
   }
-    
+
   /**
-   * Performs any necessary cleanup work (e.g., flushing all cached entries and
-   * releasing any other held resources) that should be performed when the
-   * server is to be shut down or the entry cache destroyed or replaced.
+   * {@inheritDoc}
    */
   public void finalizeEntryCache() {
-    
+
     cacheWriteLock.lock();
-    
+
     // Store index/maps in case of persistent cache. Since the cache database
     // already exist at this point all we have to do is to serialize cache
     // index maps @see FileSystemEntryCacheIndex and put them under indexkey
     // allowing for the index to be restored and cache contents reused upon
     // the next initialization.
     if (persistentCache) {
-      FileSystemEntryCacheIndex entryCacheIndex = 
+      FileSystemEntryCacheIndex entryCacheIndex =
           new FileSystemEntryCacheIndex();
       // There must be at least one backend at this stage.
       entryCacheIndex.offlineState =
           DirectoryServer.getOfflineBackendsStateIDs();
-      
+
       // Convert entry cache maps to serializable maps for the cache index.
-      Set backendSet = backendMap.keySet();
-      Iterator backendIterator = backendSet.iterator();
-      
+      Set<Backend> backendSet = backendMap.keySet();
+      Iterator<Backend> backendIterator = backendSet.iterator();
+
       // Start a timer for the progress report.
       final long persistentEntriesTotal = dnMap.size();
       Timer timer = new Timer();
@@ -641,16 +618,13 @@ public class FileSystemEntryCache
       };
       timer.scheduleAtFixedRate(progressTask, progressInterval,
           progressInterval);
-      
+
       try {
         while (backendIterator.hasNext()) {
-          Backend backend = (Backend) backendIterator.next();
+          Backend backend = backendIterator.next();
           Map<Long,DN> entriesMap = backendMap.get(backend);
-          Set entriesSet = entriesMap.keySet();
-          Iterator entriesIterator = entriesSet.iterator();
           Map<Long,String> entryMap = new LinkedHashMap<Long,String>();
-          while (entriesIterator.hasNext()) {
-            Long entryID = (Long) entriesIterator.next();
+          for (Long entryID : entriesMap.keySet()) {
             DN entryDN = entriesMap.get(entryID);
             entryCacheIndex.dnMap.put(entryDN.toNormalizedString(), entryID);
             entryMap.put(entryID, entryDN.toNormalizedString());
@@ -661,7 +635,7 @@ public class FileSystemEntryCache
       } finally {
         // Stop persistent state save progress report timer.
         timer.cancel();
-        
+
         // Final persistent state save progress report.
         int msgID = MSGID_FSCACHE_SAVE_PROGRESS_REPORT;
         String message = getMessage(msgID, persistentEntriesSaved,
@@ -669,13 +643,13 @@ public class FileSystemEntryCache
         logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.NOTICE,
             message, msgID);
       }
-      
+
       // Store the index.
       try {
         DatabaseEntry indexData = new DatabaseEntry();
         entryCacheDataBinding.objectToEntry(entryCacheIndex, indexData);
         DatabaseEntry indexKey = new DatabaseEntry(INDEXKEY.getBytes("UTF-8"));
-        if (OperationStatus.SUCCESS != 
+        if (OperationStatus.SUCCESS !=
             entryCacheDB.put(null, indexKey, indexData)) {
           throw new Exception();
         }
@@ -683,20 +657,20 @@ public class FileSystemEntryCache
         if (debugEnabled()) {
           TRACER.debugCaught(DebugLogLevel.ERROR, e);
         }
-        
+
         // Log an error message.
         logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.SEVERE_ERROR,
             MSGID_FSCACHE_CANNOT_STORE_PERSISTENT_DATA,
             stackTraceToSingleLineString(e));
       }
     }
-    
+
     // Close JE databases and environment and clear all the maps.
     try {
       backendMap.clear();
       dnMap.clear();
       if (entryCacheDB != null) {
-        entryCacheDB.close();       
+        entryCacheDB.close();
       }
       if (entryCacheClassDB != null) {
         entryCacheClassDB.close();
@@ -718,7 +692,7 @@ public class FileSystemEntryCache
       if (debugEnabled()) {
         TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
-      
+
       // That is ok, JE verification and repair on startup should take care of
       // this so if there are any unrecoverable errors during next startup
       // and we are unable to handle and cleanup them we will log errors then.
@@ -726,18 +700,11 @@ public class FileSystemEntryCache
       cacheWriteLock.unlock();
     }
   }
-   
+
   /**
-   * Indicates whether the entry cache currently contains the entry with the
-   * specified DN.  This method may be called without holding any locks if a
-   * point-in-time check is all that is required.
-   *
-   * @param  entryDN  The DN for which to make the determination.
-   *
-   * @return  <CODE>true</CODE> if the entry cache currently contains the entry
-   *          with the specified DN, or <CODE>false</CODE> if not.
+   * {@inheritDoc}
    */
-  public boolean containsEntry(DN entryDN) 
+  public boolean containsEntry(DN entryDN)
   {
     // Indicate whether the DN map contains the specified DN.
     boolean containsEntry = false;
@@ -749,16 +716,9 @@ public class FileSystemEntryCache
     }
     return containsEntry;
   }
-   
+
   /**
-   * Retrieves the entry with the specified DN from the cache.  The caller
-   * should have already acquired a read or write lock for the entry if such
-   * protection is needed.
-   *
-   * @param  entryDN  The DN of the entry to retrieve.
-   *
-   * @return  The requested entry if it is present in the cache, or
-   *          <CODE>null</CODE> if it is not present.
+   * {@inheritDoc}
    */
   public Entry getEntry(DN entryDN) {
     // Get the entry from the DN map if it is present.  If not, then return
@@ -774,16 +734,9 @@ public class FileSystemEntryCache
     }
     return entry;
   }
-  
+
   /**
-   * Retrieves the entry ID for the entry with the specified DN from the cache.
-   * The caller should have already acquired a read or write lock for the entry
-   * if such protection is needed.
-   *
-   * @param  entryDN  The DN of the entry for which to retrieve the entry ID.
-   *
-   * @return  The entry ID for the requested entry, or -1 if it is not present
-   *          in the cache.
+   * {@inheritDoc}
    */
   public long getEntryID(DN entryDN) {
     long entryID = -1;
@@ -798,31 +751,18 @@ public class FileSystemEntryCache
     }
     return entryID;
   }
-  
+
   /**
-   * Retrieves the entry with the specified DN from the cache, obtaining a lock
-   * on the entry before it is returned.  If the entry is present in the cache,
-   * then a lock will be obtained for that entry and appended to the provided
-   * list before the entry is returned.  If the entry is not present, then no
-   * lock will be obtained.
-   *
-   * @param  entryDN   The DN of the entry to retrieve.
-   * @param  lockType  The type of lock to obtain (it may be <CODE>NONE</CODE>).
-   * @param  lockList  The list to which the obtained lock will be added (note
-   *                   that no lock will be added if the lock type was
-   *                   <CODE>NONE</CODE>).
-   *
-   * @return  The requested entry if it is present in the cache, or
-   *          <CODE>null</CODE> if it is not present.
+   * {@inheritDoc}
    */
   public Entry getEntry(DN entryDN, LockType lockType, List<Lock> lockList) {
-    
+
     Entry entry = getEntry(entryDN);
     if (entry == null)
     {
       return null;
     }
-    
+
     // Obtain a lock for the entry as appropriate.  If an error occurs, then
     // make sure no lock is held and return null.  Otherwise, return the entry.
     switch (lockType)
@@ -916,7 +856,7 @@ public class FileSystemEntryCache
         return null;
     }
   }
-  
+
   /**
    * Retrieves the requested entry if it is present in the cache.
    *
@@ -928,7 +868,7 @@ public class FileSystemEntryCache
    *          <CODE>null</CODE> if it is not present.
    */
   public Entry getEntry(Backend backend, long entryID) {
-    
+
     Entry entry = null;
     cacheReadLock.lock();
     try {
@@ -936,7 +876,7 @@ public class FileSystemEntryCache
       // return null.
       Map map = backendMap.get(backend);
       if ( !(map == null) ) {
-        // Get the entry from the map by its ID.  If it isn't present, then 
+        // Get the entry from the map by its ID.  If it isn't present, then
         // return null.
         DN dn = (DN) map.get(entryID);
         if ( !(dn == null) ) {
@@ -952,32 +892,17 @@ public class FileSystemEntryCache
   }
 
   /**
-   * Retrieves the requested entry if it is present in the cache, obtaining a
-   * lock on the entry before it is returned.  If the entry is present in the
-   * cache, then a lock  will be obtained for that entry and appended to the
-   * provided list before the entry is returned.  If the entry is not present,
-   * then no lock will be obtained.
-   *
-   * @param  backend   The backend associated with the entry to retrieve.
-   * @param  entryID   The entry ID within the provided backend for the
-   *                   specified entry.
-   * @param  lockType  The type of lock to obtain (it may be <CODE>NONE</CODE>).
-   * @param  lockList  The list to which the obtained lock will be added (note
-   *                   that no lock will be added if the lock type was
-   *                   <CODE>NONE</CODE>).
-   *
-   * @return  The requested entry if it is present in the cache, or
-   *          <CODE>null</CODE> if it is not present.
+   * {@inheritDoc}
    */
   public Entry getEntry(Backend backend, long entryID, LockType lockType,
           List<Lock> lockList) {
-    
+
     Entry entry = getEntry(backend, entryID);
     if (entry == null)
     {
       return null;
     }
-    
+
     // Obtain a lock for the entry as appropriate.  If an error occurs, then
     // make sure no lock is held and return null.  Otherwise, return the entry.
     switch (lockType)
@@ -1071,19 +996,12 @@ public class FileSystemEntryCache
         return null;
     }
   }
- 
+
   /**
-   * Stores the provided entry in the cache.  Note that the mechanism that it
-   * uses to achieve this is implementation-dependent, and it is acceptable for
-   * the entry to not actually be stored in any cache.
-   *
-   * @param  entry    The entry to store in the cache.
-   * @param  backend  The backend with which the entry is associated.
-   * @param  entryID  The entry ID within the provided backend that uniquely
-   *                  identifies the specified entry.
+   * {@inheritDoc}
    */
   public void putEntry(Entry entry, Backend backend, long entryID) {
-    
+
     // If there is a set of exclude filters, then make sure that the provided
     // entry doesn't match any of them.
     if (! excludeFilters.isEmpty()) {
@@ -1096,14 +1014,14 @@ public class FileSystemEntryCache
           if (debugEnabled()) {
             TRACER.debugCaught(DebugLogLevel.ERROR, e);
           }
-          
+
           // This shouldn't happen, but if it does then we can't be sure whether
           // the entry should be excluded, so we will by default.
           return;
         }
       }
     }
-      
+
     // If there is a set of include filters, then make sure that the provided
     // entry matches at least one of them.
     if (! includeFilters.isEmpty()) {
@@ -1118,16 +1036,16 @@ public class FileSystemEntryCache
           if (debugEnabled()) {
             TRACER.debugCaught(DebugLogLevel.ERROR, e);
           }
-          
+
           // This shouldn't happen, but if it does, then just ignore it.
         }
       }
-      
+
       if (! matchFound) {
         return;
       }
     }
-    
+
     // Obtain a lock on the cache.  If this fails, then don't do anything.
     try {
       if (!cacheWriteLock.tryLock(lockTimeout, TimeUnit.MILLISECONDS)) {
@@ -1143,26 +1061,11 @@ public class FileSystemEntryCache
       cacheWriteLock.unlock();
     }
   }
-   
+
   /**
-   * Stores the provided entry in the cache only if it does not conflict with an
-   * entry that already exists.  Note that the mechanism that it uses to achieve
-   * this is implementation-dependent, and it is acceptable for the entry to not
-   * actually be stored in any cache.  However, this method must not overwrite
-   * an existing version of the entry.
-   *
-   * @param  entry    The entry to store in the cache.
-   * @param  backend  The backend with which the entry is associated.
-   * @param  entryID  The entry ID within the provided backend that uniquely
-   *                  identifies the specified entry.
-   *
-   * @return  <CODE>false</CODE> if an existing entry or some other problem
-   *          prevented the method from completing successfully, or
-   *          <CODE>true</CODE> if there was no conflict and the entry was
-   *          either stored or the cache determined that this entry should never
-   *          be cached for some reason.
+   * {@inheritDoc}
    */
-  public boolean putEntryIfAbsent(Entry entry, Backend backend, long entryID) 
+  public boolean putEntryIfAbsent(Entry entry, Backend backend, long entryID)
   {
     // If there is a set of exclude filters, then make sure that the provided
     // entry doesn't match any of them.
@@ -1176,14 +1079,14 @@ public class FileSystemEntryCache
           if (debugEnabled()) {
             TRACER.debugCaught(DebugLogLevel.ERROR, e);
           }
-          
+
           // This shouldn't happen, but if it does then we can't be sure whether
           // the entry should be excluded, so we will by default.
           return false;
         }
       }
     }
-    
+
     // If there is a set of include filters, then make sure that the provided
     // entry matches at least one of them.
     if (! includeFilters.isEmpty()) {
@@ -1198,11 +1101,11 @@ public class FileSystemEntryCache
           if (debugEnabled()) {
             TRACER.debugCaught(DebugLogLevel.ERROR, e);
           }
-          
+
           // This shouldn't happen, but if it does, then just ignore it.
         }
       }
-      
+
       if (! matchFound) {
         return true;
       }
@@ -1223,41 +1126,35 @@ public class FileSystemEntryCache
     } catch (Exception e) {
       if (debugEnabled()) {
         TRACER.debugCaught(DebugLogLevel.ERROR, e);
-      }  
+      }
       // We can't rule out the possibility of a conflict, so return false.
       return false;
     } finally {
       cacheWriteLock.unlock();
     }
   }
-  
+
   /**
-   * Removes the specified entry from the cache.
-   *
-   * @param  entryDN  The DN of the entry to remove from the cache.
+   * {@inheritDoc}
    */
   public void removeEntry(DN entryDN) {
-    
+
     cacheWriteLock.lock();
-    
+
     try {
       Long entryID = dnMap.get(entryDN);
       if (entryID == null) {
         return;
       }
-      Set backendSet = backendMap.keySet();
-      
-      Iterator backendIterator = backendSet.iterator();
-      while (backendIterator.hasNext()) {
-        Map map = backendMap.get(backendIterator.next());
-        if ((map.get(entryID) != null) && 
+      for (Map<Long,DN> map : backendMap.values()) {
+        if ((map.get(entryID) != null) &&
             (map.get(entryID).equals(entryDN))) {
           map.remove(entryID);
         }
       }
-      
+
       dnMap.remove(entryDN);
-      entryCacheDB.delete(null, 
+      entryCacheDB.delete(null,
         new DatabaseEntry(entryDN.toNormalizedString().getBytes("UTF-8")));
     } catch (Exception e) {
       if (debugEnabled()) {
@@ -1267,26 +1164,25 @@ public class FileSystemEntryCache
       cacheWriteLock.unlock();
     }
   }
-  
+
   /**
-   * Removes all entries from the cache.  The cache should still be available
-   * for future use.
+   * {@inheritDoc}
    */
   public void clear() {
     cacheWriteLock.lock();
-    
+
     dnMap.clear();
     backendMap.clear();
 
     try {
-      if ((entryCacheDB != null) && (entryCacheEnv != null) && 
+      if ((entryCacheDB != null) && (entryCacheEnv != null) &&
           (entryCacheClassDB != null) && (entryCacheDBConfig != null)) {
         entryCacheDBConfig = entryCacheDB.getConfig();
         entryCacheDB.close();
         entryCacheClassDB.close();
         entryCacheEnv.truncateDatabase(null, ENTRYCACHEDBNAME, false);
         entryCacheEnv.truncateDatabase(null, INDEXCLASSDBNAME, false);
-        entryCacheEnv.cleanLog();       
+        entryCacheEnv.cleanLog();
         entryCacheDB = entryCacheEnv.openDatabase(null,
             ENTRYCACHEDBNAME, entryCacheDBConfig);
         entryCacheClassDB = entryCacheEnv.openDatabase(null,
@@ -1304,32 +1200,29 @@ public class FileSystemEntryCache
       cacheWriteLock.unlock();
     }
   }
-  
+
   /**
-   * Removes all entries from the cache that are associated with the provided
-   * backend.
-   *
-   * @param  backend  The backend for which to flush the associated entries.
+   * {@inheritDoc}
    */
   public void clearBackend(Backend backend) {
-    
+
     cacheWriteLock.lock();
-    
-    Map backendEntriesMap = backendMap.get(backend);
-    
+
+    Map<Long,DN> backendEntriesMap = backendMap.get(backend);
+
     try {
       int entriesExamined = 0;
-      Set entriesSet = backendEntriesMap.keySet();
-      Iterator backendEntriesIterator = entriesSet.iterator();
+      Set<Long> entriesSet = backendEntriesMap.keySet();
+      Iterator<Long> backendEntriesIterator = entriesSet.iterator();
       while (backendEntriesIterator.hasNext()) {
-        long entryID = (Long) backendEntriesIterator.next();
-        DN entryDN = (DN) backendEntriesMap.get(entryID);
+        long entryID = backendEntriesIterator.next();
+        DN entryDN = backendEntriesMap.get(entryID);
         entryCacheDB.delete(null,
             new DatabaseEntry(entryDN.toNormalizedString().getBytes("UTF-8")));
         dnMap.remove(entryDN);
-        
-        // This can take a while, so we'll periodically release and re-acquire 
-        // the lock in case anyone else is waiting on it so this doesn't become 
+
+        // This can take a while, so we'll periodically release and re-acquire
+        // the lock in case anyone else is waiting on it so this doesn't become
         // a stop-the-world event as far as the cache is concerned.
         entriesExamined++;
         if ((entriesExamined % 1000) == 0) {
@@ -1338,7 +1231,7 @@ public class FileSystemEntryCache
           cacheWriteLock.lock();
         }
       }
-      
+
     } catch (Exception e) {
       if (debugEnabled()) {
         TRACER.debugCaught(DebugLogLevel.ERROR, e);
@@ -1348,11 +1241,9 @@ public class FileSystemEntryCache
       cacheWriteLock.unlock();
     }
   }
-  
+
   /**
-   * Removes all entries from the cache that are below the provided DN.
-   *
-   * @param  baseDN  The base DN below which all entries should be flushed.
+   * {@inheritDoc}
    */
   public void clearSubtree(DN baseDN) {
     // Determine which backend should be used for the provided base DN.  If
@@ -1362,7 +1253,7 @@ public class FileSystemEntryCache
     {
       return;
     }
-    
+
     // Acquire a lock on the cache.  We should not return until the cache has
     // been cleared, so we will block until we can obtain the lock.
     cacheWriteLock.lock();
@@ -1386,7 +1277,7 @@ public class FileSystemEntryCache
       cacheWriteLock.unlock();
     }
   }
-  
+
   /**
    * Clears all entries at or below the specified base DN that are associated
    * with the given backend.  The caller must already hold the cache lock.
@@ -1430,7 +1321,7 @@ public class FileSystemEntryCache
           }
         }
       }
-      
+
       entriesExamined++;
       if ((entriesExamined % 1000) == 0)
       {
@@ -1460,12 +1351,9 @@ public class FileSystemEntryCache
       }
     }
   }
-   
+
   /**
-   * Attempts to react to a scenario in which it is determined that the system
-   * is running low on available memory.  In this case, the entry cache should
-   * attempt to free some memory if possible to try to avoid out of memory
-   * errors.
+   * {@inheritDoc}
    */
   public void handleLowMemory() {
     // This is about all we can do.
@@ -1482,124 +1370,14 @@ public class FileSystemEntryCache
       }
     }
   }
-  
-  /**
-   * Retrieves the DN of the configuration entry with which this component is
-   * associated.
-   *
-   * @return  The DN of the configuration entry with which this component is
-   *          associated.
-   */
-  public DN getConfigurableComponentEntryDN() {
-    return configEntryDN;
-  }
-   
-  /**
-   * Retrieves the set of configuration attributes that are associated with this
-   * configurable component.
-   *
-   * @return  The set of configuration attributes that are associated with this
-   *          configurable component.
-   */
-  public List<ConfigAttribute> getConfigurationAttributes() {
-    
-    LinkedList<ConfigAttribute> attrList = new LinkedList<ConfigAttribute>();
-    
-    int msgID = MSGID_FSCACHE_DESCRIPTION_MAX_ENTRIES;
-    IntegerConfigAttribute maxEntriesAttr =
-            new IntegerConfigAttribute(ATTR_FSCACHE_MAX_ENTRIES,
-            getMessage(msgID), true, false, false,
-            true, 0, false, 0, maxEntries.longValue());
-    attrList.add(maxEntriesAttr);
 
-    msgID = MSGID_FSCACHE_DESCRIPTION_LOCK_TIMEOUT;
-    IntegerWithUnitConfigAttribute lockTimeoutAttr =
-         new IntegerWithUnitConfigAttribute(ATTR_FSCACHE_LOCK_TIMEOUT,
-                                            getMessage(msgID), false, timeUnits,
-                                            true, 0, false, 0, lockTimeout,
-                                            TIME_UNIT_MILLISECONDS_FULL);
-    attrList.add(lockTimeoutAttr);
-    
-    msgID = MSGID_FSCACHE_DESCRIPTION_INCLUDE_FILTERS;
-    ArrayList<String> includeStrings =
-            new ArrayList<String>(includeFilters.size());
-    for (SearchFilter f : includeFilters) {
-      includeStrings.add(f.toString());
-    }
-    StringConfigAttribute includeAttr =
-            new StringConfigAttribute(ATTR_FSCACHE_INCLUDE_FILTER,
-            getMessage(msgID), false, true, false,
-            includeStrings);
-    attrList.add(includeAttr);
-    
-    
-    msgID = MSGID_FSCACHE_DESCRIPTION_EXCLUDE_FILTERS;
-    ArrayList<String> excludeStrings =
-            new ArrayList<String>(excludeFilters.size());
-    for (SearchFilter f : excludeFilters) {
-      excludeStrings.add(f.toString());
-    }
-    StringConfigAttribute excludeAttr =
-            new StringConfigAttribute(ATTR_FSCACHE_EXCLUDE_FILTER,
-            getMessage(msgID), false, true, false,
-            excludeStrings);
-    attrList.add(excludeAttr);
-    
-    
-    msgID = MSGID_FSCACHE_DESCRIPTION_TYPE;
-    StringConfigAttribute cacheTypeAttr =
-            new StringConfigAttribute(ATTR_FSCACHE_TYPE,
-            getMessage(msgID), true, false, false, cacheType);
-    attrList.add(cacheTypeAttr);
-    
-
-    msgID = MSGID_FSCACHE_DESCRIPTION_HOME;
-    StringConfigAttribute cacheHomeAttr =
-            new StringConfigAttribute(ATTR_FSCACHE_HOME,
-            getMessage(msgID), true, false, false, cacheHome);
-    attrList.add(cacheHomeAttr);
-     
-
-    msgID = MSGID_FSCACHE_DESCRIPTION_JE_CACHE_PCT;
-    IntegerConfigAttribute jeCachePercentAttr =
-        new IntegerConfigAttribute(ATTR_FSCACHE_JE_CACHE_PCT,
-        getMessage(msgID), true, false, false, true,
-        0, true, 100, jeCachePercent);
-    attrList.add(jeCachePercentAttr);
-    
-
-    msgID = MSGID_FSCACHE_DESCRIPTION_JE_CACHE_SIZE;
-    IntegerWithUnitConfigAttribute jeCacheSizeAttr =
-            new IntegerWithUnitConfigAttribute(ATTR_FSCACHE_JE_CACHE_SIZE,
-            getMessage(msgID), false, memoryUnits, true, 0, false, 0, 
-            jeCacheSize, SIZE_UNIT_BYTES_FULL);
-    attrList.add(jeCacheSizeAttr);
-    
-    
-    msgID = MSGID_FSCACHE_IS_PERSISTENT_DESCRIPTION;
-    BooleanConfigAttribute persistentCacheAttr =
-        new BooleanConfigAttribute(ATTR_FSCACHE_IS_PERSISTENT,
-        getMessage(msgID), false, persistentCache);
-    attrList.add(persistentCacheAttr);
-    
-    
-    msgID = MSGID_FSCACHE_DESCRIPTION_MAX_MEMORY_SIZE;
-    IntegerWithUnitConfigAttribute maxAllowedMemoryAttr =
-            new IntegerWithUnitConfigAttribute(ATTR_FSCACHE_MAX_MEMORY_SIZE,
-            getMessage(msgID), false, memoryUnits, true, 0, false, 0, 
-            maxAllowedMemory, SIZE_UNIT_BYTES_FULL);
-    attrList.add(maxAllowedMemoryAttr);
-    
-    return attrList;
-  }
-    
   /**
    * {@inheritDoc}
    */
   public boolean isConfigurationChangeAcceptable(
       FileSystemEntryCacheCfg configuration,
       List<String>      unacceptableReasons
-      ) 
+      )
   {
     // Make sure that we can process the defined character sets.  If so, then
     // we'll accept the new configuration.
@@ -1614,8 +1392,7 @@ public class FileSystemEntryCache
 
     return errorHandler.getIsAcceptable();
   }
-  
-  
+
   /**
    * {@inheritDoc}
    */
@@ -1643,7 +1420,7 @@ public class FileSystemEntryCache
 
     return changeResult;
   }
-   
+
   /**
    * Makes a best-effort attempt to apply the configuration contained in the
    * provided entry.  Information about the result of this processing should be
@@ -1663,7 +1440,7 @@ public class FileSystemEntryCache
   public ConfigChangeResult applyNewConfiguration(
       FileSystemEntryCacheCfg configuration,
       boolean           detailedResults
-      ) 
+      )
   {
     // Store the current value to detect changes.
     long                  prevLockTimeout      = lockTimeout;
@@ -1677,7 +1454,7 @@ public class FileSystemEntryCache
 
     // Activate the new configuration.
     ConfigChangeResult changeResult = applyConfigurationChange(configuration);
-    
+
     // Add detailed messages if needed.
     ResultCode resultCode = changeResult.getResultCode();
     boolean configIsAcceptable = (resultCode == ResultCode.SUCCESS);
@@ -1706,26 +1483,26 @@ public class FileSystemEntryCache
         changeResult.addMessage(
             getMessage (MSGID_FSCACHE_UPDATED_EXCLUDE_FILTERS));
       }
-      
+
       if (maxAllowedMemory != prevMaxAllowedMemory)
       {
         changeResult.addMessage(
-            getMessage (MSGID_FSCACHE_UPDATED_MAX_MEMORY_SIZE, 
+            getMessage (MSGID_FSCACHE_UPDATED_MAX_MEMORY_SIZE,
             maxAllowedMemory));
       }
-      
+
       if (jeCachePercent != prevJECachePercent)
       {
         changeResult.addMessage(
             getMessage (MSGID_FSCACHE_UPDATED_JE_MEMORY_PCT, jeCachePercent));
       }
-      
+
       if (jeCacheSize != prevJECacheSize)
       {
         changeResult.addMessage(
             getMessage (MSGID_FSCACHE_UPDATED_JE_MEMORY_SIZE, jeCacheSize));
       }
-      
+
       if (persistentCache != prevPersistentCache)
       {
         changeResult.addMessage(
@@ -1735,7 +1512,7 @@ public class FileSystemEntryCache
 
     return changeResult;
   }
-   
+
   /**
    * Parses the provided configuration and configure the entry cache.
    *
@@ -1772,25 +1549,25 @@ public class FileSystemEntryCache
 
     // Maximum memory/space this cache can utilize.
     newMaxAllowedMemory = configuration.getMaxMemorySize();
-    
+
     // Determine JE cache percent.
     newJECachePercent = configuration.getDatabaseCachePercent();
-    
+
     // Determine JE cache size.
     newJECacheSize = configuration.getDatabaseCacheSize();
-    
+
     // Check if this cache is persistent.
     newPersistentCache = configuration.isPersistentCache();
-    
+
     switch (errorHandler.getConfigPhase())
     {
     case PHASE_INIT:
       // Determine the cache type.
       newCacheType = configuration.getCacheType().toString();
-      
+
       // Determine the cache home.
       newCacheHome = configuration.getCacheDirectory();
-      
+
       newIncludeFilters = EntryCacheCommon.getFilters(
           configuration.getIncludeFilter(),
           MSGID_FIFOCACHE_INVALID_INCLUDE_FILTER,
@@ -1825,15 +1602,15 @@ public class FileSystemEntryCache
       break;
     }
 
-    if (applyChanges && errorHandler.getIsAcceptable()) 
+    if (applyChanges && errorHandler.getIsAcceptable())
     {
-      switch (errorHandler.getConfigPhase()) {     
+      switch (errorHandler.getConfigPhase()) {
       case PHASE_INIT:
         cacheType      = newCacheType;
         cacheHome      = newCacheHome;
         jeCachePercent = newJECachePercent;
         jeCacheSize    = newJECacheSize;
-        break;     
+        break;
       case PHASE_APPLY:
         jeCachePercent = newJECachePercent;
         try {
@@ -1876,22 +1653,22 @@ public class FileSystemEntryCache
               false,
               ResultCode.OPERATIONS_ERROR
               );
-        }        
+        }
         break;
       }
-      
+
       configEntryDN    = newConfigEntryDN;
       lockTimeout      = newLockTimeout;
       maxEntries       = new AtomicLong(newMaxEntries);
       maxAllowedMemory = newMaxAllowedMemory;
       includeFilters   = newIncludeFilters;
       excludeFilters   = newExcludeFilters;
-      persistentCache  = newPersistentCache;    
+      persistentCache  = newPersistentCache;
     }
 
     return errorHandler.getIsAcceptable();
   }
-  
+
   /**
    * Retrieves and decodes the entry with the specified DN from JE backend db.
    *
@@ -1904,262 +1681,15 @@ public class FileSystemEntryCache
   {
     DatabaseEntry cacheEntryKey = new DatabaseEntry();
     DatabaseEntry primaryData = new DatabaseEntry();
-    
+
     try {
       // Get the primary key and data.
       cacheEntryKey.setData(entryDN.toNormalizedString().getBytes("UTF-8"));
       if (entryCacheDB.get(null, cacheEntryKey,
               primaryData,
               LockMode.DEFAULT) == OperationStatus.SUCCESS) {
-        
-        // Decode cache entry.
-        // TODO: Custom decoding used here due to performance and space 
-        // considerations. Should use Entry.decode(), see Issue 1675.
-        byte[] entryBytes = primaryData.getData();
-        
-        int pos = 0;
-        // The length of the object classes.  It may be a single
-        // byte or multiple bytes.
-        int ocLength = entryBytes[pos] & 0x7F;
-        if (entryBytes[pos++] != ocLength) {
-          int numLengthBytes = ocLength;
-          ocLength = 0;
-          for (int i=0; i < numLengthBytes; i++, pos++) {
-            ocLength = (ocLength << 8) | (entryBytes[pos] & 0xFF);
-          }
-        }
-              
-        // Next is the encoded set of object classes.  It will be a
-        // single string with the object class names separated by zeros.
-        LinkedHashMap<ObjectClass,String> objectClasses =
-            new LinkedHashMap<ObjectClass,String>();
-        int startPos = pos;
-        for (int i=0; i < ocLength; i++,pos++) {
-          if (entryBytes[pos] == 0x00) {
-            String name = new String(entryBytes, startPos, pos-startPos,
-                "UTF-8");
-            String lowerName = toLowerCase(name);
-            ObjectClass oc =
-                DirectoryServer.getObjectClass(lowerName, true);
-            objectClasses.put(oc, name);
-            startPos = pos+1;
-          }
-        }
-        String name = new String(entryBytes, startPos, pos-startPos,
-            "UTF-8");
-        String lowerName = toLowerCase(name);
-        ObjectClass oc =
-            DirectoryServer.getObjectClass(lowerName, true);
-        objectClasses.put(oc, name);
-              
-        // Next is the total number of user attributes.  It may be a
-        // single byte or multiple bytes.
-        int numUserAttrs = entryBytes[pos] & 0x7F;
-        if (entryBytes[pos++] != numUserAttrs) {
-          int numLengthBytes = numUserAttrs;
-          numUserAttrs = 0;
-          for (int i=0; i < numLengthBytes; i++, pos++) {
-            numUserAttrs = (numUserAttrs << 8) |
-                (entryBytes[pos] & 0xFF);
-          }
-        }
-               
-        // Now, we should iterate through the user attributes and decode
-        // each one.
-        LinkedHashMap<AttributeType,List<Attribute>> userAttributes =
-            new LinkedHashMap<AttributeType,List<Attribute>>();
-        for (int i=0; i < numUserAttrs; i++) {
-          // First, we have the zero-terminated attribute name.
-          startPos = pos;
-          while (entryBytes[pos] != 0x00) {
-            pos++;
-          }
-          name = new String(entryBytes, startPos, pos-startPos,
-              "UTF-8");
-          LinkedHashSet<String> options;
-          int semicolonPos = name.indexOf(';');
-          if (semicolonPos > 0) {
-            String baseName = name.substring(0, semicolonPos);
-            lowerName = toLowerCase(baseName);
-            options   = new LinkedHashSet<String>();
-            
-            int nextPos = name.indexOf(';', semicolonPos+1);
-            while (nextPos > 0) {
-              String option = name.substring(semicolonPos+1, nextPos);
-              if (option.length() > 0) {
-                options.add(option);
-              }
-              
-              semicolonPos = nextPos;
-              nextPos = name.indexOf(';', semicolonPos+1);
-            }
-            
-            String option = name.substring(semicolonPos+1);
-            if (option.length() > 0) {
-              options.add(option);
-            }
-            
-            name = baseName;
-          } else {
-            lowerName = toLowerCase(name);
-            options   = new LinkedHashSet<String>(0);
-          }
-          AttributeType attributeType =
-              DirectoryServer.getAttributeType(lowerName, true);
-              
-          // Next, we have the number of values.
-          int numValues = entryBytes[++pos] & 0x7F;
-          if (entryBytes[pos++] != numValues) {
-            int numLengthBytes = numValues;
-            numValues = 0;
-            for (int j=0; j < numLengthBytes; j++, pos++) {
-              numValues = (numValues << 8) | (entryBytes[pos] & 0xFF);
-            }
-          }
-          
-          // Next, we have the sequence of length-value pairs.
-          LinkedHashSet<AttributeValue> values =
-              new LinkedHashSet<AttributeValue>(numValues);
-          for (int j=0; j < numValues; j++) {
-            int valueLength = entryBytes[pos] & 0x7F;
-            if (entryBytes[pos++] != valueLength) {
-              int numLengthBytes = valueLength;
-              valueLength = 0;
-              for (int k=0; k < numLengthBytes; k++, pos++) {
-                valueLength = (valueLength << 8) |
-                    (entryBytes[pos] & 0xFF);
-              }
-            }
-            
-            byte[] valueBytes = new byte[valueLength];
-            System.arraycopy(entryBytes, pos, valueBytes, 0,
-                valueLength);
-            values.add(new AttributeValue(attributeType,
-                new ASN1OctetString(valueBytes)));
-            pos += valueLength;
-          }
-                  
-          // Create the attribute and add it to the set of user
-          // attributes.
-          Attribute a = new Attribute(attributeType, name, options,
-              values);
-          List<Attribute> attrList = userAttributes.get(attributeType);
-          if (attrList == null) {
-            attrList = new ArrayList<Attribute>(1);
-            attrList.add(a);
-            userAttributes.put(attributeType, attrList);
-          } else {
-            attrList.add(a);
-          }
-        }
-               
-        // Next is the total number of operational attributes.  It may
-        // be a single byte or multiple bytes.
-        int numOperationalAttrs = entryBytes[pos] & 0x7F;
-        if (entryBytes[pos++] != numOperationalAttrs) {
-          int numLengthBytes = numOperationalAttrs;
-          numOperationalAttrs = 0;
-          for (int i=0; i < numLengthBytes; i++, pos++) {
-            numOperationalAttrs =
-                (numOperationalAttrs << 8) | (entryBytes[pos] & 0xFF);
-          }
-        }
-              
-        // Now, we should iterate through the operational attributes and
-        // decode each one.
-        LinkedHashMap<AttributeType,List<Attribute>>
-            operationalAttributes =
-            new LinkedHashMap<AttributeType,List<Attribute>>();
-        for (int i=0; i < numOperationalAttrs; i++) {
-          // First, we have the zero-terminated attribute name.
-          startPos = pos;
-          while (entryBytes[pos] != 0x00) {
-            pos++;
-          }
-          name = new String(entryBytes, startPos, pos-startPos,
-              "UTF-8");
-          LinkedHashSet<String> options;
-          int semicolonPos = name.indexOf(';');
-          if (semicolonPos > 0) {
-            String baseName = name.substring(0, semicolonPos);
-            lowerName = toLowerCase(baseName);
-            options   = new LinkedHashSet<String>();
-            
-            int nextPos = name.indexOf(';', semicolonPos+1);
-            while (nextPos > 0) {
-              String option = name.substring(semicolonPos+1, nextPos);
-              if (option.length() > 0) {
-                options.add(option);
-              }
-              
-              semicolonPos = nextPos;
-              nextPos = name.indexOf(';', semicolonPos+1);
-            }
-            
-            String option = name.substring(semicolonPos+1);
-            if (option.length() > 0) {
-              options.add(option);
-            }
-            
-            name = baseName;
-          } else {
-            lowerName = toLowerCase(name);
-            options   = new LinkedHashSet<String>(0);
-          }
-          AttributeType attributeType =
-              DirectoryServer.getAttributeType(lowerName, true);
-                  
-          // Next, we have the number of values.
-          int numValues = entryBytes[++pos] & 0x7F;
-          if (entryBytes[pos++] != numValues) {
-            int numLengthBytes = numValues;
-            numValues = 0;
-            for (int j=0; j < numLengthBytes; j++, pos++) {
-              numValues = (numValues << 8) | (entryBytes[pos] & 0xFF);
-            }
-          }
-          
-          // Next, we have the sequence of length-value pairs.
-          LinkedHashSet<AttributeValue> values =
-              new LinkedHashSet<AttributeValue>(numValues);
-          for (int j=0; j < numValues; j++) {
-            int valueLength = entryBytes[pos] & 0x7F;
-            if (entryBytes[pos++] != valueLength) {
-              int numLengthBytes = valueLength;
-              valueLength = 0;
-              for (int k=0; k < numLengthBytes; k++, pos++) {
-                valueLength = (valueLength << 8) |
-                    (entryBytes[pos] & 0xFF);
-              }
-            }
-            
-            byte[] valueBytes = new byte[valueLength];
-            System.arraycopy(entryBytes, pos, valueBytes, 0,
-                valueLength);
-            values.add(new AttributeValue(attributeType,
-                new ASN1OctetString(valueBytes)));
-            pos += valueLength;
-          }
-                
-          // Create the attribute and add it to the set of operational
-          // attributes.
-          Attribute a = new Attribute(attributeType, name, options,
-              values);
-          List<Attribute> attrList =
-              operationalAttributes.get(attributeType);
-          if (attrList == null) {
-            attrList = new ArrayList<Attribute>(1);
-            attrList.add(a);
-            operationalAttributes.put(attributeType, attrList);
-          } else {
-            attrList.add(a);
-          }
-        }
-        
-        // We've got everything that we need, so create and return the
-        // entry.
-        return new
-          Entry(entryDN, objectClasses, userAttributes, operationalAttributes);
+
+        return decodeEntry(entryDN, primaryData.getData());
       } else {
         throw new Exception();
       }
@@ -2167,7 +1697,7 @@ public class FileSystemEntryCache
       if (debugEnabled()) {
         TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
-      
+
       // Log an error message.
       logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.SEVERE_ERROR,
               MSGID_FSCACHE_CANNOT_RETRIEVE_ENTRY,
@@ -2175,8 +1705,7 @@ public class FileSystemEntryCache
     }
     return null;
   }
-  
-  
+
   /**
    * Encodes and stores the entry in the JE backend db.
    *
@@ -2185,9 +1714,9 @@ public class FileSystemEntryCache
    * @param  entryID  The entry ID within the provided backend that uniquely
    *                  identifies the specified entry.
    *
-   * @return  <CODE>false</CODE> if some problem prevented the method from 
-   *          completing successfully, or <CODE>true</CODE> if the entry 
-   *          was either stored or the cache determined that this entry 
+   * @return  <CODE>false</CODE> if some problem prevented the method from
+   *          completing successfully, or <CODE>true</CODE> if the entry
+   *          was either stored or the cache determined that this entry
    *          should never be cached for some reason.
    */
   private boolean putEntryToDB(Entry entry, Backend backend, long entryID) {
@@ -2200,20 +1729,20 @@ public class FileSystemEntryCache
 
       // Zero means unlimited here.
       if (maxAllowedMemory != 0) {
-        // TODO: This should be done using JE public API 
+        // TODO: This should be done using JE public API
         // EnvironmentStats.getTotalLogSize() when JE 3.2.28 is available.
-        EnvironmentImpl envImpl = 
+        EnvironmentImpl envImpl =
               DbInternal.envGetEnvironmentImpl(entryCacheEnv);
         UtilizationProfile utilProfile = envImpl.getUtilizationProfile();
         SortedMap map = utilProfile.getFileSummaryMap(false);
-          
+
         // This calculation is not exactly precise as the last JE logfile
         // will always be less than JELOGFILEMAX however in the interest
         // of performance and the fact that JE environment is always a
         // moving target we will allow for that margin of error here.
         usedMemory = map.size() * JELOGFILEMAX.longValue();
 
-        // TODO: Check and log a warning if usedMemory hits default or 
+        // TODO: Check and log a warning if usedMemory hits default or
         // configurable watermark, see Issue 1735.
 
         if (usedMemory > maxAllowedMemory) {
@@ -2222,7 +1751,7 @@ public class FileSystemEntryCache
           // any circumstances.
           maxEntries.set((dnMap.isEmpty() ? 0 : dnMap.size() - 1));
           // Add the entry to the map to trigger remove of the eldest entry.
-          // @see LinkedHashMapRotator.removeEldestEntry() for more details. 
+          // @see LinkedHashMapRotator.removeEldestEntry() for more details.
           dnMap.put(entry.getDN(), entryID);
           // Restore the map and maxEntries.
           dnMap.remove(entry.getDN());
@@ -2237,202 +1766,31 @@ public class FileSystemEntryCache
       DatabaseEntry cacheEntryKey = new DatabaseEntry();
       cacheEntryKey.setData(
           entry.getDN().toNormalizedString().getBytes("UTF-8"));
-      
-      // Create data by encoding cache entry.
-      // TODO: Custom encoding used here due to performance and space 
-      // considerations. Should use Entry.encode(), see Issue 1675.
-      int totalBytes = 0;
-      
-      // The object classes will be encoded as one-to-five byte length
-      // followed by a zero-delimited UTF-8 byte representation of the
-      // names (e.g., top\0person\0organizationalPerson\0inetOrgPerson).
-      int i=0;
-      int totalOCBytes = entry.getObjectClasses().size() - 1;
-      byte[][] ocBytes = new byte[entry.getObjectClasses().size()][];
-      for (String ocName : entry.getObjectClasses().values()) {
-        ocBytes[i] = getBytes(ocName);
-        totalOCBytes += ocBytes[i++].length;
-      }
-      byte[] ocLength = ASN1Element.encodeLength(totalOCBytes);
-      totalBytes += totalOCBytes + ocLength.length;
-      
-      
-      // The user attributes will be encoded as a one-to-five byte
-      // number of attributes followed by a sequence of:
-      // - A UTF-8 byte representation of the attribute name.
-      // - A zero delimiter
-      // - A one-to-five byte number of values for the attribute
-      // - A sequence of:
-      //   - A one-to-five byte length for the value
-      //   - A UTF-8 byte representation for the value
-      i=0;
-      int numUserAttributes = 0;
-      int totalUserAttrBytes = 0;
-      LinkedList<byte[]> userAttrBytes = new LinkedList<byte[]>();
-      for (List<Attribute> attrList : entry.getUserAttributes().values()) {
-        for (Attribute a : attrList) {
-          if (a.isVirtual() || (! a.hasValue())) {
-            continue;
-          }
-          
-          numUserAttributes++;
-          
-          byte[] nameBytes = getBytes(a.getNameWithOptions());
-          
-          int numValues = 0;
-          int totalValueBytes = 0;
-          LinkedList<byte[]> valueBytes = new LinkedList<byte[]>();
-          for (AttributeValue v : a.getValues()) {
-            numValues++;
-            byte[] vBytes = v.getValueBytes();
-            byte[] vLength = ASN1Element.encodeLength(vBytes.length);
-            valueBytes.add(vLength);
-            valueBytes.add(vBytes);
-            totalValueBytes += vLength.length + vBytes.length;
-          }
-          byte[] numValuesBytes = ASN1Element.encodeLength(numValues);
-          
-          byte[] attrBytes = new byte[nameBytes.length +
-              numValuesBytes.length +
-              totalValueBytes + 1];
-          System.arraycopy(nameBytes, 0, attrBytes, 0,
-              nameBytes.length);
-          
-          int pos = nameBytes.length+1;
-          System.arraycopy(numValuesBytes, 0, attrBytes, pos,
-              numValuesBytes.length);
-          pos += numValuesBytes.length;
-          for (byte[] b : valueBytes) {
-            System.arraycopy(b, 0, attrBytes, pos, b.length);
-            pos += b.length;
-          }
-          
-          userAttrBytes.add(attrBytes);
-          totalUserAttrBytes += attrBytes.length;
+
+      // Create data and put this cache entry into the database.
+      if (entryCacheDB.put(null, cacheEntryKey,
+          new DatabaseEntry(encodeEntry(entry))) == OperationStatus.SUCCESS) {
+
+        // Add the entry to the cache maps.
+        dnMap.put(entry.getDN(), entryID);
+        Map<Long,DN> map = backendMap.get(backend);
+        if (map == null) {
+          map = new LinkedHashMap<Long,DN>();
+          map.put(entryID, entry.getDN());
+          backendMap.put(backend, map);
+        } else {
+          map.put(entryID, entry.getDN());
         }
       }
-      byte[] userAttrCount =
-          ASN1OctetString.encodeLength(numUserAttributes);
-      totalBytes += totalUserAttrBytes + userAttrCount.length;
-      
-      // The operational attributes will be encoded in the same way as
-      // the user attributes.
-      i=0;
-      int numOperationalAttributes = 0;
-      int totalOperationalAttrBytes = 0;
-      LinkedList<byte[]> operationalAttrBytes =
-          new LinkedList<byte[]>();
-      for (List<Attribute> attrList :
-        entry.getOperationalAttributes().values()) {
-          for (Attribute a : attrList) {
-            if (a.isVirtual() || (! a.hasValue())) {
-              continue;
-            }
-            
-            numOperationalAttributes++;
-            
-            byte[] nameBytes = getBytes(a.getNameWithOptions());
-            
-            int numValues = 0;
-            int totalValueBytes = 0;
-            LinkedList<byte[]> valueBytes = new LinkedList<byte[]>();
-            for (AttributeValue v : a.getValues()) {
-              numValues++;
-              byte[] vBytes = v.getValueBytes();
-              byte[] vLength = ASN1Element.encodeLength(vBytes.length);
-              valueBytes.add(vLength);
-              valueBytes.add(vBytes);
-              totalValueBytes += vLength.length + vBytes.length;
-            }
-            byte[] numValuesBytes = ASN1Element.encodeLength(numValues);
-            
-            byte[] attrBytes = new byte[nameBytes.length +
-                numValuesBytes.length +
-                totalValueBytes + 1];
-            System.arraycopy(nameBytes, 0, attrBytes, 0,
-                nameBytes.length);
-            
-            int pos = nameBytes.length+1;
-            System.arraycopy(numValuesBytes, 0, attrBytes, pos,
-                numValuesBytes.length);
-            pos += numValuesBytes.length;
-            for (byte[] b : valueBytes) {
-              System.arraycopy(b, 0, attrBytes, pos, b.length);
-              pos += b.length;
-            }
-            
-            operationalAttrBytes.add(attrBytes);
-            totalOperationalAttrBytes += attrBytes.length;
-          }
-        }
-        byte[] operationalAttrCount =
-            ASN1OctetString.encodeLength(numOperationalAttributes);
-        totalBytes += totalOperationalAttrBytes +
-            operationalAttrCount.length;
-        
-        
-        // Now we've got all the data that we need.  Create a big byte
-        // array to hold it all and pack it in.
-        byte[] entryBytes = new byte[totalBytes];
-        
-        int pos = 0;
-        
-        // Add the object classes length and values.
-        System.arraycopy(ocLength, 0, entryBytes, pos, ocLength.length);
-        pos += ocLength.length;
-        for (byte[] b : ocBytes) {
-          System.arraycopy(b, 0, entryBytes, pos, b.length);
-          pos += b.length + 1;
-        }
-        
-        // We need to back up one because there's no zero-teriminator
-        // after the last object class name.
-        pos--;
-        
-        // Next, add the user attribute count and the user attribute
-        // data.
-        System.arraycopy(userAttrCount, 0, entryBytes, pos,
-            userAttrCount.length);
-        pos += userAttrCount.length;
-        for (byte[] b : userAttrBytes) {
-          System.arraycopy(b, 0, entryBytes, pos, b.length);
-          pos += b.length;
-        }
-        
-        // Finally, add the operational attribute count and the
-        // operational attribute data.
-        System.arraycopy(operationalAttrCount, 0, entryBytes, pos,
-            operationalAttrCount.length);
-        pos += operationalAttrCount.length;
-        for (byte[] b : operationalAttrBytes) {
-          System.arraycopy(b, 0, entryBytes, pos, b.length);
-          pos += b.length;
-        }
-        
-        // Put this cache entry into the database.
-        if (entryCacheDB.put(null, cacheEntryKey,
-            new DatabaseEntry(entryBytes)) == OperationStatus.SUCCESS) {
-          
-          // Add the entry to the cache maps.
-          dnMap.put(entry.getDN(), entryID);        
-          Map<Long,DN> map = backendMap.get(backend);
-          if (map == null) {
-            map = new LinkedHashMap<Long,DN>();
-            map.put(entryID, entry.getDN());
-            backendMap.put(backend, map);
-          } else {
-            map.put(entryID, entry.getDN());
-          }
-        }
-        
-        // We'll always return true in this case, even if we didn't actually add
-        // the entry due to memory constraints.
-        return true;
+
+      // We'll always return true in this case, even if we didn't actually add
+      // the entry due to memory constraints.
+      return true;
     } catch (Exception e) {
       if (debugEnabled()) {
         TRACER.debugCaught(DebugLogLevel.ERROR, e);
       }
-      
+
       // Log an error message.
       logError(ErrorLogCategory.EXTENSIONS, ErrorLogSeverity.SEVERE_ERROR,
               MSGID_FSCACHE_CANNOT_STORE_ENTRY,
@@ -2441,22 +1799,456 @@ public class FileSystemEntryCache
       return false;
     }
   }
-  
- /** 
+
+  /**
+   * TODO: Custom encoding used here due to performance and space
+   * considerations. The caller should use Entry.encode() method,
+   * see Issue 1675.
+   */
+  private static byte[] encodeEntry(Entry entry)
+  {
+    // Encode cache entry.
+    int totalBytes = 0;
+
+    // The object classes will be encoded as one-to-five byte length
+    // followed by a zero-delimited UTF-8 byte representation of the
+    // names (e.g., top\0person\0organizationalPerson\0inetOrgPerson).
+    int i=0;
+    int totalOCBytes = entry.getObjectClasses().size() - 1;
+    byte[][] ocBytes = new byte[entry.getObjectClasses().size()][];
+    for (String ocName : entry.getObjectClasses().values()) {
+      ocBytes[i] = getBytes(ocName);
+      totalOCBytes += ocBytes[i++].length;
+    }
+    byte[] ocLength = ASN1Element.encodeLength(totalOCBytes);
+    totalBytes += totalOCBytes + ocLength.length;
+
+
+    // The user attributes will be encoded as a one-to-five byte
+    // number of attributes followed by a sequence of:
+    // - A UTF-8 byte representation of the attribute name.
+    // - A zero delimiter
+    // - A one-to-five byte number of values for the attribute
+    // - A sequence of:
+    //   - A one-to-five byte length for the value
+    //   - A UTF-8 byte representation for the value
+    i=0;
+    int numUserAttributes = 0;
+    int totalUserAttrBytes = 0;
+    LinkedList<byte[]> userAttrBytes = new LinkedList<byte[]>();
+    for (List<Attribute> attrList :
+      entry.getUserAttributes().values()) {
+      for (Attribute a : attrList) {
+        if (a.isVirtual() || (! a.hasValue())) {
+          continue;
+        }
+
+        numUserAttributes++;
+
+        byte[] nameBytes = getBytes(a.getNameWithOptions());
+
+        int numValues = 0;
+        int totalValueBytes = 0;
+        LinkedList<byte[]> valueBytes = new LinkedList<byte[]>();
+        for (AttributeValue v : a.getValues()) {
+          numValues++;
+          byte[] vBytes = v.getValueBytes();
+          byte[] vLength = ASN1Element.encodeLength(vBytes.length);
+          valueBytes.add(vLength);
+          valueBytes.add(vBytes);
+          totalValueBytes += vLength.length + vBytes.length;
+        }
+        byte[] numValuesBytes = ASN1Element.encodeLength(numValues);
+
+        byte[] attrBytes = new byte[nameBytes.length +
+            numValuesBytes.length +
+            totalValueBytes + 1];
+        System.arraycopy(nameBytes, 0, attrBytes, 0,
+            nameBytes.length);
+
+        int pos = nameBytes.length+1;
+        System.arraycopy(numValuesBytes, 0, attrBytes, pos,
+            numValuesBytes.length);
+        pos += numValuesBytes.length;
+        for (byte[] b : valueBytes) {
+          System.arraycopy(b, 0, attrBytes, pos, b.length);
+          pos += b.length;
+        }
+
+        userAttrBytes.add(attrBytes);
+        totalUserAttrBytes += attrBytes.length;
+      }
+    }
+    byte[] userAttrCount =
+        ASN1OctetString.encodeLength(numUserAttributes);
+    totalBytes += totalUserAttrBytes + userAttrCount.length;
+
+    // The operational attributes will be encoded in the same way as
+    // the user attributes.
+    i=0;
+    int numOperationalAttributes = 0;
+    int totalOperationalAttrBytes = 0;
+    LinkedList<byte[]> operationalAttrBytes =
+        new LinkedList<byte[]>();
+    for (List<Attribute> attrList :
+      entry.getOperationalAttributes().values()) {
+      for (Attribute a : attrList) {
+        if (a.isVirtual() || (! a.hasValue())) {
+          continue;
+        }
+
+        numOperationalAttributes++;
+
+        byte[] nameBytes = getBytes(a.getNameWithOptions());
+
+        int numValues = 0;
+        int totalValueBytes = 0;
+        LinkedList<byte[]> valueBytes = new LinkedList<byte[]>();
+        for (AttributeValue v : a.getValues()) {
+          numValues++;
+          byte[] vBytes = v.getValueBytes();
+          byte[] vLength = ASN1Element.encodeLength(vBytes.length);
+          valueBytes.add(vLength);
+          valueBytes.add(vBytes);
+          totalValueBytes += vLength.length + vBytes.length;
+        }
+        byte[] numValuesBytes = ASN1Element.encodeLength(numValues);
+
+        byte[] attrBytes = new byte[nameBytes.length +
+            numValuesBytes.length +
+            totalValueBytes + 1];
+        System.arraycopy(nameBytes, 0, attrBytes, 0,
+            nameBytes.length);
+
+        int pos = nameBytes.length+1;
+        System.arraycopy(numValuesBytes, 0, attrBytes, pos,
+            numValuesBytes.length);
+        pos += numValuesBytes.length;
+        for (byte[] b : valueBytes) {
+          System.arraycopy(b, 0, attrBytes, pos, b.length);
+          pos += b.length;
+        }
+
+        operationalAttrBytes.add(attrBytes);
+        totalOperationalAttrBytes += attrBytes.length;
+      }
+    }
+    byte[] operationalAttrCount =
+        ASN1OctetString.encodeLength(numOperationalAttributes);
+    totalBytes += totalOperationalAttrBytes +
+        operationalAttrCount.length;
+
+
+    // Now we've got all the data that we need.  Create a big byte
+    // array to hold it all and pack it in.
+    byte[] entryBytes = new byte[totalBytes];
+
+    int pos = 0;
+
+    // Add the object classes length and values.
+    System.arraycopy(ocLength, 0, entryBytes, pos, ocLength.length);
+    pos += ocLength.length;
+    for (byte[] b : ocBytes) {
+      System.arraycopy(b, 0, entryBytes, pos, b.length);
+      pos += b.length + 1;
+    }
+
+    // We need to back up one because there's no zero-teriminator
+    // after the last object class name.
+    pos--;
+
+    // Next, add the user attribute count and the user attribute
+    // data.
+    System.arraycopy(userAttrCount, 0, entryBytes, pos,
+        userAttrCount.length);
+    pos += userAttrCount.length;
+    for (byte[] b : userAttrBytes) {
+      System.arraycopy(b, 0, entryBytes, pos, b.length);
+      pos += b.length;
+    }
+
+    // Finally, add the operational attribute count and the
+    // operational attribute data.
+    System.arraycopy(operationalAttrCount, 0, entryBytes, pos,
+        operationalAttrCount.length);
+    pos += operationalAttrCount.length;
+    for (byte[] b : operationalAttrBytes) {
+      System.arraycopy(b, 0, entryBytes, pos, b.length);
+      pos += b.length;
+    }
+
+    return entryBytes;
+  }
+
+  /**
+   * TODO: Custom decoding used here due to performance and space
+   * considerations. The caller should use Entry.decode() method,
+   * see Issue 1675.
+   */
+  private static Entry decodeEntry(DN entryDN, byte[] entryBytes)
+      throws UnsupportedEncodingException
+  {
+    // Decode cache entry.
+    int pos = 0;
+    // The length of the object classes.  It may be a single
+    // byte or multiple bytes.
+    int ocLength = entryBytes[pos] & 0x7F;
+    if (entryBytes[pos++] != ocLength) {
+      int numLengthBytes = ocLength;
+      ocLength = 0;
+      for (int i=0; i < numLengthBytes; i++, pos++) {
+        ocLength = (ocLength << 8) | (entryBytes[pos] & 0xFF);
+      }
+    }
+
+    // Next is the encoded set of object classes.  It will be a
+    // single string with the object class names separated by zeros.
+    LinkedHashMap<ObjectClass,String> objectClasses =
+        new LinkedHashMap<ObjectClass,String>();
+    int startPos = pos;
+    for (int i=0; i < ocLength; i++,pos++) {
+      if (entryBytes[pos] == 0x00) {
+        String name = new String(entryBytes, startPos, pos-startPos,
+            "UTF-8");
+        String lowerName = toLowerCase(name);
+        ObjectClass oc =
+            DirectoryServer.getObjectClass(lowerName, true);
+        objectClasses.put(oc, name);
+        startPos = pos+1;
+      }
+    }
+    String name = new String(entryBytes, startPos, pos-startPos,
+        "UTF-8");
+    String lowerName = toLowerCase(name);
+    ObjectClass oc =
+        DirectoryServer.getObjectClass(lowerName, true);
+    objectClasses.put(oc, name);
+
+    // Next is the total number of user attributes.  It may be a
+    // single byte or multiple bytes.
+    int numUserAttrs = entryBytes[pos] & 0x7F;
+    if (entryBytes[pos++] != numUserAttrs) {
+      int numLengthBytes = numUserAttrs;
+      numUserAttrs = 0;
+      for (int i=0; i < numLengthBytes; i++, pos++) {
+        numUserAttrs = (numUserAttrs << 8) |
+            (entryBytes[pos] & 0xFF);
+      }
+    }
+
+    // Now, we should iterate through the user attributes and decode
+    // each one.
+    LinkedHashMap<AttributeType,List<Attribute>> userAttributes =
+        new LinkedHashMap<AttributeType,List<Attribute>>();
+    for (int i=0; i < numUserAttrs; i++) {
+      // First, we have the zero-terminated attribute name.
+      startPos = pos;
+      while (entryBytes[pos] != 0x00) {
+        pos++;
+      }
+      name = new String(entryBytes, startPos, pos-startPos,
+          "UTF-8");
+      LinkedHashSet<String> options;
+      int semicolonPos = name.indexOf(';');
+      if (semicolonPos > 0) {
+        String baseName = name.substring(0, semicolonPos);
+        lowerName = toLowerCase(baseName);
+        options   = new LinkedHashSet<String>();
+
+        int nextPos = name.indexOf(';', semicolonPos+1);
+        while (nextPos > 0) {
+          String option = name.substring(semicolonPos+1, nextPos);
+          if (option.length() > 0) {
+            options.add(option);
+          }
+
+          semicolonPos = nextPos;
+          nextPos = name.indexOf(';', semicolonPos+1);
+        }
+
+        String option = name.substring(semicolonPos+1);
+        if (option.length() > 0) {
+          options.add(option);
+        }
+
+        name = baseName;
+      } else {
+        lowerName = toLowerCase(name);
+        options   = new LinkedHashSet<String>(0);
+      }
+      AttributeType attributeType =
+          DirectoryServer.getAttributeType(lowerName, true);
+
+      // Next, we have the number of values.
+      int numValues = entryBytes[++pos] & 0x7F;
+      if (entryBytes[pos++] != numValues) {
+        int numLengthBytes = numValues;
+        numValues = 0;
+        for (int j=0; j < numLengthBytes; j++, pos++) {
+          numValues = (numValues << 8) | (entryBytes[pos] & 0xFF);
+        }
+      }
+
+      // Next, we have the sequence of length-value pairs.
+      LinkedHashSet<AttributeValue> values =
+          new LinkedHashSet<AttributeValue>(numValues);
+      for (int j=0; j < numValues; j++) {
+        int valueLength = entryBytes[pos] & 0x7F;
+        if (entryBytes[pos++] != valueLength) {
+          int numLengthBytes = valueLength;
+          valueLength = 0;
+          for (int k=0; k < numLengthBytes; k++, pos++) {
+            valueLength = (valueLength << 8) |
+                (entryBytes[pos] & 0xFF);
+          }
+        }
+
+        byte[] valueBytes = new byte[valueLength];
+        System.arraycopy(entryBytes, pos, valueBytes, 0,
+            valueLength);
+        values.add(new AttributeValue(attributeType,
+            new ASN1OctetString(valueBytes)));
+        pos += valueLength;
+      }
+
+      // Create the attribute and add it to the set of user
+      // attributes.
+      Attribute a = new Attribute(attributeType, name, options,
+          values);
+      List<Attribute> attrList = userAttributes.get(attributeType);
+      if (attrList == null) {
+        attrList = new ArrayList<Attribute>(1);
+        attrList.add(a);
+        userAttributes.put(attributeType, attrList);
+      } else {
+        attrList.add(a);
+      }
+    }
+
+    // Next is the total number of operational attributes.  It may
+    // be a single byte or multiple bytes.
+    int numOperationalAttrs = entryBytes[pos] & 0x7F;
+    if (entryBytes[pos++] != numOperationalAttrs) {
+      int numLengthBytes = numOperationalAttrs;
+      numOperationalAttrs = 0;
+      for (int i=0; i < numLengthBytes; i++, pos++) {
+        numOperationalAttrs =
+            (numOperationalAttrs << 8) | (entryBytes[pos] & 0xFF);
+      }
+    }
+
+    // Now, we should iterate through the operational attributes and
+    // decode each one.
+    LinkedHashMap<AttributeType,List<Attribute>>
+        operationalAttributes =
+        new LinkedHashMap<AttributeType,List<Attribute>>();
+    for (int i=0; i < numOperationalAttrs; i++) {
+      // First, we have the zero-terminated attribute name.
+      startPos = pos;
+      while (entryBytes[pos] != 0x00) {
+        pos++;
+      }
+      name = new String(entryBytes, startPos, pos-startPos,
+          "UTF-8");
+      LinkedHashSet<String> options;
+      int semicolonPos = name.indexOf(';');
+      if (semicolonPos > 0) {
+        String baseName = name.substring(0, semicolonPos);
+        lowerName = toLowerCase(baseName);
+        options   = new LinkedHashSet<String>();
+
+        int nextPos = name.indexOf(';', semicolonPos+1);
+        while (nextPos > 0) {
+          String option = name.substring(semicolonPos+1, nextPos);
+          if (option.length() > 0) {
+            options.add(option);
+          }
+
+          semicolonPos = nextPos;
+          nextPos = name.indexOf(';', semicolonPos+1);
+        }
+
+        String option = name.substring(semicolonPos+1);
+        if (option.length() > 0) {
+          options.add(option);
+        }
+
+        name = baseName;
+      } else {
+        lowerName = toLowerCase(name);
+        options   = new LinkedHashSet<String>(0);
+      }
+      AttributeType attributeType =
+          DirectoryServer.getAttributeType(lowerName, true);
+
+      // Next, we have the number of values.
+      int numValues = entryBytes[++pos] & 0x7F;
+      if (entryBytes[pos++] != numValues) {
+        int numLengthBytes = numValues;
+        numValues = 0;
+        for (int j=0; j < numLengthBytes; j++, pos++) {
+          numValues = (numValues << 8) | (entryBytes[pos] & 0xFF);
+        }
+      }
+
+      // Next, we have the sequence of length-value pairs.
+      LinkedHashSet<AttributeValue> values =
+          new LinkedHashSet<AttributeValue>(numValues);
+      for (int j=0; j < numValues; j++) {
+        int valueLength = entryBytes[pos] & 0x7F;
+        if (entryBytes[pos++] != valueLength) {
+          int numLengthBytes = valueLength;
+          valueLength = 0;
+          for (int k=0; k < numLengthBytes; k++, pos++) {
+            valueLength = (valueLength << 8) |
+                (entryBytes[pos] & 0xFF);
+          }
+        }
+
+        byte[] valueBytes = new byte[valueLength];
+        System.arraycopy(entryBytes, pos, valueBytes, 0,
+            valueLength);
+        values.add(new AttributeValue(attributeType,
+            new ASN1OctetString(valueBytes)));
+        pos += valueLength;
+      }
+
+      // Create the attribute and add it to the set of operational
+      // attributes.
+      Attribute a = new Attribute(attributeType, name, options,
+          values);
+      List<Attribute> attrList =
+          operationalAttributes.get(attributeType);
+      if (attrList == null) {
+        attrList = new ArrayList<Attribute>(1);
+        attrList.add(a);
+        operationalAttributes.put(attributeType, attrList);
+      } else {
+        attrList.add(a);
+      }
+    }
+
+    // We've got everything that we need, so create and return the
+    // entry.
+    return new
+        Entry(entryDN, objectClasses, userAttributes, operationalAttributes);
+  }
+
+ /**
   * Checks if the cache home exist and if not tries to recursively create it.
   * If either is successful adjusts cache home access permissions accordingly
   * to allow only process owner or the superuser to access JE environment.
-  * 
+  *
   * @param  cacheHome  String representation of complete file system path.
-  * 
-  * @throws Exception  If failed to establish cache home.  
+  *
+  * @throws Exception  If failed to establish cache home.
   */
   private void checkAndSetupCacheHome(String cacheHome) throws Exception {
-    
+
     boolean cacheHasHome = false;
     File cacheHomeDir = new File(cacheHome);
-    if (cacheHomeDir.exists() && 
-        cacheHomeDir.canRead() && 
+    if (cacheHomeDir.exists() &&
+        cacheHomeDir.canRead() &&
         cacheHomeDir.canWrite()) {
       cacheHasHome = true;
     } else {
@@ -2467,9 +2259,11 @@ public class FileSystemEntryCache
       }
     }
     if ( cacheHasHome ) {
+      // TODO: Investigate if its feasible to employ SetFileAttributes()
+      // FILE_ATTRIBUTE_TEMPORARY attribute on Windows via native code.
       if(FilePermission.canSetPermissions()) {
         try {
-          if(!FilePermission.setPermissions(cacheHomeDir, 
+          if(!FilePermission.setPermissions(cacheHomeDir,
               CACHE_HOME_PERMISSIONS)) {
             throw new Exception();
           }
@@ -2485,23 +2279,23 @@ public class FileSystemEntryCache
       throw new Exception();
     }
   }
-  
+
  /**
   * This inner class exist solely to override <CODE>removeEldestEntry()</CODE>
   * method of the LinkedHashMap.
-  * 
-  * @see  java.util.LinkedHashMap<K,V>  
+  *
+  * @see  java.util.LinkedHashMap<K,V>
   */
   private class LinkedHashMapRotator<K,V> extends LinkedHashMap<K,V> {
-    
+
     static final long serialVersionUID = 5271482121415968435L;
-    
-    public LinkedHashMapRotator(int initialCapacity, 
-                                float loadFactor, 
+
+    public LinkedHashMapRotator(int initialCapacity,
+                                float loadFactor,
                                 boolean accessOrder) {
       super(initialCapacity, loadFactor, accessOrder);
     }
-    
+
     // This method will get called each time we add a new key/value
     // pair to the map. The eldest entry will be selected by the
     // underlying LinkedHashMap implementation based on the access
@@ -2515,13 +2309,13 @@ public class FileSystemEntryCache
         cacheWriteLock.lock();
         try {
           // Remove the the eldest entry from supporting maps.
-          cacheEntryKey.setData(eldest.getKey().toString().getBytes("UTF-8"));
+          cacheEntryKey.setData(
+              ((DN) eldest.getKey()).toNormalizedString().getBytes("UTF-8"));
           long entryID = (long) ((Long) eldest.getValue()).longValue();
-          Set backendSet = backendMap.keySet();
-          
-          Iterator backendIterator = backendSet.iterator();
+          Set<Backend> backendSet = backendMap.keySet();
+          Iterator<Backend> backendIterator = backendSet.iterator();
           while (backendIterator.hasNext()) {
-            Map map = backendMap.get(backendIterator.next());
+            Map<Long,DN> map = backendMap.get(backendIterator.next());
             map.remove(entryID);
           }
           // Remove the the eldest entry from the database.
@@ -2537,6 +2331,32 @@ public class FileSystemEntryCache
       } else {
         return false;
       }
+    }
+  }
+
+  /**
+   * This exception should be thrown if an error occurs while
+   * trying to locate and load persistent cache index from
+   * the existing entry cache database.
+   */
+  private class CacheIndexNotFoundException extends Exception {
+    static final long serialVersionUID = 6444756053577853869L;
+    public CacheIndexNotFoundException() {}
+    public CacheIndexNotFoundException(String message) {
+      super(message);
+    }
+  }
+
+  /**
+   * This exception should be thrown if persistent cache index
+   * found in the existing entry cache database is determined
+   * to be empty, inconsistent or damaged.
+   */
+  private class CacheIndexImpairedException extends Exception {
+    static final long serialVersionUID = -369455697709478407L;
+    public CacheIndexImpairedException() {}
+    public CacheIndexImpairedException(String message) {
+      super(message);
     }
   }
 

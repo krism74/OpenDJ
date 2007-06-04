@@ -369,7 +369,7 @@ public class ExtensionsMessages
        CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 31;
 
 
-  
+
   /**
    * The message ID for the message that will be used if a password modify
    * extended request sequence contains an element with an invalid type.  This
@@ -5011,198 +5011,6 @@ public class ExtensionsMessages
        CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_MILD_ERROR | 476;
 
 
-  /**
-   * The message ID for the message that will be used as the description of the
-   * FS-based entry cache max memory percentage configuration attribute.  This
-   * does not take any arguments.
-   */
-  public static final int MSGID_FSCACHE_DESCRIPTION_MAX_MEMORY_PCT =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 477;
-
-  /**
-   * The message ID for the message that will be used if an error occurs while
-   * trying to determine the percentage of memory to use for the FS-based
-   * entry cache.  This takes three arguments, which are the DN of the
-   * configuration entry, a string representation of the exception that was
-   * caught, and the default percentage value that will be used.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_DETERMINE_MAX_MEMORY_PCT =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 478;
-
-  /**
-   * The message ID for the message that will be used as the description of the
-   * FS-based entry cache max memory percentage configuration attribute.  This
-   * does not take any arguments.
-   */
-  public static final int MSGID_FSCACHE_DESCRIPTION_MAX_ENTRIES =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 479;
-
-  /**
-   * The message ID for the message that will be used if an error occurs while
-   * trying to determine the maximum number of entries to hold in the FS-based
-   * entry cache.  This takes two arguments, which are the DN of the
-   * configuration entry and a string representation of the exception that was
-   * caught.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_DETERMINE_MAX_ENTRIES =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 480;
-
-  /**
-   * The message ID for the message that will be used as the description of the
-   * FS-based entry cache lock timeout configuration attribute.  This does not
-   * take any arguments.
-   */
-  public static final int MSGID_FSCACHE_DESCRIPTION_LOCK_TIMEOUT =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 481;
-
-  /**
-   * The message ID for the message that will be used if an error occurs while
-   * trying to determine the lock timeout to use for the FS-based entry cache.
-   * This takes three arguments, which are the DN of the configuration entry, a
-   * string representation of the exception that was caught, and the default
-   * lock timeout that will be used.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_DETERMINE_LOCK_TIMEOUT =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 482;
-
-  /**
-   * The message ID for the message that will be used as the description of the
-   * FS-based entry cache include filters configuration attribute.  This does
-   * not take any arguments.
-   */
-  public static final int MSGID_FSCACHE_DESCRIPTION_INCLUDE_FILTERS =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 483;
-
-  /**
-   * The message ID for the message that will be used if an error occurs while
-   * trying to decode an include filter.  This takes three arguments, which are
-   * the invalid filter string, the DN of the configuration entry, and a string
-   * representation of the exception that was caught.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_DECODE_INCLUDE_FILTER =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_WARNING | 484;
-
-  /**
-   * The message ID for the message that will be used if none of the include
-   * filter strings can be parsed.  This takes a single argument, which is the
-   * DN of the configuration entry.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_DECODE_ANY_INCLUDE_FILTERS =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_WARNING | 485;
-
-  /**
-   * The message ID for the message that will be used if an error occurs while
-   * trying to determine the include filters to use for the FS-based entry
-   * cache.  This takes two arguments, which are the DN of the configuration
-   * entry and a string representation of the exception that was caught.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_DETERMINE_INCLUDE_FILTERS =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 486;
-
-  /**
-   * The message ID for the message that will be used as the description of the
-   * FS-based entry cache exclude filters configuration attribute.  This does
-   * not take any arguments.
-   */
-  public static final int MSGID_FSCACHE_DESCRIPTION_EXCLUDE_FILTERS =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 487;
-
-  /**
-   * The message ID for the message that will be used if an error occurs while
-   * trying to decode an exclude filter.  This takes three arguments, which are
-   * the invalid filter string, the DN of the configuration entry, and a string
-   * representation of the exception that was caught.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_DECODE_EXCLUDE_FILTER =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_WARNING | 488;
-
-  /**
-   * The message ID for the message that will be used if none of the exclude
-   * filter strings can be parsed.  This takes a single argument, which is the
-   * DN of the configuration entry.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_DECODE_ANY_EXCLUDE_FILTERS =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_WARNING | 489;
-
-  /**
-   * The message ID for the message that will be used if an error occurs while
-   * trying to determine the exclude filters to use for the FS-based entry
-   * cache.  This takes two arguments, which are the DN of the configuration
-   * entry and a string representation of the exception that was caught.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_DETERMINE_EXCLUDE_FILTERS =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 490;
-
-  /**
-   * The message ID for the message that will be used if the user requested an
-   * invalid max memory percentage.  This takes two arguments, which are the DN
-   * of the configuration entry and a string representation of the exception
-   * that was caught.
-   */
-  public static final int MSGID_FSCACHE_INVALID_MAX_MEMORY_PCT =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 491;
-
-  /**
-   * The message ID for the message that will be used if the user requested an
-   * invalid max entries.  This takes two arguments, which are the DN of the
-   * configuration entry and a string representation of the exception that was
-   * caught.
-   */
-  public static final int MSGID_FSCACHE_INVALID_MAX_ENTRIES =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 492;
-
-  /**
-   * The message ID for the message that will be used if the user requested an
-   * invalid lock timeout.  This takes two arguments, which are the DN of the
-   * configuration entry and a string representation of the exception that was
-   * caught.
-   */
-  public static final int MSGID_FSCACHE_INVALID_LOCK_TIMEOUT =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 493;
-
-  /**
-   * The message ID for the message that will be used if the user requested an
-   * invalid include filter.  This takes three arguments, which are the DN
-   * of the configuration entry, the invalid filter string, and a string
-   * representation of the exception that was caught.
-   */
-  public static final int MSGID_FSCACHE_INVALID_INCLUDE_FILTER =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 494;
-
-  /**
-   * The message ID for the message that will be used if the user requested an
-   * invalid set of include filters.  This takes two arguments, which are the DN
-   * of the configuration entry and a string representation of the exception
-   * that was caught.
-   */
-  public static final int MSGID_FSCACHE_INVALID_INCLUDE_FILTERS =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 495;
-
-  /**
-   * The message ID for the message that will be used if the user requested an
-   * invalid exclude filter.  This takes three arguments, which are the DN
-   * of the configuration entry, the invalid filter string, and a string
-   * representation of the exception that was caught.
-   */
-  public static final int MSGID_FSCACHE_INVALID_EXCLUDE_FILTER =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 496;
-
-  /**
-   * The message ID for the message that will be used if the user requested an
-   * invalid set of exclude filters.  This takes two arguments, which are the DN
-   * of the configuration entry and a string representation of the exception
-   * that was caught.
-   */
-  public static final int MSGID_FSCACHE_INVALID_EXCLUDE_FILTERS =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 497;
-
-  /**
-   * The message ID for the message that will be used if entry cache memory
-   * percent has been updated.  This takes two arguments, which are the new
-   * percentage of memory that may be used and the corresponding size in bytes.
-   */
-  public static final int MSGID_FSCACHE_UPDATED_MAX_MEMORY_PCT =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 498;
 
   /**
    * The message ID for the message that will be used if maximum number of cache
@@ -5210,7 +5018,7 @@ public class ExtensionsMessages
    * maximum number of entries.
    */
   public static final int MSGID_FSCACHE_UPDATED_MAX_ENTRIES =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 499;
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 477;
 
   /**
    * The message ID for the message that will be used if the cache lock timeout
@@ -5218,39 +5026,120 @@ public class ExtensionsMessages
    * timeout.
    */
   public static final int MSGID_FSCACHE_UPDATED_LOCK_TIMEOUT =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 500;
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 478;
 
   /**
    * The message ID for the message that will be used if the cache include
    * filter set has been updated.  This does not take any arguments.
    */
   public static final int MSGID_FSCACHE_UPDATED_INCLUDE_FILTERS =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 501;
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 479;
 
   /**
    * The message ID for the message that will be used if the cache exclude
    * filter set has been updated.  This does not take any arguments.
    */
   public static final int MSGID_FSCACHE_UPDATED_EXCLUDE_FILTERS =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 502;
-  
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 480;
+
   /**
-   * The message ID for the message that will be used as the description of the
-   * FS-based entry cache-home configuration attribute.  This does not take any 
-   * arguments.
+   * The message ID for the message that will be used if entry cache memory
+   * size has been updated.  This takes one argument, which is the new size
+   * of memory that may be used, in bytes.
    */
-  public static final int MSGID_FSCACHE_DESCRIPTION_HOME =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 503;
-  
+  public static final int MSGID_FSCACHE_UPDATED_MAX_MEMORY_SIZE =
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 481;
+
+  /**
+   * The message ID for the message that will be used if entry cache type
+   * has been changed.  This takes one argument, which is the new entry
+   * cache type.
+   */
+  public static final int MSGID_FSCACHE_UPDATED_TYPE =
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 482;
+
+
+  /**
+   * The message ID for the message that will be used if entry cache JE
+   * cache memory percent has been changed.  This takes one argument,
+   * which is the new percentage of JVM memory that can be utilized.
+   */
+  public static final int MSGID_FSCACHE_UPDATED_JE_MEMORY_PCT =
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 483;
+
+  /**
+   * The message ID for the message that will be used if entry cache JE
+   * cache memory size has been changed.  This takes one argument,
+   * which is the new maximum size of JVM memory that can be utilized.
+   */
+  public static final int MSGID_FSCACHE_UPDATED_JE_MEMORY_SIZE =
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 484;
+
+  /**
+   * The message ID for the message that will be used if entry cache
+   * persistence state has been changed.  This takes one argument,
+   * which is the new persistence state.
+   */
+  public static final int MSGID_FSCACHE_UPDATED_IS_PERSISTENT =
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 485;
+
   /**
    * The message ID for the message that will be used if an error occurs while
-   * trying to determine the entry cache home for the FS-based entry cache.  
-   * This takes three arguments, which are the DN of the configuration entry,
-   * a string representation of the exception that was caught, and the default
-   * entry cache home value that will be used.
+   * trying to load persistent cache for the FS-based entry cache.
+   * This takes one argument which is a string representation of the exception
+   * that was caught.
    */
-  public static final int MSGID_FSCACHE_CANNOT_DETERMINE_HOME =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 504;
+  public static final int MSGID_FSCACHE_CANNOT_LOAD_PERSISTENT_DATA =
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 486;
+
+  /**
+   * The message ID for the message that will be used if an error occurs while
+   * trying to store persistence cache for the FS-based entry cache.
+   * This takes one argument which is a string representation of the exception
+   * that was caught.
+   */
+  public static final int MSGID_FSCACHE_CANNOT_STORE_PERSISTENT_DATA =
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 487;
+
+  /**
+   * The message ID for the message that will be used if a fatal error occurs
+   * while trying to initialize the FS-based entry cache.  This takes one
+   * argument which is a string representation of the exception that was caught.
+   */
+  public static final int MSGID_FSCACHE_CANNOT_INITIALIZE =
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_FATAL_ERROR | 488;
+
+  /**
+   * The message ID for the message that will be used if we are unable to put
+   * a new entry to the cache. This takes one argument, which is a string
+   * representation of the exception that was caught.
+   */
+  public static final int MSGID_FSCACHE_CANNOT_STORE_ENTRY =
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 489;
+
+  /**
+   * The message ID for the message that will be used if we are unable to get
+   * an existing entry from the cache. This takes one argument, which is a
+   * string representation of the exception that was caught.
+   */
+  public static final int MSGID_FSCACHE_CANNOT_RETRIEVE_ENTRY =
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 490;
+
+  /**
+   * The message ID for the message that will be used if we are unable to set
+   * the JE cache size as percentage. This takes one argument, which is a
+   * string representation of the exception that was caught.
+   */
+  public static final int MSGID_FSCACHE_CANNOT_SET_JE_MEMORY_PCT =
+      CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 491;
+
+  /**
+   * The message ID for the message that will be used if we are unable to set
+   * the JE cache size in bytes. This takes one argument, which is a string
+   * representation of the exception that was caught.
+   */
+  public static final int MSGID_FSCACHE_CANNOT_SET_JE_MEMORY_SIZE =
+      CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 492;
 
   /**
    * The message ID for the message that will be used if entry cache home
@@ -5260,295 +5149,64 @@ public class ExtensionsMessages
    * home value and a string representation of the exception that was caught.
    */
   public static final int MSGID_FSCACHE_INVALID_HOME =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 505;
-  
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 493;
+
   /**
-   * The message ID for the message that will be used as the description of the
-   * JE cache size configuration attribute.  This does not take any arguments.
-   */
-  public static final int MSGID_FSCACHE_DESCRIPTION_JE_CACHE_SIZE =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 506;
-  
-  /**
-   * The message ID for the message that will be used if an error occurs while
-   * trying to determine the JE cache size for the FS-based entry cache.  
-   * This takes three arguments, which are the DN of the configuration entry,
-   * a string representation of the exception that was caught, and the default
-   * JE cache size value that will be used.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_DETERMINE_JE_CACHE_SIZE =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 507;
-  
-  /**
-   * The message ID for the message that will be used if JE cache size either
-   * smaller than 96K which is the minimum value imposed by JE or bigger than
-   * the maximum amount of free memory in this JVM. This takes three arguments, 
-   * which are the DN of the configuration entry, the je-cache-size attribute 
-   * value of the configuration entry and a string representation of the 
-   * exception that was caught.
-   */
-  public static final int MSGID_FSCACHE_INVALID_JE_CACHE_SIZE =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 508;
-  
-  /**
-   * The message ID for the message that will be used as the description of the
-   * file system entry cache persistence.  This does not take any arguments.
-   */
-  public static final int MSGID_FSCACHE_IS_PERSISTENT_DESCRIPTION =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 509;
-  
-  /**
-   * The message ID for the message that will be used if an error occurs while
-   * trying to determine persistence status for the FS-based entry cache.  
-   * This takes three arguments, which are the DN of the configuration entry,
-   * a string representation of the exception that was caught, and the default
-   * value that will be used.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_DETERMINE_IF_PERSISTENT =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 510;
-  
-  /**
-   * The message ID for the message that will be used if an error occurs while
-   * trying to load persistent cache for the FS-based entry cache.  
-   * This takes one argument which is a string representation of the exception 
-   * that was caught.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_LOAD_PERSISTENT_DATA =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 511;
-  
-  /**
-   * The message ID for the message that will be used if an error occurs while
-   * trying to store persistence cache for the FS-based entry cache.  
-   * This takes one argument which is a string representation of the exception 
-   * that was caught.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_STORE_PERSISTENT_DATA =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 512;
-  
-  /**
-   * The message ID for the message that will be used if a fatal error occurs 
-   * while trying to initialize the FS-based entry cache.  This takes one 
-   * argument which is a string representation of the exception that was caught.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_INITIALIZE =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_FATAL_ERROR | 513;
-  
-  /**
-   * The message ID for the message that will be used if a fatal error occurs 
-   * while trying to setup the cache db environment home.  This takes one 
+   * The message ID for the message that will be used if a fatal error occurs
+   * while trying to setup the cache db environment home.  This takes one
    * argument which is a string representation of the exception that was caught.
    */
   public static final int MSGID_FSCACHE_HOMELESS =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_FATAL_ERROR | 514;
-  
-  /**
-   * The message ID for the message that will be used as the description of the
-   * FS-based entry cache-type configuration attribute.  This does not take any 
-   * arguments.
-   */
-  public static final int MSGID_FSCACHE_DESCRIPTION_TYPE =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 515;
-  
-  /**
-   * The message ID for the message that will be used if an error occurs while
-   * trying to determine the entry cache type for the FS-based entry cache.  
-   * This takes three arguments, which are the DN of the configuration entry,
-   * a string representation of the exception that was caught, and the default
-   * entry cache type value that will be used.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_DETERMINE_TYPE =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 516;
-  
-  /**
-   * The message ID for the message that will be used if entry cache type
-   * is specified incorrectly. This takes two arguments, which are the DN 
-   * of the configuration entry and the cache-type attribute value of the 
-   * configuration entry.
-   */
-  public static final int MSGID_FSCACHE_INVALID_TYPE =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 517;
-  
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_FATAL_ERROR | 494;
+
   /**
    * The message ID of an error indicating that the file permissions for the
    * file system entry cache database directory were not set.
    */
   public static final int MSGID_FSCACHE_SET_PERMISSIONS_FAILED =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_WARNING | 518;
-  
-  /**
-   * The message ID for the message that will be used as the description of the
-   * JE cache percent configuration attribute. This does not take any arguments.
-   */
-  public static final int MSGID_FSCACHE_DESCRIPTION_JE_CACHE_PCT =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 519;
-  
-  /**
-   * The message ID for the message that will be used if an error occurs while
-   * trying to determine the JE cache percent for the FS-based entry cache.  
-   * This takes three arguments, which are the DN of the configuration entry,
-   * a string representation of the exception that was caught, and the default
-   * JE cache percent value that will be used.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_DETERMINE_JE_CACHE_PCT =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 520;
-  
-  /**
-   * The message ID for the message that will be used if JE cache percent is
-   * either less than 1 or more 90 which is the maximum value imposed by JE.
-   * This takes three arguments, which are the DN of the configuration entry, 
-   * the je-cache-percent attribute value of the configuration entry and a 
-   * string representation of the exception that was caught.
-   */
-  public static final int MSGID_FSCACHE_INVALID_JE_CACHE_PCT =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 521;
-  
-  /**
-   * The message ID for the message that will be used as the description of the
-   * FS-based entry cache max memory size configuration attribute.  This
-   * does not take any arguments.
-   */
-  public static final int MSGID_FSCACHE_DESCRIPTION_MAX_MEMORY_SIZE =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 522;
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_WARNING | 495;
 
   /**
-   * The message ID for the message that will be used if an error occurs while
-   * trying to determine the maximum size of memory to use for the FS-based
-   * entry cache.  This takes two arguments, which are the DN of the
-   * configuration entry and a string representation of the exception that was
-   * caught.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_DETERMINE_MAX_MEMORY_SIZE =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 523;
-  
-  /**
-   * The message ID for the message that will be used if entry cache memory
-   * size has been updated.  This takes one argument, which is the new size
-   * of memory that may be used, in bytes.
-   */
-  public static final int MSGID_FSCACHE_UPDATED_MAX_MEMORY_SIZE =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 524;
-  
-  /**
-   * The message ID for the message that will be used if entry cache type
-   * has been changed.  This takes one argument, which is the new entry
-   * cache type.
-   */
-  public static final int MSGID_FSCACHE_UPDATED_TYPE =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 525;
-  
-  /**
-   * The message ID for the message that will be used if entry cache home
-   * has been changed.  This takes one argument, which is the new entry
-   * cache home location.
-   */
-  public static final int MSGID_FSCACHE_UPDATED_HOME =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 526;
-  
-  /**
-   * The message ID for the message that will be used if entry cache JE
-   * cache memory percent has been changed.  This takes one argument, 
-   * which is the new percentage of JVM memory that can be utilized.
-   */
-  public static final int MSGID_FSCACHE_UPDATED_JE_MEMORY_PCT =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 527;
-  
-  /**
-   * The message ID for the message that will be used if entry cache JE
-   * cache memory size has been changed.  This takes one argument, 
-   * which is the new maximum size of JVM memory that can be utilized.
-   */
-  public static final int MSGID_FSCACHE_UPDATED_JE_MEMORY_SIZE =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 528;
-  
-  /**
-   * The message ID for the message that will be used if entry cache
-   * persistence state has been changed.  This takes one argument, 
-   * which is the new persistence state.
-   */
-  public static final int MSGID_FSCACHE_UPDATED_IS_PERSISTENT =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 529;
-  
-  /**
-   * The message ID for the message that will be used if we are unable to put
-   * a new entry to the cache. This takes one argument, which is a string 
-   * representation of the exception that was caught.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_STORE_ENTRY =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 530;
-  
-  /**
-   * The message ID for the message that will be used if we are unable to get
-   * an existing entry from the cache. This takes one argument, which is a 
-   * string representation of the exception that was caught.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_RETRIEVE_ENTRY =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 531;
-  
-  /**
-   * The message ID for the message that will be used if we are unable to set
-   * the maximum cache size in bytes. This takes one argument, which is a
-   * string representation of the exception that was caught.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_SET_MAX_MEMORY_SIZE =
-      CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 532;
-  
-  /**
-   * The message ID for the message that will be used if we are unable to set
-   * the cache type. This takes one argument, which is a string representation 
-   * of the exception that was caught.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_SET_TYPE =
-      CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 533;
-  
-  /**
-   * The message ID for the message that will be used if we are unable to set
-   * the cache home. This takes one argument, which is a string representation 
-   * of the exception that was caught.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_SET_HOME =
-      CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_FATAL_ERROR | 534;
-  
-  /**
-   * The message ID for the message that will be used if we are unable to set
-   * the JE cache size as percentage. This takes one argument, which is a 
-   * string representation of the exception that was caught.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_SET_JE_MEMORY_PCT =
-      CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 535;
-  
-  /**
-   * The message ID for the message that will be used if we are unable to set
-   * the JE cache size in bytes. This takes one argument, which is a string 
-   * representation of the exception that was caught.
-   */
-  public static final int MSGID_FSCACHE_CANNOT_SET_JE_MEMORY_SIZE =
-      CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 536;
-  
-  /**
    * The message ID for the message that will be used if recorded offline state
-   * does not match the current offline state for given backend. This takes one 
+   * does not match the current offline state for given backend. This takes one
    * argument which is the backend ID.
    */
   public static final int MSGID_FSCACHE_OFFLINE_STATE_FAIL =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_WARNING | 537;
-  
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_WARNING | 496;
+
   /**
-   * The message ID for the message that will be used to report the cache 
-   * persistent state restoration progress. This takes two arguments which 
+   * The message ID for the message that will be used to report the cache
+   * persistent state restoration progress. This takes two arguments which
    * are the restored entries count and the total number of entries to be
    * restored.
    */
   public static final int MSGID_FSCACHE_RESTORE_PROGRESS_REPORT =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 538;
-  
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 497;
+
   /**
-   * The message ID for the message that will be used to report the cache 
-   * persistent state preservation progress. This takes two arguments which 
+   * The message ID for the message that will be used to report the cache
+   * persistent state preservation progress. This takes two arguments which
    * are the preserved entries count and the total number of entries to be
    * preserved.
    */
   public static final int MSGID_FSCACHE_SAVE_PROGRESS_REPORT =
-       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 539;
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 498;
+
+  /**
+   * The message ID for the message that will be used if an error occurs while
+   * trying to load persistent cache index of the FS-based persistent entry
+   * cache. Takes no arguments.
+   */
+  public static final int MSGID_FSCACHE_INDEX_NOT_FOUND =
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_INFORMATIONAL | 499;
+
+  /**
+   * The message ID for the message that will be used if persistent cache index
+   * of the FS-based persistent entry cache is empty or damaged in any way we
+   * can detect. Takes no arguments.
+   */
+  public static final int MSGID_FSCACHE_INDEX_IMPAIRED =
+       CATEGORY_MASK_EXTENSIONS | SEVERITY_MASK_SEVERE_ERROR | 500;
 
   /**
    * Associates a set of generic messages with the message IDs defined in this
@@ -7743,158 +7401,8 @@ public class ExtensionsMessages
                     "which is itself a virtual static group.  One " +
                     "virtual static group is not allowed to reference " +
                     "another as its target group");
-    
-    
-    registerMessage(MSGID_FSCACHE_DESCRIPTION_MAX_MEMORY_PCT,
-                    "Specifies the maximum percentage of available space " +
-                    "in the file system that the entry cache " +
-                    "should be allowed to consume. Its value should be an " +
-                    "integer between 1 and 100. Changes to this " +
-                    "configuration attribute will take effect immediately, " +
-                    "although if the value is reduced to a percentage that " +
-                    "is less than the current consumption in the memory " +
-                    "based file system, it may take some time for existing " +
-                    "cache items to be purged.");
-    registerMessage(MSGID_FSCACHE_CANNOT_DETERMINE_MAX_MEMORY_PCT,
-                    "An error occurred while attempting to determine the " +
-                    "value of the " + ATTR_FSCACHE_MAX_MEMORY_PCT +
-                    " attribute in configuration entry %s:  %s.  The default " +
-                    "value of %d will be used.");
-    registerMessage(MSGID_FSCACHE_DESCRIPTION_MAX_MEMORY_SIZE,
-                    "Specifies the maximum size of available space in the " +
-                    "file system that the entry cache should be allowed to " +
-                    "consume. Its value should be an integer. Changes to " +
-                    "this configuration attribute will take effect " +
-                    "immediately, although if the value is reduced to a " +
-                    "size that is less than the current consumption it may " +
-                    "take some time for existing cache items to be purged.");
-    registerMessage(MSGID_FSCACHE_CANNOT_DETERMINE_MAX_MEMORY_SIZE,
-                    "An error occurred while attempting to determine the " +
-                    "value of the " + ATTR_FSCACHE_MAX_MEMORY_SIZE +
-                    " attribute in configuration entry %s:  %s.  No size " +
-                    "limit will be imposed.");
-    registerMessage(MSGID_FSCACHE_DESCRIPTION_MAX_ENTRIES,
-                    "Specifies the maximum number of entries that may be " +
-                    "held in the entry cache, with a value of zero " +
-                    "indicating that there should be no limit to the number " +
-                    "of entries (although the memory percentage will still " +
-                    "be observed).  Changes to this configuration attribute " +
-                    "will take effect immediately, although if it is reduced " +
-                    "to a value that is less than the number of entries " +
-                    "currently held in the cache, it may take some time for " +
-                    "existing cache items to be purged.");
-    registerMessage(MSGID_FSCACHE_CANNOT_DETERMINE_MAX_ENTRIES,
-                    "An error occurred while attempting to determine the " +
-                    "value of the " + ATTR_FSCACHE_MAX_ENTRIES +
-                    " attribute in configuration entry %s:  %s.  No hard " +
-                    "limit on the number of entries will be enforced, but " +
-                    "the value of " + ATTR_FSCACHE_MAX_MEMORY_PCT +
-                    " will still be observed.");
-    registerMessage(MSGID_FSCACHE_DESCRIPTION_LOCK_TIMEOUT,
-                    "Specifies the maximum length of time in milliseconds " +
-                    "that the entry cache should block while attempting " +
-                    "to acquire a lock for an entry.  Changes to this " +
-                    "configuration attribute will take effect immediately.");
-    registerMessage(MSGID_FSCACHE_CANNOT_DETERMINE_LOCK_TIMEOUT,
-                    "An error occurred while attempting to determine the " +
-                    "value of the " + ATTR_FSCACHE_LOCK_TIMEOUT +
-                    " attribute in configuration entry %s:  %s.  The default " +
-                    "of %d will be used.");
-    registerMessage(MSGID_FSCACHE_DESCRIPTION_INCLUDE_FILTERS,
-                    "Specifies a set of search filters that may be used to " +
-                    "indicate which entries should be included in the entry " +
-                    "cache.  Entries that do not match at least one of these " +
-                    "filters will not be stored in the cache.  If no filters " +
-                    "are provided, then any entry will be accepted.  Changes " +
-                    "to this configuration attribute will take effect " +
-                    "immediately, but will not impact existing entries that " +
-                    "are already held in the cache.");
-    registerMessage(MSGID_FSCACHE_CANNOT_DECODE_INCLUDE_FILTER,
-                    "An error occurred while attempting to decode the value " +
-                    "\"%s\" from attribute " + ATTR_FSCACHE_INCLUDE_FILTER +
-                    " of entry %s:  %s.  This filter will not be used when " +
-                    "determining whether to store an entry in the cache.");
-    registerMessage(MSGID_FSCACHE_CANNOT_DECODE_ANY_INCLUDE_FILTERS,
-                    "An error occurred while attempting to decode any of the " +
-                    "values from attribute " + ATTR_FSCACHE_INCLUDE_FILTER +
-                    " of entry %s.  All entries will be considered eligible " +
-                    "for inclusion in the cache.");
-    registerMessage(MSGID_FSCACHE_CANNOT_DETERMINE_INCLUDE_FILTERS,
-                    "An error occurred while attempting to determine the " +
-                    "value of the " + ATTR_FSCACHE_INCLUDE_FILTER +
-                    " attribute in configuration entry %s:  %s.  All entries " +
-                    "will be considered eligible for inclusion in the cache.");
-    registerMessage(MSGID_FSCACHE_DESCRIPTION_EXCLUDE_FILTERS,
-                    "Specifies a set of search filters that may be used to " +
-                    "indicate which entries should be excluded from the " +
-                    "entry cache.  Entries that match any of these filters " +
-                    "will not be stored in the cache.  If no filters are " +
-                    "provided, then any entry will be accepted.  Changes to " +
-                    "this configuration attribute will take effect " +
-                    "immediately, but will not impact existing entries that " +
-                    "are already held in the cache.");
-    registerMessage(MSGID_FSCACHE_CANNOT_DECODE_EXCLUDE_FILTER,
-                    "An error occurred while attempting to decode the value " +
-                    "\"%s\" from attribute " + ATTR_FSCACHE_EXCLUDE_FILTER +
-                    " of entry %s:  %s.  This filter will not be used when " +
-                    "determining whether to store an entry in the cache.");
-    registerMessage(MSGID_FSCACHE_CANNOT_DECODE_ANY_EXCLUDE_FILTERS,
-                    "An error occurred while attempting to decode any of the " +
-                    "values from attribute " + ATTR_FSCACHE_EXCLUDE_FILTER +
-                    " of entry %s.  All entries will be considered eligible " +
-                    "for inclusion in the cache.");
-    registerMessage(MSGID_FSCACHE_CANNOT_DETERMINE_EXCLUDE_FILTERS,
-                    "An error occurred while attempting to determine the " +
-                    "value of the " + ATTR_FSCACHE_EXCLUDE_FILTER +
-                    " attribute in configuration entry %s:  %s.  All entries " +
-                    "will be considered eligible for inclusion in the cache.");
-    registerMessage(MSGID_FSCACHE_INVALID_MAX_MEMORY_PCT,
-                    "The " + ATTR_FSCACHE_MAX_MEMORY_PCT + " attribute of " +
-                    "entry %s, which holds the maximum percentage of the " +
-                    "file system space available for use in the entry " +
-                    "cache, has an invalid value:  %s.  Its value must be an " +
-                    "integer between 1 and 100.");
-    registerMessage(MSGID_FSCACHE_INVALID_MAX_ENTRIES,
-                    "The " + ATTR_FSCACHE_MAX_ENTRIES + " attribute of " +
-                    "entry %s, which specifies the maximum number of entries " +
-                    "that may be held in the entry cache, has an invalid " +
-                    "value:  %s.  Its value must be a positive integer, or " +
-                    "zero to indicate that no limit should be enforced.");
-    registerMessage(MSGID_FSCACHE_INVALID_LOCK_TIMEOUT,
-                    "The " + ATTR_FSCACHE_LOCK_TIMEOUT + " attribute of " +
-                    "entry %s, which specifies the maximum length of time in " +
-                    "milliseconds that the cache should block while " +
-                    "attempting to obtain a lock on an entry, has an invalid " +
-                    "value:  %s.  Its value must be a positive integer, or " +
-                    "zero to indicate that it should never block.");
-    registerMessage(MSGID_FSCACHE_INVALID_INCLUDE_FILTER,
-                    "The " + ATTR_FSCACHE_INCLUDE_FILTER + " attribute of " +
-                    "entry %s, which specifies a set of search filters that " +
-                    "may be used to control which entries are included in " +
-                    "the cache, has an invalid value of \"%s\":  %s.");
-    registerMessage(MSGID_FSCACHE_INVALID_INCLUDE_FILTERS,
-                    "The " + ATTR_FSCACHE_INCLUDE_FILTER + " attribute of " +
-                    "entry %s, which specifies a set of search filters that " +
-                    "may be used to control which entries are included in " +
-                    "the cache, has an invalid value:  %s.");
-    registerMessage(MSGID_FSCACHE_INVALID_EXCLUDE_FILTER,
-                    "The " + ATTR_FSCACHE_EXCLUDE_FILTER + " attribute of " +
-                    "entry %s, which specifies a set of search filters that " +
-                    "may be used to control which entries are excluded from " +
-                    "the cache, has an invalid value of \"%s\":  %s.");
-    registerMessage(MSGID_FSCACHE_INVALID_EXCLUDE_FILTERS,
-                    "The " + ATTR_FSCACHE_EXCLUDE_FILTER + " attribute of " +
-                    "entry %s, which specifies a set of search filters that " +
-                    "may be used to control which entries are excluded from " +
-                    "the cache, has an invalid value:  %s.");
-    registerMessage(MSGID_FSCACHE_UPDATED_MAX_MEMORY_PCT,
-                    "The amount of space that may be used for the entry " +
-                    "cache has been updated to %d percent of the total " +
-                    "space available in the file system, or approximately %d " +
-                    "bytes.  If this percentage has been reduced, it may " +
-                    "take some time for entries to be purged so that the " +
-                    "current cache space consumption can reflect this new " +
-                    "setting.");
+
+
     registerMessage(MSGID_FSCACHE_UPDATED_MAX_MEMORY_SIZE,
                     "The amount of space that may be used for the entry " +
                     "cache has been updated to %d bytes. If the previous " +
@@ -7920,9 +7428,6 @@ public class ExtensionsMessages
                     "updated.");
     registerMessage(MSGID_FSCACHE_UPDATED_TYPE,
                     "The entry cache type has been changed to %s.");
-    registerMessage(MSGID_FSCACHE_UPDATED_HOME,
-                    "The entry cache home has been moved a to new location " +
-                    "%s.  The previous location can be safely removed now.");
     registerMessage(MSGID_FSCACHE_UPDATED_JE_MEMORY_PCT,
                     "The amount of memory that may be used for the entry " +
                     "cache Berkeley DB JE internal cache has been updated " +
@@ -7934,74 +7439,6 @@ public class ExtensionsMessages
     registerMessage(MSGID_FSCACHE_UPDATED_IS_PERSISTENT,
                     "The persistence state for the entry cache has been " +
                     "changed to %s");
-    registerMessage(MSGID_FSCACHE_DESCRIPTION_HOME,
-                    "Specifies a path to the file system entry cache home. " +
-                    "Its value should be a string containing a complete file " +
-                    "system path unique to each server instance. Changes to " +
-                    "this configuration attribute will take effect " +
-                    "immediately but the current cache contents will not be " +
-                    "preserved.");
-    registerMessage(MSGID_FSCACHE_CANNOT_DETERMINE_HOME,
-                    "An error occurred while attempting to determine the " +
-                    "value of the " + ATTR_FSCACHE_HOME +
-                    " attribute in configuration entry %s:  %s.  The default " +
-                    "value of %s will be used instead.");
-    registerMessage(MSGID_FSCACHE_INVALID_HOME,
-                    "The " + ATTR_FSCACHE_HOME + " attribute of entry %s, " +
-                    "which holds the path to the entry cache home has an  " +
-                    "invalid value:  %s.  Its value must be a complete file " +
-                    "system path, unique to each server instance. The " +
-                    "default value of %s will be used instead.");
-    registerMessage(MSGID_FSCACHE_DESCRIPTION_JE_CACHE_SIZE,
-                    "Specifies the size of Berkeley DB Java Edition internal " +
-                    "cache used in conjunction with this file system entry " +
-                    "cache. Its value should be an integer between 98304 and " +
-                    "the maximum amount of free memory available in the JVM, " +
-                    "in bytes. Changes to this configuration attribute will " +
-                    "take effect immediately.");
-    registerMessage(MSGID_FSCACHE_CANNOT_DETERMINE_JE_CACHE_SIZE,
-                    "An error occurred while attempting to determine the " +
-                    "value of the " + ATTR_FSCACHE_JE_CACHE_SIZE +
-                    " attribute in configuration entry %s:  %s.  The default " +
-                    "value will be used instead.");
-    registerMessage(MSGID_FSCACHE_INVALID_JE_CACHE_SIZE,
-                    "The " + ATTR_FSCACHE_JE_CACHE_SIZE + " attribute of " +
-                    "entry %s, which holds the size of the Berkeley DB Java " +
-                    "Edition internal cache, has an invalid value:  %d.  Its " +
-                    "value must an integer between 98304 and the maximum " +
-                    "amount of free memory available in the JVM. The default " +
-                    "value will be used instead.");   
-    registerMessage(MSGID_FSCACHE_DESCRIPTION_JE_CACHE_PCT,
-                    "Specifies the percentage of available JVM memory that " +
-                    "can be utilized for Berkeley DB Java Edition internal " +
-                    "cache used in conjunction with this file system entry " +
-                    "cache. Its value should be an integer between 1 and 90. " +
-                    "Changes to this configuration attribute will take " +
-                    "effect immediately.");
-    registerMessage(MSGID_FSCACHE_CANNOT_DETERMINE_JE_CACHE_PCT,
-                    "An error occurred while attempting to determine the " +
-                    "value of the " + ATTR_FSCACHE_JE_CACHE_PCT +
-                    " attribute in configuration entry %s:  %s.  The default " +
-                    "value will be used instead.");
-    registerMessage(MSGID_FSCACHE_INVALID_JE_CACHE_PCT,
-                    "The " + ATTR_FSCACHE_JE_CACHE_PCT + " attribute of " +
-                    "entry %s, which holds the percentage of available JVM " +
-                    "memory that can be utilized for Berkeley DB Java " +
-                    "Edition internal cache, has an invalid value:  %d.  Its " +
-                    "value must an integer between 1 and 90. The default " +
-                    "value will be used instead.");    
-    registerMessage(MSGID_FSCACHE_IS_PERSISTENT_DESCRIPTION,
-                    "Specifies whether this cache is persistent across " +
-                    "server restarts or not. Its value should be a boolean. " +
-                    "Changes to this configuration attribute will take " +
-                    "effect immediately however already cached entries that " +
-                    "were brought over from the previously persisted cache " +
-                    "will not be affected until the server is restarted.");
-    registerMessage(MSGID_FSCACHE_CANNOT_DETERMINE_IF_PERSISTENT,
-                    "An error occurred while attempting to determine the " +
-                    "value of the " + ATTR_FSCACHE_IS_PERSISTENT +
-                    " attribute in configuration entry %s:  %s.  The default " +
-                    "value of %s will be used instead.");
     registerMessage(MSGID_FSCACHE_CANNOT_LOAD_PERSISTENT_DATA,
                     "An error occurred while trying to load persistent cache." +
                     " Persistent cache will be flushed now.");
@@ -8015,21 +7452,6 @@ public class ExtensionsMessages
                     "A fatal error occurred while trying to setup file " +
                     "system entry cache home. No suitable path can be found " +
                     "to host the cache home. This cache will be disabled now.");
-    registerMessage(MSGID_FSCACHE_DESCRIPTION_TYPE,
-                    "Specifies the type of the file system entry cache. " +
-                    "Its value should be a string that represents one of " +
-                    "the currently supported cache types which is either " +
-                    "FIFO or LRU. Changes to this configuration attribute " +
-                    "will take effect immediately.");
-    registerMessage(MSGID_FSCACHE_CANNOT_DETERMINE_TYPE,
-                    "An error occurred while attempting to determine the " +
-                    "value of the " + ATTR_FSCACHE_TYPE +
-                    " attribute in configuration entry %s:  %s.  The default " +
-                    "value of %s will be used.");
-    registerMessage(MSGID_FSCACHE_INVALID_TYPE,
-                    "The " + ATTR_FSCACHE_TYPE + " attribute of entry %s, " +
-                    "which holds the type of the entry cache has an invalid " +
-                    "value:  %s.  Its value must be either FIFO or LRU.");
     registerMessage(MSGID_FSCACHE_SET_PERMISSIONS_FAILED,
                     "Unable to set file permissions for the file system " +
                     "entry cache backend database directory %s.");
@@ -8039,17 +7461,6 @@ public class ExtensionsMessages
     registerMessage(MSGID_FSCACHE_CANNOT_RETRIEVE_ENTRY,
                     "Unable to retrieve an existing cache entry from the " +
                     "file system entry cache.");
-    registerMessage(MSGID_FSCACHE_CANNOT_SET_MAX_MEMORY_SIZE,
-                    "Internal error occured while trying to set the maximum " +
-                    "entry cache size. The previous or default size will be " +
-                    "used instead.");
-    registerMessage(MSGID_FSCACHE_CANNOT_SET_TYPE,
-                    "Internal error occured while trying to set the entry " +
-                    "cache type. The previous or default type will be used " +
-                    "instead.");
-    registerMessage(MSGID_FSCACHE_CANNOT_SET_HOME,
-                    "Internal error occured while trying to set the entry " +
-                    "cache home. This entry cache is not operational now.");
     registerMessage(MSGID_FSCACHE_CANNOT_SET_JE_MEMORY_PCT,
                     "Internal error occured while trying to set the entry " +
                     "cache backend internal cache size as percentage. The " +
@@ -8068,6 +7479,12 @@ public class ExtensionsMessages
     registerMessage(MSGID_FSCACHE_SAVE_PROGRESS_REPORT,
                     "Made persistent %d cache entries of %d total cache " +
                     "entries found.");
+    registerMessage(MSGID_FSCACHE_INDEX_NOT_FOUND,
+                    "No previous persistent cache state can be found. " +
+                    "Starting with an empty cache.");
+    registerMessage(MSGID_FSCACHE_INDEX_IMPAIRED,
+                    "The persistent cache index is inconsistent or damaged. " +
+                    "Persistent cache will be flushed now.");
   }
 }
 

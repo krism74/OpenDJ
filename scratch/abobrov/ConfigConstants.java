@@ -810,89 +810,75 @@ public class ConfigConstants
 
   /**
    * The name of the configuration attribute that indicates the maximum
-   * percentage of available space in the file system that the FS entry 
-   * cache will be allowed to consume.
-   */
-  public static final String ATTR_FSCACHE_MAX_MEMORY_PCT =
-       NAME_PREFIX_CFG + "max-memory-percent";
-  
-  /**
-   * The name of the configuration attribute that indicates the maximum
    * memory size of the FS entry cache.
    */
   public static final String ATTR_FSCACHE_MAX_MEMORY_SIZE =
        NAME_PREFIX_CFG + "max-memory-size";
 
   /**
-   * The default value for the entry cache max memory percent that will be used
-   * if no other value is specified.
-   */
-  public static final int DEFAULT_FSCACHE_MAX_MEMORY_PCT = 90;
-
-  /**
-   * The name of the configuration attribute that specifies the entry cache JE 
+   * The name of the configuration attribute that specifies the entry cache JE
    * environment home.
    */
-  public static final String ATTR_FSCACHE_HOME = 
+  public static final String ATTR_FSCACHE_HOME =
       NAME_PREFIX_CFG + "cache-directory";
-  
+
   /**
    * The default value for the entry cache JE environment home that will be used
    * if no other value is specified.
    */
-  public static final String DEFAULT_FSCACHE_HOME = "/tmp/.opends.cache";
-  
+  public static final String DEFAULT_FSCACHE_HOME = "/tmp/OpenDS.FSCache";
+
   /**
    * The name of the configuration attribute that indicates the maximum
-   * available space in bytes in the file system that JE cache will be 
+   * available space in bytes in the file system that JE cache will be
    * allowed to consume.
    */
   public static final String ATTR_FSCACHE_JE_CACHE_SIZE =
        NAME_PREFIX_CFG + "database-cache-size";
-  
+
   /**
    * The default value for the JE cache size in bytes that will be used
    * if no other value is specified.
    */
   public static final long DEFAULT_FSCACHE_JE_CACHE_SIZE = 0;
-  
+
   /**
    * The name of the configuration attribute that indicates the maximum
    * available memory percent that JE cache can consume.
    */
   public static final String ATTR_FSCACHE_JE_CACHE_PCT =
        NAME_PREFIX_CFG + "database-cache-percent";
-  
+
   /**
    * The default value for the JE cache size percent that will be used
    * if no other value is specified.
    */
   public static final int DEFAULT_FSCACHE_JE_CACHE_PCT = 0;
-  
+
   /**
    * The name of the configuration attribute that indicates whether
    * file system entry cache is configured as persistent or not.
    */
   public static final String ATTR_FSCACHE_IS_PERSISTENT =
        NAME_PREFIX_CFG + "persistent-cache";
-  
+
   /**
    * The default value to indicate whether the cache is persistent or not.
    */
   public static final boolean DEFAULT_FSCACHE_IS_PERSISTENT = false;
-  
+
   /**
    * The default value to indicate which cache type to use.
    */
   public static final String DEFAULT_FSCACHE_TYPE = "FIFO";
-  
+
   /**
    * The name of the configuration attribute that indicates which
    * cache type will be used.
    */
   public static final String ATTR_FSCACHE_TYPE =
        NAME_PREFIX_CFG + "cache-type";
-  
+
   /**
    * The name of the configuration attribute that specifies the fully-qualified
    * class name for a group implementation.
