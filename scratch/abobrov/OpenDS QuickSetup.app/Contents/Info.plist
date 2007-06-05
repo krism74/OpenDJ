@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
+<plist version="0.9">
+<dict>
+	<key>CFBundleName</key>
+	<string>OpenDS QuickSetup</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>CFBundleAllowMixedLocalizations</key>
+	<string>true</string>
+	<key>CFBundleExecutable</key>
+	<string>JavaApplicationStub</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleGetInfoString</key>
+	<string>OpenDS QuickSetup</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleIconFile</key>
+	<string>OpenDS.icns</string>
+	<key>Java</key>
+	<dict>
+		<key>MainClass</key>
+		<string>org.opends.quicksetup.installer.InstallLauncher</string>
+		<key>JVMVersion</key>
+		<string>1.5+</string>
+		<key>ClassPath</key>
+			<array>
+			<string>$JAVAROOT/../../../../lib/quicksetup.jar</string>
+			<string>$JAVAROOT/../../../../lib/statuspanel.jar</string>
+			<string>$JAVAROOT/../../../../lib/activation.jar</string>
+			<string>$JAVAROOT/../../../../lib/aspectjrt.jar</string>
+			<string>$JAVAROOT/../../../../lib/OpenDS.jar</string>
+			<string>$JAVAROOT/../../../../lib/mail.jar</string>
+			<string>$JAVAROOT/../../../../lib/je.jar</string>
+			</array>
+	</dict>
+</dict>
+</plist>
