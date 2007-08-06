@@ -1,0 +1,110 @@
+<style type="text/css">
+div#rscontentarea {position:absolute; top:33px; left:23px; width:609px;height:306px; overflow:auto}
+div#rswindowtitle {position:absolute;top:10px;left:174px;width:320px;height:16px; font-size:12px;font-weight:bold }
+div#rsquitbutton {position:absolute; top:369px; left:444px; width:180px; height:25px;text-align:right;}
+div#rsbottombar {position:absolute; top:359px; left:9px; width:623px;height:40px;background-color:#d6d9df;border-top:solid 1px #808080}
+div#rswindowbucket {position:absolute;top:0px;left:0px}
+ div#rscontentarea .ConTblCl1Div_sun4 {margin-top:17px}
+ div#rscontentarea .ConTblCl2Div_sun4 {margin-top:12px}
+ div#rscontentarea .IndentedControls {margin:3px 0px 0px 25px} 
+ .list-table td {padding:3px 10px; border-top:1px solid #eee}
+ .list-table td.incremental {border-top:none}
+ .list-table tr.selrow {background-color:#90b7d0}
+
+</style>
+<div id="rswindowbucket"><img src="backupdialog.png" width="646" height="414" /></div>
+<div id="rswindowtitle"> - Restore From Backup</div>
+<div id="rscontentarea">
+  <table style="margin-top:10px" border="0" cellspacing="0" cellpadding="0" title="">
+    <tr>
+      <td align="left" valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4">Backup Path:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4"><input type="text" class="TxtFld_sun4" size="40" value="/local/OpenDS-0.9.0/bak/"/>&nbsp;&nbsp;<input type="button" class="Btn2_sun4" onClick="alert('Opens local file browser.')" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="Browse..."/>
+          </div></td>
+    </tr>
+    <tr>
+      <td align="left" valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4">Available Backups:</label>
+        </div></td>
+      <td><div class="ConTblCl2Div_sun4">
+     <!--   <select name="select" size="10" class="Lst_sun4">
+          <option class="LstOpt_sun4" selected>20070518091523Z [May 18, 2007 09:15:23] Full</option>
+          <option class="LstOpt_sun4">&nbsp;&nbsp;&nbsp;20070520091421Z [May 20, 2007 09:14:21] Incremental</option>
+           <option class="LstOpt_sun4">&nbsp;&nbsp;&nbsp;20070521091421Z [May 21, 2007 09:14:21] Incremental</option>
+          <option class="LstOptSep_sun4" disabled>---------------------------------</option>
+          <option class="LstOpt_sun4">20070618091523Z [June 18, 2007 09:15:23] Full</option>
+          <option class="LstOptSep_sun4" disabled>---------------------------------</option>
+          <option class="LstOpt_sun4">20070718091523Z [July 18, 2007 09:15:23] Full</option>
+                       </select>-->
+	<div style="overflow:auto;border:solid 1px #ccc;height:200px">
+<table class="list-table" border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr class="selrow">
+    <td>20070518091523Z</td>
+    <td align="right">May 18, 2007 09:15:23</td>
+    <td>Full</td>
+    </tr>
+  <tr>
+    <td class="incremental">&nbsp;&nbsp;&nbsp;&nbsp;20070520091421Z</td>
+    <td align="right" class="incremental">May 20, 2007 09:14:21</td>
+    <td class="incremental">Incremental</td>
+    </tr>
+   <tr>
+    <td class="incremental">&nbsp;&nbsp;&nbsp;&nbsp;20070522091941Z</td>
+    <td align="right" class="incremental">May 22, 2007 09:19:41</td>
+    <td  class="incremental">Incremental</td>
+    </tr>
+   <tr>
+    <td>20070618091523Z</td>
+    <td align="right">June 18, 2007 09:15:23</td>
+    <td>Full</td>
+    </tr>
+  <tr>
+    <td>20070718091523Z</td>
+    <td align="right">July 18, 2007 09:15:23</td>
+    <td>Full</td>
+    </tr>
+   <tr>
+    <td>20070818091523Z</td>
+    <td align="right">August 18, 2007 09:15:23</td>
+    <td>Full</td>
+    </tr>
+  <tr>
+    <td>20070918091523Z</td>
+    <td align="right">September 18, 2007 09:15:23</td>
+    <td>Full</td>
+    </tr>
+  <tr>
+    <td>20071018091523Z</td>
+    <td align="right">October 18, 2007 09:15:23</td>
+    <td>Full</td>
+    </tr>
+  <tr>
+    <td>20071118091523Z</td>
+    <td align="right">November 18, 2007 09:15:23</td>
+    <td>Full</td>
+    </tr>
+  <tr>
+    <td>20071218091523Z</td>
+    <td align="right">December 18, 2007 09:15:23</td>
+    <td>Full</td>
+    </tr>
+</table>
+</div>  <div style="margin-top:10px; text-align:right">
+    <input type="button" class="Btn2_sun4" id="newEntry" onClick="alert('Refreshes list. Would be used if user changes the Backup Path.')" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="Refresh List"/>
+    <input  type="button" class="Btn2_sun4" id="deleteEntry" onClick="loadFile('progress2.html')" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="Verify Backup"/>
+  </div>
+</td>
+    </tr>
+  </table>
+</div>
+<div id="rsbottombar"></div>
+<div id="rsquitbutton">
+  <input type="button" class="Btn1_sun4" onClick="loadFile('progress.html')" onMouseDown="if (this.disabled==0) this.className='Btn1Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn1_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn1Hov_sun4'"
+       onMouseOut="if (this.disabled==0) this.className='Btn1_sun4'" value="OK"/>
+  <input type="button" class="Btn2_sun4" onClick="closeSubWin()" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="Cancel"/>
+</div>

@@ -1,0 +1,551 @@
+<!--
+ ! CDDL HEADER START
+ !
+ ! The contents of this file are subject to the terms of the
+ ! Common Development and Distribution License, Version 1.0 only
+ ! (the "License").  You may not use this file except in compliance
+ ! with the License.
+ !
+ ! You can obtain a copy of the license at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE
+ ! or https://OpenDS.dev.java.net/OpenDS.LICENSE.
+ ! See the License for the specific language governing permissions
+ ! and limitations under the License.
+ !
+ ! When distributing Covered Code, include this CDDL HEADER in each
+ ! file and include the License file at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE.  If applicable,
+ ! add the following below this CDDL HEADER, with the fields enclosed
+ ! by brackets "[]" replaced with your own identifying information:
+ !      Portions Copyright [yyyy] [name of copyright owner]
+ !
+ ! CDDL HEADER END
+ !
+ !
+ !      Portions Copyright 2007 Sun Microsystems, Inc.
+ ! -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Opends Control Panel UI Spec</title>
+<link rel="stylesheet" type="text/css" href="../../mockups/suntheme/css/css_master.css" />
+<script language='javascript' src='opends-utilities.js'></script>
+<script language='javascript' src='add-rmv.js'></script>
+<script type="text/javascript" language="javascript">
+var clicked;
+var canceled = false;
+
+function makeProgress() {
+window.setTimeout('progUpd1()',2000);
+}
+
+function progUpd1() {
+document.getElementById('progimg').src='prog2.png';
+document.getElementById('progtask').innerHTML='The next thing I am doing...';
+document.getElementById('progtime').innerHTML='30% complete (About 7 Seconds Remaining).';
+document.getElementById('progdetails').innerHTML='Info and output...<strong>Done.</strong><br\>More info and output...';
+window.setTimeout('progUpd2()',2000);
+}
+
+function progUpd2() {
+if (canceled==false) {
+document.getElementById('progimg').src='prog3.png';
+document.getElementById('progtask').innerHTML='The very next thing I am doing...';
+document.getElementById('progtime').innerHTML='75% complete (About 4 Seconds Remaining).';
+document.getElementById('progdetails').innerHTML='Info and output...<strong>Done.</strong><br\>More info and output...<strong>Done.</strong><br\>Even more info and output...<strong>Done.</strong><br\>Bonus info and output...';
+window.setTimeout('progUpd3()',2000);
+  } else { progUpd4();
+ }
+}
+
+function progUpd3() {
+if (canceled==false) {
+document.getElementById('progimg').src='prog4.png';
+document.getElementById('progtask').innerHTML='Pretty much the last thing I am doing...';
+document.getElementById('progtime').innerHTML='99% complete (About 1 Second Remaining).';
+document.getElementById('progdetails').innerHTML='Info and output...<strong>Done.</strong><br\>More info and output...<strong>Done.</strong><br\>Even more info and output...<strong>Done.</strong><br\>Bonus info and output...<strong>Done.</strong><br\>Buy one get one free info and output...<strong>Done.</strong><br\>Final bit of info and output..';
+window.setTimeout('progUpd4()',2000);
+  } else { progUpd4();
+ }
+}
+
+function progUpd4() {
+document.getElementById('windowbutton').disabled=false;
+document.getElementById('windowbutton').className='Btn1_sun4';
+document.getElementById('windowbutton').focus();
+document.getElementById('progbarstuff').style.display='none';
+if (canceled==true) {document.getElementById('canceledalert').style.display='block';} else { document.getElementById('finalalert').style.display='block';}
+canceled=false;
+document.getElementById('progdetails').innerHTML='Info and output...<strong>Done.</strong><br\>More info and output...<strong>Done.</strong><br\>Even more info and output...<strong>Done.</strong><br\>Bonus info and output...<strong>Done.</strong><br\>Buy one get one free info and output...<strong>Done.</strong><br\>Final bit of info and output...<strong>Done.</strong>';
+}
+
+function applyFilter() {
+document.getElementById('brstatusarea').style.display='none';
+document.getElementById('browsetree').style.display='none';
+document.getElementById('browsetree_filtered').style.display='none';
+document.getElementById('progressarea').style.display='block';
+deselectEntry();
+window.setTimeout('loadTree()',3000);
+}
+
+function loadTree() {
+document.getElementById('progressarea').style.display='none';
+document.getElementById('browsetree_filtered').style.display='block';
+document.getElementById('brstatusarea').innerHTML='17 Entries Found';
+document.getElementById('statusarea').style.display='block';
+}
+
+function selectEntry() {
+document.getElementById('selectedrow').style.backgroundColor='#90b7d0';
+document.getElementById('selectedrow_filtered').style.backgroundColor='#90b7d0';
+document.getElementById('noneselected').style.display='none';
+document.getElementById('entrydn').style.display='inline';
+document.getElementById('entryldif').disabled=false;
+document.getElementById('entryldif').className='TxtAra_sun4';
+document.getElementById('entryldif').innerHTML='cn: Barbara Jensen\ncn: Babs Jensen\nsn: Jensen\ngivenname: Barbara\nobjectclass: top\nobjectclass: person\nobjectclass: organizationalPerson\nobjectclass: inetOrgPerson\nou: Product Development\nou: People\nl: Cupertino\nuid: bjensen\nmail: bjensen@example.com\ntelephonenumber: +1 408 555 1862\nfacsimiletelephonenumber: +1 408 555 1992\nroomnumber: 0209';
+//document.getElementById('newEntry').className='Btn2_sun4';document.getElementById('newEntry').disabled=false;
+document.getElementById('deleteEntry').className='Btn2_sun4';document.getElementById('deleteEntry').disabled=false;
+document.getElementById('saveEntry').className='Btn2_sun4';document.getElementById('saveEntry').disabled=false;
+}
+
+function deselectEntry() {
+document.getElementById('selectedrow').style.backgroundColor='#ffffff';
+document.getElementById('selectedrow_filtered').style.backgroundColor='#ffffff';
+document.getElementById('noneselected').style.display='inline';
+document.getElementById('entrydn').style.display='none';
+document.getElementById('entryldif').disabled=true;
+document.getElementById('entryldif').className='TxtAraDis_sun4';
+document.getElementById('entryldif').innerHTML=' ';
+//document.getElementById('newEntry').className='Btn2Dis_sun4';document.getElementById('newEntry').disabled=true;
+document.getElementById('deleteEntry').className='Btn2Dis_sun4';document.getElementById('deleteEntry').disabled=true;
+document.getElementById('saveEntry').className='Btn2Dis_sun4';document.getElementById('saveEntry').disabled=true;
+}
+
+function handleRB(num) {
+ switch(num) {
+ case 1:
+  if (document.theform.availnodes.disabled=true) {
+  document.theform.availnodes.disabled=false;
+  document.theform.availnodes.className='Lst_sun4';
+  document.theform.selnodes.disabled=false;
+  document.theform.selnodes.className='Lst_sun4';
+  document.theform.selnodes.options[0].selected=true;
+  handleButtonsSel(document.theform, document.theform.availnodes);
+  document.theform2.availnodes.disabled=true;
+  document.theform2.availnodes.className='LstDis_sun4';
+  document.theform2.selnodes.disabled=true;
+  document.theform2.selnodes.className='LstDis_sun4';
+  deselectAll(document.theform2.availnodes);
+  deselectAll(document.theform2.selnodes);
+  document.theform2.add.disabled=true;
+  document.theform2.add.className='Btn2Dis_sun4';
+  document.theform2.remove.disabled=true;
+  document.theform2.remove.className='Btn2Dis_sun4';
+  document.getElementById('cleanindex').disabled=true;
+  document.getElementById('cleanindex').className='MnuStdDis_sun4';
+  }
+  break;
+ case 2:
+  if (document.getElementById('cleanindex').disabled=true) {
+  document.theform.availnodes.disabled=true;
+  document.theform.availnodes.className='LstDis_sun4';
+  document.theform.selnodes.disabled=true;
+  document.theform.selnodes.className='LstDis_sun4';
+  deselectAll(document.theform.availnodes);
+  deselectAll(document.theform.selnodes);
+  document.theform.add.disabled=true;
+  document.theform.add.className='Btn2Dis_sun4';
+  document.theform.remove.disabled=true;
+  document.theform.remove.className='Btn2Dis_sun4';
+  document.theform2.availnodes.disabled=true;
+  document.theform2.availnodes.className='LstDis_sun4';
+  deselectAll(document.theform2.availnodes);
+  deselectAll(document.theform2.selnodes);
+  document.theform2.selnodes.disabled=true;
+  document.theform2.selnodes.className='LstDis_sun4';
+  document.theform2.add.disabled=true;
+  document.theform2.add.className='Btn2Dis_sun4';
+  document.theform2.remove.disabled=true;
+  document.theform2.remove.className='Btn2Dis_sun4';
+  document.getElementById('cleanindex').disabled=false;
+  document.getElementById('cleanindex').className='MnuStd_sun4';
+  }
+  break;
+ case 3:
+  if (document.theform2.availnodes.disabled=true) {
+  document.theform2.availnodes.disabled=false;
+  document.theform2.availnodes.className='Lst_sun4';
+  document.theform2.availnodes.options[0].selected=true;
+  document.theform2.selnodes.disabled=false;
+  document.theform2.selnodes.className='Lst_sun4';
+  handleButtonsAvail(document.theform2, document.theform2.availnodes);
+  document.theform.availnodes.disabled=true;
+  document.theform.availnodes.className='LstDis_sun4';
+  deselectAll(document.theform.availnodes);
+  deselectAll(document.theform.selnodes);
+  document.theform.selnodes.disabled=true;
+  document.theform.selnodes.className='LstDis_sun4';
+  document.theform.add.disabled=true;
+  document.theform.add.className='Btn2Dis_sun4';
+  document.theform.remove.disabled=true;
+  document.theform.remove.className='Btn2Dis_sun4';
+  document.getElementById('cleanindex').disabled=true;
+  document.getElementById('cleanindex').className='MnuStdDis_sun4';
+  }
+  break;
+  }
+}
+
+function applySchemaFilter() {
+document.getElementById('browsetree').style.display='none';
+document.getElementById('progressarea').style.display='block';
+document.getElementById('editableclass').style.display='none';
+document.getElementById('panelbuttons').style.display='none';
+document.getElementById('readonlyclass').style.display='none';
+window.setTimeout('loadSchemaFilter()',3000);
+}
+
+function loadSchemaFilter() {
+document.getElementById('progressarea').style.display='none';
+document.getElementById('browsetree').style.display='block';
+selectEditableClass();
+}
+
+function selectStandardClass() {
+document.getElementById('selectedStandardClass').style.backgroundColor='#bbd4e5';
+document.getElementById('selectedEditableClass').style.backgroundColor='#ffffff';
+document.getElementById('selectedStandardAttribute').style.backgroundColor='#ffffff';
+document.getElementById('selectedEditableAttribute').style.backgroundColor='#ffffff';
+document.getElementById('panelbuttons').style.display='none';
+document.getElementById('editableattribute').style.display='none';
+document.getElementById('editableclass').style.display='none';
+document.getElementById('readonlyattribute').style.display='none';
+document.getElementById('readonlyclass').style.display='block';
+}
+
+function selectEditableClass() {
+document.getElementById('selectedStandardClass').style.backgroundColor='#ffffff';
+document.getElementById('selectedEditableClass').style.backgroundColor='#bbd4e5';
+document.getElementById('selectedStandardAttribute').style.backgroundColor='#ffffff';
+document.getElementById('selectedEditableAttribute').style.backgroundColor='#ffffff';
+document.getElementById('readonlyclass').style.display='none';
+document.getElementById('editableattribute').style.display='none';
+document.getElementById('readonlyattribute').style.display='none';
+document.getElementById('panelbuttons').style.display='block';
+document.getElementById('editableclass').style.display='block';
+}
+
+function selectStandardAttribute() {
+document.getElementById('selectedStandardClass').style.backgroundColor='#ffffff';
+document.getElementById('selectedEditableClass').style.backgroundColor='#ffffff';
+document.getElementById('selectedStandardAttribute').style.backgroundColor='#bbd4e5';
+document.getElementById('selectedEditableAttribute').style.backgroundColor='#ffffff';
+document.getElementById('panelbuttons').style.display='none';
+document.getElementById('editableattribute').style.display='none';
+document.getElementById('editableclass').style.display='none';
+document.getElementById('readonlyattribute').style.display='block';
+document.getElementById('readonlyclass').style.display='none';
+}
+
+function selectEditableAttribute() {
+document.getElementById('selectedStandardClass').style.backgroundColor='#ffffff';
+document.getElementById('selectedEditableClass').style.backgroundColor='#ffffff';
+document.getElementById('selectedStandardAttribute').style.backgroundColor='#ffffff';
+document.getElementById('selectedEditableAttribute').style.backgroundColor='#bbd4e5';
+document.getElementById('readonlyclass').style.display='none';
+document.getElementById('editableattribute').style.display='block';
+document.getElementById('readonlyattribute').style.display='none';
+document.getElementById('panelbuttons').style.display='block';
+document.getElementById('editableclass').style.display='none';
+}
+
+
+</script>
+
+<style type="text/css">
+div#buttonbar {position:absolute; top:57px; left:22px; width:179px;height:520px;overflow:auto; padding-top:1px }
+div#contentarea {position:absolute; top:40px; left:214px; width:436px;height:534px;font-size:11px}
+div#quitbutton {position:absolute; top:590px; left:562px; width:80px;height:20px;text-align:right}
+body {font-family:Arial, Helvetica, sans-serif;font-size:12px;}
+ .info-table {border:solid 1px #000; border-collapse:collapse; font-size:12px;}
+ .info-table th {border: solid 1px #B5B5B5;padding:3px 5px;background: #fff url(accordiontitlebk.png) left bottom repeat-x;font-weight:bold;text-align:left;vertical-align:bottom; font-size:11px}
+ .info-table td {border: solid 1px #B5B5B5;padding:3px 5px;vertical-align:top; font-size:11px; background-color:#fff}
+a.cplink:link, a.cplink:visited {font-size:11px; font-weight:normal;text-decoration:none; color:#000; padding:4px 0px 3px 12px;display:block}
+a.cplink:hover {text-decoration:none; color:#000;  background-color: #bbd4e5;}
+a.cplink:active {text-decoration:none; color:#000;  background: #bbd4e5 url(accordiontitleselactive.png) left bottom repeat-x;}
+.cpmenu {margin-top:-1px;border-top:1px solid #747980;border-left:1px solid #a0a3a9;border-right:1px solid #a0a3a9; }
+a.cpmenulabel:link, a.cpmenulabel:visited {font-size:11px;padding:4px 6px;display:block;color:#000; font-weight:bold; text-align:left; background: #fff url(accordiontitlebk.png) left bottom repeat-x; }
+a.cpmenulabel:hover {text-decoration:none;background: #fff url(accordiontitlehover.png) left bottom repeat-x; }
+a.cpmenulabel:active {text-decoration:none;background: #fff url(accordiontitleactive.png) left bottom repeat-x; }
+a.cpmenulabelsel:link, a.cpmenulabelsel:visited {font-size:11px;padding:4px 6px;display:block;color:#000; font-weight:bold; text-align:left; background: #fff url(accordiontitlesel.png) left bottom repeat-x; }
+a.cpmenulabelsel:hover {text-decoration:none;background: #fff url(accordiontitleselhover.png) left bottom repeat-x; }
+a.cpmenulabelsel:active {text-decoration:none;background: #fff url(accordiontitleselactive.png) left bottom repeat-x; }
+.cpoption {cursor:pointer; font-weight:normal;}
+.cpoptionlabel {}
+.cpoptions {cursor:pointer; font-weight:normal;padding:3px 0px 5px;background-color:#fff;border-left:1px solid #737373;border-right:1px solid #737373;border-top:1px solid #B1B1B1;border-bottom:1px solid #808080;}
+.ConTblCl1Div_sun4 {margin-left:0px}
+
+#content-inner {position:absolute;top:35px; left:35px; }
+#content-inner2 {position:absolute;top:50px; left:50px; }
+
+
+.Btn2_sun4 {font-size:12px;padding:0px 8px 1px;background: url(secondary-enabled.png) repeat-x top; -moz-border-radius:5px;border-top-color:#888B91;border-right-color:#62656B;border-bottom-color:#3C3F45;border-left-color:#62656B;}
+.Btn2Hov_sun4 {font-size:12px;padding:0px 8px 1px;background: url(secondary-hover.png) repeat-x top; -moz-border-radius:5px;border-top-color:#6A6E75;border-right-color:#3B3E46;border-bottom-color:#0B0F16;border-left-color:#3B3E46;}
+.Btn2Down_sun4 {font-size:12px;padding:0px 8px 1px;margin:0px 2px 0px 1px;background: url(secondary-down.png) repeat-x top; -moz-border-radius:5px;border-top:1px solid #6A6E75;border-right:1px solid #3B3E46;border-bottom:1px solid #0B0F16;border-left:1px solid #3B3E46;}
+.Btn2Dis_sun4 {font-size:12px;padding:0px 8px 1px;-moz-border-radius:5px;}
+.Btn1_sun4 {font-size:12px;padding:0px 8px 1px;background: url(primary-enabled.png) repeat-x top; -moz-border-radius:5px;border-top-color:#556A7D;border-right-color:#2A3F52;border-bottom-color:#091E31;border-left-color:#2A3F52;}
+.Btn1Hov_sun4 {font-size:12px;padding:0px 8px 1px;background: url(primary-hover.png) repeat-x top; -moz-border-radius:5px;border-top-color:#2A455C;border-right-color:#0E2840;border-bottom-color:#000000;border-left-color:#0E2840;}
+.Btn1Down_sun4 {font-size:12px;padding:0px 8px 1px;margin:0px 2px 0px 1px;background: url(primary-down.png) repeat-x top; -moz-border-radius:5px;border-top:1px solid #2A455C;border-right:1px solid #000F27;border-bottom:1px solid #000;border-left:1px solid #000F27;}
+.Btn1Dis_sun4 {font-size:12px;padding:0px 8px 1px;-moz-border-radius:5px;}
+
+
+</style>
+</head>
+<body style="margin:0px" onclick="if (document.getElementById('mymenu')) {document.getElementById('mymenu').style.display='none'}">
+<img src="conpanelac.png" width="673" height="640" />
+
+<div id="buttonbar">
+  <div id="menus">
+    <div class='cpmenu' onclick="TrocaMenu('sub1')">
+<a class="cpmenulabelsel" id="sub1lnk" href="#"><img id="sub1img" style="margin-top:-1px" src="tree_handledowntopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Directory Data</a>
+     <!-- <div class="cpmenulabel"><img id="sub1img" style="margin-top:-1px" src="tree_handledowntopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle"/>Directory Data</div>-->
+    </div>
+    <div class='cpoptions' id='sub1' style="display:block">
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="browse_entries" class="cplink" href="javascript:loadFile('browse.html')" onclick="clicked='browse_entries'">Browse Entries</a></div>
+      </div>
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="new_base_dn" class="cplink"  href="javascript:loadFile('basedn.html')" onclick="clicked='new_base_dn'">New Base DN...</a></div>
+      </div>
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="import_ldif" class="cplink"  href="javascript:loadFile('import.html')" onclick="clicked='import_ldif'">Import LDIF...</a></div>
+      </div>
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="export_ldif" class="cplink" href="javascript:loadFile('export.html')" onclick="clicked='export_ldif'">Export LDIF...</a></div>
+      </div>
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="backup" class="cplink" href="javascript:loadFile('backup.html')" onclick="clicked='backup'">Backup...</a></div>
+      </div>
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="restore" class="cplink" href="javascript:loadFile('restore.html');" onclick="clicked='restore'">Restore...</a></div>
+      </div>
+    </div>
+    <div class='cpmenu' onclick="TrocaMenu('sub3')">
+<a class="cpmenulabel" id="sub3lnk" href="#"><img id="sub3img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Password Policies</a>
+    </div>
+    <div class='cpoptions' id='sub3' style="display:none">
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="#">Default Policy</a></div>
+      </div>
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="#">New Policy...</a></div>
+      </div>
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="#">Manage Policies</a></div>
+      </div>
+    </div>
+    <div class='cpmenu' onclick="TrocaMenu('sub4')">
+<a class="cpmenulabel" id="sub4lnk" href="#"><img id="sub4img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Access Control</a>
+    </div>
+    <div class='cpoptions' id='sub4' style="display:none">
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="#">New ACI...</a></div>
+      </div>
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="#">Manage Access Controls</a></div>
+      </div>
+    </div>
+    <div class='cpmenu' onclick="TrocaMenu('sub5')">
+<a class="cpmenulabel" id="sub5lnk" href="#"><img id="sub5img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Schema</a>
+    </div>
+    <div class='cpoptions' id='sub5' style="display:none">
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="#">New Attribute...</a></div>
+      </div>
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="#">New Class...</a></div>
+      </div>
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="schema_manager" class="cplink" href="javascript:loadFile('classes.html')" onclick="clicked='schema_manager'">Manage Schema</a></div>
+      </div>
+    </div>
+    <div class='cpmenu' onclick="TrocaMenu('sub2')" >
+<a class="cpmenulabel" id="sub2lnk" href="#"><img id="sub2img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Indexes</a>
+    </div>
+    <div class='cpoptions' id='sub2' style="display:none">
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="#">New Index...</a></div>
+      </div>
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="#">Manage Indexes</a></div>
+      </div>
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="repair_index" class="cplink" href="javascript:loadFile('repairindex.html');" onclick="clicked='repair_index'">Verify/Rebuild Indexes</a></div>
+      </div>
+    </div>
+    <div class='cpmenu' onclick="TrocaMenu('sub6')">
+<a class="cpmenulabel"  id="sub6lnk" href="#"><img id="sub6img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Logging</a>
+    </div>
+    <div class='cpoptions' id='sub6' style="display:none">
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="cplink" class="cplink" style="color:#999" href="#">Error Logging</a></div>
+      </div>
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="cplink" class="cplink" style="color:#999" href="#">Access Logging</a></div>
+      </div>
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="cplink" class="cplink" style="color:#999" href="#">Audit Logging</a></div>
+      </div>
+    </div>
+    <div class='cpmenu' onclick="TrocaMenu('sub8')">
+<a class="cpmenulabel" id="sub8lnk" href="#"><img id="sub8img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Scheduled Tasks</a>
+    </div>
+    <div class='cpoptions' id='sub8' style="display:none">
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="cplink" class="cplink" style="color:#999" href="#">New Task...</a></div>
+      </div>
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="cplink" class="cplink" style="color:#999" href="#">Manage Tasks</a></div>
+      </div>
+    </div>
+    <div class='cpmenu' onclick="TrocaMenu('sub7')">
+<a class="cpmenulabel" id="sub7lnk" href="#"><img id="sub7img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Administrative Users</a>
+    </div>
+    <div class='cpoptions' id='sub7' style="display:none">
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="cplink" class="cplink" style="color:#999" href="#">New Admin User...</a></div>
+      </div>
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="cplink" class="cplink" style="color:#999" href="#">Manage Admin Users</a></div>
+      </div>
+    </div>
+    <div class='cpmenu' onclick="TrocaMenu('sub0')">
+<a class="cpmenulabel" id="sub0lnk" href="#"><img id="sub0img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Runtime Options</a>
+    </div>
+    <div class='cpoptions' id='sub0' style="display:none">
+      <div class='cpoption'>
+        <div class="cpoptionlabel"><a id="windows_service" class="cplink"href="javascript:loadFile('winservice.html');" onclick="clicked='windows_service'">Windows Service</a></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+<div id="contentarea">
+  <table width="100%"  border="0" cellspacing="0" cellpadding="0" style="margin:20px 0px 0px;width:430px">
+    <tr>
+      <td align="left"><span class="LblLev1Txt_sun4">Server Status</span> </td>
+    </tr>
+  </table>
+  <table border="0" cellspacing="0" cellpadding="0" title="">
+    <tr>
+      <td nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4">Server Run Status:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4">Started&nbsp;&nbsp;
+          <input class="Btn2_sun4" type="button" value="Stop" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" onclick="loadFile('progress.html')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'"/>
+          <input type="button" class="Btn2_sun4" onclick="loadFile('progress.html')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Restart"/>
+        </div></td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4">Current Connections:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4">2</div></td>
+    </tr>
+  </table>
+  <table width="100%"  border="0" cellspacing="0" cellpadding="0" style="margin:30px 0px 0px;width:430px">
+    <tr>
+      <td align="left"><span class="LblLev1Txt_sun4">Server Details</span> </td>
+    </tr>
+  </table>
+  <table border="0" cellspacing="0" cellpadding="0" title="">
+    <tr>
+      <td nowrap="nowrap" valign="top" align="left"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4">Administrative Users:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4">cn=Directory Manager<br/>
+          cn=Scott Farkus </div></td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4">Installation Path:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4">/local/foo/OpenDS0.1/</div></td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4">OpenDS Version:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4">OpenDS0.1-build0037</div></td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4">Java Version:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4">1.5.0_07</div></td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4">Windows Service:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4">Disabled</div></td>
+    </tr>
+  </table>
+  <table width="100%"  border="0" cellspacing="0" cellpadding="0" style="margin:30px 0px 10px;width:430px">
+    <tr>
+      <td align="left"><span class="LblLev1Txt_sun4">Listener Ports</span> </td>
+    </tr>
+  </table>
+  <table width="100%" class="info-table" border="0" cellspacing="0" cellpadding="0" style="width:430px">
+    <tr>
+      <th>Address:port</th>
+      <th>Protocol </th>
+      <th>State</th>
+    </tr>
+    <tr>
+      <td>myhost:1389</td>
+      <td>LDAP</td>
+      <td>Enabled</td>
+    </tr>
+    <tr>
+      <td>myhost:1689</td>
+      <td>JMX</td>
+      <td>Enabled</td>
+    </tr>
+    <tr>
+      <td>--</td>
+      <td>LDAPS</td>
+      <td>Not Configured</td>
+    </tr>
+  </table>
+  <table width="100%"  border="0" cellspacing="0" cellpadding="0" style="margin:30px 0px 10px;width:430px">
+    <tr>
+      <td align="left"><span class="LblLev1Txt_sun4">Directory Databases</span> </td>
+    </tr>
+  </table>
+  <table width="100%" class="info-table" border="0" cellspacing="0" cellpadding="0" style="width:430px">
+    <tr>
+      <th>Backend ID</th>
+      <th>Base DN </th>
+      <th>Entries</th>
+    </tr>
+    <tr>
+      <td>userRoot</td>
+      <td>dc=example, dc=com</td>
+      <td>2002</td>
+    </tr>
+  </table>
+</div>
+<div id="quitbutton">
+  <input type="button" class="Btn2_sun4" onclick="alert('Quits Application')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Quit"/>
+</div>
+<div id="content-inner" style="display:none">
+</div>
+<div id="content-inner2" style="display:none">
+</div>
+</body>
+</html>

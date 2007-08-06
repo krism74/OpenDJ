@@ -1,0 +1,51 @@
+div#contentarea {position:absolute; top:31px; left:225px; width:539px;height:372px; }
+div#quitbutton {position:absolute; top:419px; left:674px; width:80px;height:20px;text-align:right}
+div#navbuttons {position:absolute; top:419px; left:226px; width:180px;height:20px;}
+div#bottomchoice {position:absolute; top:376px; left:239px; width:341px;height:20px;}
+div#bottombar {position:absolute; top:405px; left:224px; width:541px;height:45px;background-color:#d6d9df;border-top:solid 1px #808080}
+div#inlineprogress{position:absolute; top:360px; left:234px; width:521px;height:40px;}
+
+
+body {font-family:Arial, Helvetica, sans-serif;font-size:12px;}
+ .info-table {border:solid 1px #000; border-collapse:collapse; font-size:12px;}
+ .info-table th {border: solid 1px #B5B5B5;padding:3px 5px;background: #fff url(accordiontitlebk.png) left bottom repeat-x;font-weight:bold;text-align:left;vertical-align:bottom; font-size:11px}
+ .info-table td {border: solid 1px #B5B5B5;padding:3px 5px;vertical-align:top; font-size:11px; background-color:#fff}
+/*.ConTblCl1Div_sun4 {margin-left:0px}*/
+div#stepsarea {position:absolute; top:31px; left:9px; width:215px;height:420px; overflow:auto;background-color:#d6d9df; border-right:solid 1px #808080}
+div#steplistouter{margin:15px 15px 0px; width:182px;height:357px;padding:1px 0px 0px 1px;border-top:1px solid #82858b;border-left:1px solid #82858b;border-right:1px solid #EFF0F2;border-bottom:1px solid #EFF0F2; background-color:#A0A3A9;-moz-border-radius:11px}
+div#steplistmiddle{width:179px;height:354px;border:1px solid #B8BBC1;-moz-border-radius:9px}
+div#steplistinner{width:178px;height:353px;padding:0px;border:1px solid #C7CAD0;background-color:#CFD2D8;overflow:auto;-moz-border-radius:9px}
+.stepText {margin:7px 0px 7px 10px}
+.subStepText {margin:7px 0px 7px 28px; }
+.stepTextSel {font-weight:bold}
+
+#content-inner {position:absolute;top:10px; left:75px; }
+#content-inner2 {position:absolute;top:50px; left:50px; }
+
+.Btn2_sun4 {font-size:12px;padding:0px 8px 1px;background: url(secondary-enabled.png) repeat-x top; -moz-border-radius:5px;border-top-color:#888B91;border-right-color:#62656B;border-bottom-color:#3C3F45;border-left-color:#62656B;}
+.Btn2Hov_sun4 {font-size:12px;padding:0px 8px 1px;background: url(secondary-hover.png) repeat-x top; -moz-border-radius:5px;border-top-color:#6A6E75;border-right-color:#3B3E46;border-bottom-color:#0B0F16;border-left-color:#3B3E46;}
+.Btn2Down_sun4 {font-size:12px;padding:0px 8px 1px;margin:0px 2px 0px 1px;background: url(secondary-down.png) repeat-x top; -moz-border-radius:5px;border-top:1px solid #6A6E75;border-right:1px solid #3B3E46;border-bottom:1px solid #0B0F16;border-left:1px solid #3B3E46;}
+.Btn2Dis_sun4 {font-size:12px;padding:0px 8px 1px;-moz-border-radius:5px;}
+.Btn1_sun4 {font-size:12px;padding:0px 8px 1px;background: url(primary-enabled.png) repeat-x top; -moz-border-radius:5px;border-top-color:#556A7D;border-right-color:#2A3F52;border-bottom-color:#091E31;border-left-color:#2A3F52;}
+.Btn1Hov_sun4 {font-size:12px;padding:0px 8px 1px;background: url(primary-hover.png) repeat-x top; -moz-border-radius:5px;border-top-color:#2A455C;border-right-color:#0E2840;border-bottom-color:#000000;border-left-color:#0E2840;}
+.Btn1Down_sun4 {font-size:12px;padding:0px 8px 1px;margin:0px 2px 0px 1px;background: url(primary-down.png) repeat-x top; -moz-border-radius:5px;border-top:1px solid #2A455C;border-right:1px solid #000F27;border-bottom:1px solid #000;border-left:1px solid #000F27;}
+.Btn1Dis_sun4 {font-size:12px;padding:0px 8px 1px;-moz-border-radius:5px;}
+
+
+div#contentarea .ConTblCl1Div_sun4 {margin-top:17px}
+div#contentarea .ConTblCl2Div_sun4 {margin-top:13px}
+div#contentarea .IndentedControls {margin:3px 0px 0px 35px} 
+
+div#contentarea table.review .ConTblCl1Div_sun4 {margin-top:10px}
+div#contentarea table.review .ConTblCl2Div_sun4 {margin-top:7px}
+
+.panelTitle { font-weight:bold; margin:20px 15px 5px; font-size:14px}
+.panelHelp {margin:0px 15px}
+.panelHelp p {margin:8px 0px 0px}
+
+div#progdetails {border:solid 1px #999;padding:10px;height:225px}
+
+div#sslcontentarea {position:absolute; top:30px; left:10px; width:622px;height:338px; overflow:auto}
+div#sslquitbutton {position:absolute; top:393px; left:444px; width:180px; height:25px;text-align:right;}
+div#sslbottombar {position:absolute; top:383px; left:9px; width:623px;height:40px;background-color:#d6d9df;border-top:solid 1px #808080}
+div#sslcontentarea .IndentedControls {margin:3px 0px 0px 35px} 

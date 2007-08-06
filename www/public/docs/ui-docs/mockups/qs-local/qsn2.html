@@ -1,0 +1,337 @@
+<!--
+ ! CDDL HEADER START
+ !
+ ! The contents of this file are subject to the terms of the
+ ! Common Development and Distribution License, Version 1.0 only
+ ! (the "License").  You may not use this file except in compliance
+ ! with the License.
+ !
+ ! You can obtain a copy of the license at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE
+ ! or https://OpenDS.dev.java.net/OpenDS.LICENSE.
+ ! See the License for the specific language governing permissions
+ ! and limitations under the License.
+ !
+ ! When distributing Covered Code, include this CDDL HEADER in each
+ ! file and include the License file at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE.  If applicable,
+ ! add the following below this CDDL HEADER, with the fields enclosed
+ ! by brackets "[]" replaced with your own identifying information:
+ !      Portions Copyright [yyyy] [name of copyright owner]
+ !
+ ! CDDL HEADER END
+ !
+ !
+ !      Portions Copyright 2007 Sun Microsystems, Inc.
+ ! -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Opends QuickSetup UI Spec</title>
+<link rel="stylesheet" type="text/css" href="../../mockups/suntheme/css/css_master.css" />
+<link rel="stylesheet" type="text/css" href="qs_css.css" />
+<script language='javascript' src='opends-utilities.js'></script>
+<script language='javascript'> 
+function enableSSL(arg) {
+ genrb = document.getElementById('generated'); 
+ existrb = document.getElementById('existing');
+ if (arg) {
+  genrb.disabled=false;
+  existrb.disabled=false;
+  if (genrb.checked==true) {
+    genRBselect();
+    } else {
+    existRBselect();
+   }
+  } else {
+   if (document.getElementById('enableSSL').checked==false && document.getElementById('enableStartTLS').checked==false) {
+       genrb.disabled=true;
+       existrb.disabled=true;
+       	document.getElementById('hostname').className='TxtFldDis_sun4';
+       	document.getElementById('hostname').disabled=true;
+		document.getElementById('keystorepath').className='TxtFldDis_sun4';
+		document.getElementById('keystorepath').disabled=true;
+		document.getElementById('keystorepassword').className='TxtFldDis_sun4';
+		document.getElementById('keystorepassword').disabled=true;
+		document.getElementById('keystoretype1').disabled=true;
+		document.getElementById('keystoretype2').disabled=true;
+		document.getElementById('keystoretype3').disabled=true;
+		document.getElementById('keystorepathbrowse').disabled=true;
+		document.getElementById('keystorepathbrowse').className='Btn2Dis_sun4';
+        }
+    }
+}
+
+function genRBselect() {
+	document.getElementById('hostname').className='TxtFld_sun4';
+	document.getElementById('hostname').disabled=false;
+	document.getElementById('keystorepath').className='TxtFldDis_sun4';
+	document.getElementById('keystorepath').disabled=true;
+	document.getElementById('keystorepassword').className='TxtFldDis_sun4';
+	document.getElementById('keystorepassword').disabled=true;
+	document.getElementById('keystoretype1').disabled=true;
+	document.getElementById('keystoretype2').disabled=true;
+	document.getElementById('keystoretype3').disabled=true;
+	document.getElementById('keystorepathbrowse').disabled=true;
+	document.getElementById('keystorepathbrowse').className='Btn2Dis_sun4';
+}
+
+function existRBselect() {
+	document.getElementById('hostname').className='TxtFldDis_sun4';
+	document.getElementById('hostname').disabled=true;
+	document.getElementById('keystorepath').className='TxtFld_sun4';
+	document.getElementById('keystorepath').disabled=false;
+	document.getElementById('keystorepassword').className='TxtFld_sun4';
+	document.getElementById('keystorepassword').disabled=false;
+	document.getElementById('keystoretype1').disabled=false;
+	document.getElementById('keystoretype2').disabled=false;
+	document.getElementById('keystoretype3').disabled=false;
+	document.getElementById('keystorepathbrowse').disabled=false;
+	document.getElementById('keystorepathbrowse').className='Btn2_sun4';
+	if (document.getElementById('keystoretype3').checked==true) {handle11Token(1) }
+}
+
+function handle11Token(arg){
+	if (arg) {
+		document.getElementById('keystorepath').className='TxtFldDis_sun4';
+		document.getElementById('keystorepath').disabled=true;
+		document.getElementById('keystorepathbrowse').disabled=true;
+		document.getElementById('keystorepathbrowse').className='Btn2Dis_sun4';
+	} else {
+		document.getElementById('keystorepath').className='TxtFld_sun4';
+		document.getElementById('keystorepath').disabled=false;
+		document.getElementById('keystorepathbrowse').disabled=false;
+		document.getElementById('keystorepathbrowse').className='Btn2_sun4';
+	}
+}
+
+</script>
+</head>
+<body style="margin:0px">
+<img src="wizard.png" width="779" height="466" />
+<div id="stepsarea">
+  <div id="steplistouter">
+    <div id="steplistmiddle">
+      <div id="steplistinner">
+        <table id="newsteps" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px">
+          <tr valign="middle">
+            <td nowrap="nowrap"></td>
+            <td><div class="stepText">Welcome</div></td>
+          </tr>
+          <tr valign="middle">
+            <td><img style="margin-left:7px; margin-top:1px" id="stepIndicator" src="wiz-arrow.png" alt="Current Step" title="Current Step" border="0" height="14" width="14"></td>
+            <td><div class="stepText"><span class="stepTextSel">Server Settings</span></div></td>
+          </tr>
+          <tr valign="middle">
+            <td></td>
+            <td><div class="stepText">Topology Options</div></td>
+          </tr>
+  <!--            <tr>
+            <td valign="top"></td>
+            <td valign="top"><div class="stepText">Topology Options</div></td>
+          </tr>
+      <tr>
+            <td valign="top"></td>
+            <td valign="top"><table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td valign="top"></td>
+                  <td valign="top"><div class="subStepText">Global Administrator</div></td>
+                </tr>
+              </table></td>
+          </tr>
+          <tr>
+            <td valign="top"></td>
+            <td valign="top"><table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td valign="top"></td>
+                  <td valign="top"><div class="subStepText">Data Replication</div></td>
+                </tr>
+              </table></td>
+          </tr>
+          <tr>
+            <td valign="top"></td>
+            <td valign="top"><table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td valign="top"></td>
+                  <td valign="top"><div class="subStepText">Directory Data</div></td>
+                </tr>
+              </table></td>
+          </tr>
+ 	  -->         <tr valign="middle">
+            <td></td>
+            <td><div class="stepText">Review</div></td>
+          </tr>
+          <tr valign="middle">
+            <td></td>
+            <td><div class="stepText">Progress</div></td>
+          </tr>
+          <tr>
+            <td valign="top"></td>
+            <td valign="top"><div class="stepText">Finished</div></td>
+          </tr>
+	
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="contentarea">
+<div class="panelTitle">Server Settings </div>
+ <div class="panelHelp">
+   Choose a location for the server files and create a password for the OpenDS administrative user.
+ </div>
+ <table border="0" cellspacing="0" cellpadding="0" title="">
+   <!--<tr>
+     <td align="left" valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4">
+         <label id="username" for="pwd" class="LblLev2Txt_sun4">Server Location:</label>
+     </div></td>
+     <td ><div class="ConTblCl2Div_sun4">
+         <table border="0" cellspacing="0" cellpadding="0">
+           <tr>
+             <td><input type="text" class="TxtFld_sun4" size="30" value="/local"/></td>
+             <td>&nbsp;&nbsp;<strong>/</strong>&nbsp;&nbsp;
+                 <input id="backupfile" type="text" class="TxtFld_sun4" size="15" value="OpenDS"/></td>
+           </tr>
+           <tr>
+             <td align="right"><input type="button" class="Btn2_sun4" style="margin-top:5px " onclick="alert('Opens local file browser.')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Browse..."/></td>
+             <td>&nbsp;</td>
+           </tr>
+         </table>
+     </div></td>
+   </tr>-->
+    <tr>
+      <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">LDAP Listener Port:</span> </div></td>
+      <td><div class="ConTblCl2Div_sun4">
+          <input type="text" class="TxtFld_sun4" size="6" value="1389"/>&nbsp;&nbsp;Could not use 389. Port in use or user not authorized.
+        </div></td>
+    </tr>
+    <tr>
+      <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">LDAP Secure Access:</span> </div></td>
+      <td><div class="ConTblCl2Div_sun4">disabled&nbsp;&nbsp;<input type="button" class="Btn2_sun4" onclick="document.getElementById('content-inner').style.display='block'" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Configure..."/>
+        </div></td>
+    </tr>
+    <tr>
+      <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Server Nickname:</span> </div></td>
+      <td><div class="ConTblCl2Div_sun4">
+          <input type="text" class="TxtFld_sun4" size="30" value="hostname_1389"/>
+        </div></td>
+    </tr>
+    <tr>
+      <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Administrative User DN:</span> </div></td>
+      <td><div class="ConTblCl2Div_sun4">
+          <input type="text" class="TxtFld_sun4" size="30" value="cn=Directory Manager"/>
+        </div></td>
+    </tr>
+    <tr>
+      <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Password:</span> </div></td>
+      <td><div class="ConTblCl2Div_sun4">
+          <input type="password" class="TxtFld_sun4" size="20" value=""/>
+        </div></td>
+    </tr>
+    <tr>
+      <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Password (confirm):</span> </div></td>
+      <td><div class="ConTblCl2Div_sun4">
+          <input type="Password" class="TxtFld_sun4" size="20" value=""/>
+        </div></td>
+    </tr>
+ </table>
+</div>
+<div id="bottombar"></div>
+<div id="navbuttons">
+  <input type="button" class="Btn2_sun4"  onclick="history.back();" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Previous"/>
+  <input type="button" class="Btn1_sun4" onclick="document.location.href='qsn3.html'" onmousedown="if (this.disabled==0) this.className='Btn1Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn1_sun4'" onmouseover="if (this.disabled==0) this.className='Btn1Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn1_sun4'" value="Next"/>
+</div>
+<div id="quitbutton">
+  <input type="button" class="Btn2_sun4" onclick="alert('Quits QuickSetup')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Quit"/>
+</div>
+<div id="content-inner" style="display:none">
+<img src="ssldialog.png" width="646" height="438" />
+<div id="sslcontentarea">
+  <div class="panelTitle">Configure Secure Access </div>
+  <div class="panelHelp">Specify the settings for enabling secure access to the server. </div>
+  <table style="margin-top:5px" border="0" cellspacing="0" cellpadding="0" title="">
+    <tr>
+      <td align="left" valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4">SSL Access:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4">
+          <input type="checkbox" id="enableSSL"  onclick="if (this.checked==true) { enableSSL(1);document.getElementById('SSLPort').disabled=false;document.getElementById('SSLPort').className='TxtFld_sun4';  } else {enableSSL(0);document.getElementById('SSLPort').disabled=true;document.getElementById('SSLPort').className='TxtFldDis_sun4'; } " />
+          Enable SSL on Port:&nbsp;
+          <input type="text" id="SSLPort" class="TxtFldDis_sun4" disabled size="6" value="636"/>
+        </div></td>
+    </tr>
+    <tr>
+      <td align="left" valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4">StartTLS Access:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4">
+          <input type="checkbox" id="enableStartTLS" onclick="if (this.checked==true) { enableSSL(1);} else {enableSSL(0) } "/>
+          Enable StartTLS for LDAP</div></td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap" align="left" valign="top"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4">Certificate:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4">
+        <div style="margin:0px 0px 8px">
+          <input type="radio" disabled checked name="certificatetype" id="generated" onclick="genRBselect()"/>
+          Generate Self-Signed Certificate (recommended for testing only) </div>
+        <div style="margin:8px 0px">
+          <div class="IndentedControls"> Host Name:&nbsp;&nbsp;
+            <input id="hostname" type="text" class="TxtFldDis_sun4" size="30" value="thehost.host.com" disabled="disabled" />
+          </div>
+        </div>
+        <div style="margin:8px 0px">
+          <input type="radio" disabled name="certificatetype" id="existing" onclick="existRBselect()"/>
+          Use an Existing Certificate:
+          <table border="0" cellspacing="0" cellpadding="0" class="review" style="margin-left:20px">
+            <tr valign="top">
+              <td><div class="ConTblCl1Div_sun4">Key Store Type:&nbsp;&nbsp; </div></td>
+              <td><div class="ConTblCl2Div_sun4">
+                <div style="margin:0px 0px 8px">
+                  <input type="radio" disabled checked  name="keystoretype" id="keystoretype1" onclick="handle11Token(0)"/>&nbsp;Java Key Store (JKS) File
+                </div>
+	                <div style="margin:8px 0px">
+                  <input type="radio" disabled name="keystoretype" id="keystoretype2" onclick="handle11Token(0)"/>&nbsp;PKCS#12 File
+                </div>
+                <div style="margin:8px 0px 0px">
+                  <input type="radio" disabled name="keystoretype" id="keystoretype3" onclick="handle11Token(1)"/>&nbsp;PKCS#11 Token
+                </div>
+				  </td>
+            </tr>
+            <tr valign="top">
+              <td><div class="ConTblCl1Div_sun4">Key Store Path:&nbsp;&nbsp; </div></td>
+              <td><div class="ConTblCl2Div_sun4">
+                  <input id="keystorepath" type="text" class="TxtFldDis_sun4" size="30" value="" disabled="disabled" />
+                  <input type="button" disabled="disabled" class="Btn2Dis_sun4" id="keystorepathbrowse" onclick="alert('Opens local file browser.')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Browse..."/>
+                </div></td>
+            </tr>
+            <tr valign="top">
+              <td><div class="ConTblCl1Div_sun4">Key Store Password:&nbsp;&nbsp; </div></td>
+              <td><div class="ConTblCl2Div_sun4">
+                  <input id="keystorepassword" type="password" class="TxtFldDis_sun4" size="25" value="" disabled="disabled" />
+                </div></td>
+            </tr>
+          </table>
+        </div></div></td>
+    </tr>
+  </table>
+</div>
+<div id="sslbottombar"></div>
+<div id="sslquitbutton">
+  <input type="button" class="Btn1_sun4" onclick="getElementById('content-inner').style.display='none';" onmousedown="if (this.disabled==0) this.className='Btn1Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn1_sun4'" onmouseover="if (this.disabled==0) this.className='Btn1Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn1_sun4'" value="OK"/>
+  <input type="button" class="Btn2_sun4" onclick="getElementById('content-inner').style.display='none';" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Cancel"/>
+</div>
+
+</div>
+<div id="content-inner2" style="display:none"> </div>
+</body>
+</html>

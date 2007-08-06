@@ -1,0 +1,702 @@
+<style type="text/css">
+div#smwindowtitle {position:absolute;top:10px;left:174px;width:320px;height:16px; font-size:12px;font-weight:bold }
+div#smfilterarea {position:absolute; top:31px; left:9px; width:648px;height:40px; border-bottom :solid 1px #ccc; background-color:#d6d9df; border-bottom:solid 1px #E1E3E7}
+div#smbrowsearea {position:absolute; top:73px; left:9px; width:179px;height:440px; border-top:1px solid #595E6D;border-right:1px solid #595E6D;border-bottom:1px solid #595E6D;overflow:auto;background-color:#d6d9df;}
+div#smcontentarea {position:absolute; top:73px; left:197px; width:459px;height:440px;border-top:1px solid #595E6D;border-left:1px solid #595E6D;border-bottom:1px solid #595E6D;background-color:#d6d9df;overflow:auto}
+div#smsplitter {position:absolute; top:73px; left:189px; width:8px;height:442px; background-image:url(splitterbk.png); text-align:center; }
+div#smbottombar {position:absolute; top:516px; left:9px; width:648px;height:40px;background-color:#d6d9df;border-top:solid 1px #E1E3E7}
+div#smquitbutton {position:absolute; top:527px; left:450px; width:200px;height:20px;text-align:right}
+div#smstatusarea {position:absolute; top:527px; left:24px;width:450px;height:20px;}
+div#smwindowbucket {position:absolute;top:0px;left:0px}
+div#smcontentarea .ConTblCl1Div_sun4 {margin-top:13px; margin-left:0px}
+div#smcontentarea .ConTblCl2Div_sun4 {margin-top:8px}
+div#smcontentarea .IndentedControls {margin:3px 0px 0px 25px} 
+div#smbrowsearea img {padding-bottom:0px !important; margin-bottom:-4px !important;margin-top:-4px !important;}
+div#smcontentarea .AddRmvLbl2_sun4 {background:none; font-weight:normal;margin:0px 0px -3px;padding:0px;border:none;} 
+div#mymenu {border:outset 1px #666;background-color:rgb(244,244,244);-moz-opacity:0.9 ; color:#000; position:absolute;display:none;font-size:11px;}
+a.mymenuitem:link, a.mymenuitem:visited {font-weight:normal;font-size:11px; width:100px;text-decoration:none; color:#000; padding:3px 6px;display:block}
+a.mymenuitem:hover {width:100px;text-decoration:none; color:#fff; background-color:#0066CC;}
+.mymenusep {padding:0px 2px;}
+</style>
+<div id="smwindowbucket" ><img src="browsedialog.png" width="671" height="572" /></div>
+<div id="smwindowtitle"> - Schema Editor</div>
+<div id="smsplitter"><img style="margin-top:200px" src="splittervert.png" alt="" height="19" width="4" border="0" /></div>
+<div id="smfilterarea">
+  <div style="padding:10px">
+    <input type="button" class="Btn2_sun4" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="New Class..."/>
+    <input type="button" class="Btn2_sun4" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="New Attribute..."/>
+    <img src="../../mockups/suntheme/images/table/actions_separator.gif" alt=" " width="18" height="18" align="absmiddle">
+    <label id="username" for="pwd" class="LblLev2Txt_sun4">Filter:</label>
+    <select name="SearchData.ComboNumberResults" id="SearchData.ComboNumberResults" class="MnuStd_sun4">
+      <option class="MnuStdOpt_sun4" selected>Name</option>
+      <option class="MnuStdOpt_sun4">Parent class</option>
+      <option class="MnuStdOpt_sun4">Child class</option>
+      <option class="MnuStdOpt_sun4">Required attributes</option>
+      <option class="MnuStdOpt_sun4">Optional attributes</option>
+    </select>
+    <input type="text" class="TxtFld_sun4" size="16" value="person"/>
+&nbsp;
+    <input type="button" class="Btn2_sun4" onClick="applySchemaFilter()" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="Apply"/>
+  </div>
+</div>
+<div id="smbrowsearea" oncontextmenu="document.getElementById('mymenu').style.left = event.clientX + scrollLeft + 'px';document.getElementById('mymenu').style.top = event.clientY + scrollTop + 'px';document.getElementById('mymenu').style.display = 'block';document.getElementById('mymenu').style.display='block';return false;">
+  <div id="progressarea" style="margin:20px;display:none"><img src="../../mockups/suntheme/images/progressBar/asynch-1F.gif" width="30" height="30" align="absmiddle" /> Loading Schema...</div>
+  <div id="browsetree">
+      <div id="menus">
+        <div class='cpmenu' onClick="TrocaMenu('userclass')" > <a class="cpmenulabel" id="userclasslnk" href="#"><img id="userclassimg" style="margin-top:-1px" src="tree_handledowntopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Object Classes (Custom)</a> </div>
+        <div class='cpoptions' id='userclass' style="display:block" onClick="selectEditableClass()">
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="selectedEditableClass" class="cplink" href="#" style="background-color:#bbd4e5 ">disOrganizationalPerson</a></div>
+          </div>
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="cplinkuberorg" class="cplink" href="#">&uuml;berOrganizationalPerson</a></div>
+          </div>
+        </div>
+        <div class='cpmenu' onClick="TrocaMenu('standardclass')"> <a class="cpmenulabel" id="standardclasslnk" href="#"><img id="standardclassimg" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Object Classes (Standard)</a> </div>
+        <div class='cpoptions' id='standardclass' style="display:none" onClick="selectStandardClass()">
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="cplink" class="cplink" href="#">account</a></div>
+          </div>
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="cplink" class="cplink" href="#">inetorgperson</a></div>
+          </div>
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="cplink" class="cplink" href="#">organization</a></div>
+          </div>
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="selectedStandardClass" class="cplink" href="#">organizationalperson</a></div>
+          </div>
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="cplink" class="cplink" href="#">passwordObject</a></div>
+          </div>
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="cplink" class="cplink" href="#">person</a></div>
+          </div>
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="cplink" class="cplink" href="#">residentialPerson</a></div>
+          </div>
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="cplink" class="cplink" href="#">room</a></div>
+          </div>
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="cplink" class="cplink" href="#">top</a></div>
+          </div>
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="cplink" class="cplink" href="#">(etc...)</a></div>
+          </div>
+        </div>
+        <div class='cpmenu' onClick="TrocaMenu('userattribute')"> <a class="cpmenulabel"  id="userattributelnk" href="#"><img id="userattributeimg" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Attributes (Custom) </a> </div>
+        <div class='cpoptions' id='userattribute' style="display:none" onClick="selectEditableAttribute()">
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="selectedEditableAttribute" class="cplink"  href="#">disOrganizationLevel</a></div>
+          </div>
+        </div>
+        <div class='cpmenu' onClick="TrocaMenu('standardattribute')"> <a class="cpmenulabel" id="standardattributelnk" href="#"><img id="standardattributeimg" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Attributes (Standard)</a> </div>
+        <div class='cpoptions' id='standardattribute' style="display:none" onClick="selectStandardAttribute()">
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="cplink" class="cplink" href="#">audio</a></div>
+          </div>
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="cplink" class="cplink" href="#">buildingName</a></div>
+          </div>
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="cplink" class="cplink" href="#">businessCategory</a></div>
+          </div>
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="cplink" class="cplink" href="#">carLicense</a></div>
+          </div>
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="selectedStandardAttribute" class="cplink" href="#">cn</a></div>
+          </div>
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="cplink" class="cplink" href="#">co</a></div>
+          </div>
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="cplink" class="cplink" href="#">dc</a></div>
+          </div>
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="cplink" class="cplink" href="#">departmentNumber</a></div>
+          </div>
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="cplink" class="cplink" href="#">description</a></div>
+          </div>
+          <div class='cpoption'>
+            <div class="cpoptionlabel"><a id="cplink" class="cplink" href="#">(etc...)</a></div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div id="smcontentarea">
+    <div id="readonlyattribute" style="margin:0px 10px 10px; display:none">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tbody>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Name:</span></div></td>
+            <td><div class="ConTblCl2Div_sun4">cn </div></td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">OID:</span> </div></td>
+            <td><div class="ConTblCl2Div_sun4">2.5.4.3</div></td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Aliases:</span></div></td>
+            <td><div class="ConTblCl2Div_sun4">commonName</div></td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Origin:</span> </div></td>
+            <td><div class="ConTblCl2Div_sun4">RFC 2256</div></td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Description:</span> </div></td>
+            <td><div class="ConTblCl2Div_sun4">Standard LDAP Attribute Type</div></td>
+          </tr>
+   <tr>
+           <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Syntax:</span> </div></td>
+            <td><div class="ConTblCl2Div_sun4">1.3.6.1.4.1466.115.121.1.15 (DirectoryString)</div></td>
+          </tr>
+   <tr>
+           <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Multivalued:</span> </div></td>
+            <td><div class="ConTblCl2Div_sun4">Yes</div></td>
+          </tr>
+
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">
+                <label for="ViewObjectclass.RequiredAttributesList">Required By:</label>
+                </span></div></td>
+            <td><div class="ConTblCl2Div_sun4">
+                <select style="width:100%" name="ViewObjectclass.RequiredAttributesList" id="ViewObjectclass.RequiredAttributesList" class="Lst_sun4" size="7" multiple="multiple">
+                  <option class="LstOpt_sun4" value="cn">groupOfCertificates</option>
+                  <option class="LstOpt_sun4" value="objectClass">groupOfNames</option>
+                  <option class="LstOpt_sun4" value="sn">groupOfURLs</option>
+                </select>
+</div></td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">
+                <label for="ViewObjectclass.RequiredAttributesList">Allowed By:</label>
+                </span></div></td>
+            <td><div class="ConTblCl2Div_sun4">
+                <select style="width:100%"  name="ViewObjectclass.AllowedAttributesList" id="ViewObjectclass.AllowedAttributesList" class="Lst" size="7" multiple="multiple">
+                  <option class="LstOpt_sun4" value="audio">document</option>
+                  <option class="LstOpt_sun4" value="businessCategory">mailGroup</option>
+                </select>
+     </div></td>
+          </tr>
+      </table>
+</div>
+    <div id="editableattribute" style="margin:0px 10px 10px; display:none"> 
+	      <table border="0" cellpadding="0" cellspacing="0">
+        <tbody>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Name:</span></div></td>
+            <td><div class="ConTblCl2Div_sun4">disOrganizationalLevel</div></td>
+          </tr>
+           <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">OID:</span> </div></td>
+            <td><div class="ConTblCl2Div_sun4"><input type="text" class="TxtFld_sun4" size="44" value="86.7.5.3.09"/></div></td>
+          </tr>
+         <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Aliases:</span> </div></td>
+            <td><div class="ConTblCl2Div_sun4"><input type="text" class="TxtFld_sun4" size="44" value=" "/><br>
+Separate with commas.</div></td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Description:</span> </div></td>
+            <td><div class="ConTblCl2Div_sun4">
+                <input type="text" class="TxtFld_sun4" size="44" value="Custom Attribute"/>
+              </div></td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Syntax:</span></div></td>
+            <td><div class="ConTblCl2Div_sun4">
+               <select name="NewSchemaAttribute.SyntaxComboBox" id="NewSchemaAttribute.SyntaxComboBox" class="MnuStd_sun4">
+<option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.24">GeneralizedTime</option>
+
+<option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.50">TelephoneNumber</option>
+<option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.7">Boolean</option>
+<option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.5">Binary</option>
+<option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.15" selected="selected">DirectoryString</option>
+<option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.41">Postal Address</option>
+<option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.12">DN</option>
+<option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.40">OctetString</option>
+<option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.4401.1.1.1">URI</option>
+<option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.11">Country String</option>
+
+<option class="MnuStdOp_sun4t" value="1.3.6.1.4.1.1466.115.121.1.27">INTEGER</option>
+<option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.26">IA5String</option></select>
+              </div></td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">
+                <label for="ViewObjectclass.RequiredAttributesList">Multivalued:</label>
+                </span></div></td>
+            <td><div class="ConTblCl2Div_sun4"><input type="checkbox" checked class="CB_sun4" />&nbsp;Allow Multiple Values For Attribute</div></td>
+          </tr>
+      </table>
+
+	</div>
+    <div id="readonlyclass" style="margin:0px 10px 10px; display:none">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tbody>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Name:</span></div></td>
+            <td><div class="ConTblCl2Div_sun4">inetOrgPerson </div></td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Parent:</span></div></td>
+            <td><div class="ConTblCl2Div_sun4">organizationalPerson </div></td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">OID:</span> </div></td>
+            <td><div class="ConTblCl2Div_sun4">2.16.840.1.113730.3.2.2</div></td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Origin:</span> </div></td>
+            <td><div class="ConTblCl2Div_sun4">inetOrgPerson Internet Draft</div></td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Description:</span> </div></td>
+            <td><div class="ConTblCl2Div_sun4">Internet extended organizational person objectclass</div></td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">
+                <label for="ViewObjectclass.RequiredAttributesList">Required Attributes:</label>
+                </span></div></td>
+            <td><div class="ConTblCl2Div_sun4">
+                <select style="width:100%" name="ViewObjectclass.RequiredAttributesList" id="ViewObjectclass.RequiredAttributesList" class="Lst_sun4" size="5" multiple="multiple">
+                  <option class="LstOpt_sun4" value="cn">cn (*)</option>
+                  <option class="LstOpt_sun4" value="objectClass">objectClass (*)</option>
+                  <option class="LstOpt_sun4" value="sn">sn (*)</option>
+                </select>
+                <br/>
+                <span class="LblLev3Txt">
+                <label for="ViewObjectclass.RequiredAttributesList">(*)Inherited Attribute</label>
+                </span> </div></td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">
+                <label for="ViewObjectclass.RequiredAttributesList">Allowed Attributes:</label>
+                </span></div></td>
+            <td><div class="ConTblCl2Div_sun4">
+                <select style="width:100%"  name="ViewObjectclass.AllowedAttributesList" id="ViewObjectclass.AllowedAttributesList" class="Lst" size="9" multiple="multiple">
+                  <option class="LstOpt_sun4" value="audio">audio</option>
+                  <option class="LstOpt_sun4" value="businessCategory">businessCategory</option>
+                  <option class="LstOpt_sun4" value="carLicense">carLicense</option>
+                  <option class="LstOpt_sun4" value="departmentNumber">departmentNumber</option>
+                  <option class="LstOpt_sun4" value="description">description (*)</option>
+                  <option class="LstOpt_sun4" value="destinationIndicator">destinationIndicator (*)</option>
+                  <option class="LstOpt_sun4" value="displayName">displayName</option>
+                  <option class="LstOpt_sun4" value="employeeNumber">employeeNumber</option>
+                  <option class="LstOpt_sun4" value="employeeType">employeeType</option>
+                  <option class="LstOpt_sun4" value="facsimileTelephoneNumber">facsimileTelephoneNumber (*)</option>
+                  <option class="LstOpt_sun4" value="givenName">givenName</option>
+                  <option class="LstOpt_sun4" value="homePhone">homePhone</option>
+                  <option class="LstOpt_sun4" value="homePostalAddress">homePostalAddress</option>
+                  <option class="LstOpt_sun4" value="initials">initials</option>
+                  <option class="LstOpt_sun4" value="internationaliSDNNumber">internationaliSDNNumber (*)</option>
+                  <option class="LstOpt_sun4" value="jpegPhoto">jpegPhoto</option>
+                  <option class="LstOpt_sun4" value="l">l (*)</option>
+                  <option class="LstOpt_sun4" value="labeledUri">labeledUri</option>
+                  <option class="LstOpt_sun4" value="mail">mail</option>
+                  <option class="LstOpt_sun4" value="manager">manager</option>
+                  <option class="LstOpt_sun4" value="mobile">mobile</option>
+                  <option class="LstOpt_sun4" value="o">o</option>
+                  <option class="LstOpt_sun4" value="ou">ou (*)</option>
+                  <option class="LstOpt_sun4" value="pager">pager</option>
+                  <option class="LstOpt_sun4" value="photo">photo</option>
+                  <option class="LstOpt_sun4" value="physicalDeliveryOfficeName">physicalDeliveryOfficeName (*)</option>
+                  <option class="LstOpt_sun4" value="postOfficeBox">postOfficeBox (*)</option>
+                  <option class="LstOpt_sun4" value="postalAddress">postalAddress (*)</option>
+                  <option class="LstOpt_sun4" value="postalCode">postalCode (*)</option>
+                  <option class="LstOpt_sun4" value="preferredDeliveryMethod">preferredDeliveryMethod (*)</option>
+                  <option class="LstOpt_sun4" value="preferredLanguage">preferredLanguage</option>
+                  <option class="LstOpt_sun4" value="registeredAddress">registeredAddress (*)</option>
+                  <option class="LstOpt_sun4" value="roomNumber">roomNumber</option>
+                  <option class="LstOpt_sun4" value="secretary">secretary</option>
+                  <option class="LstOpt_sun4" value="seeAlso">seeAlso (*)</option>
+                  <option class="LstOpt_sun4" value="st">st (*)</option>
+                  <option class="LstOpt_sun4" value="street">street (*)</option>
+                  <option class="LstOpt_sun4" value="telephoneNumber">telephoneNumber (*)</option>
+                  <option class="LstOpt_sun4" value="teletexTerminalIdentifier">teletexTerminalIdentifier (*)</option>
+                  <option class="LstOpt_sun4" value="telexNumber">telexNumber (*)</option>
+                  <option class="LstOpt_sun4" value="title">title (*)</option>
+                  <option class="LstOpt_sun4" value="uid">uid</option>
+                  <option class="LstOpt_sun4" value="userCertificate">userCertificate</option>
+                  <option class="LstOpt_sun4" value="userPKCS12">userPKCS12</option>
+                  <option class="LstOpt_sun4" value="userPassword">userPassword (*)</option>
+                  <option class="LstOpt_sun4" value="userSMIMECertificate">userSMIMECertificate</option>
+                  <option class="LstOpt_sun4" value="x121Address">x121Address (*)</option>
+                  <option class="LstOpt_sun4" value="x500UniqueIdentifier">x500UniqueIdentifier</option>
+                </select>
+                <br/>
+                <span class="LblLev3Txt">
+                <label for="ViewObjectclass.RequiredAttributesList">(*)Inherited Attribute</label>
+                </span> </div></td>
+          </tr>
+      </table>
+    </div>
+    <div id="editableclass" style="margin:5px 10px 10px;display:block;">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tbody>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Name:</span></div></td>
+            <td><div class="ConTblCl2Div_sun4">disOrganizationalPerson</div></td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Parent Class:</span></div></td>
+            <td><div class="ConTblCl2Div_sun4">
+                <select name="WizardWindow.Wizard.NewUserObjectclassParent.ParentCombobox" id="WizardWindow.Wizard.NewUserObjectclassParent.ParentCombobox" class="MnuStd_sun4" onFocus="javascript: if (ccFocus) ccFocus.set(this)">
+                  <option class="MnuStdOpt_sun4" value="account">account</option>
+                  <option class="MnuStdOpt_sun4" value="alias">alias</option>
+                  <option class="MnuStdOpt_sun4" value="applicationentity">applicationentity</option>
+                  <option class="MnuStdOpt_sun4" value="applicationprocess">applicationprocess</option>
+                  <option class="MnuStdOpt_sun4" value="bootabledevice">bootabledevice</option>
+                  <option class="MnuStdOpt_sun4" value="certificationauthority">certificationauthority</option>
+                  <option class="MnuStdOpt_sun4" value="certificationauthority-v2">certificationauthority-v2</option>
+                  <option class="MnuStdOpt_sun4" value="changelogentry">changelogentry</option>
+                  <option class="MnuStdOpt_sun4" value="cirreplicasource">cirreplicasource</option>
+                  <option class="MnuStdOpt_sun4" value="cosclassicdefinition">cosclassicdefinition</option>
+                  <option class="MnuStdOpt_sun4" value="cosdefinition">cosdefinition</option>
+                  <option class="MnuStdOpt_sun4" value="cosindirectdefinition">cosindirectdefinition</option>
+                  <option class="MnuStdOpt_sun4" value="cospointerdefinition">cospointerdefinition</option>
+                  <option class="MnuStdOpt_sun4" value="cossuperdefinition">cossuperdefinition</option>
+                  <option class="MnuStdOpt_sun4" value="costemplate">costemplate</option>
+                  <option class="MnuStdOpt_sun4" value="country">country</option>
+                  <option class="MnuStdOpt_sun4" value="crldistributionpoint">crldistributionpoint</option>
+                  <option class="MnuStdOpt_sun4" value="dcobject">dcobject</option>
+                  <option class="MnuStdOpt_sun4" value="device">device</option>
+                  <option class="MnuStdOpt_sun4" value="dmd">dmd</option>
+                  <option class="MnuStdOpt_sun4" value="dnsdomain">dnsdomain</option>
+                  <option class="MnuStdOpt_sun4" value="document">document</option>
+                  <option class="MnuStdOpt_sun4" value="documentseries">documentseries</option>
+                  <option class="MnuStdOpt_sun4" value="domain">domain</option>
+                  <option class="MnuStdOpt_sun4" value="domainrelatedobject">domainrelatedobject</option>
+                  <option class="MnuStdOpt_sun4" value="ds-signedplugin">ds-signedplugin</option>
+                  <option class="MnuStdOpt_sun4" value="dsa">dsa</option>
+                  <option class="MnuStdOpt_sun4" value="dsattributeencryption">dsattributeencryption</option>
+                  <option class="MnuStdOpt_sun4" value="dsidentitymapping">dsidentitymapping</option>
+                  <option class="MnuStdOpt_sun4" value="dsidmappinglibrary">dsidmappinglibrary</option>
+                  <option class="MnuStdOpt_sun4" value="dspatternmatching">dspatternmatching</option>
+                  <option class="MnuStdOpt_sun4" value="dssaslconfig">dssaslconfig</option>
+                  <option class="MnuStdOpt_sun4" value="extensibleobject">extensibleobject</option>
+                  <option class="MnuStdOpt_sun4" value="friendlycountry">friendlycountry</option>
+                  <option class="MnuStdOpt_sun4" value="glue">glue</option>
+                  <option class="MnuStdOpt_sun4" value="groupofcertificates">groupofcertificates</option>
+                  <option class="MnuStdOpt_sun4" value="groupofmailenhanceduniquenames">groupofmailenhanceduniquenames</option>
+                  <option class="MnuStdOpt_sun4" value="groupofnames">groupofnames</option>
+                  <option class="MnuStdOpt_sun4" value="groupofuniquenames">groupofuniquenames</option>
+                  <option class="MnuStdOpt_sun4" value="groupofurls">groupofurls</option>
+                  <option class="MnuStdOpt_sun4" value="ieee802device">ieee802device</option>
+                  <option class="MnuStdOpt_sun4" value="inetadmin">inetadmin</option>
+                  <option class="MnuStdOpt_sun4" value="inetdomain">inetdomain</option>
+                  <option class="MnuStdOpt_sun4" value="inetorgperson">inetorgperson</option>
+                  <option class="MnuStdOpt_sun4" value="inetsubscriber">inetsubscriber</option>
+                  <option class="MnuStdOpt_sun4" value="inetuser">inetuser</option>
+                  <option class="MnuStdOpt_sun4" value="iphost">iphost</option>
+                  <option class="MnuStdOpt_sun4" value="ipnetwork">ipnetwork</option>
+                  <option class="MnuStdOpt_sun4" value="ipprotocol">ipprotocol</option>
+                  <option class="MnuStdOpt_sun4" value="ipservice">ipservice</option>
+                  <option class="MnuStdOpt_sun4" value="javacontainer">javacontainer</option>
+                  <option class="MnuStdOpt_sun4" value="javamarshalledobject">javamarshalledobject</option>
+                  <option class="MnuStdOpt_sun4" value="javanamingreference">javanamingreference</option>
+                  <option class="MnuStdOpt_sun4" value="javaobject">javaobject</option>
+                  <option class="MnuStdOpt_sun4" value="javaserializedobject">javaserializedobject</option>
+                  <option class="MnuStdOpt_sun4" value="labeleduriobject">labeleduriobject</option>
+                  <option class="MnuStdOpt_sun4" value="ldapreplica">ldapreplica</option>
+                  <option class="MnuStdOpt_sun4" value="ldapserver">ldapserver</option>
+                  <option class="MnuStdOpt_sun4" value="ldapsubentry">ldapsubentry</option>
+                  <option class="MnuStdOpt_sun4" value="locality">locality</option>
+                  <option class="MnuStdOpt_sun4" value="mailgroup">mailgroup</option>
+                  <option class="MnuStdOpt_sun4" value="mailgroupmanagement">mailgroupmanagement</option>
+                  <option class="MnuStdOpt_sun4" value="mailgroupmanagement-globalconfig">mailgroupmanagement-globalconfig</option>
+                  <option class="MnuStdOpt_sun4" value="mailgroupmember">mailgroupmember</option>
+                  <option class="MnuStdOpt_sun4" value="mailrecipient">mailrecipient</option>
+                  <option class="MnuStdOpt_sun4" value="nginfo">nginfo</option>
+                  <option class="MnuStdOpt_sun4" value="nismap">nismap</option>
+                  <option class="MnuStdOpt_sun4" value="nisnetgroup">nisnetgroup</option>
+                  <option class="MnuStdOpt_sun4" value="nisobject">nisobject</option>
+                  <option class="MnuStdOpt_sun4" value="ntgroup">ntgroup</option>
+                  <option class="MnuStdOpt_sun4" value="ntuser">ntuser</option>
+                  <option class="MnuStdOpt_sun4" value="oncrpc">oncrpc</option>
+                  <option class="MnuStdOpt_sun4" value="organization">organization</option>
+                  <option class="MnuStdOpt_sun4" value="organizationalperson" selected="selected">organizationalperson</option>
+                  <option class="MnuStdOpt_sun4" value="organizationalrole">organizationalrole</option>
+                  <option class="MnuStdOpt_sun4" value="organizationalunit">organizationalunit</option>
+                  <option class="MnuStdOpt_sun4" value="passwordobject">passwordobject</option>
+                  <option class="MnuStdOpt_sun4" value="passwordpolicy">passwordpolicy</option>
+                  <option class="MnuStdOpt_sun4" value="person">person</option>
+                  <option class="MnuStdOpt_sun4" value="personalinterestprofile">personalinterestprofile</option>
+                  <option class="MnuStdOpt_sun4" value="pilotobject">pilotobject</option>
+                  <option class="MnuStdOpt_sun4" value="pilotorganization">pilotorganization</option>
+                  <option class="MnuStdOpt_sun4" value="pipuser">pipuser</option>
+                  <option class="MnuStdOpt_sun4" value="pipuserinfo">pipuserinfo</option>
+                  <option class="MnuStdOpt_sun4" value="posixaccount">posixaccount</option>
+                  <option class="MnuStdOpt_sun4" value="posixgroup">posixgroup</option>
+                  <option class="MnuStdOpt_sun4" value="pwdpolicy">pwdpolicy</option>
+                  <option class="MnuStdOpt_sun4" value="replpriorityrule">replpriorityrule</option>
+                  <option class="MnuStdOpt_sun4" value="residentialperson">residentialperson</option>
+                  <option class="MnuStdOpt_sun4" value="rfc822localpart">rfc822localpart</option>
+                  <option class="MnuStdOpt_sun4" value="room">room</option>
+                  <option class="MnuStdOpt_sun4" value="shadowaccount">shadowaccount</option>
+                  <option class="MnuStdOpt_sun4" value="simplesecurityobject">simplesecurityobject</option>
+                  <option class="MnuStdOpt_sun4" value="strongauthenticationuser">strongauthenticationuser</option>
+                  <option class="MnuStdOpt_sun4" value="subschema">subschema</option>
+                  <option class="MnuStdOpt_sun4" value="sunpwdpolicy">sunpwdpolicy</option>
+                  <option class="MnuStdOpt_sun4" value="top" >top</option>
+                  <option class="MnuStdOpt_sun4" value="usersecurityinformation">usersecurityinformation</option>
+                  <option class="MnuStdOpt_sun4" value="vlvindex">vlvindex</option>
+                  <option class="MnuStdOpt_sun4" value="vlvsearch">vlvsearch</option>
+                </select>
+              </div></td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">OID:</span> </div></td>
+            <td><div class="ConTblCl2Div_sun4">86.7.5.3.09</div></td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Description:</span> </div></td>
+            <td><div class="ConTblCl2Div_sun4">
+                <input type="text" class="TxtFld_sun4" size="44" value="Distended organizational person objectclass "/>
+              </div></td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">
+                <label for="ViewObjectclass.RequiredAttributesList">Attributes:</label>
+                </span></div></td>
+            <td><div class="ConTblCl2Div_sun4"> </div></td>
+          </tr>
+      </table>
+      <table style="margin-top:-4px; margin-left:10px">
+        <tr>
+          <td rowspan="2" valign="top"><div class="AddRmvHrzDiv_sun4">
+              <label class="AddRmvLbl2_sun4" for="availnodes">Available:</label>
+              <select style="width:160px" name="availnodes" id="availnodes" class="Lst_sun4" size="12" multiple="multiple" onChange="if (this.length != 1) { deselectAll(document.theform2.selnodes); handleButtonsAvail(document.theform2, document.theform2.selnodes)}" ondblclick="if (this.length != 1) { shiftBetween(document.theform2.availnodes, document.theform2.selnodes,0); handleButtonsSel(document.theform2, document.theform2.availnodes);return false;}">
+                <option class="LstOpt_sun4" value="abstract">abstract</option>
+                <option class="LstOpt_sun4" value="aci">aci</option>
+                <option class="LstOpt_sun4" value="aclRights">aclRights</option>
+                <option class="LstOpt_sun4" value="aclRightsInfo">aclRightsInfo</option>
+                <option class="LstOpt_sun4" value="aliasedObjectName">aliasedObjectName</option>
+                <option class="LstOpt_sun4" value="attributeTypes">attributeTypes</option>
+                <option class="LstOpt_sun4" value="audio">audio</option>
+                <option class="LstOpt_sun4" value="authorityRevocationList">authorityRevocationList</option>
+                <option class="LstOpt_sun4" value="bootFile">bootFile</option>
+                <option class="LstOpt_sun4" value="bootParameter">bootParameter</option>
+                <option class="LstOpt_sun4" value="buildingName">buildingName</option>
+                <option class="LstOpt_sun4" value="businessCategory">businessCategory</option>
+                <option class="LstOpt_sun4" value="c">c</option>
+                <option class="LstOpt_sun4" value="carLicense">carLicense</option>
+                <option class="LstOpt_sun4" value="certificateRevocationList">certificateRevocationList</option>
+                <option class="LstOpt_sun4" value="co">co</option>
+                <option class="LstOpt_sun4" value="copiedFrom">copiedFrom</option>
+                <option class="LstOpt_sun4" value="copyingFrom">copyingFrom</option>
+                <option class="LstOpt_sun4" value="crossCertificatePair">crossCertificatePair</option>
+                <option class="LstOpt_sun4" value="dITContentRules">dITContentRules</option>
+                <option class="LstOpt_sun4" value="dITStructureRules">dITStructureRules</option>
+                <option class="LstOpt_sun4" value="dNSRecord">dNSRecord</option>
+                <option class="LstOpt_sun4" value="dSAQuality">dSAQuality</option>
+                <option class="LstOpt_sun4" value="dc">dc</option>
+                <option class="LstOpt_sun4" value="departmentNumber">departmentNumber</option>
+                <option class="LstOpt_sun4" value="description">description</option>
+                <option class="LstOpt_sun4" value="displayName">displayName</option>
+                <option class="LstOpt_sun4" value="dn">dn</option>
+                <option class="LstOpt_sun4" value="dncomp">dncomp</option>
+                <option class="LstOpt_sun4" value="drink">drink</option>
+                <option class="LstOpt_sun4" value="employeeNumber">employeeNumber</option>
+                <option class="LstOpt_sun4" value="employeeType">employeeType</option>
+                <option class="LstOpt_sun4" value="entrydn">entrydn</option>
+                <option class="LstOpt_sun4" value="entryid">entryid</option>
+                <option class="LstOpt_sun4" value="gidNumber">gidNumber</option>
+                <option class="LstOpt_sun4" value="givenName">givenName</option>
+                <option class="LstOpt_sun4" value="homeDirectory">homeDirectory</option>
+                <option class="LstOpt_sun4" value="homePhone">homePhone</option>
+                <option class="LstOpt_sun4" value="homePostalAddress">homePostalAddress</option>
+                <option class="LstOpt_sun4" value="host">host</option>
+                <option class="LstOpt_sun4" value="houseIdentifier">houseIdentifier</option>
+                <option class="LstOpt_sun4" value="inetDomainBaseDN">inetDomainBaseDN</option>
+                <option class="LstOpt_sun4" value="inetDomainStatus">inetDomainStatus</option>
+                <option class="LstOpt_sun4" value="inetSubscriberAccountId">inetSubscriberAccountId</option>
+                <option class="LstOpt_sun4" value="inetSubscriberChallenge">inetSubscriberChallenge</option>
+                <option class="LstOpt_sun4" value="inetSubscriberResponse">inetSubscriberResponse</option>
+                <option class="LstOpt_sun4" value="inetUserHttpURL">inetUserHttpURL</option>
+                <option class="LstOpt_sun4" value="inetUserStatus">inetUserStatus</option>
+                <option class="LstOpt_sun4" value="info">info</option>
+                <option class="LstOpt_sun4" value="initials">initials</option>
+                <option class="LstOpt_sun4" value="ipHostNumber">ipHostNumber</option>
+                <option class="LstOpt_sun4" value="ipNetmaskNumber">ipNetmaskNumber</option>
+                <option class="LstOpt_sun4" value="ipNetworkNumber">ipNetworkNumber</option>
+                <option class="LstOpt_sun4" value="ipProtocolNumber">ipProtocolNumber</option>
+                <option class="LstOpt_sun4" value="ipServicePort">ipServicePort</option>
+                <option class="LstOpt_sun4" value="ipServiceProtocol">ipServiceProtocol</option>
+                <option class="LstOpt_sun4" value="isMemberOf">isMemberOf</option>
+                <option class="LstOpt_sun4" value="jpegPhoto">jpegPhoto</option>
+                <option class="LstOpt_sun4" value="keyWords">keyWords</option>
+                <option class="LstOpt_sun4" value="knowledgeInformation">knowledgeInformation</option>
+                <option class="LstOpt_sun4" value="l">l</option>
+                <option class="LstOpt_sun4" value="labeledUri">labeledUri</option>
+                <option class="LstOpt_sun4" value="loginShell">loginShell</option>
+                <option class="LstOpt_sun4" value="macAddress">macAddress</option>
+                <option class="LstOpt_sun4" value="mail">mail</option>
+                <option class="LstOpt_sun4" value="mailAccessDomain">mailAccessDomain</option>
+                <option class="LstOpt_sun4" value="mailAlternateAddress">mailAlternateAddress</option>
+                <option class="LstOpt_sun4" value="mailAutoReplyMode">mailAutoReplyMode</option>
+                <option class="LstOpt_sun4" value="mailAutoReplyText">mailAutoReplyText</option>
+                <option class="LstOpt_sun4" value="mailDeliveryOption">mailDeliveryOption</option>
+                <option class="LstOpt_sun4" value="mailForwardingAddress">mailForwardingAddress</option>
+                <option class="LstOpt_sun4" value="mailHost">mailHost</option>
+                <option class="LstOpt_sun4" value="mailMessageStore">mailMessageStore</option>
+                <option class="LstOpt_sun4" value="mailPreferenceOption">mailPreferenceOption</option>
+                <option class="LstOpt_sun4" value="mailProgramDeliveryInfo">mailProgramDeliveryInfo</option>
+                <option class="LstOpt_sun4" value="mailQuota">mailQuota</option>
+                <option class="LstOpt_sun4" value="mailRoutingAddress">mailRoutingAddress</option>
+                <option class="LstOpt_sun4" value="manager">manager</option>
+                <option class="LstOpt_sun4" value="member">member</option>
+                <option class="LstOpt_sun4" value="memberOf">memberOf</option>
+                <option class="LstOpt_sun4" value="memberURL">memberURL</option>
+                <option class="LstOpt_sun4" value="memberUid">memberUid</option>
+                <option class="LstOpt_sun4" value="mgmemRefDN">mgmemRefDN</option>
+                <option class="LstOpt_sun4" value="mobile">mobile</option>
+                <option class="LstOpt_sun4" value="multiLineDescription">multiLineDescription</option>
+                <option class="LstOpt_sun4" value="name">name</option>
+                <option class="LstOpt_sun4" value="nameForms">nameForms</option>
+                <option class="LstOpt_sun4" value="o">o</option>
+                <option class="LstOpt_sun4" value="objectClass">objectClass</option>
+                <option class="LstOpt_sun4" value="objectClasses">objectClasses</option>
+                <option class="LstOpt_sun4" value="obsoletedByDocument">obsoletedByDocument</option>
+                <option class="LstOpt_sun4" value="obsoletesDocument">obsoletesDocument</option>
+                <option class="LstOpt_sun4" value="oid">oid</option>
+                <option class="LstOpt_sun4" value="oncRpcNumber">oncRpcNumber</option>
+                <option class="LstOpt_sun4" value="organizationalStatus">organizationalStatus</option>
+                <option class="LstOpt_sun4" value="otherMailbox">otherMailbox</option>
+                <option class="LstOpt_sun4" value="ou">ou</option>
+                <option class="LstOpt_sun4" value="owner">owner</option>
+                <option class="LstOpt_sun4" value="pager">pager</option>
+                <option class="LstOpt_sun4" value="parentOrganization">parentOrganization</option>
+                <option class="LstOpt_sun4" value="parentid">parentid</option>
+                <option class="LstOpt_sun4" value="personalSignature">personalSignature</option>
+                <option class="LstOpt_sun4" value="personalTitle">personalTitle</option>
+                <option class="LstOpt_sun4" value="photo">photo</option>
+                <option class="LstOpt_sun4" value="postOfficeBox">postOfficeBox</option>
+                <option class="LstOpt_sun4" value="postalAddress">postalAddress</option>
+                <option class="LstOpt_sun4" value="postalCode">postalCode</option>
+                <option class="LstOpt_sun4" value="preferredLanguage">preferredLanguage</option>
+                <option class="LstOpt_sun4" value="preferredLocale">preferredLocale</option>
+                <option class="LstOpt_sun4" value="preferredTimeZone">preferredTimeZone</option>
+                <option class="LstOpt_sun4" value="presentationAddress">presentationAddress</option>
+                <option class="LstOpt_sun4" value="ref">ref</option>
+                <option class="LstOpt_sun4" value="registeredAddress">registeredAddress</option>
+                <option class="LstOpt_sun4" value="roleOccupant">roleOccupant</option>
+                <option class="LstOpt_sun4" value="roomNumber">roomNumber</option>
+                <option class="LstOpt_sun4" value="secretary">secretary</option>
+                <option class="LstOpt_sun4" value="seeAlso">seeAlso</option>
+                <option class="LstOpt_sun4" value="singleLevelQuality">singleLevelQuality</option>
+                <option class="LstOpt_sun4" value="sn">sn</option>
+                <option class="LstOpt_sun4" value="st">st</option>
+                <option class="LstOpt_sun4" value="street">street</option>
+                <option class="LstOpt_sun4" value="subject">subject</option>
+                <option class="LstOpt_sun4" value="telephoneNumber">telephoneNumber</option>
+                <option class="LstOpt_sun4" value="teletexTerminalIdentifier">teletexTerminalIdentifier</option>
+                <option class="LstOpt_sun4" value="telexNumber">telexNumber</option>
+                <option class="LstOpt_sun4" value="textEncodedORAddress">textEncodedORAddress</option>
+                <option class="LstOpt_sun4" value="title">title</option>
+                <option class="LstOpt_sun4" value="ttl">ttl</option>
+                <option class="LstOpt_sun4" value="uidNumber">uidNumber</option>
+                <option class="LstOpt_sun4" value="uniqueIdentifier">uniqueIdentifier</option>
+                <option class="LstOpt_sun4" value="uniqueMember">uniqueMember</option>
+                <option class="LstOpt_sun4" value="url">url</option>
+                <option class="LstOpt_sun4" value="userCertificate">userCertificate</option>
+                <option class="LstOpt_sun4" value="userClass">userClass</option>
+                <option class="LstOpt_sun4" value="userPKCS12">userPKCS12</option>
+                <option class="LstOpt_sun4" value="userPassword">userPassword</option>
+                <option class="LstOpt_sun4" value="userSMIMECertificate">userSMIMECertificate</option>
+                <option class="LstOptDis_sun4" value="ignoreMe" disabled="disabled"> _______________</option>
+              </select>
+            </div>
+          <td valign="top"><div class="AddRmvHrzDiv_sun4">
+              <table class="AddRmvBtnTbl_sun4">
+                <tr>
+                  <td align="center" width="85px"><div class="AddRmvHrzWin_sun4">
+                      <input name="add" 
+                    type="button" class="Btn2_sun4" id="add" 
+                    onClick="shiftBetween(document.theform2.availnodes, document.theform2.selnodes,0); handleButtonsSel(document.theform2, document.theform2.availnodes);return false;" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" 
+                    onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'" 
+                    onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="    Add      &gt;">
+                    </div>
+                    <div class="AddRmvHrzBwn_sun4">
+                      <input name="remove" 
+                    type="button" disabled="disabled" class="Btn2Dis_sun4" id="remove" 
+                    onClick="shiftBetween(document.theform2.selnodes, document.theform2.availnodes,0); handleButtonsAvail(document.theform2, document.theform2.selnodes);return false;" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'"
+                    onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'" 
+                    onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="&lt;    Remove   ">
+                    </div></td>
+                </tr>
+              </table>
+            </div></td>
+          <td valign="top"><div class="AddRmvHrzDiv_sun4">
+              <label class="AddRmvLbl2_sun4" for="selnodes">Required:</label>
+              <select name="selnodes" id="selnodes" class="Lst_sun4" size="5" multiple="multiple" onChange="if (this.length != 1) { deselectAll(document.theform2.availnodes);handleButtonsSel(document.theform2, document.theform2.availnodes);}" ondblclick="if (this.length != 1) { shiftBetween(document.theform2.selnodes, document.theform2.availnodes,0); handleButtonsAvail(document.theform2, document.theform2.selnodes);return false;}">
+                <option class="LstOpt_sun4" value="cn">cn</option>
+                <option class="LstOpt_sun4" value="uid">uid</option>
+                <option class="LstOptDis_sun4" value="ignoreMe" disabled="disabled"> _____________</option>
+              </select>
+            </div></td>
+        </tr>
+        <tr>
+          <td valign="top"><div class="AddRmvHrzDiv_sun4">
+              <table class="AddRmvBtnTbl_sun4">
+                <tr>
+                  <td align="center" width="85px"><div class="AddRmvHrzWin_sun4">
+                      <input name="add" 
+                    type="button" class="Btn2_sun4" id="add" 
+                    onClick="shiftBetween(document.theform2.availnodes, document.theform2.selnodes,0); handleButtonsSel(document.theform2, document.theform2.availnodes);return false;" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" 
+                    onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'" 
+                    onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="    Add      &gt;" />
+                    </div>
+                    <div class="AddRmvHrzBwn_sun4">
+                      <input name="remove" 
+                    type="button" disabled="disabled" class="Btn2Dis_sun4" id="remove" 
+                    onClick="shiftBetween(document.theform2.selnodes, document.theform2.availnodes,0); handleButtonsAvail(document.theform2, document.theform2.selnodes);return false;" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'"
+                    onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'" 
+                    onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="&lt;    Remove   " />
+                    </div></td>
+                </tr>
+              </table>
+            </div></td>
+          <td valign="top"><div class="AddRmvHrzDiv_sun4">
+              <label class="AddRmvLbl2_sun4" for="selnodes">Allowed:</label>
+              <select name="selnodes" id="selnodes" class="Lst_sun4" size="5" multiple="multiple" onChange="if (this.length != 1) { deselectAll(document.theform2.availnodes);handleButtonsSel(document.theform2, document.theform2.availnodes);}" ondblclick="if (this.length != 1) { shiftBetween(document.theform2.selnodes, document.theform2.availnodes,0); handleButtonsAvail(document.theform2, document.theform2.selnodes);return false;}">
+                <option class="LstOptDis_sun4" value="ignoreMe" disabled="disabled"> _____________</option>
+              </select>
+            </div></td>
+        </tr>
+      </table>
+    </div>
+    <div id="panelbuttons" style="margin:10px;padding-top:10px; display:none;border-top:solid 1px #e5e5e5; text-align:right">
+      <input type="button" class="Btn2_sun4" id="deleteEntry" onClick="alert('Deletes class after confirmation')" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="Delete..."/>
+      <input  type="button" class="Btn2_sun4" id="saveEntry" onClick="alert('Saves changes user made to class')" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="Save Changes"/>
+    </div>
+  </div>
+</div>
+<p>&nbsp;</p>
+</div>
+<div id="smbottombar"></div>
+<div id="smstatusarea">
+  <input type="checkbox" class="Cb_sun4" checked onClick="applyFilter()" />
+&nbsp;Hide Operational Classes and Attributes</div>
+<div id="smquitbutton">
+  <input type="button" class="Btn2_sun4" onClick="closeSubWin()" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="Close"/>
+</div>
+<div id="mymenu" onClick="document.getElementById('mymenu').style.display='none';"> <a href="#" class="mymenuitem">New Class...</a>
+  <div class="mymenusep">--------------------------</div>
+  <a href="#" class="mymenuitem">Copy</a> <a href="#" class="mymenuitem">Paste</a>
+  <div class="mymenusep">--------------------------</div>
+  <a href="javascript:confirm('Confirm Deletion\n\nAre you sure you want to delete the selected class? This operation cannot be undone.');" class="mymenuitem">Delete Class...</a> </div>
+</body></html>

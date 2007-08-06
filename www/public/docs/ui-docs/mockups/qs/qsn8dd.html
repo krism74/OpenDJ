@@ -1,0 +1,220 @@
+<!--
+ ! CDDL HEADER START
+ !
+ ! The contents of this file are subject to the terms of the
+ ! Common Development and Distribution License, Version 1.0 only
+ ! (the "License").  You may not use this file except in compliance
+ ! with the License.
+ !
+ ! You can obtain a copy of the license at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE
+ ! or https://OpenDS.dev.java.net/OpenDS.LICENSE.
+ ! See the License for the specific language governing permissions
+ ! and limitations under the License.
+ !
+ ! When distributing Covered Code, include this CDDL HEADER in each
+ ! file and include the License file at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE.  If applicable,
+ ! add the following below this CDDL HEADER, with the fields enclosed
+ ! by brackets "[]" replaced with your own identifying information:
+ !      Portions Copyright [yyyy] [name of copyright owner]
+ !
+ ! CDDL HEADER END
+ !
+ !
+ !      Portions Copyright 2007 Sun Microsystems, Inc.
+ ! -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Opends QuickSetup UI Spec</title>
+<link rel="stylesheet" type="text/css" href="../../mockups/suntheme/css/css_master.css" />
+<link rel="stylesheet" type="text/css" href="qs_css.css" />
+<script language='javascript' src='opends-utilities.js'></script>
+<script language='javascript'> 
+var canceled = false;
+
+function makeProgress() {
+window.setTimeout('progUpd1()',2000);
+}
+
+function progUpd1() {
+document.getElementById('progimg').src='prog2.png';
+document.getElementById('progtask').innerHTML='The next thing I am doing...';
+document.getElementById('progtime').innerHTML='30% complete (About 7 Seconds Remaining).';
+document.getElementById('progdetails').innerHTML='Info and output...<strong>Done.</strong><br\>More info and output...';
+window.setTimeout('progUpd2()',2000);
+}
+
+function progUpd2() {
+if (canceled==false) {
+document.getElementById('progimg').src='prog3.png';
+document.getElementById('progtask').innerHTML='The very next thing I am doing...';
+document.getElementById('progtime').innerHTML='75% complete (About 4 Seconds Remaining).';
+document.getElementById('progdetails').innerHTML='Info and output...<strong>Done.</strong><br\>More info and output...<strong>Done.</strong><br\>Even more info and output...<strong>Done.</strong><br\>Bonus info and output...';
+window.setTimeout('progUpd3()',2000);
+  } else { progUpd4();
+ }
+}
+
+function progUpd3() {
+if (canceled==false) {
+document.getElementById('progimg').src='prog4.png';
+document.getElementById('progtask').innerHTML='Pretty much the last thing I am doing...';
+document.getElementById('progtime').innerHTML='99% complete (About 1 Second Remaining).';
+document.getElementById('progdetails').innerHTML='Info and output...<strong>Done.</strong><br\>More info and output...<strong>Done.</strong><br\>Even more info and output...<strong>Done.</strong><br\>Bonus info and output...<strong>Done.</strong><br\>Buy one get one free info and output...<strong>Done.</strong><br\>Final bit of info and output..';
+window.setTimeout('progUpd4()',2000);
+  } else { progUpd4();
+ }
+}
+
+function progUpd4() {
+document.getElementById('windowbutton').disabled=false;
+document.getElementById('windowbutton').className='Btn1_sun4';
+document.getElementById('windowbutton').focus();
+document.getElementById('progbarstuff').style.display='none';
+if (canceled==true) {document.getElementById('canceledalert').style.display='block';} else { document.getElementById('finalalert').style.display='block';}
+canceled=false;
+document.getElementById('progresssteps').style.display='none';
+document.getElementById('donesteps').style.display='block';
+document.getElementById('progdetails').innerHTML='Info and output...<strong>Done.</strong><br\>More info and output...<strong>Done.</strong><br\>Even more info and output...<strong>Done.</strong><br\>Bonus info and output...<strong>Done.</strong><br\>Buy one get one free info and output...<strong>Done.</strong><br\>Final bit of info and output...<strong>Done.</strong>';
+document.getElementById('progdetails').style.height='155px';
+}
+
+</script>
+</head>
+<body style="margin:0px" onload="makeProgress()">
+<img src="wizard.png" width="779" height="466" />
+
+<div id="stepsarea">
+  <div id="steplistouter">
+    <div id="steplistmiddle">
+      <div id="steplistinner">
+        <table border="0" cellspacing="0" cellpadding="0" style="margin-top:10px" id="progresssteps">
+          <tr valign="middle">
+            <td nowrap="nowrap"></td>
+            <td><div class="stepText">Welcome</div></td>
+          </tr>
+          <tr>
+            <td valign="top"></td>
+            <td valign="top"><div class="stepText">Server Settings</div></td>
+          </tr>
+          <tr valign="middle">
+            <td></td>
+            <td><div class="stepText">Topology Options</div></td>
+          </tr>
+          <tr valign="middle">
+            <td></td>
+            <td><table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td valign="top"></td>
+                  <td valign="top"><div class="subStepText">Directory Data</div></td>
+                </tr>
+              </table></td>
+          </tr>
+          <tr valign="middle">
+            <td></td>
+            <td><div class="stepText">Review</div></td>
+          </tr>
+          <tr valign="middle">
+            <td><img style="margin-left:7px; margin-top:1px" id="stepIndicator" src="wiz-arrow.png" alt="Current Step" title="Current Step" border="0" height="14" width="14"></td>
+            <td><div class="stepText"><span class="stepTextSel">Progress</span></div></td>
+          </tr>
+          <tr valign="middle" >
+            <td></td>
+            <td><div class="stepText">Finished</div></td>
+          </tr>
+        </table>
+		<table border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;display:none" id="donesteps">
+          <tr valign="middle">
+            <td nowrap="nowrap"></td>
+            <td><div class="stepText">Welcome</div></td>
+          </tr>
+          <tr>
+            <td valign="top"></td>
+            <td valign="top"><div class="stepText">Server Settings</div></td>
+          </tr>
+          <tr valign="middle">
+            <td></td>
+            <td><div class="stepText">Topology Options</div></td>
+          </tr>
+          <tr valign="middle">
+            <td></td>
+            <td><table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td valign="top"></td>
+                  <td valign="top"><div class="subStepText">Directory Data</div></td>
+                </tr>
+              </table></td>
+          </tr>
+          <tr valign="middle">
+            <td></td>
+            <td><div class="stepText">Review</div></td>
+          </tr>
+          <tr valign="middle" >
+            <td></td>
+            <td><div class="stepText">Progress</div></td>
+          </tr>
+         <tr valign="middle">
+            <td><img style="margin-left:7px; margin-top:1px" id="stepIndicator" src="wiz-arrow.png" alt="Current Step" title="Current Step" border="0" height="14" width="14"></td>
+            <td><div class="stepText"><span class="stepTextSel">Finished</span></div></td>
+          </tr>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div id="contentarea">
+  <!--<div class="panelTitle">Progress</div> -->
+  <div id="finalalert" style="margin:20px 15px 5px;display:none;">
+    <table border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td valign="top"><img id="form:alert:alertImage" src="success_48.png" alt="Success" border="0" height="48" width="48" align="top">&nbsp;</td>
+        <td><div style="font-size:14px; font-weight:bold"><span style="margin-left:10px"> OpenDS Installation Completed Successfully</span> </div>
+          <div style="margin-left:10px; margin-top:5px">OpenDS is now installed in /local/OpenDS.</div>
+          <div style="margin-left:10px; margin-top:5px">Visit the <a href="https://www.opends.org/wiki//page/QuickReferenceGuide">OpenDS Quick Reference</a> page for an overview of server management and configuration. To see basic server configuration and status and to start/stop the server, click Launch Control Panel. Note that you can launch control panel later using <font face="monospace">/local/OpenDS/bin-gui/control-panel</font>.</div>
+          <div style="margin-left:10px; margin-top:10px">
+            <input type="button" class="Btn2_sun4"  onclick="document.location.href='../cp/top.html'" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Launch Control Panel"/>
+          </div></td>
+      </tr>
+    </table>
+  </div>
+  <div id="canceledalert" style="margin:20px 15px 5px;display:none;">
+    <table border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td valign="top"><img id="form:alert:alertImage" src="success_48.png" alt="Success" border="0" height="48" width="48" align="top">&nbsp;</td>
+        <td><div style="font-size:14px; font-weight:bold"><span style="margin-left:10px">OpenDS Installation Successfully Canceled</span> </div>
+          <div style="margin-left:10px; margin-top:5px">The installation was successfully canceled and all changes backed out.</div></td>
+      </tr>
+    </table>
+  </div>
+  <div style="margin:15px">
+    <div id="progbarstuff">
+      <div id="progtask" style="margin:20px 0px 5px; font-weight:bold;font-size:14px">The first thing I am doing...</div>
+      <div id="progbar">
+        <div id="progbardiv"  style="float:left"> <img id="progimg" src="prog1.png" width="423" height="15" /></div>
+        <div>&nbsp;&nbsp;&nbsp;
+          <input type="button" class="Btn2_sun4" id="cancelbutton" style="margin-top:-5px" onclick="if (confirm('Confirm Cancellation\n\nAre you sure you want to cancel the operation? All changes will be backed out and your server will be left in its previous state.')){ canceled=true;};" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Cancel"/>
+        </div>
+      </div>
+      <div id="progtime" style="margin:5px 0px; font-size:11px">15% Complete (About 10 Seconds Remaining)</div>
+    </div>
+    <div style="margin-top:15px;margin-bottom:3px;font-weight:bold;">Details:</div>
+    <div id="progdetails"> Info and output. </div>
+  </div>
+</div>
+</div>
+</div>
+<div id="bottombar"></div>
+<div id="navbuttons"> </div>
+<div id="quitbutton">
+  <input id="windowbutton" type="button" class="Btn1Dis_sun4" disabled onclick="document.location.href='qs1.html'" onmousedown="if (this.disabled==0) this.className='Btn1Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn1_sun4'" onmouseover="if (this.disabled==0) this.className='Btn1Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn1_sun4'" value="Close"/>
+</div>
+<div id="content-inner" style="display:none"> </div>
+<div id="content-inner2" style="display:none"> </div>
+</body>
+</html>

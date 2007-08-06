@@ -1,0 +1,29 @@
+<style type="text/css">
+div#nucontentarea {position:absolute; top:33px; left:19px; width:519px;height:446px; overflow:auto}
+div#nuwindowtitle {position:absolute;top:10px;left:174px;width:320px;height:16px; font-size:12px;font-weight:bold }
+div#nuquitbutton {position:absolute; top:446px; left:354px; width:180px; height:25px;text-align:right;}
+div#nubottombar {position:absolute; top:440px; left:9px; width:533px;height:40px;background-color:#d6d9df;border-top:solid 1px #808080}
+div#nuwindowbucket {position:absolute;top:0px;left:0px}
+ div#nucontentarea .ConTblCl1Div_sun4 {margin-top:14px}
+ div#nucontentarea .ConTblCl2Div_sun4 {margin-top:12px}
+ div#nucontentarea .IndentedControls {margin:3px 0px 0px 25px} 
+
+</style>
+<div id="nuwindowbucket"><img src="newentrydialog.png" width="556" height="494" /></div>
+<div id="nuwindowtitle"> - New Entry From LDIF</div>
+<div id="nucontentarea">
+  <div style="margin:10px">
+ <div style="padding:8px 0px"> Enter LDIF syntax for the new entry.</div>
+    <textarea id="ldif" style="width:95%" class="TxtAra_sun4"  rows="21"></textarea>
+  <br>
+   <div style="padding:8px 0px">  <input type="button" class="Btn2_sun4" onClick="alert('Checks Syntax')" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="Check Syntax"/></div>
+</div>
+</div>
+<div id="nubottombar"></div>
+<div id="nuquitbutton">
+  <input type="button" class="Btn1_sun4" onClick="closeSubWin2()" onMouseDown="if (this.disabled==0) this.className='Btn1Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn1_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn1Hov_sun4'"
+       onMouseOut="if (this.disabled==0) this.className='Btn1_sun4'" value="OK"/>
+  <input type="button" class="Btn2_sun4" onClick="closeSubWin2()" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="Cancel"/>
+</div>

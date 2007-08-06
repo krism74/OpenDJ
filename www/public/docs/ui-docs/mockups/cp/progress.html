@@ -1,0 +1,57 @@
+<style type="text/css">
+div#pgquitbutton {position:absolute; top:445px; left:421px; width:200px;height:20px;text-align:right}
+div#pgcontentarea {position:absolute; top:31px; left:9px; width:623px;height:448px; overflow:auto;background-color:#d6d9df;}
+div#pgwindowtitle {position:absolute;top:10px;left:174px;width:320px;height:16px; font-size:12px;font-weight:bold }
+div#pgwindowbucket {position:absolute;top:0px;left:0px}
+div#progdetailsouter{width:558px;height:250px;padding:1px 0px 0px 1px;border-top:1px solid #82858b;border-left:1px solid #82858b;border-right:1px solid #EFF0F2;border-bottom:1px solid #EFF0F2; background-color:#A0A3A9;-moz-border-radius:11px}
+div#progdetailsmiddle{width:555px;height:247px;border:1px solid #B8BBC1;-moz-border-radius:9px}
+div#progdetails{width:534px;height:226px;padding:10px;border:1px solid #C7CAD0;background-color:#CFD2D8;overflow:auto;-moz-border-radius:9px}
+
+</style>
+<div id="pgwindowbucket"><img src="progressdialog.png" width="646" height="494" /></div>
+<div id="pgwindowtitle"> - [Name of Task] Progress</div>
+<div id="pgcontentarea">
+  <div id="finalalert" style="margin:30px 25px -8px;display:none;">
+    <table border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><img id="form:alert:alertImage" src="success_48.png" alt="Success" border="0" height="48" width="48" align="absmiddle">&nbsp;</td>
+        <td><div style="font-size:14px; font-weight:bold"><span style="margin-left:10px"> [Name of Task] Completed Successfully</span> </div>
+          <div style="margin-left:10px; margin-top:5px">You know that thing you asked me to do, well I did it and it all went fine. Here is some more useful information about it.</div></td>
+      </tr>
+    </table>
+  </div>
+  <div id="canceledalert" style="margin:30px 25px -8px;display:none;">
+    <table border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><img id="form:alert:alertImage" src="success_48.png" alt="Success" border="0" height="48" width="48" align="absmiddle">&nbsp;</td>
+        <td><div style="font-size:14px; font-weight:bold"><span style="margin-left:10px"> [Name of Task] Successfully Canceled</span> </div>
+          <div style="margin-left:10px; margin-top:5px">he task operation was successfully canceled and all changes backed out.</div></td>
+      </tr>
+    </table>
+  </div>
+  <div style="margin:30px 30px 15px">
+    <div id="progbarstuff">
+      <div id="progtask" style="margin:5px 0px; font-weight:bold;font-size:14px">The first thing I am doing...</div>
+      <div id="progbar">
+        <div id="progbardiv"  style="float:left"> <img id="progimg" src="prog1.png" width="423" height="15" /></div>
+        <div>&nbsp;&nbsp;&nbsp;
+          <input type="button" class="Btn2_sun4" id="cancelbutton" style="margin-top:-5px" onClick="if (confirm('Confirm Cancellation\n\nAre you sure you want to cancel the operation? All changes will be backed out and your server will be left in its previous state.')){ canceled=true;};" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="Cancel"/>
+        </div>
+      </div>
+      <div id="progtime" style="margin:5px 0px; font-size:11px">15% Complete (About 10 Seconds Remaining)</div>
+    </div>
+    <div style="margin-top:15px;margin-bottom:3px;font-weight:bold;font-size:14px">Details:</div>
+    <div id="progdetailsouter">
+      <div id="progdetailsmiddle">
+        <div id="progdetails"> Info and output. </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="pgbottombar"></div>
+<div id="pgquitbutton">
+  <input type="button" disabled class="Btn1Dis_sun4" id="windowbutton" onClick="closeSubWin()" onMouseDown="if (this.disabled==0) this.className='Btn1Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn1_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn1Hov_sun4'"
+       onMouseOut="if (this.disabled==0) this.className='Btn1_sun4'" value="Close"/>
+</div>
+<script type="text/javascript" language="javascript">makeProgress()</script>

@@ -1,0 +1,79 @@
+<style type="text/css">
+div#dncontentarea {position:absolute; top:33px; left:23px; width:609px;height:306px; overflow:auto}
+div#dnwindowtitle {position:absolute;top:10px;left:174px;width:320px;height:16px; font-size:12px;font-weight:bold }
+div#dnquitbutton {position:absolute; top:368px; left:444px; width:180px; height:25px;text-align:right;}
+div#dnbottombar {position:absolute; top:359px; left:9px; width:623px;height:40px;background-color:#d6d9df;border-top:solid 1px #808080}
+div#dnwindowbucket {position:absolute;top:0px;left:0px}
+ div#dncontentarea .ConTblCl1Div_sun4 {margin-top:17px}
+ div#dncontentarea .ConTblCl2Div_sun4 {margin-top:12px}
+ div#dncontentarea .IndentedControls {margin:3px 0px 0px 25px} 
+
+</style>
+
+<div id="dnwindowbucket"><img src="backupdialog.png" width="646" height="414" /></div>
+<div id="dnwindowtitle"> - New Base DN</div>
+<div id="dncontentarea">
+  <table style="margin-top:10px" border="0" cellspacing="0" cellpadding="0" title="">
+    <tr>
+      <td nowrap="nowrap" valign="top" align="left"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4">Backend:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4"><span class="ConTblCl2Div">
+          <select id="backend" name="backend" class="MnuStd_sun4" onChange="if(document.getElementById('backend').options.selectedIndex==3) {document.getElementById('newbackend').disabled=false;document.getElementById('newbackend').className='TxtFld_sun4';document.getElementById('newbackend').focus(); } else { document.getElementById('newbackend').disabled=true;document.getElementById('newbackend').className='TxtFldDis_sun4'}">
+            <option class="MnuStdOpt_sun4" value="other">userRoot</option>
+            <option class="MnuStdOpt_sun4" value="csh">sumpinElse</option>
+            <option class="MnuStdOptDis_sun4" value="csh">-----------------</option>
+            <option class="MnuStdOpt_sun4" value="new">New Backend:</option>
+          </select>&nbsp;&nbsp;<input id="newbackend" type="text" class="TxtFldDis_sun4" disabled size="20"/>
+          </span>
+    </div></td>
+    </tr>
+    <tr>
+      <td align="left" valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4">Directory Base DN:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4">
+          <input type="text" class="TxtFld_sun4" size="50"/>
+        </div></td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap" align="left" valign="top"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4">Directory Data:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4">
+        <div style="margin:8px 0px">
+          <input type="radio" class="RbSpn_sun4" checked name="import-type" onClick=  
+		"document.getElementById('ldifpath').className='TxtFldDis_sun4';document.getElementById('ldifpath').disabled=true;
+	    document.getElementById('ldifbrowse').className='Btn2Dis_sun4';document.getElementById('ldifbrowse').disabled=true;
+	    document.getElementById('numentries').className='TxtFldDis_sun4';document.getElementById('numentries').disabled=true;"/>Only Create Base Entry</span></div>
+        <div style="margin:8px 0px">
+          <input type="radio" class="RbSpn_sun4" name="import-type" onClick=				"document.getElementById('ldifpath').className='TxtFldDis_sun4';document.getElementById('ldifpath').disabled=true;
+	    document.getElementById('ldifbrowse').className='Btn2Dis_sun4';document.getElementById('ldifbrowse').disabled=true;
+	    document.getElementById('numentries').className='TxtFldDis_sun4';document.getElementById('numentries').disabled=true;"/>Leave Database Empty</span></div>
+        <div style="margin:8px 0px">
+          <input type="radio" class="RbSpn_sun4" name="import-type" onClick=		"document.getElementById('ldifpath').className='TxtFld_sun4';document.getElementById('ldifpath').disabled=false;document.getElementById('ldifpath').focus();
+	    document.getElementById('ldifbrowse').className='Btn2_sun4';document.getElementById('ldifbrowse').disabled=false;
+	    document.getElementById('numentries').className='TxtFldDis_sun4';document.getElementById('numentries').disabled=true;"/>Import Data from LDIF File</span>
+          <div class="IndentedControls"> Path:&nbsp;&nbsp;<input id="ldifpath" type="text" class="TxtFldDis_sun4" size="40" value="" disabled />
+            <input type="button" disabled class="Btn2Dis_sun4" id="ldifbrowse" onClick="alert('Opens local file browser.')" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="Browse..."/>
+          </div>
+        </div>
+        <div style="margin:8px 0px">
+          <input type="radio" class="RbSpn_sun4" name="import-type" onClick="document.getElementById('ldifpath').className='TxtFldDis_sun4';document.getElementById('ldifpath').disabled=true;
+	    document.getElementById('ldifbrowse').className='Btn2Dis_sun4';document.getElementById('ldifbrowse').disabled=true;
+	    document.getElementById('numentries').className='TxtFld_sun4';document.getElementById('numentries').disabled=false;document.getElementById('numentries').focus()"/>Import Automatically Generated Example Data</span>
+          <div class="IndentedControls"> Number of User Entries:&nbsp;
+            <input id="numentries" type="text" class="TxtFldDis_sun4" size="15" value="2000" disabled />
+          </div>
+        </div></td>
+    </tr>
+  </table>
+</div>
+<div id="dnbottombar"></div>
+<div id="dnquitbutton">
+  <input class="Btn1_sun4" type="button" value="OK" onMouseOver="if (this.disabled==0) this.className='Btn1Hov_sun4'"
+       onMouseOut="if (this.disabled==0) this.className='Btn1_sun4'" onMouseDown="if (this.disabled==0) this.className='Btn1Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn1_sun4'" onClick="loadFile('progress.html')"/>
+  <input type="button" class="Btn2_sun4" onClick="closeSubWin()" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="Cancel"/>
+</div>

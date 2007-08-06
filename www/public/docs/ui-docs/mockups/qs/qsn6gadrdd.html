@@ -1,0 +1,169 @@
+<!--
+ ! CDDL HEADER START
+ !
+ ! The contents of this file are subject to the terms of the
+ ! Common Development and Distribution License, Version 1.0 only
+ ! (the "License").  You may not use this file except in compliance
+ ! with the License.
+ !
+ ! You can obtain a copy of the license at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE
+ ! or https://OpenDS.dev.java.net/OpenDS.LICENSE.
+ ! See the License for the specific language governing permissions
+ ! and limitations under the License.
+ !
+ ! When distributing Covered Code, include this CDDL HEADER in each
+ ! file and include the License file at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE.  If applicable,
+ ! add the following below this CDDL HEADER, with the fields enclosed
+ ! by brackets "[]" replaced with your own identifying information:
+ !      Portions Copyright [yyyy] [name of copyright owner]
+ !
+ ! CDDL HEADER END
+ !
+ !
+ !      Portions Copyright 2007 Sun Microsystems, Inc.
+ ! -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Opends QuickSetup UI Spec</title>
+<link rel="stylesheet" type="text/css" href="../../mockups/suntheme/css/css_master.css" />
+<link rel="stylesheet" type="text/css" href="qs_css.css" />
+<script language='javascript' src='opends-utilities.js'></script>
+<script language='javascript'> 
+</script>
+</head>
+<body style="margin:0px">
+<img src="wizard.png" width="779" height="466" />
+
+<div id="stepsarea">
+  <div id="steplistouter">
+    <div id="steplistmiddle">
+      <div id="steplistinner">
+        <table border="0" cellpadding="0" cellspacing="0" id="newsteps" style="margin-top:10px">
+          <tr valign="middle">
+            <td nowrap="nowrap"></td>
+            <td><div class="stepText">Welcome</div></td>
+          </tr>
+          <tr valign="middle">
+            <td></td>
+            <td><div class="stepText">Server Settings</div></td>
+          </tr>
+          <tr valign="middle">
+            <td></td>
+            <td><div class="stepText">Topology Options</div></td>
+          </tr>
+          <tr valign="middle">
+            <td></td>
+            <td><table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td valign="top"></td>
+                  <td valign="top"><div class="subStepText">Global Administrator</div></td>
+                </tr>
+            </table></td>
+          </tr>
+          <tr valign="middle">
+            <td></td>
+            <td><table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td valign="top"></td>
+                  <td valign="top"><div class="subStepText">Data Replication</div></td>
+                </tr>
+            </table></td>
+          </tr>
+          <tr valign="middle">
+            <td><img style="margin-left:7px; margin-top:1px" id="stepIndicator" src="wiz-arrow.png" alt="Current Step" title="Current Step" border="0" height="14" width="14" /></td>
+            <td><table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td valign="top"></td>
+                  <td valign="top"><div class="subStepText"><span class="stepTextSel">Directory Data</span></div></td>
+                </tr>
+            </table></td>
+          </tr>
+          <tr valign="middle">
+            <td></td>
+            <td><div class="stepText">Review</div></td>
+          </tr>
+          <tr valign="middle">
+            <td></td>
+            <td><div class="stepText">Progress</div></td>
+          </tr>
+          <tr valign="middle">
+            <td></td>
+            <td><div class="stepText">Finished</div></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="contentarea">
+<div class="panelTitle">Directory Data </div>
+ <div class="panelHelp">
+   Choose options for the LDAP data to be hosted by OpenDS.
+ </div>
+ <table style="margin-top:5px" border="0" cellspacing="0" cellpadding="0" title="">
+   <tr>
+     <td align="left" valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4">
+         <label id="username" for="pwd" class="LblLev2Txt_sun4">Directory Base DN:</label>
+     </div></td>
+     <td ><div class="ConTblCl2Div_sun4">
+         <input type="text" class="TxtFld_sun4" size="50" value="dc=example,dc=com"/>
+     </div></td>
+   </tr>
+   <tr>
+     <td nowrap="nowrap" align="left" valign="top"><div class="ConTblCl1Div_sun4">
+         <label id="username" for="pwd" class="LblLev2Txt_sun4">Directory Data:</label>
+     </div></td>
+     <td ><div class="ConTblCl2Div_sun4">
+         <div style="margin:8px 0px">
+           <input type="radio" class="RbSpn_sun4" checked="checked" name="import-type" onclick=  
+		"document.getElementById('ldifpath').className='TxtFldDis_sun4';document.getElementById('ldifpath').disabled=true;
+	    document.getElementById('ldifbrowse').className='Btn2Dis_sun4';document.getElementById('ldifbrowse').disabled=true;
+	    document.getElementById('numentries').className='TxtFldDis_sun4';document.getElementById('numentries').disabled=true;"/>
+           Only Create Base Entry</div>
+         <div style="margin:8px 0px">
+           <input type="radio" class="RbSpn_sun4" name="import-type" onclick=				"document.getElementById('ldifpath').className='TxtFldDis_sun4';document.getElementById('ldifpath').disabled=true;
+	    document.getElementById('ldifbrowse').className='Btn2Dis_sun4';document.getElementById('ldifbrowse').disabled=true;
+	    document.getElementById('numentries').className='TxtFldDis_sun4';document.getElementById('numentries').disabled=true;"/>
+           Leave Database Empty</div>
+         <div style="margin:8px 0px">
+           <input type="radio" class="RbSpn_sun4" name="import-type" onclick=		"document.getElementById('ldifpath').className='TxtFld_sun4';document.getElementById('ldifpath').disabled=false;document.getElementById('ldifpath').focus();
+	    document.getElementById('ldifbrowse').className='Btn2_sun4';document.getElementById('ldifbrowse').disabled=false;
+	    document.getElementById('numentries').className='TxtFldDis_sun4';document.getElementById('numentries').disabled=true;"/>
+           Import Data from LDIF File
+           <div class="IndentedControls"> Path:&nbsp;&nbsp;
+               <input id="ldifpath" type="text" class="TxtFldDis_sun4" size="30" value="" disabled="disabled" />
+               <input type="button" disabled="disabled" class="Btn2Dis_sun4" id="ldifbrowse" onclick="alert('Opens local file browser.')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Browse..."/>
+           </div>
+         </div>
+         <div style="margin:8px 0px">
+           <input type="radio" class="RbSpn_sun4" name="import-type" onclick="document.getElementById('ldifpath').className='TxtFldDis_sun4';document.getElementById('ldifpath').disabled=true;
+	    document.getElementById('ldifbrowse').className='Btn2Dis_sun4';document.getElementById('ldifbrowse').disabled=true;
+	    document.getElementById('numentries').className='TxtFld_sun4';document.getElementById('numentries').disabled=false;document.getElementById('numentries').focus()"/>
+           Import Automatically Generated Example Data
+           <div class="IndentedControls"> Number of User Entries:&nbsp;
+               <input id="numentries" type="text" class="TxtFldDis_sun4" size="15" value="2000" disabled="disabled" />
+           </div>
+         </div>
+     </div></td>
+   </tr>
+ </table>
+</div>
+<div id="bottombar"></div>
+<div id="navbuttons">
+  <input type="button" class="Btn2_sun4"  onclick="history.back();" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Previous"/>
+  <input type="button" class="Btn1_sun4" onclick="document.location.href='qsn7gadrdd.html'" onmousedown="if (this.disabled==0) this.className='Btn1Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn1_sun4'" onmouseover="if (this.disabled==0) this.className='Btn1Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn1_sun4'" value="Next"/>
+</div>
+<div id="quitbutton">
+  <input type="button" class="Btn2_sun4" onclick="alert('Quits QuickSetup')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Quit"/>
+</div>
+<div id="content-inner" style="display:none"> </div>
+<div id="content-inner2" style="display:none"> </div>
+</body>
+</html>

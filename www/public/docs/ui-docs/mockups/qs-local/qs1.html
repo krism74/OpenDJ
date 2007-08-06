@@ -1,0 +1,178 @@
+<!--
+ ! CDDL HEADER START
+ !
+ ! The contents of this file are subject to the terms of the
+ ! Common Development and Distribution License, Version 1.0 only
+ ! (the "License").  You may not use this file except in compliance
+ ! with the License.
+ !
+ ! You can obtain a copy of the license at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE
+ ! or https://OpenDS.dev.java.net/OpenDS.LICENSE.
+ ! See the License for the specific language governing permissions
+ ! and limitations under the License.
+ !
+ ! When distributing Covered Code, include this CDDL HEADER in each
+ ! file and include the License file at
+ ! trunk/opends/resource/legal-notices/OpenDS.LICENSE.  If applicable,
+ ! add the following below this CDDL HEADER, with the fields enclosed
+ ! by brackets "[]" replaced with your own identifying information:
+ !      Portions Copyright [yyyy] [name of copyright owner]
+ !
+ ! CDDL HEADER END
+ !
+ !
+ !      Portions Copyright 2007 Sun Microsystems, Inc.
+ ! -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Opends QuickSetup UI Spec</title>
+<link rel="stylesheet" type="text/css" href="../../mockups/suntheme/css/css_master.css" />
+<link rel="stylesheet" type="text/css" href="qs_css.css" />
+<script language='javascript' src='opends-utilities.js'></script>
+<script language='javascript'> 
+var installtype='new';
+function processNext () {
+if (installtype=='upgrade') {
+  document.location.href='qsu2.html';
+  } else {
+  document.location.href='qsn2.html';
+  }
+}
+
+</script>
+</head>
+<body style="margin:0px">
+<img src="wizard.png" width="779" height="466" />
+
+<div id="stepsarea">
+  <div id="steplistouter">
+    <div id="steplistmiddle">
+      <div id="steplistinner">
+        <table id="newsteps" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px">
+          <tr>
+            <td nowrap="nowrap" valign="middle"><img style="margin-left:7px; margin-top:1px" id="stepIndicator" src="wiz-arrow.png" alt="Current Step" title="Current Step" border="0" height="14" width="14"></td>
+            <td valign="top"><div class="stepText"><span class="stepTextSel">Welcome</span></div></td>
+          </tr>
+          <tr>
+            <td valign="top"></td>
+            <td valign="top"><div class="stepText">Server Settings</div></td>
+          </tr>
+          <tr>
+            <td valign="top"></td>
+            <td valign="top"><div class="stepText">Topology Options</div></td>
+          </tr>
+  <!--           <tr>
+            <td valign="top"></td>
+            <td valign="top"><div class="stepText">Topology Options</div></td>
+          </tr>
+       <tr>
+            <td valign="top"></td>
+            <td valign="top"><table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td valign="top"></td>
+                  <td valign="top"><div class="subStepText">Global Administrator</div></td>
+                </tr>
+              </table></td>
+          </tr>
+          <tr>
+            <td valign="top"></td>
+            <td valign="top"><table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td valign="top"></td>
+                  <td valign="top"><div class="subStepText">Data Replication</div></td>
+                </tr>
+              </table></td>
+          </tr>
+          <tr>
+            <td valign="top"></td>
+            <td valign="top"><table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td valign="top"></td>
+                  <td valign="top"><div class="subStepText">Directory Data</div></td>
+                </tr>
+              </table></td>
+          </tr>
+ 	  -->         <tr>
+            <td valign="top"></td>
+            <td valign="top"><div class="stepText">Review</div></td>
+          </tr>
+          <tr>
+            <td valign="top"></td>
+            <td valign="top"><div class="stepText">Progress</div></td>
+          </tr>
+          <tr>
+            <td valign="top"></td>
+            <td valign="top"><div class="stepText">Finished</div></td>
+          </tr>
+	
+        </table>
+        <table id="upgradesteps" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;display:none;">
+          <tr>
+            <td nowrap="nowrap" valign="middle"><img style="margin-left:7px; margin-top:1px" id="stepIndicator" src="wiz-arrow.png" alt="Current Step" title="Current Step" border="0" height="14" width="14"></td>
+            <td valign="top"><div class="stepText"><span class="stepTextSel">Welcome</span></div></td>
+          </tr>
+          <tr>
+            <td valign="top"></td>
+            <td valign="top"><div class="stepText">Removal Options</div></td>
+          </tr>
+          <tr>
+            <td valign="top"></td>
+            <td valign="top"><div class="stepText">Progress</div></td>
+          </tr>
+          <tr>
+            <td valign="top"></td>
+            <td valign="top"><div class="stepText">Finished</div></td>
+          </tr>
+
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="contentarea">
+<div class="panelTitle">Welcome</div>
+ <div class="panelHelp">
+   <p>The OpenDS QuickSetup tool can be used for basic configuration of a new server instance. </p>
+    <p>You can also use run QuickSetup via Java Web Start  to download, install and configure a new server instance or upgrade an existing server instance to the latest weekly build. To run QuickSetup via Java Web Start click the Launch QuickSetup link on <a href="https://www.opends.org/wiki//page/OverviewOfTheQuickSetupTool">the About QuickSetup Tool</a> page of the OpenDS Wiki. </p>
+    <p>OpenDS requires a Java SE 5.0 or higher runtime. Additional information on QuickSetup is available on the <a href="https://www.opends.org/wiki//page/OverviewOfTheQuickSetupTool">OpenDS documentation wiki</a>.</p>
+ <!--  <p><strong>Note: </strong>If you choose the upgrade option, QuickSetup will need to stop and start the server.</p> -->
+ </div>
+
+<!-- <table border="0" cellpadding="0" cellspacing="0" title="">
+    <tr>
+      <td nowrap="nowrap" align="left" valign="top"><div class="ConTblCl1Div_sun4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div></td>
+      <td nowrap="nowrap" ><div class="ConTblCl2Div_sun4">
+          <div style="margin:8px 0px">
+            <input type="radio" class="RbSpn_sun4" name="import-type" id="newinstance" checked onclick=				"document.getElementById('newsteps').style.display='block';document.getElementById('upgradesteps').style.display='none';installtype='new';"/>
+          <label for="newinstance">Perform Initial Setup of this Server Instance</label>
+          </div>
+          <div style="margin:8px 0px">
+            <input type="radio" class="RbSpn_sun4" name="import-type"  id="upgradeinstance" onclick="document.getElementById('newsteps').style.display='none';document.getElementById('upgradesteps').style.display='block';installtype='upgrade'"/>
+             <label for="upgradeinstance">Uninstall this Server Instance</label>
+            <div class="IndentedControls"> Path to Zip:&nbsp;&nbsp;
+              <input id="ldifpath" type="text" class="TxtFldDis_sun4" size="35" value="" disabled />
+              <input type="button" disabled class="Btn2Dis_sun4" id="ldifbrowse" onclick="alert('Opens local file browser.')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Browse..."/>
+            </div>
+          </div>
+        </div></td>
+    </tr>
+  </table>-->
+</div>
+<div id="bottombar"></div>
+<div id="navbuttons">
+  <input type="button" style="display:none " class="Btn2_sun4"  onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Previous"/>
+  <input type="button" style="margin-left:79px" class="Btn1_sun4" onclick="processNext();" onmousedown="if (this.disabled==0) this.className='Btn1Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn1_sun4'" onmouseover="if (this.disabled==0) this.className='Btn1Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn1_sun4'" value="Next"/>
+</div>
+<div id="quitbutton">
+  <input type="button" class="Btn2_sun4" onclick="alert('Quits QuickSetup')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Quit"/>
+</div>
+<div id="content-inner" style="display:none"> </div>
+<div id="content-inner2" style="display:none"> </div>
+</body>
+</html>
