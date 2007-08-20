@@ -268,10 +268,10 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../../../opends/OpenDS.iml" filepath="$PROJECT_DIR$/../../../opends/OpenDS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/OpenDS.iml" filepath="$PROJECT_DIR$/OpenDS.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/../../../opends/build/classes" />
   </component>
   <component name="ProjectRunConfigurationManager" />
