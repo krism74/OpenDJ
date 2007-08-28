@@ -4,7 +4,6 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.jdom.Comment;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
@@ -46,6 +45,21 @@ public class IssueTranslator {
     IssueTranslator translator = new IssueTranslator();
     translator.translate(args[0], args[1], args[2], args[3], args[4]);
 
+  }
+
+  public static String toCSV(List<?> list)
+  {
+    StringBuilder builder = new StringBuilder();
+    if (list.size() > 0)
+    {
+      builder.append(list.get(0));
+      for (int i = 1; i < list.size(); i++)
+      {
+        builder.append(',');
+        builder.append(list.get(i));
+      }
+    }
+    return builder.toString();
   }
 
   public void translate(String fileIn, String userCSV, String fileOut, String csvFileOut, String attachmentPath) {
@@ -135,21 +149,22 @@ public class IssueTranslator {
 
         List<Element> ccKids = e.getChildren("cc");
 
-        StringBuilder ccBuilder = new StringBuilder();
-        if (ccKids.size() > 0)
+        List<String> cc = new ArrayList<String>(ccKids.size());
+        for (Element elem : ccKids)
         {
-          ccBuilder.append(registerUser(ccKids.get(0).getText()));
-          for (int i = 1; i < ccKids.size(); i++)
-          {
-            String user = ccKids.get(i).getText();
-            ccBuilder.append(',');
-            ccBuilder.append(registerUser(user));
-          }
+          cc.add(elem.getText());
         }
 
         String keywords = e.getChildText("keywords");
 
-        ArrayList<String> docList = new ArrayList<String>();
+        ArrayList<String> docAssessment = new ArrayList<String>();
+        ArrayList<String> docStatus = new ArrayList<String>();
+        ArrayList<String> otherKeywords = new ArrayList<String>();
+        ArrayList<String> qaFlags = new ArrayList<String>();
+        ArrayList<String> qaTestCategories = new ArrayList<String>();
+        ArrayList<String> qaEval = new ArrayList<String>();
+        ArrayList<String> qaStatus = new ArrayList<String>();
+
         if (keywords != null)
         {
           String[] words = keywords.split(",");
@@ -158,29 +173,127 @@ public class IssueTranslator {
             String keyword = word.trim();
             if (keyword.equals("doc_not_impacted"))
             {
-              docList.add(keyword);
+              docAssessment.add(keyword);
             }
             else if (keyword.equals("doc_needed"))
             {
-              docList.add(keyword);
+              docAssessment.add(keyword);
+              docStatus.add("New");
             }
             else if (keyword.equals("doc_complete"))
             {
-              docList.add(keyword);
+              docAssessment.add("doc_needed");
+              docStatus.add("Complete");
+            }
+            else if (keyword.equals("qa_seen"))
+            {
+              qaEval.add("seen");
+            }
+            else if (keyword.equals("qa_internal_feature"))
+            {
+              qaFlags.add("internal_feature");
+            }
+            else if (keyword.equals("qa_api_test"))
+            {
+              qaFlags.add("internal_api");
+            }
+            else if (keyword.equals("qa_no_cli"))
+            {
+              qaFlags.add("no_cli");
+            }
+            else if (keyword.equals("qa_no_spec"))
+            {
+              qaFlags.add("no_spec");
+            }
+            else if (keyword.equals("qa_no_doc"))
+            {
+              qaFlags.add("no_doc");
+            }
+            else if (keyword.equals("qa_unit_test"))
+            {
+              qaTestCategories.add("unit");
+            }
+            else if (keyword.equals("qa_functional_test"))
+            {
+              qaTestCategories.add("functional");
+            }
+            else if (keyword.equals("qa_system_test"))
+            {
+              qaTestCategories.add("system");
+            }
+            else if (keyword.equals("qa_interop_test"))
+            {
+              qaTestCategories.add("interop");
+            }
+            else if (keyword.equals("qa_perf_test"))
+            {
+              qaTestCategories.add("perf");
+            }
+            else if (keyword.equals("qa_integration_test"))
+            {
+              qaTestCategories.add("integration");
+            }
+            else if (keyword.equals("qa_manual_test"))
+            {
+              qaTestCategories.add("manual");
+            }
+            else if (keyword.equals("qa_wait_input"))
+            {
+              qaStatus.add("wait_input");
+            }
+            else if (keyword.equals("qa_blocked"))
+            {
+              qaStatus.add("blocked");
+            }
+            else if (keyword.equals("qa_will_not_test"))
+            {
+              qaStatus.add("will_not_test");
+            }
+            else
+            {
+              otherKeywords.add(keyword);
             }
           }
         }
 
-        String docStatus = "";
-        if (docList.size() > 0)
+        if (docAssessment.size() > 1)
         {
-          docStatus = docList.get(docList.size()-1);
-          if (docList.size() > 1)
-          {
-            System.out.println("WARNING: Issue " + issue_id +
-                 ": chose " + docStatus +
-                 " as the doc status from multiple doc keywords " + docList);
-          }
+          System.out.println("WARNING: Issue " + issue_id +
+               " has multiple values of Doc Assessment: " + docAssessment);
+        }
+        else if (docAssessment.size() == 0)
+        {
+          docAssessment.add("doc_not_assessed");
+        }
+
+        if (docStatus.size() > 1)
+        {
+          System.out.println("WARNING: Issue " + issue_id +
+               " has multiple values of Doc Status: " + docStatus);
+        }
+        else if (docAssessment.size() == 0)
+        {
+          docAssessment.add("N/A");
+        }
+
+        if (qaStatus.size() > 1)
+        {
+          System.out.println("WARNING: Issue " + issue_id +
+               " has multiple values of QA Status: " + qaStatus);
+        }
+        else if (qaStatus.size() == 0)
+        {
+          qaStatus.add("not_started");
+        }
+
+        if (qaEval.size() > 1)
+        {
+          System.out.println("WARNING: Issue " + issue_id +
+               " has multiple values of QA Evaluation: " + qaEval);
+        }
+        else if (qaEval.size() == 0)
+        {
+          qaEval.add("unseen");
         }
 
         // Convert delta_ts date format.
@@ -192,7 +305,6 @@ public class IssueTranslator {
         String assignedTo = registerUser(e.getChildText("assigned_to"));
         String reporter = registerUser(e.getChildText("reporter"));
         String qaContact = registerUser(e.getChildText("qa_contact"));
-        String cc = ccBuilder.toString();
 
         Issue issue = new Issue(
           issue_id,
@@ -215,7 +327,11 @@ public class IssueTranslator {
           e.getChildText("votes"),
           e.getChildText("op_sys"),
           e.getChildText("short_desc"),
-          keywords, cc, docStatus, activities, longDescs, blocks,
+          toCSV(otherKeywords), toCSV(cc), toCSV(docAssessment),
+          toCSV(docStatus),
+          toCSV(qaEval), toCSV(qaFlags), toCSV(qaTestCategories),
+          toCSV(qaStatus),
+          activities, longDescs, blocks,
           dups, attachments);
         issueTrackerIssues.add(issue);
       }
@@ -254,7 +370,12 @@ public class IssueTranslator {
            "Summary",
            "Keywords",
            "CC",
+           "Doc Assessment",
            "Doc Status",
+           "QA Evaluation",
+           "QA Flags",
+           "QA Tests",
+           "QA Status",
            null, headerDescs, null, null, null);
       header.writeCsvRecord(csv);
 
@@ -327,9 +448,9 @@ public class IssueTranslator {
 
       out.output(docOut, writer);
 
-      System.out.println("Parsed and wrote [" + issueTrackerIssues.size() + "] issues\n");
-      System.out.println("Found [" + users.size() + "] issue tracker users: " + users);
-      System.out.println("Wrote [" + attachmentWritten + "] attachments");
+      System.out.println("Parsed and wrote " + issueTrackerIssues.size() + " issues\n");
+      System.out.println("Found " + users.size() + " issue tracker users: " + users);
+      System.out.println("Wrote " + attachmentWritten + " attachments");
 
     } catch (JDOMException e) {
       System.out.println(e.getMessage());
@@ -355,7 +476,7 @@ public class IssueTranslator {
     {
       String login = csv.get("login");
       String wikiLogin = csv.get("wikilogin");
-      if (wikiLogin == null)
+      if (wikiLogin == null || wikiLogin.length() == 0)
       {
         wikiLogin = login;
       }
@@ -407,7 +528,12 @@ public class IssueTranslator {
     public String shortDesc;
     public String keywords;
     public String cc;
+    public String docAssessment;
     public String docStatus;
+    public String qaEval;
+    public String qaFlags;
+    public String qaTestCategories;
+    public String qaStatus;
     public List<Activity> activities;
     public List<LongDesc> longDescriptions;
     public List<Blocks> blocks;
@@ -418,7 +544,8 @@ public class IssueTranslator {
                  String version, String repPlatform, String assignedTo, String deltaTs,
                  String subcomponent, String reporter, String targetMilestone, String issueType,
                  String creationTs, String qaContact, String statusWhiteboard, String issueFileLoc,
-                 String votes, String opSys, String shortDesc, String keywords, String cc, String docStatus,
+                 String votes, String opSys, String shortDesc, String keywords, String cc, String docAssessment,
+                 String docStatus, String qaEval, String qaFlags, String qaTestCategories, String qaStatus,
                  List<Activity> activities, List<LongDesc> longdescriptions, List<Blocks> blocks,
                  List<Duplicate> duplicates, List<Attachment> attachments) {
       this.id = id;
@@ -450,7 +577,12 @@ public class IssueTranslator {
       this.shortDesc = shortDesc;
       this.keywords = keywords;
       this.cc = cc;
+      this.docAssessment = docAssessment;
       this.docStatus = docStatus;
+      this.qaEval = qaEval;
+      this.qaFlags = qaFlags;
+      this.qaTestCategories = qaTestCategories;
+      this.qaStatus = qaStatus;
       if (activities == null)
       {
         this.activities = new ArrayList<Activity>();
@@ -529,7 +661,12 @@ public class IssueTranslator {
       csv.write(cc);
       csv.write(component);
       csv.write(url);
+      csv.write(docAssessment);
       csv.write(docStatus);
+      csv.write(qaEval);
+      csv.write(qaFlags);
+      csv.write(qaTestCategories);
+      csv.write(qaStatus);
 
       // The first comment is the bug description.
       if (longDescriptions.size() == 0)

@@ -8,8 +8,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="OpenDS" level="project" />
     <orderEntry type="library" name="javacsv" level="project" />
+    <orderEntry type="library" name="OpenDS" level="project" />
     <orderEntryProperties />
   </component>
 </module>

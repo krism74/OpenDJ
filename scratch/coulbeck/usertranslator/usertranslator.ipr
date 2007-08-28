@@ -284,16 +284,16 @@
     </option>
   </component>
   <component name="libraryTable">
-    <library name="OpenDS">
+    <library name="javacsv">
       <CLASSES>
-        <root url="jar:///export/opends/opends/build/package/OpenDS-0.9.0/lib/OpenDS.jar!/" />
+        <root url="jar://$PROJECT_DIR$/javacsv.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="javacsv">
+    <library name="OpenDS">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/javacsv.jar!/" />
+        <root url="jar:///export/opends/opends/build/package/OpenDS-1.0.0/lib/OpenDS.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

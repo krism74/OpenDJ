@@ -70,7 +70,7 @@ public class UserTranslator
     ldifOut.println("dn: dc=opends,dc=org\n" +
          "objectClass: domain\n" +
          "objectClass: top\n" +
-         "dc: example\n");
+         "dc: opends\n");
 
     SAXParserFactory parserFactory = SAXParserFactory.newInstance();
     SAXParser parser = parserFactory.newSAXParser();

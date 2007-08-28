@@ -143,7 +143,7 @@
       <file leaf-file-name="UserTranslator.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/UserTranslator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="129" column="0" selection-start="3911" selection-end="3911" vertical-scroll-proportion="0.2725528">
+            <state line="164" column="0" selection-start="4968" selection-end="4968" vertical-scroll-proportion="2.7098382">
               <folding />
             </state>
           </provider>
@@ -152,7 +152,7 @@
       <file leaf-file-name="PrintStream.java" pinned="false" current="false" current-in-tab="false">
         <entry file="jar:///usr/jdk/instances/jdk1.5.0/src.zip!/java/io/PrintStream.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="301" column="16" selection-start="11569" selection-end="11569" vertical-scroll-proportion="0.032629557">
+            <state line="301" column="16" selection-start="11569" selection-end="11569" vertical-scroll-proportion="0.02117061">
               <folding />
             </state>
           </provider>
@@ -161,7 +161,7 @@
       <file leaf-file-name="FilterOutputStream.java" pinned="false" current="false" current-in-tab="false">
         <entry file="jar:///usr/jdk/instances/jdk1.5.0/src.zip!/java/io/FilterOutputStream.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="45" selection-start="990" selection-end="1002" vertical-scroll-proportion="0.032629557">
+            <state line="27" column="45" selection-start="990" selection-end="1002" vertical-scroll-proportion="0.02117061">
               <folding />
             </state>
           </provider>
@@ -170,7 +170,7 @@
       <file leaf-file-name="OutputStream.java" pinned="false" current="false" current-in-tab="false">
         <entry file="jar:///usr/jdk/instances/jdk1.5.0/src.zip!/java/io/OutputStream.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="0" selection-start="848" selection-end="848" vertical-scroll-proportion="0.032629557">
+            <state line="28" column="0" selection-start="848" selection-end="848" vertical-scroll-proportion="0.02117061">
               <folding />
             </state>
           </provider>
@@ -179,7 +179,7 @@
       <file leaf-file-name="FileOutputStream.java" pinned="false" current="false" current-in-tab="false">
         <entry file="jar:///usr/jdk/instances/jdk1.5.0/src.zip!/java/io/FileOutputStream.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="34" column="6" selection-start="1131" selection-end="1131" vertical-scroll-proportion="0.032629557">
+            <state line="34" column="6" selection-start="1131" selection-end="1131" vertical-scroll-proportion="0.02117061">
               <folding />
             </state>
           </provider>
@@ -188,7 +188,7 @@
       <file leaf-file-name="System.java" pinned="false" current="false" current-in-tab="false">
         <entry file="jar:///usr/jdk/instances/jdk1.5.0/src.zip!/java/lang/System.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="82" column="36" selection-start="2900" selection-end="2900" vertical-scroll-proportion="0.032629557">
+            <state line="82" column="36" selection-start="2900" selection-end="2900" vertical-scroll-proportion="0.02117061">
               <folding />
             </state>
           </provider>
@@ -197,7 +197,7 @@
       <file leaf-file-name="CsvReader.class" pinned="false" current="false" current-in-tab="false">
         <entry file="jar://$PROJECT_DIR$/javacsv.jar!/com/csvreader/CsvReader.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="92" column="14" selection-start="3473" selection-end="3473" vertical-scroll-proportion="0.03359684">
+            <state line="92" column="14" selection-start="3473" selection-end="3473" vertical-scroll-proportion="0.021573603">
               <folding />
             </state>
           </provider>
@@ -206,7 +206,7 @@
       <file leaf-file-name="WikiUserHandler.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/WikiUserHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="52" column="0" selection-start="1818" selection-end="1818" vertical-scroll-proportion="0.032629557">
+            <state line="27" column="0" selection-start="965" selection-end="965" vertical-scroll-proportion="0.02117061">
               <folding />
             </state>
           </provider>
@@ -215,7 +215,7 @@
       <file leaf-file-name="String.java" pinned="false" current="false" current-in-tab="false">
         <entry file="jar:///usr/jdk/instances/jdk1.5.0/src.zip!/java/lang/String.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1733" column="18" selection-start="68850" selection-end="68850" vertical-scroll-proportion="0.03359684">
+            <state line="1733" column="18" selection-start="68850" selection-end="68850" vertical-scroll-proportion="0.021573603">
               <folding />
             </state>
           </provider>
@@ -224,7 +224,7 @@
       <file leaf-file-name="Attributes.java" pinned="false" current="false" current-in-tab="false">
         <entry file="jar:///usr/jdk/instances/jdk1.5.0/src.zip!/org/xml/sax/Attributes.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="114" column="27" selection-start="3995" selection-end="3995" vertical-scroll-proportion="0.032629557">
+            <state line="114" column="27" selection-start="3995" selection-end="3995" vertical-scroll-proportion="0.02117061">
               <folding />
             </state>
           </provider>
@@ -261,7 +261,20 @@
     <option name="LAST_EDITED_TAB_NAME" />
   </component>
   <component name="NamedScopeManager" />
-  <component name="PackagesPane" />
+  <component name="PackagesPane">
+    <subPane>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="usertranslator.ipr" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="usertranslator" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+        </PATH_ELEMENT>
+      </PATH>
+    </subPane>
+  </component>
   <component name="PerforceChangeBrowserSettings">
     <option name="USE_CLIENT_FILTER" value="true" />
     <option name="CLIENT" value="" />
@@ -359,7 +372,7 @@
       <showLibraryContents />
       <hideEmptyPackages />
       <abbreviatePackageNames />
-      <showStructure ProjectPane="false" Favorites="false" />
+      <showStructure ProjectPane="false" PackagesPane="false" Favorites="false" />
       <autoscrollToSource />
       <autoscrollFromSource />
       <sortByType />
@@ -381,38 +394,6 @@
   <component name="RecentsManager" />
   <component name="RestoreUpdateTree" />
   <component name="RunManager" selected="Application.UserTranslator">
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-    </configuration>
-    <configuration default="true" type="Application" factoryName="Application" enabled="false" merge="false">
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <module name="" />
-      <method>
-        <option name="Make" value="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="Remote" factoryName="Remote">
-      <option name="USE_SOCKET_TRANSPORT" value="true" />
-      <option name="SERVER_MODE" value="false" />
-      <option name="SHMEM_ADDRESS" value="javadebug" />
-      <option name="HOST" value="localhost" />
-      <option name="PORT" value="5005" />
-    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -431,6 +412,38 @@
       <method>
         <option name="Make" value="true" />
       </method>
+    </configuration>
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application" enabled="false" merge="false">
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <module name="" />
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
     </configuration>
     <configuration default="false" name="UserTranslator" type="Application" factoryName="Application" enabled="false" merge="false">
       <option name="MAIN_CLASS_NAME" value="UserTranslator" />
@@ -513,8 +526,8 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-4" y="0" width="1292" height="996" extended-state="0" />
-    <editor active="false" />
+    <frame x="3" y="2" width="1292" height="988" extended-state="1" />
+    <editor active="true" />
     <layout>
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
@@ -530,7 +543,7 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="1" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32830626" order="2" x="28" y="106" width="1228" height="822" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32830626" order="2" x="28" y="106" width="1228" height="822" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="2" />
       <window_info id="File View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" order="4" />
@@ -618,7 +631,7 @@
   </component>
   <component name="com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectRootMasterDetailsConfigurable" proportions="0.16666667" version="1">
     <option name="myPlainMode" value="false" />
-    <option name="myLastEditedConfigurable" value="javacsv" />
+    <option name="myLastEditedConfigurable" value="OpenDS" />
   </component>
   <component name="com.intellij.profile.ui.ErrorOptionsConfigurable" proportions="" version="1">
     <option name="myLastEditedConfigurable" />
@@ -640,70 +653,70 @@
     </entry>
     <entry file="jar:///usr/jdk/instances/jdk1.5.0/src.zip!/java/io/PrintStream.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="301" column="16" selection-start="11569" selection-end="11569" vertical-scroll-proportion="0.032629557">
+        <state line="301" column="16" selection-start="11569" selection-end="11569" vertical-scroll-proportion="0.02117061">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="jar:///usr/jdk/instances/jdk1.5.0/src.zip!/java/io/FilterOutputStream.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="45" selection-start="990" selection-end="1002" vertical-scroll-proportion="0.032629557">
+        <state line="27" column="45" selection-start="990" selection-end="1002" vertical-scroll-proportion="0.02117061">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="jar:///usr/jdk/instances/jdk1.5.0/src.zip!/java/io/OutputStream.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="0" selection-start="848" selection-end="848" vertical-scroll-proportion="0.032629557">
+        <state line="28" column="0" selection-start="848" selection-end="848" vertical-scroll-proportion="0.02117061">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="jar:///usr/jdk/instances/jdk1.5.0/src.zip!/java/io/FileOutputStream.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="6" selection-start="1131" selection-end="1131" vertical-scroll-proportion="0.032629557">
+        <state line="34" column="6" selection-start="1131" selection-end="1131" vertical-scroll-proportion="0.02117061">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="jar:///usr/jdk/instances/jdk1.5.0/src.zip!/java/lang/System.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="82" column="36" selection-start="2900" selection-end="2900" vertical-scroll-proportion="0.032629557">
+        <state line="82" column="36" selection-start="2900" selection-end="2900" vertical-scroll-proportion="0.02117061">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="jar://$PROJECT_DIR$/javacsv.jar!/com/csvreader/CsvReader.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="92" column="14" selection-start="3473" selection-end="3473" vertical-scroll-proportion="0.03359684">
+        <state line="92" column="14" selection-start="3473" selection-end="3473" vertical-scroll-proportion="0.021573603">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/WikiUserHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="0" selection-start="1818" selection-end="1818" vertical-scroll-proportion="0.032629557">
+        <state line="27" column="0" selection-start="965" selection-end="965" vertical-scroll-proportion="0.02117061">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="jar:///usr/jdk/instances/jdk1.5.0/src.zip!/java/lang/String.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1733" column="18" selection-start="68850" selection-end="68850" vertical-scroll-proportion="0.03359684">
+        <state line="1733" column="18" selection-start="68850" selection-end="68850" vertical-scroll-proportion="0.021573603">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="jar:///usr/jdk/instances/jdk1.5.0/src.zip!/org/xml/sax/Attributes.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="114" column="27" selection-start="3995" selection-end="3995" vertical-scroll-proportion="0.032629557">
+        <state line="114" column="27" selection-start="3995" selection-end="3995" vertical-scroll-proportion="0.02117061">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/UserTranslator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="129" column="0" selection-start="3911" selection-end="3911" vertical-scroll-proportion="0.2725528">
+        <state line="164" column="0" selection-start="4968" selection-end="4968" vertical-scroll-proportion="2.7098382">
           <folding />
         </state>
       </provider>
