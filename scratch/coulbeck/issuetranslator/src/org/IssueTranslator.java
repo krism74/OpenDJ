@@ -260,6 +260,9 @@ public class IssueTranslator {
         {
           System.out.println("WARNING: Issue " + issue_id +
                " has multiple values of Doc Assessment: " + docAssessment);
+          String firstValue = docAssessment.get(0);
+          docAssessment = new ArrayList<String>(1);
+          docAssessment.add(firstValue);
         }
         else if (docAssessment.size() == 0)
         {
@@ -270,6 +273,9 @@ public class IssueTranslator {
         {
           System.out.println("WARNING: Issue " + issue_id +
                " has multiple values of Doc Status: " + docStatus);
+          String firstValue = docStatus.get(0);
+          docStatus = new ArrayList<String>(1);
+          docStatus.add(firstValue);
         }
         else if (docAssessment.size() == 0)
         {
@@ -280,6 +286,9 @@ public class IssueTranslator {
         {
           System.out.println("WARNING: Issue " + issue_id +
                " has multiple values of QA Status: " + qaStatus);
+          String firstValue = qaStatus.get(0);
+          qaStatus = new ArrayList<String>(1);
+          qaStatus.add(firstValue);
         }
         else if (qaStatus.size() == 0)
         {
@@ -290,6 +299,9 @@ public class IssueTranslator {
         {
           System.out.println("WARNING: Issue " + issue_id +
                " has multiple values of QA Evaluation: " + qaEval);
+          String firstValue = qaEval.get(0);
+          qaEval = new ArrayList<String>(1);
+          qaEval.add(firstValue);
         }
         else if (qaEval.size() == 0)
         {
@@ -498,6 +510,13 @@ public class IssueTranslator {
         {
           String mappedUser = userMap.get(trimmed);
           users.add(trimmed);
+          if (mappedUser == null)
+          {
+            System.out.println("ERROR: User " + trimmed +
+                 " is not in the user map");
+            userMap.put(trimmed, trimmed);
+            return trimmed;
+          }
           return mappedUser;
         }
       }
