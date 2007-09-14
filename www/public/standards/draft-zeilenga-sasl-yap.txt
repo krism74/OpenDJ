@@ -6,12 +6,12 @@
 
 INTERNET-DRAFT                                      Kurt D. Zeilenga
 Intended Category: Standards Track                  Isode Limited
-Expires in six months                               25 February 2007
+Expires in six months                               8 July 2007
 
 
 
                    SASL Yet Another Password Mechanism
-                     <draft-zeilenga-sasl-yap-00.txt>
+                     <draft-zeilenga-sasl-yap-01.txt>
 
 
 
@@ -55,16 +55,16 @@ Status of this Memo
 
 
 
-Zeilenga               draft-zeilenga-sasl-yap-00               [Page 1]
+Zeilenga               draft-zeilenga-sasl-yap-01               [Page 1]
 
-INTERNET-DRAFT                  SASL YAP                25 February 2007
+INTERNET-DRAFT                  SASL YAP                     8 July 2007
 
 
 Abstract
 
   This document describes a password authentication mechanism, called
-  YAP-SHA-256, for use in protocols support Simple Authentication and
-  Security Layer (SASL) framework.  The mechanism relies on security
+  YAP-SHA-256, for use in protocols which support Simple Authentication
+  and Security Layer (SASL) framework.  The mechanism relies on security
   services provided by a lower layer, such as Transport Layer Security
   (TLS), to protect the authentication exchange, and subsequent
   application data exchange, from common attacks.  The YAP-SHA-256
@@ -80,21 +80,26 @@ Abstract
   [RFC2831].  None of these mechanisms, themselves, provide integrity
   and confidential protection over the entirety of the authentication
   exchange.  Only DIGEST-MD5 offers a security layer and, even so, the
-  specification and implementations suffer from multiple problems.  And
-  while these mechanisms may be used in conjunction with lower-level
+  specification and its implementations suffer from multiple problems.
+  And while these mechanisms may be used in conjunction with lower-level
   security services, these mechanism do not offer any facility to bind
   the channels [CBIND].
 
   This situation has lead to multiple efforts to design "better" SASL
   password-based mechanism.  This document not only specifies yet
   another password mechanism, YAP-SHA-256, but defines a family of
-  related password mechanisms.
+  related password mechanisms, YAP-*.
 
-  The YAP is a family of simple password SASL mechanisms based upon the
+  YAP-* is pronounced "yap-star".  YAP-SHA-256 is pronounced
+  "yap-shaw-two-fifty-six".
+
+  YAP-* is a family of simple password SASL mechanisms based upon the
   Keyed-Hash Message Authentication Code (HMAC) [RFC2104] algorithm.
   The YAP-SHA-256 utilizes the SHA-256 [FIPS180-2] cryptographic hash
-  function in conjunction with the HMAC algorithm.  YAP is specified as
-  a family of SASL mechanisms to provide hash agility.
+  function in conjunction with the HMAC algorithm.
+
+  YAP is specified as a family of SASL mechanisms to provide hash
+  agility.
 
   YAP mechanisms reply on services provided at a lower level, such as
   Transport Layer Security (TLS) [RFC4346], to secure the authentication
@@ -104,18 +109,17 @@ Abstract
   authentication.
 
 
+
+
+Zeilenga               draft-zeilenga-sasl-yap-01               [Page 2]
+
+INTERNET-DRAFT                  SASL YAP                     8 July 2007
+
+
 1.1 Terminology
 
   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-
-
-
-Zeilenga               draft-zeilenga-sasl-yap-00               [Page 2]
-
-INTERNET-DRAFT                  SASL YAP                25 February 2007
-
-
   document are to be interpreted as described in BCP 14 [RFC2119].
 
 2. The YAP-* Family of mechanism
@@ -130,58 +134,67 @@ INTERNET-DRAFT                  SASL YAP                25 February 2007
 
   The mechanism involves a single message from the client to the server.
 
-      message = authcid separator [ authzid ] separator data
+      message = authzid separator [ authcid ] separator data
       separator = %x00
 
   where:
-      - <authcid> is authentication identity, a simple user name
-        [RFC4013], prepared using the SASLprep [RFC4013] and represented
-        in UTF-8 [RFC3629],
-
       - <authzid>, when present, is the authorization identity in the
         form specified by the application protocol specification,
         represented in UTF-8 [RFC3629], and
 
-      - <data> is Base64 [RFC4648] encoding of a Keyed-Hash Message
-        Authentication Code (HMAC) [RFC2104] produced as described
-        below.
+      - <authcid> is authentication identity, a simple user name
+        [RFC4013], prepared using the SASLprep [RFC4013] and represented
+        in UTF-8 [RFC3629],
 
-  The mechanism-specific hash algorithm, such as SHA-256 [FIPS180-2], is
-  used as the cryptographic hash function, H, in computing the HMAC.
-  The secret key, K, is the unique channel bindings [CBIND] for the
+      - <data> is a Keyed-Hash Message Authentication Code (HMAC)
+        [RFC2104] produced as described below.
+
+  Implementors should note that the data portion of the message may
+  contain a zero-valued octet and hence should parse the message
+  front-to-back.
+
+  The HMAC is produced using the mechanism-specific hash algorithm, such
+  as SHA-256 [FIPS180-2], as the cryptographic hash function, H.  The
+  secret key, K, is the unique channel bindings [CBIND] for the
   lower-level security protocol, padded with zero octets to the block
   size of the hash function.  Where the unique channel binding is longer
   than the block size of the hash function, K is hash of the unique
   channel bindings.  The text is the concatenation of the authcid, the
-  authzid, and the hash of the concatenation of the authcid and user's
-  password, a simple password [RFC4013], prepared using SASLprep
-  [RFC4013], and represented in UTF-8 [RFC3629].  That is, the <data> is
-  computed as illustrated by the following pseudo code.
-
-    Base64( HMAC(
-      K( Pad( LEN(ChannelBindings)>HashBlockSize
-        ? H(ChannelBindings) : ChannelBindings ), 0, HashBlockSize),
-      Concat( authcid, authzid,
-        H( authcid, UTF-8( SASLprep( password ))))))
+  authzid, and the hash of the user's password, a simple password
+  [RFC4013], prepared using SASLprep [RFC4013] and represented in UTF-8
+  [RFC3629].  That is, the <data> is computed as illustrated by the
+  following pseudo code.
 
 
 
-
-Zeilenga               draft-zeilenga-sasl-yap-00               [Page 3]
+Zeilenga               draft-zeilenga-sasl-yap-01               [Page 3]
 
-INTERNET-DRAFT                  SASL YAP                25 February 2007
+INTERNET-DRAFT                  SASL YAP                     8 July 2007
 
 
-  The text encompasses all parameters of the exchange to ensure
-  integrity of all parameters.
+    HMAC(
+      Pad( Length(ChannelBindings)>HashBlockSize
+        ? H(ChannelBindings) : ChannelBindings, 0, HashBlockSize),
+      Concat( authzid, authcid, H(UTF8( SASLprep( password )))))
 
-  The text includes a hash encompassing the password, instead of the
-  password itself, to allow the server to store this hash instead of the
-  password.  This hash also encompasses the authcid to make it harder to
-  mount dictionary attacks using pre-computed dictionary entries.
+  Note, in this pseudo code, the first argument of the HMAC function is
+  the secret key and the second is the text.  The cryptographic hash
+  function used in the HMAC is implicitly H.  The Pad function pads the
+  first argument to the length specified in the third argument with the
+  octet value provided in the second argument.  The variable
+  HashBlockSize is the block size of hash function, H.  The Length
+  function returns the length of its argument.  The Concat function
+  returns an octet which is the concatentation of its arguments.  The
+  UTF8 function returns the UTF-8 encoding of its argument.  The
+  SASLprep function prepares it argument according to the SASLprep
+  algorithm.  The H function returns the hash of its argument.
+
+  The hash of the user's password is a password equivalent.  Servers may
+  choose to store this hash instead of the user's password.   In either
+  case, the stored value must be adequately protected.
 
   Implementations SHOULD NOT advertise availabilty of any mechanism in
-  this family unless a lower-level security service provding both data
+  this family unless a lower-level security service providing both data
   integrity and data confidentiality protection is in place.  Client
   implementations SHOULD NOT utilize any mechanism in this family
   without first verifying the identity of the server within the
@@ -194,14 +207,28 @@ INTERNET-DRAFT                  SASL YAP                25 February 2007
   channel bindings, as describe in [CBIND-TLS].
 
 
-  3. The YAP-SHA256 Mechanism
+  3. The YAP-SHA-256 Mechanism
 
   The YAP-SHA-256 mechanism, named "YAP-SHA-256", is a YAP SASL
   mechanism.  The YAP-SHA-256 mechanism, as the name suggests, uses the
   SHA-256 [FIPS180-2][RFC4634] hash algorithm.
 
 
-4. Security Considerations
+  4. YAP-SHA-256 Examples
+
+  This section will provide examples of an YAP-SHA-256 authentication
+  exchanges...
+
+
+
+
+
+Zeilenga               draft-zeilenga-sasl-yap-01               [Page 4]
+
+INTERNET-DRAFT                  SASL YAP                     8 July 2007
+
+
+5. Security Considerations
 
   Security is discussed throughout this document.
 
@@ -218,17 +245,23 @@ INTERNET-DRAFT                  SASL YAP                25 February 2007
   Hash agility is provided in the family of mechanisms through the
   specification of additional mechanisms.
 
+  To avoid requiring server implementations maintain access to the
+  user's password, a password equivalent is used.  The password
+  equivalent is a simple hash of the password.
+
+  While it is likely that those choosing to store the password
+  equivalent instead of the password would prefer the equilavent be
+  designed to hinder dictionary attack with precomputed direction
+  entries, a simple hash was choosen to avoid adding a server challedge.
+  Use of the autchid as a salt was considered, but rejected as it would
+  tie the password equivalent to a particular authcid.  It was also
+  realized that it likely that implementors would (continue to) choose
+  to store the password instead of a mechanism specific password
+  equivalent.  Storing the password avoids significant implementation
+  complexity and facilates mechanism agility.
 
 
-
-
-
-Zeilenga               draft-zeilenga-sasl-yap-00               [Page 4]
-
-INTERNET-DRAFT                  SASL YAP                25 February 2007
-
-
-5. IANA Considerations
+6. IANA Considerations
 
   It is requested that IANA process the following request(s) upon
   approval of this document for publication as an RFC.
@@ -243,6 +276,14 @@ INTERNET-DRAFT                  SASL YAP                25 February 2007
       Owner/Change controller: IESG
 
       Subject: Registration of SASL YAP-SHA-256 mechanism
+
+
+
+Zeilenga               draft-zeilenga-sasl-yap-01               [Page 5]
+
+INTERNET-DRAFT                  SASL YAP                     8 July 2007
+
+
       SASL mechanism (or prefix for the family): YAP-SHA-256
       Security considerations: see RFC XXXX
       Published specification (recommended): RFC XXXX
@@ -252,12 +293,12 @@ INTERNET-DRAFT                  SASL YAP                25 February 2007
       Owner/Change controller: IESG
 
 
-6. Acknowledgments
+7. Acknowledgments
 
   TBD.
 
 
-7. Author's Address
+8. Author's Address
 
   Kurt D. Zeilenga
   Isode Limited
@@ -265,10 +306,10 @@ INTERNET-DRAFT                  SASL YAP                25 February 2007
   Email: Kurt.Zeilenga@Isode.COM
 
 
-8. References
+9. References
 
 
-8.1. Normative References
+9.1. Normative References
 
   [RFC2104]     Krawczyk, H., Bellare, M., and R. Canetti, "HMAC:
                 Keyed-Hashing for Message Authentication", RFC 2104,
@@ -276,13 +317,6 @@ INTERNET-DRAFT                  SASL YAP                25 February 2007
 
   [RFC2119]     Bradner, S., "Key words for use in RFCs to Indicate
                 Requirement Levels", BCP 14 (also RFC 2119), March 1997.
-
-
-
-Zeilenga               draft-zeilenga-sasl-yap-00               [Page 5]
-
-INTERNET-DRAFT                  SASL YAP                25 February 2007
-
 
   [RFC3629]     Yergeau, F., "UTF-8, a transformation format of ISO
                 10646", RFC 3629 (also STD 63), November 2003.
@@ -294,18 +328,22 @@ INTERNET-DRAFT                  SASL YAP                25 February 2007
                 Authentication and Security Layer (SASL)", RFC 4422,
                 June 2006.
 
-  [RFC4648]     Josefsson, S., "The Base16, Base32, and Base64 Data
-                Encodings", RFC 4648, October 2006.
-
 
   [FIPS180-2]   National Institute of Standards and Technology, "Secure
                 Hash Algorithm. NIST FIPS 180-2", August 2002.
   [CBIND] draft-ietf-nfsv4-channel-bindings
 
+
+
+Zeilenga               draft-zeilenga-sasl-yap-01               [Page 6]
+
+INTERNET-DRAFT                  SASL YAP                     8 July 2007
+
+
   [CBIND-TLS] draft-altman-tls-channel-bindings
 
 
-8.2. Informative References
+9.2. Informative References
 
   [RFC2195]     Klensin, J., R. Catoe, and P. Krumviede, "IMAP/POP
                 AUTHorize Extension for Simple Challenge/Response", RFC
@@ -323,6 +361,9 @@ INTERNET-DRAFT                  SASL YAP                25 February 2007
   [RFC4634]     Eastlake 3rd, D. and T. Hansen, "US Secure Hash
                 Algorithms (SHA and HMAC-SHA)", RFC 4634, August 2006.
 
+  [RFC4648]     Josefsson, S., "The Base16, Base32, and Base64 Data
+                Encodings", RFC 4648, October 2006.
+
 
 
 Intellectual Property
@@ -332,14 +373,6 @@ Intellectual Property
   pertain to the implementation or use of the technology described in
   this document or the extent to which any license under such rights
   might or might not be available; nor does it represent that it has
-
-
-
-Zeilenga               draft-zeilenga-sasl-yap-00               [Page 6]
-
-INTERNET-DRAFT                  SASL YAP                25 February 2007
-
-
   made any independent effort to identify any such rights.  Information
   on the procedures with respect to rights in RFC documents can be found
   in BCP 78 and BCP 79.
@@ -355,6 +388,14 @@ INTERNET-DRAFT                  SASL YAP                25 February 2007
   copyrights, patents or patent applications, or other proprietary
   rights that may cover technology that may be required to implement
   this standard.  Please address the information to the IETF at
+
+
+
+Zeilenga               draft-zeilenga-sasl-yap-01               [Page 7]
+
+INTERNET-DRAFT                  SASL YAP                     8 July 2007
+
+
   ietf-ipr@ietf.org.
 
 
@@ -391,5 +432,20 @@ Full Copyright
 
 
 
-Zeilenga               draft-zeilenga-sasl-yap-00               [Page 7]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Zeilenga               draft-zeilenga-sasl-yap-01               [Page 8]
 

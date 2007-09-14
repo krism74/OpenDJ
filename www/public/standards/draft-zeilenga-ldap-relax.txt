@@ -6,12 +6,12 @@
 
 INTERNET-DRAFT                                   Kurt D. Zeilenga
 Intended Category: Experimental                  Isode Limited
-Expires in six months                            14 February 2007
+Expires in six months                            31 August 2007
 
 
 
                        The LDAP Relax Rules Control
-                    <draft-zeilenga-ldap-relax-01.txt>
+                    <draft-zeilenga-ldap-relax-02.txt>
 
 
 Status of this Memo
@@ -57,7 +57,7 @@ Status of this Memo
 
 Zeilenga                LDAP Relax Rules Control                [Page 1]
 
-INTERNET-DRAFT        draft-zeilenga-ldap-relax-01      14 February 2007
+INTERNET-DRAFT        draft-zeilenga-ldap-relax-02        31 August 2007
 
 
 Abstract
@@ -113,7 +113,7 @@ Abstract
 
 Zeilenga                LDAP Relax Rules Control                [Page 2]
 
-INTERNET-DRAFT        draft-zeilenga-ldap-relax-01      14 February 2007
+INTERNET-DRAFT        draft-zeilenga-ldap-relax-02        31 August 2007
 
 
   This extension is considered experimental as it is not yet clear
@@ -169,7 +169,7 @@ INTERNET-DRAFT        draft-zeilenga-ldap-relax-01      14 February 2007
 
 Zeilenga                LDAP Relax Rules Control                [Page 3]
 
-INTERNET-DRAFT        draft-zeilenga-ldap-relax-01      14 February 2007
+INTERNET-DRAFT        draft-zeilenga-ldap-relax-02        31 August 2007
 
 
   DIT content rule may contain an attribute now precluded by the current
@@ -225,7 +225,7 @@ INTERNET-DRAFT        draft-zeilenga-ldap-relax-01      14 February 2007
 
 Zeilenga                LDAP Relax Rules Control                [Page 4]
 
-INTERNET-DRAFT        draft-zeilenga-ldap-relax-01      14 February 2007
+INTERNET-DRAFT        draft-zeilenga-ldap-relax-02        31 August 2007
 
 
   In the presence of the Relax Rules control, the server performs the
@@ -281,7 +281,7 @@ INTERNET-DRAFT        draft-zeilenga-ldap-relax-01      14 February 2007
 
 Zeilenga                LDAP Relax Rules Control                [Page 5]
 
-INTERNET-DRAFT        draft-zeilenga-ldap-relax-01      14 February 2007
+INTERNET-DRAFT        draft-zeilenga-ldap-relax-02        31 August 2007
 
 
   constraintViolation or other appropriate error [RFC4511].  In the
@@ -337,7 +337,7 @@ INTERNET-DRAFT        draft-zeilenga-ldap-relax-01      14 February 2007
 
 Zeilenga                LDAP Relax Rules Control                [Page 6]
 
-INTERNET-DRAFT        draft-zeilenga-ldap-relax-01      14 February 2007
+INTERNET-DRAFT        draft-zeilenga-ldap-relax-02        31 August 2007
 
 
       replace: entryUUID
@@ -393,7 +393,7 @@ INTERNET-DRAFT        draft-zeilenga-ldap-relax-01      14 February 2007
 
 Zeilenga                LDAP Relax Rules Control                [Page 7]
 
-INTERNET-DRAFT        draft-zeilenga-ldap-relax-01      14 February 2007
+INTERNET-DRAFT        draft-zeilenga-ldap-relax-02        31 August 2007
 
 
   on entry creation, the client should issue an LDAP Add request with
@@ -449,7 +449,7 @@ INTERNET-DRAFT        draft-zeilenga-ldap-relax-01      14 February 2007
 
 Zeilenga                LDAP Relax Rules Control                [Page 8]
 
-INTERNET-DRAFT        draft-zeilenga-ldap-relax-01      14 February 2007
+INTERNET-DRAFT        draft-zeilenga-ldap-relax-02        31 August 2007
 
 
       modifiersName: cn=Jane Doe,dc=example,net
@@ -505,7 +505,7 @@ INTERNET-DRAFT        draft-zeilenga-ldap-relax-01      14 February 2007
 
 Zeilenga                LDAP Relax Rules Control                [Page 9]
 
-INTERNET-DRAFT        draft-zeilenga-ldap-relax-01      14 February 2007
+INTERNET-DRAFT        draft-zeilenga-ldap-relax-02        31 August 2007
 
 
       Author/Change Controller: Kurt Zeilenga <Kurt.Zeilenga@Isode.COM>
@@ -561,7 +561,7 @@ INTERNET-DRAFT        draft-zeilenga-ldap-relax-01      14 February 2007
 
 Zeilenga                LDAP Relax Rules Control               [Page 10]
 
-INTERNET-DRAFT        draft-zeilenga-ldap-relax-01      14 February 2007
+INTERNET-DRAFT        draft-zeilenga-ldap-relax-02        31 August 2007
 
 
                 Models", RFC 4512, June 2006.
@@ -617,7 +617,7 @@ Full Copyright
 
 Zeilenga                LDAP Relax Rules Control               [Page 11]
 
-INTERNET-DRAFT        draft-zeilenga-ldap-relax-01      14 February 2007
+INTERNET-DRAFT        draft-zeilenga-ldap-relax-02        31 August 2007
 
 
   Copyright (C) The IETF Trust (2007).

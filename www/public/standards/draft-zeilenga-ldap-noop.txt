@@ -6,12 +6,12 @@
 
 INTERNET-DRAFT                                      Kurt D. Zeilenga
 Intended Category: Standard Track                      Isode Limited
-Expires in six months                               14 February 2007
+Expires in six months                                 31 August 2007
 
 
 
                           The LDAP No-Op Control
-                    <draft-zeilenga-ldap-noop-10.txt>
+                    <draft-zeilenga-ldap-noop-11.txt>
 
 
 Status of this Memo
@@ -57,7 +57,7 @@ Status of this Memo
 
 Zeilenga                   LDAP No-Op Control                   [Page 1]
 
-INTERNET-DRAFT         draft-zeilenga-ldap-noop-10      14 February 2007
+INTERNET-DRAFT         draft-zeilenga-ldap-noop-11        31 August 2007
 
 
 Abstract
@@ -113,7 +113,7 @@ Abstract
 
 Zeilenga                   LDAP No-Op Control                   [Page 2]
 
-INTERNET-DRAFT         draft-zeilenga-ldap-noop-10      14 February 2007
+INTERNET-DRAFT         draft-zeilenga-ldap-noop-11        31 August 2007
 
 
 2.  No-Op Control
@@ -169,7 +169,7 @@ INTERNET-DRAFT         draft-zeilenga-ldap-noop-10      14 February 2007
 
 Zeilenga                   LDAP No-Op Control                   [Page 3]
 
-INTERNET-DRAFT         draft-zeilenga-ldap-noop-10      14 February 2007
+INTERNET-DRAFT         draft-zeilenga-ldap-noop-11        31 August 2007
 
 
 4.  IANA Considerations
@@ -225,7 +225,7 @@ INTERNET-DRAFT         draft-zeilenga-ldap-noop-10      14 February 2007
 
 Zeilenga                   LDAP No-Op Control                   [Page 4]
 
-INTERNET-DRAFT         draft-zeilenga-ldap-noop-10      14 February 2007
+INTERNET-DRAFT         draft-zeilenga-ldap-noop-11        31 August 2007
 
 
   Email: Kurt.Zeilenga@Isode.COM
@@ -281,7 +281,7 @@ Intellectual Property
 
 Zeilenga                   LDAP No-Op Control                   [Page 5]
 
-INTERNET-DRAFT         draft-zeilenga-ldap-noop-10      14 February 2007
+INTERNET-DRAFT         draft-zeilenga-ldap-noop-11        31 August 2007
 
 
   pertain to the implementation or use of the technology described in
