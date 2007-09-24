@@ -1,3 +1,6 @@
+## For the wiki (and maybe the functional tests) we also need to consider the generated properties like list-je-indexes -> list-local-db-indexes.  Maybe we can run "dsconfig --help-all" in the trunk and the then the temp-admin branch to see what needs to change.
+
+
 acl-handler-class,java-class
 java-implementation-class,java-class
 notification-handler-class,java-class
