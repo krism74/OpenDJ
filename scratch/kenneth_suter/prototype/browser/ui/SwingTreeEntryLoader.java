@@ -25,12 +25,14 @@
  *      Portions Copyright 2007 Sun Microsystems, Inc.
  */
 
-package org.opends.statuspanel.browser.ui;
+package org.opends.guitools.statuspanel.browser.ui;
 
-import org.opends.statuspanel.browser.ldap.Entry;
-import org.opends.statuspanel.browser.ldap.DirectoryFacade;
-import org.opends.statuspanel.browser.ui.EntryLoaderListener;
-import org.opends.statuspanel.browser.ldap.EntryManager;
+import org.opends.guitools.statuspanel.browser.ldap.Entry;
+import org.opends.guitools.statuspanel.browser.ldap.DirectoryFacade;
+import org.opends.guitools.statuspanel.browser.ui.EntryLoaderListener;
+import org.opends.guitools.statuspanel.browser.ldap.EntryManager;
+import org.opends.server.types.DN;
+import org.opends.quicksetup.util.BackgroundTask;
 
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeExpansionEvent;
@@ -44,6 +46,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  *
@@ -52,8 +55,8 @@ public class SwingTreeEntryLoader implements TreeExpansionListener, EntryLoader 
 
   TreeAdapter treeAdapter;
   DirectoryFacade provider;
-  Map<Entry, EntryLoader> loaders =
-          Collections.synchronizedMap(new WeakHashMap<Entry, EntryLoader>());
+  Map<Entry, EntryLoadingWorker> loaders =
+          Collections.synchronizedMap(new WeakHashMap<Entry, EntryLoadingWorker>());
   Status status;
   Set<EntryLoaderListener> listeners = new HashSet<EntryLoaderListener>();
 
@@ -120,9 +123,9 @@ public class SwingTreeEntryLoader implements TreeExpansionListener, EntryLoader 
   }
 
   protected void entryExpanded(Entry entry) {
-    EntryLoader loader;
-    if (null != (loader = loaders.get(entry))) {
-      loader.setPriority(Thread.MAX_PRIORITY);
+    EntryLoadingWorker loadingWorker;
+    if (null != (loadingWorker = loaders.get(entry))) {
+      // loadingWorker.setPriority(Thread.MAX_PRIORITY);
     } else {
       startLoader(entry, 2);
     }
@@ -154,12 +157,12 @@ public class SwingTreeEntryLoader implements TreeExpansionListener, EntryLoader 
    * @param depth
    */
   synchronized private void startLoader(Entry entry, int depth) {
-    EntryLoader loader = new EntryLoader(entry, depth, status);
-    loaders.put(entry,  loader);
-    loader.start();
+    EntryLoadingWorker loadingWorker = new EntryLoadingWorker(entry, depth, status);
+    loaders.put(entry, loadingWorker);
+    loadingWorker.startBackgroundTask();
   }
 
-  class EntryLoader extends SwingWorker<List<Entry>> {
+  class EntryLoadingWorker extends BackgroundTask<List<Entry>> {
 
     Entry parent;
     Long msgId;
@@ -167,15 +170,16 @@ public class SwingTreeEntryLoader implements TreeExpansionListener, EntryLoader 
     Status status;
     boolean loadPerformed;
 
-    public EntryLoader(Entry parent, int depth, Status status) {
+    public EntryLoadingWorker(Entry parent, int depth, Status status) {
       this.parent = parent;
       this.depth = depth;
       this.status = status;
     }
 
-    protected List<Entry> construct() throws Exception {
+    public List<Entry> processBackgroundTask() throws Exception {
       List<Entry> children = null;
-      try {
+      Boolean hasChildren = parent.hasChildren();
+      if (Boolean.TRUE.equals(hasChildren) || hasChildren == null) {
         if (parent.childrenNeedLoading()) {
           msgId = status.wait("Loading children for " + parent);
           DirectoryFacade.SearchOperation so = provider.getChildren(parent);
@@ -184,38 +188,43 @@ public class SwingTreeEntryLoader implements TreeExpansionListener, EntryLoader 
           fireEntriesLoaded(children);
           loadPerformed = true;
         } else {
-          System.out.println("Entry " + parent + " already loaded.");
+          System.out.println("Children for " + parent + " already loaded.");
           children = parent.getChildren();
-          loadPerformed = false;
         }
-      } catch (Exception e) {
-        // status.handleThrowable(e, getThrowableMessageInterpreter());
-      } finally {
-        // status.clear(msgId);
+      } else {
+        System.out.println("Entry " + parent + " has no children");
+        children = Collections.emptyList();
       }
+      Collections.sort(children, new Comparator<Entry>() {
+        public int compare(Entry o1, Entry o2) {
+          DN dn1 = o1.getDn();
+          DN dn2 = o2.getDn();
+          return dn1.getRDN().compareTo(dn2.getRDN());
+        }
+      });
       return children;
     }
 
-    protected void finished() {
-      try {
-        List<Entry> children = get();
-        // Update the tree if something was actually loaded.
-        if (loadPerformed) {
-          treeAdapter.setChildren(parent, children);
-        }
-        if (depth > 0) {
-          for (Entry child : children) {
-            startLoader(child, depth - 1);
-          }
-        }
-        loaders.remove(parent);
-        status.done(msgId);
-      } catch (InterruptedException ex) {
-        ex.printStackTrace();
-      } catch (ExecutionException ex) {
-        ex.printStackTrace();
+    public void backgroundTaskCompleted(List<Entry> children,
+                                        Throwable throwable) {
+      // Update the tree if something was actually loaded.
+      if (loadPerformed) {
+        treeAdapter.setChildren(parent, children);
       }
+      if (depth > 0) {
+        for (Entry child : children) {
+          startLoader(child, depth - 1);
+        }
+      }
+      loaders.remove(parent);
+      status.done(msgId);
+
+      if (throwable != null) {
+        status.error(throwable.getMessage());
+      }
+
     }
+
   }
 
 }

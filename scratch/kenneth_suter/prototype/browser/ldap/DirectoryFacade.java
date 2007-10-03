@@ -1,7 +1,7 @@
-package org.opends.statuspanel.browser.ldap;
+package org.opends.guitools.statuspanel.browser.ldap;
 
-import org.opends.statuspanel.browser.ldap.LdapServerInfo;
-import org.opends.statuspanel.browser.ldap.Entry;
+import org.opends.guitools.statuspanel.browser.ldap.LdapServerInfo;
+import org.opends.guitools.statuspanel.browser.ldap.Entry;
 
 import java.util.List;
 import java.util.Set;

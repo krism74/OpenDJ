@@ -1,4 +1,4 @@
-package org.opends.statuspanel.browser.ui;
+package org.opends.guitools.statuspanel.browser.ui;
 
 import org.opends.quicksetup.event.MinimumSizeComponentListener;
 import org.opends.quicksetup.ui.UIFactory;
@@ -7,12 +7,13 @@ import org.opends.server.core.DirectoryServer;
 import org.opends.server.types.DN;
 import org.opends.server.types.RDN;
 import org.opends.server.types.DirectoryException;
-import org.opends.statuspanel.browser.ldap.Entry;
-import org.opends.statuspanel.browser.ldap.DirectoryFacade;
-import org.opends.statuspanel.browser.ldap.JndiDirectoryFacade;
-import org.opends.statuspanel.browser.ldap.LdapServerInfo;
-import org.opends.statuspanel.browser.ldap.EntryManager;
-import org.opends.statuspanel.browser.BrowserProperties;
+import org.opends.guitools.statuspanel.browser.ldap.Entry;
+import org.opends.guitools.statuspanel.browser.ldap.DirectoryFacade;
+import org.opends.guitools.statuspanel.browser.ldap.JndiDirectoryFacade;
+import org.opends.guitools.statuspanel.browser.ldap.LdapServerInfo;
+import org.opends.guitools.statuspanel.browser.ldap.EntryManager;
+import org.opends.guitools.statuspanel.browser.BrowserProperties;
+import org.opends.messages.Message;
 
 import javax.swing.*;
 import java.util.logging.Logger;
@@ -36,9 +37,9 @@ public class Browser extends JFrame {
 
   private static final long serialVersionUID = -651282065343750689L;
 
-  private static final String CMD_REFRESH = "refresh";
-  private static final String CMD_NEW_CHILD_ENTRY = "new child entry";
-  private static final String CMD_DELETE_ENTRY = "delete child entry";
+  static final String CMD_REFRESH = "refresh";
+  static final String CMD_NEW_CHILD_ENTRY = "new child entry";
+  static final String CMD_DELETE_ENTRY = "delete child entry";
 
   private final String LDAP_FILTER = "LDAP Filter:";
 
@@ -51,8 +52,6 @@ public class Browser extends JFrame {
   private StatusPanel status;
 
   private LdapServerInfo ldapInfo;
-
-  private Properties properties;
 
   /**
    * Constructs a new instance.  In order for this browser to
@@ -83,6 +82,10 @@ public class Browser extends JFrame {
     }
   }
 
+  public void refresh() {
+    setServerInfo(this.ldapInfo);
+  }
+
   /**
    * Sets credentials for accessing entries from the directory
    * @param name of a directory user
@@ -98,11 +101,22 @@ public class Browser extends JFrame {
   }
 
   /**
+   * Creates a new child entry for the selected node.
+   */
+  public void newChildForSelectedEntry() {
+    createNewChildEntry(treeAdapter.getSelected());
+  }
+
+  public void deleteSelectedEntry() {
+    deleteEntry(treeAdapter.getSelected());
+  }
+
+  /**
    * Constructs the browser UI.
    */
   private void init() {
 
-    final BrowseTreeMenu treeMenu = new BrowseTreeMenu();
+    final BrowseTreeMenu treeMenu = new BrowseTreeMenu(this);
 
     status = new StatusPanel();
     // status.setBorder(BorderFactory.createLineBorder(Color.BLUE));
@@ -241,7 +255,9 @@ public class Browser extends JFrame {
     gbc.insets.bottom = 7;
     gbc.weightx = 0;
     gbc.fill = GridBagConstraints.NONE;
-    topPanel.add(UIFactory.makeJLabel(null, "Base DN:", UIFactory.TextStyle.SECONDARY_FIELD_VALID), gbc);
+    topPanel.add(UIFactory.makeJLabel(null,
+            Message.raw("Base DN:"),
+            UIFactory.TextStyle.SECONDARY_FIELD_VALID), gbc);
 
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -250,7 +266,9 @@ public class Browser extends JFrame {
     gbc.weightx = 0;
     gbc.fill = GridBagConstraints.NONE;
     gbc.insets.left = 15;
-    topPanel.add(UIFactory.makeJLabel(null, "Filter:", UIFactory.TextStyle.SECONDARY_FIELD_VALID), gbc);
+    topPanel.add(UIFactory.makeJLabel(null,
+            Message.raw("Filter:"),
+            UIFactory.TextStyle.SECONDARY_FIELD_VALID), gbc);
 
     gbc.insets.left = 5;
     gbc.weightx = .75;
@@ -290,7 +308,9 @@ public class Browser extends JFrame {
 
   private JPanel createBottomPanel(StatusPanel status) {
     JPanel bottom = new JPanel();
-    JButton btnClose = UIFactory.makeJButton("Close", "Close entry browser");
+    JButton btnClose = UIFactory.makeJButton(
+            Message.raw("Close"), 
+            Message.raw("Close entry browser"));
     btnClose.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         setVisible(false);
@@ -347,61 +367,6 @@ public class Browser extends JFrame {
         status.error(dop.getLocalizedErrorMessage());
       }
     }, "Modify " + entry).start();
-  }
-
-  /**
-   * Implementation of a popup menu invoked by right-clicking
-   * entries in the browse tree.
-   */
-  private class BrowseTreeMenu extends JPopupMenu {
-
-    JMenuItem miNewChild;
-    JMenuItem miDelete;
-    JMenuItem miRefresh;
-
-    BrowseTreeMenu() {
-
-      ActionListener al = new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          String cmd = e.getActionCommand();
-          if (CMD_REFRESH.equals(cmd)) {
-            setServerInfo(ldapInfo);
-          } else if (CMD_NEW_CHILD_ENTRY.equals(cmd)) {
-            createNewChildEntry(treeAdapter.getSelected());
-          } else if (CMD_DELETE_ENTRY.equals(cmd)) {
-            if (JOptionPane.YES_OPTION ==
-                    JOptionPane.showConfirmDialog(
-                    Browser.this,
-                    "Delete this entry?",
-                    "Confirm Delete",
-                    JOptionPane.YES_NO_OPTION
-                    )) {
-              deleteEntry(treeAdapter.getSelected());
-            }
-          }
-        }
-      };
-
-      miNewChild = new JMenuItem("New Child Entry");
-      miNewChild.setActionCommand(CMD_NEW_CHILD_ENTRY);
-      miNewChild.addActionListener(al);
-      add(miNewChild);
-
-      miDelete = new JMenuItem("Delete Entry");
-      miDelete.setActionCommand(CMD_DELETE_ENTRY);
-      miDelete.addActionListener(al);
-      add(miDelete);
-
-      miRefresh = new JMenuItem("Refresh");
-      miRefresh.setActionCommand(CMD_REFRESH);
-      miRefresh.addActionListener(al);
-      add(miRefresh);
-    }
-
-    public void setState(Entry entry) {
-      miDelete.setEnabled(entry != null && entry.canDelete());
-    }
-
   }
 
   /**

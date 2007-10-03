@@ -25,7 +25,7 @@
  *      Portions Copyright 2007 Sun Microsystems, Inc.
  */
 
-package org.opends.statuspanel.browser.ldap;
+package org.opends.guitools.statuspanel.browser.ldap;
 
 import org.opends.server.types.DN;
 import org.opends.server.types.DirectoryException;

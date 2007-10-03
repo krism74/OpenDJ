@@ -1,8 +1,9 @@
-package org.opends.statuspanel.browser.ui;
+package org.opends.guitools.statuspanel.browser.ui;
 
 import org.opends.quicksetup.ui.UIFactory;
-import org.opends.statuspanel.browser.ldap.Entry;
-import org.opends.statuspanel.browser.ui.EntryListener;
+import org.opends.guitools.statuspanel.browser.ldap.Entry;
+import org.opends.guitools.statuspanel.browser.ui.EntryListener;
+import org.opends.messages.Message;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -16,13 +17,15 @@ import java.util.Map;
 import java.util.List;
 import java.util.Collections;
 import java.util.ArrayList;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 /**
  * The main right-hand panel of the browser representing entry contents.
  * This panel hosts tool bars for operating on the entry as well as
  * viewers for representing the entry visually.
  */
-public class ContentPanel extends JPanel implements ActionListener {
+public class ContentPanel extends JPanel implements ActionListener, EntryListener {
 
   /** Action command string for new child entries. */
   static public final String CMD_NEW_CHILD = "new child";
@@ -46,6 +49,8 @@ public class ContentPanel extends JPanel implements ActionListener {
    * entry in response to another entry being set.
    */
   static public final String CMD_ABANDON = "abandon";
+
+  private static final long serialVersionUID = -8011564990796028367L;
 
   static private final String NEW_TOOLS = "new";
   static private final String EXISTING_TOOLS = "existing";
@@ -124,6 +129,8 @@ public class ContentPanel extends JPanel implements ActionListener {
       setModifiedEntry(false);
       String label = "<html><b>" + ENTRY_DETAILS + "</b>" + entry.getDn() + "</html>";
       entryName.setText(label);
+      attrsView.setEntry(entry);
+      showAttributes(true);
       //tm = new EntryTableModel(entry);
       //tblEntry.setModel(tm);
       if (entry.isNew()) {
@@ -239,21 +246,31 @@ public class ContentPanel extends JPanel implements ActionListener {
     }
   }
 
-  private List<AttributesView> createAttributesViews() {
-    List<AttributesView> lstAttrViews = new ArrayList<AttributesView>();
-    lstAttrViews.add(new EmptyAttributesView());
-    lstAttrViews.add(new TableAttributesView());
-    return lstAttrViews;
-  }
+//  private List<AttributesView> createAttributesViews() {
+//    List<AttributesView> lstAttrViews = new ArrayList<AttributesView>();
+//
+//    EmptyAttributesView empty = new EmptyAttributesView();
+//    lstAttrViews.add(new EmptyAttributesView());
+//
+//    TableAttributesView table = new TableAttributesView();
+//    table.addPropertyChangeListener(this);
+//    lstAttrViews.add(new TableAttributesView());
+//
+//    return lstAttrViews;
+//  }
 
   private void init() {
-    entryName = UIFactory.makeJLabel(null, ENTRY_DETAILS, UIFactory.TextStyle.INSTRUCTIONS);
-    attrsView = new EmptyAttributesView();
+    entryName = UIFactory.makeJLabel(null,
+            Message.raw(ENTRY_DETAILS),
+            UIFactory.TextStyle.INSTRUCTIONS);
+    attrsView = new TableAttributesView();
+    attrsView.addEntryListener(this);
     pnlAttributes = new JPanel();
     CardLayout cl = new CardLayout();
     pnlAttributes.setLayout(cl);
-    List<AttributesView> attrViews = createAttributesViews();
-    
+    pnlAttributes.add("empty", new EmptyAttributesView());
+    pnlAttributes.add("table", attrsView);
+
 
 //    tblEntry = new JTable();
 //    tblEntry.setShowGrid(false);
@@ -326,10 +343,19 @@ public class ContentPanel extends JPanel implements ActionListener {
   }
 
   private JButton createButton(String text, String command) {
-    JButton btn = UIFactory.makeJButton(text, "");
+    JButton btn = UIFactory.makeJButton(Message.raw(text), Message.raw(""));
     btn.setActionCommand(command);
     btn.addActionListener(this);
     return btn;
+  }
+
+  private void showAttributes(boolean show) {
+    CardLayout cl = (CardLayout)pnlAttributes.getLayout();
+    if (show) {
+      cl.show(pnlAttributes, "table");
+    } else {
+      cl.show(pnlAttributes, "empty");
+    }
   }
 
   private void showTools(String key) {
@@ -361,4 +387,17 @@ public class ContentPanel extends JPanel implements ActionListener {
     butDelete.setEnabled(entry.canDelete());    
   }
 
+  public void actionPerformed(ContentEvent evt) {
+    setModifiedEntry(true);
+  }
+
+  public void entryModified(EntryModifiedEvent evt) {
+    setModifiedEntry(true);
+  }
+
+  public void entryDeleted(EntryDeletedEvent evt) {
+  }
+
+  public void entryAdded(EntryAddedEvent evt) {
+  }
 }

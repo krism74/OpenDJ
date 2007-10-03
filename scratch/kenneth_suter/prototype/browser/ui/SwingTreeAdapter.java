@@ -1,6 +1,6 @@
-package org.opends.statuspanel.browser.ui;
+package org.opends.guitools.statuspanel.browser.ui;
 
-import org.opends.statuspanel.browser.ldap.Entry;
+import org.opends.guitools.statuspanel.browser.ldap.Entry;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionListener;
@@ -219,19 +219,6 @@ public class SwingTreeAdapter implements TreeAdapter {
       tp = new TreePath(pathArray);
     }
     return tp;
-  }
-
-  class EntryTreeNode extends DefaultMutableTreeNode {
-
-    public EntryTreeNode(Entry entry) {
-      super(entry, true);
-      entry.setNode(this);
-    }
-
-    public Entry getEntry() {
-      return (Entry)getUserObject();
-    }
-
   }
 
 }

@@ -1,4 +1,4 @@
-package org.opends.statuspanel.browser;
+package org.opends.guitools.statuspanel.browser;
 
 import java.util.Properties;
 import java.util.List;
@@ -21,6 +21,8 @@ public class BrowserProperties extends Properties {
 
   static private final Logger LOG =
           Logger.getLogger(BrowserProperties.class.getName());
+
+  static private final long serialVersionUID = -3160742534902122448L;
 
   static private BrowserProperties instance;
 

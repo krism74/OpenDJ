@@ -1,4 +1,4 @@
-package org.opends.statuspanel.browser.ldap;
+package org.opends.guitools.statuspanel.browser.ldap;
 
 /**
  */

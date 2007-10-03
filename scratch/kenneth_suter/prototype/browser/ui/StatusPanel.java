@@ -1,15 +1,15 @@
-package org.opends.statuspanel.browser.ui;
+package org.opends.guitools.statuspanel.browser.ui;
 
 import org.opends.quicksetup.ui.UIFactory;
 
 import javax.swing.*;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.PriorityBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.WeakHashMap;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.awt.*;
 
 /**
@@ -18,18 +18,20 @@ public class StatusPanel extends JPanel implements Status {
 
   private static Logger LOG = Logger.getLogger(StatusPanel.class.getName());
 
+  private static final long serialVersionUID = -2110906650411270393L;
+
   private static final int STATUS_REAPER_FREQUENCY_MS = 1000;
 
   private static final int STATUS_DISPLAYER_FREQUENCY_MS = 1000;
 
   private JLabel lblStatus = UIFactory.makeJLabel(null, null, UIFactory.TextStyle.SECONDARY_FIELD_VALID);
 
-  private Message currentMessage = null;
+  private StatusMessage currentMessage = null;
 
-  private PriorityBlockingQueue<Message> messageQueue =
-          new PriorityBlockingQueue<Message>();
+  private PriorityQueue<StatusMessage> messageQueue =
+          new PriorityQueue<StatusMessage>();
 
-  private Map<Long,Message> messageMap = new WeakHashMap<Long,Message>();
+  private Map<Long, StatusMessage> messageMap = new WeakHashMap<Long, StatusMessage>();
 
   public StatusPanel() {
     setLayout(new BorderLayout());
@@ -42,7 +44,7 @@ public class StatusPanel extends JPanel implements Status {
   synchronized public Long wait(final String s) {
     Long id = null;
     if (s != null) {
-      Message msg = new Message(s, Message.Type.WAIT, 5);
+      StatusMessage msg = new StatusMessage(s, StatusMessage.Type.WAIT, 5);
       id = msg.getId();
       messageQueue.add(msg);
       messageMap.put(id, msg);
@@ -51,7 +53,7 @@ public class StatusPanel extends JPanel implements Status {
   }
 
   synchronized public void done(Long messageId) {
-    Message msg = messageMap.remove(messageId);
+    StatusMessage msg = messageMap.remove(messageId);
     if (msg != null) {
       messageQueue.remove(msg);
     }
@@ -59,19 +61,19 @@ public class StatusPanel extends JPanel implements Status {
 
   synchronized public void error(String text) {
     if (text != null) {
-      Message msg = new Message(text, Message.Type.ERROR, 1);
+      StatusMessage msg = new StatusMessage(text, StatusMessage.Type.ERROR, 1);
       messageQueue.add(msg);
     }
   }
 
   synchronized public void warning(String text) {
     if (text != null) {
-      Message msg = new Message(text, Message.Type.WARNING, 2);
+      StatusMessage msg = new StatusMessage(text, StatusMessage.Type.WARNING, 2);
       messageQueue.add(msg);
     }
   }
 
-  private void updateLabel(final Message message) {
+  private void updateLabel(final StatusMessage message) {
     if (SwingUtilities.isEventDispatchThread()) {
       updateLabel2(message);
     } else {
@@ -83,7 +85,7 @@ public class StatusPanel extends JPanel implements Status {
     }
   }
 
-  synchronized private void updateLabel2(final Message message) {
+  synchronized private void updateLabel2(final StatusMessage message) {
     currentMessage = message;
     if (message != null) {
       message.shown(System.currentTimeMillis());
@@ -107,23 +109,54 @@ public class StatusPanel extends JPanel implements Status {
 
   private class MessageDisplayer implements Runnable {
 
-    PriorityBlockingQueue<Message> messages;
+    PriorityQueue<StatusMessage> messages;
 
-    MessageDisplayer(PriorityBlockingQueue<Message> messages) {
+    MessageDisplayer(PriorityQueue<StatusMessage> messages) {
       this.messages = messages;
     }
 
     public void run() {
       while (true) {
         try {
-          // Blocks waiting for a new message
-          Message nextMessage = messages.peek();
-          if (nextMessage != null &&
-                  (currentMessage == null ||
-                  currentMessage.isStale() ||
-                  currentMessage.getPriority() < nextMessage.getPriority())) {
-            updateLabel(messages.take());
+          if (currentMessage != null &&
+                  currentMessage.isExpired()) {
+            updateLabel(null);
           }
+
+          StatusMessage nextMessage = messages.poll();
+          if (nextMessage != null) {
+            System.out.println("nextm=" + nextMessage.toString());
+            System.out.println("nextstale=" + nextMessage.isStale());
+            if (currentMessage != null) {
+              System.out.println("currentexp=" + currentMessage.isExpired());
+              System.out.println("currentprio=" + currentMessage.getPriority());
+              System.out.println("nextprio=" + nextMessage.getPriority());
+            }
+            while (true) {
+              System.out.println("nextm=" + nextMessage.toString());
+              System.out.println("nextstale=" + nextMessage.isStale());
+              if (currentMessage != null) {
+                System.out.println("currentexp=" + currentMessage.isExpired());
+                System.out.println("currentprio=" + currentMessage.getPriority());
+                System.out.println("nextprio=" + nextMessage.getPriority());
+              }
+              if (!nextMessage.isStale()) {
+                if (currentMessage == null ||
+                            currentMessage.isExpired() &&
+                            currentMessage.getPriority() >= nextMessage.getPriority()) {
+                  break;
+                }
+              }
+              nextMessage = messages.poll();
+              if (nextMessage == null) break;
+            }
+          }
+
+          if (nextMessage != null) {
+            System.out.println("Showing " + nextMessage);
+            updateLabel(nextMessage);
+          }
+
           Thread.sleep(STATUS_DISPLAYER_FREQUENCY_MS);
         } catch (InterruptedException e) {
           LOG.log(Level.INFO, "message canceler interrupted", e);
@@ -138,7 +171,7 @@ public class StatusPanel extends JPanel implements Status {
     public void run() {
       while (true) {
         try {
-          if (currentMessage != null && currentMessage.isStale()) {
+          if (currentMessage != null && currentMessage.isExpired()) {
             updateLabel(null);
           }
           Thread.sleep(STATUS_REAPER_FREQUENCY_MS);
@@ -150,23 +183,23 @@ public class StatusPanel extends JPanel implements Status {
 
   }
 
-  static private class Message implements Comparable<Message> {
+  static private class StatusMessage implements Comparable<StatusMessage> {
 
     public enum Type { INFO, WARNING, ERROR, WAIT }
 
     String msg;
     Type type;
-    Long id;
+    Long created;
     Integer priority;
     Long shown;
 
     /** Number of seconds this message should remain in the status area */
     Long duration;
 
-    Message(String msg, Type type, int priority) {
+    StatusMessage(String msg, Type type, int priority) {
       this.msg = msg;
       this.type = type;
-      this.id = System.currentTimeMillis();
+      this.created = System.currentTimeMillis();
       this.priority = priority;
       switch(type) {
         case INFO: duration = 1000L; break;
@@ -188,12 +221,16 @@ public class StatusPanel extends JPanel implements Status {
       return priority;
     }
 
-    public boolean isStale() {
+    public boolean isExpired() {
       return (shown != null && System.currentTimeMillis() - shown > duration);
     }
 
+    public boolean isStale() {
+      return (created != null && System.currentTimeMillis() - created > duration);
+    }
+
     public long getId() {
-      return this.id;
+      return this.created;
     }
 
     public long getDelay(TimeUnit unit) {
@@ -205,7 +242,7 @@ public class StatusPanel extends JPanel implements Status {
               compareTo(o.getDelay(TimeUnit.MILLISECONDS));
     }
 
-    public int compareTo(Message o) {
+    public int compareTo(StatusMessage o) {
       return priority.compareTo(o.priority);
     }
 

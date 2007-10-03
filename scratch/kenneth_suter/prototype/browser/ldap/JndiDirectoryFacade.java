@@ -1,10 +1,10 @@
-package org.opends.statuspanel.browser.ldap;
+package org.opends.guitools.statuspanel.browser.ldap;
 
 import org.opends.server.types.DirectoryException;
 import org.opends.server.types.DN;
-import org.opends.statuspanel.browser.ldap.Entry;
-import org.opends.statuspanel.browser.ldap.EntryManager;
-import org.opends.statuspanel.browser.ldap.LdapServerInfo;
+import org.opends.guitools.statuspanel.browser.ldap.Entry;
+import org.opends.guitools.statuspanel.browser.ldap.EntryManager;
+import org.opends.guitools.statuspanel.browser.ldap.LdapServerInfo;
 
 import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
@@ -27,12 +27,13 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Arrays;
 
 /**
  */
 public class JndiDirectoryFacade extends DirectoryFacade {
 
-  static private final long MAX_ENTRIES = 10000;
+  static private final long MAX_ENTRIES = 1000;
 
   private LdapServerInfo info;
 
@@ -160,6 +161,7 @@ public class JndiDirectoryFacade extends DirectoryFacade {
       }
       attrMap.put(attr.getID(), valueSet);
     }
+    ae.close();
     entry.setAttributes(attrMap);
     return entry;
   }
@@ -246,9 +248,30 @@ public class JndiDirectoryFacade extends DirectoryFacade {
                 ctx.search(name, filter, controls);
         while (ne.hasMore()) {
           SearchResult sr = ne.next();
-          Entry entry = createEntryFromSearchResult(sr);
-          result.add(entry);
+          result.add(createEntryFromSearchResult(sr));
         }
+        ne.close();
+
+        for (Entry e : result) {
+          Boolean hasChildren = null;
+          if ("".equals(e.getDn())) {
+            hasChildren = true;
+          } else {
+            Attributes subAttrs = ctx.getAttributes(e.getDn().toString(),
+                    new String[]{"hassubordinates"});
+            Attribute subAttr = subAttrs.get("hassubordinates");
+            if (subAttr != null) {
+              Object subAttrV = subAttr.get();
+              if (Boolean.parseBoolean(String.valueOf(subAttrV))) {
+                hasChildren = true;
+              } else {
+                hasChildren = false;
+              }
+            }
+          }
+          e.hasChildren(hasChildren);
+        }
+
       } catch (SizeLimitExceededException slee) {
         sizeLimitExceeded = true;
         throw slee;

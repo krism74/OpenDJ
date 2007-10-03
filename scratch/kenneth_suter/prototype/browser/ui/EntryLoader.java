@@ -1,6 +1,6 @@
-package org.opends.statuspanel.browser.ui;
+package org.opends.guitools.statuspanel.browser.ui;
 
-import org.opends.statuspanel.browser.ldap.Entry;
+import org.opends.guitools.statuspanel.browser.ldap.Entry;
 
 /**
  */

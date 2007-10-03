@@ -1,4 +1,4 @@
-package org.opends.statuspanel.browser.ldap;
+package org.opends.guitools.statuspanel.browser.ldap;
 
 import org.opends.server.types.DN;
 import org.opends.server.types.RDN;
@@ -23,6 +23,7 @@ public class Entry {
   Map<String,Set<String>> attributes = new HashMap<String,Set<String>>();
   long childrenSetTimestamp;
   List<Entry> children = null;
+  Boolean hasChildren;
   Entry parent = null;
   private boolean childrenSizeExceeded;
   String error;
@@ -174,5 +175,26 @@ public class Entry {
 
   public boolean isDeleted() {
     return deleted;
+  }
+
+  /**
+   * Sets whether or not this entry has children.  Can be null
+   * to indicate that we don't know if this entry has children.
+   *
+   * @param b where true means yes there are children, false means
+   *        there are no children and null means we don't know
+   */
+  void hasChildren(Boolean b) {
+    this.hasChildren = b;
+  }
+
+  /**
+   * Indicates whether or not this entry has children.
+   *
+   * @return Boolean where true means yes there are children, false means
+   *         there are no children and null means we don't know
+   */
+  public Boolean hasChildren() {
+    return hasChildren;
   }
 }

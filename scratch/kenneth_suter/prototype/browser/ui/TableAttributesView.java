@@ -1,6 +1,6 @@
-package org.opends.statuspanel.browser.ui;
+package org.opends.guitools.statuspanel.browser.ui;
 
-import org.opends.statuspanel.browser.ldap.Entry;
+import org.opends.guitools.statuspanel.browser.ldap.Entry;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -9,13 +9,14 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
+import java.awt.*;
 
 /**
  */
 public class TableAttributesView extends AttributesView {
 
   private JTable tblEntry;
-  private TableModel tableModel;
+  private EntryTableModel tableModel;
 
   public TableAttributesView() {
     init();
@@ -25,16 +26,31 @@ public class TableAttributesView extends AttributesView {
     tblEntry = new JTable();
     tblEntry.setShowGrid(false);
 
+    setLayout(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.insets.top = 10;
+    gbc.insets.left = 10;
+    gbc.insets.right = 10;
+    gbc.weightx = 1.0;
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.fill = GridBagConstraints.BOTH;
+    gbc.weighty = 1.0;
+    add(new JScrollPane(tblEntry), gbc);    
   }
 
-  void populateUi(Entry entry) {
-    tableModel = new EntryTableModel(entry);
+  protected void setAttributes(Map<String, Set<String>> attributes) {
+    tableModel = new EntryTableModel(attributes);
     tblEntry.setModel(tableModel);
+  }
+
+  Map<String, Set<String>> getAttributes() {
+    return tableModel.getCurrentAttributes();
   }
 
   private class EntryTableModel extends AbstractTableModel {
 
-    Map<Integer, String[]> rowData = null;
+    Map<Integer, String[]> rowData = new HashMap<Integer, String[]>();
 
     String[] columnNames = {
             "Attribute Name",
@@ -42,8 +58,15 @@ public class TableAttributesView extends AttributesView {
     };
 
     public EntryTableModel(Entry entry) {
-      rowData = new HashMap<Integer, String[]>();
       Map<String, Set<String>> attrs = entry.getAttributes();
+      setAttributes(attrs);
+    }
+
+    public EntryTableModel(Map<String,Set<String>> attrs) {
+      setAttributes(attrs);
+    }
+
+    private void setAttributes(Map<String, Set<String>> attrs) {
       int row = 0;
       for (String name : attrs.keySet()) {
         Set<String> values = attrs.get(name);
@@ -96,7 +119,8 @@ public class TableAttributesView extends AttributesView {
       if (oldValue == null && newValue != null ||
               !oldValue.equals(newValue)) {
         rowData.get(rowIndex)[columnIndex] = newValue.toString();
-        entryModified();
+        String attrName = rowData.get(rowIndex)[0];
+        modified(attrName, oldValue, newValue);
       }
     }
 

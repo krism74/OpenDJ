@@ -1,4 +1,4 @@
-package org.opends.statuspanel.browser.ui;
+package org.opends.guitools.statuspanel.browser.ui;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.Executor;

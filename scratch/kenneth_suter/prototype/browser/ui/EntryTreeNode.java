@@ -29,40 +29,22 @@ package org.opends.guitools.statuspanel.browser.ui;
 
 import org.opends.guitools.statuspanel.browser.ldap.Entry;
 
-import java.util.Set;
-import java.util.Map;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
  *
  */
-public class ContentEvent {
+class EntryTreeNode extends DefaultMutableTreeNode {
 
-  Entry currentEntry;
-  Map<String, Set<String>> attrs;
-  String action;
+  private static final long serialVersionUID = -3474801887437215500L;
 
-  public ContentEvent(Entry currentEntry, String action) {
-    this(currentEntry, null, action);
+  public EntryTreeNode(Entry entry) {
+    super(entry, true);
+    entry.setNode(this);
   }
 
-  public ContentEvent(Entry currentEntry,
-                           Map<String, Set<String>> attrs,
-                           String action) {
-    this.currentEntry = currentEntry;
-    this.attrs = attrs;
-    this.action = action;
-  }
-
-  public Entry getCurrentEntry() {
-    return this.currentEntry;
-  }
-
-  public Map<String, Set<String>> getCurrentAttributes() {
-    return this.attrs;
-  }
-
-  public String getAction() {
-    return this.action;
+  public Entry getEntry() {
+    return (Entry)getUserObject();
   }
 
 }

@@ -1,14 +1,17 @@
-package org.opends.statuspanel.browser.ui;
+package org.opends.guitools.statuspanel.browser.ui;
 
 import java.util.Set;
 import java.util.Map;
 import java.util.Collections;
+import java.awt.*;
 
 /**
  */
 public class EmptyAttributesView extends AttributesView {
 
-  void setAttributes(Map<String, Set<String>> attributes) {
+  private static final long serialVersionUID = -8775723189094483696L;
+
+  protected void setAttributes(Map<String, Set<String>> attributes) {
     // do nothing;
   }
 

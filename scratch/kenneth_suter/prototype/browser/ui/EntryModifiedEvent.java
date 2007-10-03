@@ -25,9 +25,9 @@
  *      Portions Copyright 2007 Sun Microsystems, Inc.
  */
 
-package org.opends.statuspanel.browser.ui;
+package org.opends.guitools.statuspanel.browser.ui;
 
-import org.opends.statuspanel.browser.ldap.Entry;
+import org.opends.guitools.statuspanel.browser.ldap.Entry;
 
 import java.util.Set;
 import java.util.Map;
@@ -37,15 +37,40 @@ import java.util.Map;
  */
 public class EntryModifiedEvent extends EntryChangeEvent {
 
-  Map<String, Set<String>> newAttrs;
+  enum Action { ADD, DELETE, MODIFY }
 
-  public EntryModifiedEvent(Entry entry, Map<String, Set<String>> newAttrs) {
+  Action action;
+  String attr;
+  Object oldValue;
+  Object newValue;
+
+  public EntryModifiedEvent(Entry entry, Action action,
+                            String attr, Object oldValue, Object newValue) {
     super(entry);
-    this.newAttrs = newAttrs;
+    this.action = action;
+    this.attr = attr;
+    this.oldValue = oldValue;
+    this.newValue = newValue;
   }
 
-  public Map<String,Set<String>> getNewAttributes() {
-    return this.newAttrs;
+  public Entry getEntry() {
+    return this.entry;
+  }
+
+  public Action getAction() {
+    return this.action;
+  }
+
+  public String getAttributeName() {
+    return this.attr;
+  }
+
+  public Object getOldValue() {
+    return this.oldValue;
+  }
+
+  public Object getNewValue() {
+    return this.newValue;
   }
 
 }
