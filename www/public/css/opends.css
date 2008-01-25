@@ -52,8 +52,6 @@ a.white {color:#fff !important}
 #bodycol a.buttonlink:visited {padding:3px 12px 2px; background-image:url(../images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; }
 #bodycol div.buttonlinkdiv {margin:10px 5px 15px 50px}
 
-table.axial {display:none !important}
-
 
 /* STYLES REPEATED WITHOUT SELECTOR FOR NONAV BROWSING */
  body, table,  td,  th,  p,  div,  span,  li { font-size: 12px}
