@@ -64,11 +64,11 @@ a.white {color:#fff !important}
 #bodycol #projecthome a:hover img {text-decoration:none } 
 
 
-#bodycol #projecthome a.buttonlink:link {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; white-space:nowrap }
-#bodycol #projecthome a.buttonlink:hover {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk_over.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; text-decoration:none}
-#bodycol #projecthome a.buttonlink:active {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; }
-#bodycol #projecthome a.buttonlink:visited {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; }
-#bodycol #projecthome div.buttonlinkdiv {margin:10px 5px 15px 50px}
+#bodycol div.application#projecthome div.pagecomponent a.buttonlink:link {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; white-space:nowrap }
+#bodycol div.application#projecthome div.pagecomponent a.buttonlink:hover {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk_over.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; text-decoration:none}
+#bodycol div.application#projecthome div.pagecomponent a.buttonlink:active {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; }
+#bodycol div.application#projecthome div.pagecomponent a.buttonlink:visited {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; }
+#bodycol div.application#projecthome div.pagecomponent div.buttonlinkdiv {margin:10px 5px 15px 50px}
 
 
 
