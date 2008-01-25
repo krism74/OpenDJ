@@ -53,22 +53,22 @@ a.white {color:#fff !important}
 #bodycol div.buttonlinkdiv {margin:10px 5px 15px 50px}
 
 /* Specific Selectors for Project Home Page */
-#projecthome { font-size: 12px;}
-#projecthome table, #projecthome td, #projecthome th, #projecthome p, #projecthome div, #projecthome span, #projecthome li { font-size: 12px}
-#projecthome H1 {font-size:18px;color:#000}
-#projecthome H2 {font-size:16px;color:#000}
-#projecthome H3 {font-size:14px;color:#000;margin:15px 0px 3px;}
-#projecthome a:link {text-decoration:none } 
-#projecthome a:visited {color: #069;text-decoration:none } 
-#projecthome a:hover {text-decoration:underline } 
-#projecthome a:hover img {text-decoration:none } 
+#bodycol #projecthome { font-size: 12px;}
+#bodycol #projecthome table, #bodycol #projecthome td, #bodycol #projecthome th, #bodycol #projecthome p, #bodycol #projecthome div, #bodycol #projecthome span, #bodycol #projecthome li { font-size: 12px}
+#bodycol #projecthome H1 {font-size:18px;color:#000}
+#bodycol #projecthome H2 {font-size:16px;color:#000}
+#bodycol #projecthome H3 {font-size:14px;color:#000;margin:15px 0px 3px;}
+#bodycol #projecthome a:link {text-decoration:none } 
+#bodycol #projecthome a:visited {color: #069;text-decoration:none } 
+#bodycol #projecthome a:hover {text-decoration:underline } 
+#bodycol #projecthome a:hover img {text-decoration:none } 
 
 
-#projecthome a.buttonlink:link {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; white-space:nowrap }
-#projecthome a.buttonlink:hover {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk_over.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; text-decoration:none}
-#projecthome a.buttonlink:active {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; }
-#projecthome a.buttonlink:visited {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; }
-#projecthome div.buttonlinkdiv {margin:10px 5px 15px 50px}
+#bodycol #projecthome a.buttonlink:link {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; white-space:nowrap }
+#bodycol #projecthome a.buttonlink:hover {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk_over.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; text-decoration:none}
+#bodycol #projecthome a.buttonlink:active {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; }
+#bodycol #projecthome a.buttonlink:visited {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; }
+#bodycol #projecthome div.buttonlinkdiv {margin:10px 5px 15px 50px}
 
 
 
