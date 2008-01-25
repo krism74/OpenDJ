@@ -82,13 +82,6 @@ a.white {color:#fff !important}
  .tertmasttable td { vertical-align:bottom }
  .collectionheader {margin-bottom:5px;font-size:24px;color:#333; }
 
-a.buttonlink:link {padding:3px 12px 2px; background-image:url(../images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; white-space:nowrap }
-a.buttonlink:hover {padding:3px 12px 2px; background-image:url(../images/buttonlink_bk_over.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; text-decoration:none}
-a.buttonlink:active {padding:3px 12px 2px; background-image:url(../images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; }
-a.buttonlink:visited {padding:3px 12px 2px; background-image:url(../images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; }
-div.buttonlinkdiv {margin:10px 5px 15px 50px}
-
-
 /* Replace tigris css spec overridden by the above */
  #navcol li, #navcol a, #navcol dd, #navcol dt, #navcol, #footer table, #footer td, #footer a, #footer p { 
 	font-family: Verdana, Helvetica, Arial, sans-serif;
