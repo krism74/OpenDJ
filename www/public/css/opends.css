@@ -52,6 +52,26 @@ a.white {color:#fff !important}
 #bodycol a.buttonlink:visited {padding:3px 12px 2px; background-image:url(../images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; }
 #bodycol div.buttonlinkdiv {margin:10px 5px 15px 50px}
 
+/* Specific Selectors for Project Home Page */
+#projecthome { font-size: 12px;}
+#projecthome table, #projecthome td, #projecthome th, #projecthome p, #projecthome div, #projecthome span, #projecthome li { font-size: 12px}
+#projecthome H1 {font-size:18px;color:#000}
+#projecthome H2 {font-size:16px;color:#000}
+#projecthome H3 {font-size:14px;color:#000;margin:15px 0px 3px;}
+#projecthome a:link {text-decoration:none } 
+#projecthome a:visited {color: #069;text-decoration:none } 
+#projecthome a:hover {text-decoration:underline } 
+#projecthome a:hover img {text-decoration:none } 
+
+
+#projecthome a.buttonlink:link {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; white-space:nowrap }
+#projecthome a.buttonlink:hover {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk_over.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; text-decoration:none}
+#projecthome a.buttonlink:active {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; }
+#projecthome a.buttonlink:visited {padding:3px 12px 2px; background-image:url(public/images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; }
+#projecthome div.buttonlinkdiv {margin:10px 5px 15px 50px}
+
+
+
 
 /* STYLES REPEATED WITHOUT SELECTOR FOR NONAV BROWSING */
  body, table,  td,  th,  p,  div,  span,  li { font-size: 12px}
