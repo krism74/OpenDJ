@@ -1,0 +1,153 @@
+OpenDS Import Prototype  (1/24/08)
+
+- Revision: 3740
+
+- Files in zip file:
+
+Archive:  import.zip
+  Length     Date   Time    Name
+ --------    ----   ----    ----
+     3313  01-21-08 06:24   src/server/org/opends/server/types/ByteArray.java
+     5393  01-22-08 14:14   src/server/org/opends/server/backends/jeb/ImportWorkItemNewArch.java
+    10053  01-24-08 12:36   src/server/org/opends/server/backends/jeb/ImportBufferMgrNewArch.java
+     1863  01-22-08 16:05   src/server/org/opends/server/backends/jeb/ImportIndexContainer.java
+    29530  01-24-08 12:45   src/server/org/opends/server/backends/jeb/ImportJobNewArch.java
+     5688  01-22-08 18:03   src/server/org/opends/server/backends/jeb/ImportMemoryBudgetNewArch.java
+     4047  01-24-08 12:48   src/server/org/opends/server/backends/jeb/ImportThreadNewArch.java
+     9675  01-22-08 12:06   src/server/org/opends/server/backends/jeb/SubstringIndexer.java
+   147618  01-23-08 17:50   src/server/org/opends/server/backends/jeb/EntryContainer.java
+     8566  01-22-08 12:06   src/server/org/opends/server/backends/jeb/EqualityIndexer.java
+    12835  01-22-08 13:24   src/server/org/opends/server/backends/jeb/ImportContext.java
+     6499  01-22-08 12:06   src/server/org/opends/server/backends/jeb/PresenceIndexer.java
+     8565  01-22-08 12:06   src/server/org/opends/server/backends/jeb/OrderingIndexer.java
+    51979  01-23-08 18:02   src/server/org/opends/server/backends/jeb/AttributeIndex.java
+     5610  01-22-08 12:06   src/server/org/opends/server/backends/jeb/ID2CIndexer.java
+     8567  01-22-08 13:13   src/server/org/opends/server/backends/jeb/ID2Entry.java
+    28490  01-23-08 17:48   src/server/org/opends/server/backends/jeb/Index.java
+     8276  01-22-08 12:06   src/server/org/opends/server/backends/jeb/ApproximateIndexer.java
+    46545  01-23-08 11:27   src/server/org/opends/server/backends/jeb/BackendImpl.java
+     5730  01-22-08 12:06   src/server/org/opends/server/backends/jeb/ID2SIndexer.java
+    17192  01-23-08 10:49   src/server/org/opends/server/backends/jeb/Longs.java
+     4635  01-22-08 12:00   src/server/org/opends/server/backends/jeb/Indexer.java
+    19410  01-23-08 18:07   src/messages/messages/jeb.properties
+
+- Stick with basic command line options:
+
+	import-ldif -R /tmp/r -n userRoot -l ~/ldifs/addTest/1M.ldif 
+
+- JVM heap and DB cache *must* be large enough; prototype will print to screen calculations used in
+  memory management and buffer calculation:
+
+[24/Jan/2008:16:55:21 -0600] category=RUNTIME_INFORMATION severity=NOTICE msgID=20381715 msg=JVM Arguments: "-Xms1024M", "-Xmx1024M", "-Dorg.opends.server.scriptName=import-ldif"
+[24/Jan/2008:16:55:21 -0600] category=JEB severity=INFORMATION msgID=8388786 msg=Per thread buffer size 32000000 calculated from: DB logsize 3145728, DB cache size 508 MB, heap free 989 MB, heap total 1016 MB, heap total free 989 MB, system 197 MB, config buffer size 256000000
+
+If you see this message:
+
+Specified buffer size 256000000 is too large either using larger of 1MB or adjusted buffer size.
+
+Then your heap free memory is not big enough for your ds-cfg-import-buffer-size size and either a default
+value will be used or the code will try and find a reasonable size.
+
+- If your DB cache is not big enough you will start seeing the following messages once eviction starts:
+
+ [24/Jan/2008:17:05:06 -0600] category=JEB severity=INFORMATION msgID=8388704 msg=Processed 1368 entries, skipped 0, rejected 0, and migrated 0 (recent rate 136.5/sec)
+[24/Jan/2008:17:05:06 -0600] category=JEB severity=INFORMATION msgID=8388705 msg=Free memory = 3 MB, Cache miss rate = 0.0/entry
+[24/Jan/2008:17:05:06 -0600] category=JEB severity=INFORMATION msgID=8388783 msg=DB cache evicton in progress. Eviction stats: passes: 4 evicted nodes: 1 bin stripped: 275
+[24/Jan/2008:17:05:16 -0600] category=JEB severity=INFORMATION msgID=8388704 msg=Processed 1583 entries, skipped 0, rejected 0, and migrated 0 (recent rate 21.3/sec)
+[24/Jan/2008:17:05:16 -0600] category=JEB severity=INFORMATION msgID=8388705 msg=Free memory = 1 MB, Cache miss rate = 0.6/entry
+[24/Jan/2008:17:05:16 -0600] category=JEB severity=INFORMATION msgID=8388783 msg=DB cache evicton in progress. Eviction stats: passes: 15 evicted nodes: 83 bin stripped: 1581
+
+Unless your close to completing your LDIF load, you should stop the import and make your DB cache size larger.
+
+- If your buffer is constrained, when the worker threads start final flushing you will see these messages:
+
+24/Jan/2008:17:10:55 -0600] category=JEB severity=INFORMATION msgID=8388767 msg=End of LDIF reached
+[24/Jan/2008:17:10:55 -0600] category=JEB severity=INFORMATION msgID=8388785 msg=Thread begin final buffer flush.Intermediate buffer flushes: 17
+[24/Jan/2008:17:10:56 -0600] category=JEB severity=INFORMATION msgID=8388785 msg=Thread begin final buffer flush.Intermediate buffer flushes: 22
+[24/Jan/2008:17:10:56 -0600] category=JEB severity=INFORMATION msgID=8388785 msg=Thread begin final buffer flush.Intermediate buffer flushes: 20
+[24/Jan/2008:17:10:56 -0600] category=JEB severity=INFORMATION msgID=8388785 msg=Thread begin final buffer flush.Intermediate buffer flushes: 16
+[24/Jan/2008:17:10:56 -0600] category=JEB severity=INFORMATION msgID=8388785 msg=Thread begin final buffer flush.Intermediate buffer flushes: 18
+[24/Jan/2008:17:10:56 -0600] category=JEB severity=INFORMATION msgID=8388785 msg=Thread begin final buffer flush.Intermediate buffer flushes: 20
+[24/Jan/2008:17:10:56 -0600] category=JEB severity=INFORMATION msgID=8388785 msg=Thread begin final buffer flush.Intermediate buffer flushes: 20
+[24/Jan/2008:17:10:56 -0600] category=JEB severity=INFORMATION msgID=8388785 msg=Thread begin final buffer flush.Intermediate buffer flushes: 18
+
+These are the number of intermediate flushes each thread performed during the load. If you have enough buffer
+memory and didn't perform any intermediate flushes:
+
+[24/Jan/2008:17:13:27 -0600] category=JEB severity=INFORMATION msgID=8388767 msg=End of LDIF reached
+[24/Jan/2008:17:13:28 -0600] category=JEB severity=INFORMATION msgID=8388789 msg=Thread begin final buffer flush
+[24/Jan/2008:17:13:28 -0600] category=JEB severity=INFORMATION msgID=8388789 msg=Thread begin final buffer flush
+[24/Jan/2008:17:13:28 -0600] category=JEB severity=INFORMATION msgID=8388789 msg=Thread begin final buffer flush
+[24/Jan/2008:17:13:28 -0600] category=JEB severity=INFORMATION msgID=8388789 msg=Thread begin final buffer flush
+[24/Jan/2008:17:13:28 -0600] category=JEB severity=INFORMATION msgID=8388789 msg=Thread begin final buffer flush
+[24/Jan/2008:17:13:28 -0600] category=JEB severity=INFORMATION msgID=8388789 msg=Thread begin final buffer flush
+[24/Jan/2008:17:13:28 -0600] category=JEB severity=INFORMATION msgID=8388789 msg=Thread begin final buffer flush
+[24/Jan/2008:17:13:28 -0600] category=JEB severity=INFORMATION msgID=8388789 msg=Thread begin final buffer flush
+
+- When the import completes, you'll see a dump of the index contents. Something like:
+
+[24/Jan/2008:17:13:33 -0600] category=JEB severity=INFORMATION msgID=8388784 msg=Index dc_example_dc_com_id2children: 1 keys exceeded entry limit
+[24/Jan/2008:17:13:33 -0600] category=JEB severity=INFORMATION msgID=8388788 msg=Index dc_example_dc_com_id2children key inserts: 2 key reads: 7
+[24/Jan/2008:17:13:33 -0600] category=JEB severity=INFORMATION msgID=8388784 msg=Index dc_example_dc_com_id2subtree: 2 keys exceeded entry limit
+[24/Jan/2008:17:13:33 -0600] category=JEB severity=INFORMATION msgID=8388788 msg=Index dc_example_dc_com_id2subtree key inserts: 2 key reads: 14
+[24/Jan/2008:17:13:33 -0600] category=JEB severity=INFORMATION msgID=8388788 msg=Index dc_example_dc_com_objectClass.equality key inserts: 6 key reads: 28
+[24/Jan/2008:17:13:33 -0600] category=JEB severity=INFORMATION msgID=8388784 msg=Index dc_example_dc_com_objectClass.equality: 4 keys exceeded entry limit
+[24/Jan/2008:17:13:33 -0600] category=JEB severity=INFORMATION msgID=8388788 msg=Index dc_example_dc_com_givenName.equality key inserts: 8605 key reads: 1221
+[24/Jan/2008:17:13:33 -0600] category=JEB severity=INFORMATION msgID=8388788 msg=Index dc_example_dc_com_givenName.substring key inserts: 19629 key reads: 12497
+[24/Jan/2008:17:13:33 -0600] category=JEB severity=INFORMATION msgID=8388788 msg=Index dc_example_dc_com_uid.equality key inserts: 10001 key reads: 0
+[24/Jan/2008:17:13:33 -0600] category=JEB severity=INFORMATION msgID=8388788 msg=Index dc_example_dc_com_cn.equality key inserts: 10001 key reads: 0
+[24/Jan/2008:17:13:33 -0600] category=JEB severity=INFORMATION msgID=8388788 msg=Index dc_example_dc_com_cn.substring key inserts: 86048 key reads: 22055
+[24/Jan/2008:17:13:33 -0600] category=JEB severity=INFORMATION msgID=8388788 msg=Index dc_example_dc_com_telephoneNumber.equality key inserts: 10001 key reads: 0
+[24/Jan/2008:17:13:33 -0600] category=JEB severity=INFORMATION msgID=8388788 msg=Index dc_example_dc_com_telephoneNumber.substring key inserts: 73355 key reads: 11654
+[24/Jan/2008:17:13:33 -0600] category=JEB severity=INFORMATION msgID=8388788 msg=Index dc_example_dc_com_sn.equality key inserts: 10001 key reads: 0
+[24/Jan/2008:17:13:33 -0600] category=JEB severity=INFORMATION msgID=8388788 msg=Index dc_example_dc_com_sn.substring key inserts: 32220 key reads: 10934
+[24/Jan/2008:17:13:33 -0600] category=JEB severity=INFORMATION msgID=8388788 msg=Index dc_example_dc_com_mail.equality key inserts: 10001 key reads: 0
+[24/Jan/2008:17:13:33 -0600] category=JEB severity=INFORMATION msgID=8388788 msg=Index dc_example_dc_com_mail.substring key inserts: 31235 key reads: 9951
+[24/Jan/2008:17:13:33 -0600] category=JEB severity=INFORMATION msgID=8388784 msg=Index dc_example_dc_com_mail.substring: 12 keys exceeded entry limit
+[24/Jan/2008:17:13:33 -0600] category=JEB severity=INFORMATION msgID=8388788 msg=Index dc_example_dc_com_entryUUID.equality key inserts: 10003 key reads: 0
+
+There will always be one line per index:
+
+Index dc_example_dc_com_sn.substring key inserts: 32220 key reads: 10934
+
+The key insert value is the count of keys in the index. The reads is the count of the number of times the
+buffer manager had to go to DB to read a key, append newly added IDs and write out. This count should be 
+doubled if you counting DB access, I only increment for the read part. I also haven't checked these values
+yet, so beware relying on them.
+
+Sometimes you'll see the line:
+
+Index dc_example_dc_com_id2children: 1 keys exceeded entry limit
+
+This is the number of keys in the index that exceeded the index's entry limit. It isn't printed if it's 0.
+
+- Large LDIFS
+
+The record is about, barely, just made, really slow the last few hours 8.8M entries before the JVM
+starts making no headway. Below is the options I added to the java.properties file:
+
+import-ldif.online.java-args=-Xms24G -Xmx24G -Xmn2G -d64
+
+and config.ldif changes:
+
+ds-cfg-import-buffer-size: 500  megabytes
+ds-cfg-db-cache-percent: 60
+
+The LDIF was generated using a standard SLAMD example.template. The load was done using a standard config.ldif
+(except for the two lines above). The machine was an 8 CPU Operteron something or other, 32G of memory 
+running Solaris 10. The latest version of Java 6 was used. One run did get to 9M entries before eviction
+started. 
+
+- Substring indexes
+
+Rather than explain, below is the type of value that will really slow the system down:
+
+cn: ikjtidjshfhrjrtcfelmldpiterjaqpqcoasektpplqli anhjjnlqkffpqhphmegmcnfdghnndmdeekadflfralttq
+
+vs
+
+cn: Aaren Atp
+
+- I'll update this file as things change.
+
+	 
