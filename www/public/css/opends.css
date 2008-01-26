@@ -7,7 +7,7 @@
 #bodycol H3 {font-size:14px;color:#000;margin:15px 0px 3px;}
 #bodycol a:link {text-decoration:none !important } 
 #bodycol a:visited {color: #069;text-decoration:none !important } 
-#bodycol a:hover {text-decoration:underline } 
+#bodycol a:hover {text-decoration:underline; !important } 
 #bodycol a:hover img {text-decoration:none !important} 
 
 /* Table Style */
@@ -47,7 +47,7 @@ table.welcometable td.welcomenarrowbot {text-align:left; vertical-align:top; pad
 a.white {color:#fff !important}
 
 #bodycol a.buttonlink:link {padding:3px 12px 2px; background-image:url(../images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; white-space:nowrap;text-decoration:none }
-#bodycol a.buttonlink:hover {padding:3px 12px 2px; background-image:url(../images/buttonlink_bk_over.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; text-decoration:none}
+#bodycol a.buttonlink:hover {padding:3px 12px 2px; background-image:url(../images/buttonlink_bk_over.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; text-decoration:none !important}
 #bodycol a.buttonlink:active {padding:3px 12px 2px; background-image:url(../images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; }
 #bodycol a.buttonlink:visited {padding:3px 12px 2px; background-image:url(../images/buttonlink_bk.png); background-position:bottom; background-repeat: repeat-x;background-color:#FFFFFF; border:solid 2px #008fcd; color:#000 !important; }
 #bodycol div.buttonlinkdiv {margin:10px 5px 15px 50px}
