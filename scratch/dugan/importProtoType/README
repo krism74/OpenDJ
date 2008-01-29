@@ -1,3 +1,90 @@
+OpenDS Import ProtoType (1/29)
+
+- revision 3782
+
+- bug fixes and some memory management improvements; experimental substring key
+  cache
+
+- Added dbCacheSize function that will estimate the size of the DB cache needed
+  to load the ldif. This mode simulates a import of the LDIF file and gathers enough
+  statistics about the load to invoke the sleepycat DbCacheSize utility. It outputs a
+  two lines every 5000 entries. The key map line is an output of an experimental key
+  cache I've been looking at, mainly to cache substring keys. 
+
+import-ldif -R /tmp/r -n userRoot  -l 1M.ldif  --dbCacheSize 50000:1000000
+[29/Jan/2008:06:31:03 -0600] category=RUNTIME_INFORMATION severity=NOTICE msgID=20381713 msg=JVM Information: 1.6.0-b88-17-release by Apple Computer, Inc., 32-bit architecture, 1689845760 bytes heap size
+[29/Jan/2008:06:31:03 -0600] category=RUNTIME_INFORMATION severity=NOTICE msgID=20381714 msg=JVM Host: 192.168.1.5, running Mac OS X 10.4.11 i386, 3221225472 bytes physical memory size, number of processors available 2
+[29/Jan/2008:06:31:03 -0600] category=RUNTIME_INFORMATION severity=NOTICE msgID=20381715 msg=JVM Arguments: "-Xms1624M", "-Xmx1624M", "-Dorg.opends.server.scriptName=import-ldif"
+[29/Jan/2008:06:31:03 -0600] category=JEB severity=INFORMATION msgID=8388766 msg=Processing LDIF
+Processed Entries: 5000
+Key map hits: 107617 total: 26115
+Processed Entries: 10000
+Key map hits: 217581 total: 51115
+Processed Entries: 15000
+Key map hits: 337506 total: 71117
+...
+Processed Entries: 45000
+Key map hits: 1056814 total: 191117
+Processed Entries: 50000
+Key map hits: 1176652 total: 211117
+Final keyBytes: 5320916 valBytes: 11383248 numDBEntries: 311116 ratio: 6
+Final key map hits: 1176652 total: 211117
+LDIF subset desired using estimates: 6 6000000
+Inputs: records=6000000 keySize=17 dataSize=36 nodeMax=128 density=80% overhead=10%
+
+    Cache Size      Btree Size  Description
+--------------  --------------  -----------
+   333,055,573     299,750,016  Minimum, internal nodes only  
+   451,100,586     405,990,528  Maximum, internal nodes only  
+   813,055,573     731,750,016  Minimum, internal nodes and leaf nodes  
+   931,100,586     837,990,528  Maximum, internal nodes and leaf nodes  
+
+Btree levels: 4
+
+
+The option --dbCacheSize  takes two parameters:
+
+	* "all" - run over the complete ldif file and estimate
+		
+		import-ldif -R /tmp/r -n userRoot  -l 1M.ldif  --dbCacheSize all
+  
+          if you have a large LDIF file you probably don't want to run over the complete file. You might
+          consider the second option.
+
+	* "offset:total" - the example I've shown. Only read offset entries of the ldif file and then
+          use "total" to estimate the size of the cache. For example, estimate using 50000 entries of an
+          1000000 entry LDIF file. The further into the LDIF file you read, the more accurate the statistics
+          are. The above estimate was a little high, the results from running the "all" option:
+
+Final keyBytes: 103321128 valBytes: 221890906 numDBEntries: 5111128 ratio: 5
+Final key map hits: 25715586 total: 3111125
+Inputs: records=5111128 keySize=20 dataSize=43 nodeMax=128 density=80% overhead=10%
+
+    Cache Size      Btree Size  Description
+--------------  --------------  -----------
+   283,720,248     255,348,224  Minimum, internal nodes only  
+   384,279,324     345,851,392  Maximum, internal nodes only  
+   738,042,737     664,238,464  Minimum, internal nodes and leaf nodes  
+   838,601,813     754,741,632  Maximum, internal nodes and leaf nodes  
+
+Btree levels: 4
+
+Here's an example of how I used the tool:
+
+When I loaded this LDIF using JVM options of "-Xms1024M -Xmx1024M" and a 50% DB cache percentage
+I was using a DB cache of 50MB:
+
+[29/Jan/2008:07:05:24 -0600] category=JEB severity=INFORMATION msgID=8388786 msg= ... DB cache size 508 MB ...
+
+and started DB evicting around 800K entries or so. I increased my heap size to "-Xms1624M -Xms1624M", giving
+me a 805MB DB cache: and had no eviction. 
+		
+There is one caveat to using the tool. All of sleepycat's DbCacheSize classes aren't public, so I had
+to invoke the tool using the Runtime.exec() method. You need to have enough memory on the machine to run 
+both your import-ldif JVM and this second DbCacheSize JVM. I'll probably fix this later, if we think this
+function is useful. Also, this option still requires a significant amount of memory to run if using the
+"all" options over a large LDIF, although a  lot less than a regular import.
+
 OpenDS Import Prototype  (1/24/08)
 
 - Revision: 3740
