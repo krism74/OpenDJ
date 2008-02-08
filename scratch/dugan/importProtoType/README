@@ -7,6 +7,10 @@ entry:
 ds-cfg-je-property: je.env.runCheckpointer=true
 ds-cfg-je-property: je.env.isLocking=true
 
+we also found that for a large LDIF load we had to
+set our ds-cfg-db-cleaner-min-utilization to 80
+rather than the 75 that it currently.
+
 OpenDS Import ProtoType (1/29)
 
 - revision 3782
