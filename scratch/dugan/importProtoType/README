@@ -1,3 +1,12 @@
+OpenDS Import Prototype (2/8)
+
+The is a bare bones version that does no caching or buffering. To run it with the
+cleaner add the following lines to your ds-cfg-backend-id=userRoot,cn=Backends,cn=config
+entry:
+
+ds-cfg-je-property: je.env.runCheckpointer=true
+ds-cfg-je-property: je.env.isLocking=true
+
 OpenDS Import ProtoType (1/29)
 
 - revision 3782
