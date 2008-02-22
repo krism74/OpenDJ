@@ -1,3 +1,8 @@
+OpenDS import Proto (2/22)
+
+Second bare bones version that uses some changes discussed during a
+core meeting the week of 2/11 - 2/15.
+
 OpenDS Import Prototype (2/8)
 
 The is a bare bones version that does no caching or buffering. To run it with the
