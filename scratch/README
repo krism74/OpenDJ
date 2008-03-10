@@ -7,8 +7,9 @@ space.  Simply create a subdirectory named with your java.net username and
 place all content below that directory.
 
 Content placed below this scratch space will be accessible below.
-"http://builds.opends.org/scratch/".  For example, the URL
-"http://builds.opends.org/scratch/README" may be used to access this file.
+"http://www.opends.org/source/xref/trunk/scratch/".  For example, the URL
+"http://www.opends.org/source/xref/trunk/scratch/README" may be used to
+access this file.
 
 Guidelines for using this scratch space are as follows:
 
