@@ -35,6 +35,9 @@ package org.opends.scratch.txn;
 public final class BackendTxnCfg
 {
 
+  // By default a transaction can not be canceled.
+  private CancellationHandler cancellationHandler = CancellationHandler.DEFAULT;
+
   // The transaction lock timeout in milli-seconds (0 means no limit).
   private int lockTimeout = 0;
 
@@ -52,18 +55,13 @@ public final class BackendTxnCfg
 
 
   /**
-   * Sets the transaction lock timeout in milli-seconds (0 means no
-   * limit).
+   * Returns the transaction cancellation handler.
    *
-   * @param lockTimeout
-   *          The transaction lock timeout in milli-seconds (0 means
-   *          no limit).
-   * @return This backend transaction configuration.
+   * @return The the transaction cancellation handler.
    */
-  public BackendTxnCfg setLockTimeout(int lockTimeout)
+  public CancellationHandler getCancellationHandler()
   {
-    this.lockTimeout = (lockTimeout < 0) ? 0 : lockTimeout;
-    return this;
+    return cancellationHandler;
   }
 
 
@@ -78,5 +76,42 @@ public final class BackendTxnCfg
   public int getLockTimeout()
   {
     return lockTimeout;
+  }
+
+
+
+  /**
+   * Sets the transaction cancellation handler.
+   *
+   * @param handler
+   *          The transaction cancellation handler.
+   * @return This backend transaction configuration.
+   */
+  public BackendTxnCfg setCancellationHandler(CancellationHandler handler)
+  {
+    if (handler == null)
+    {
+      throw new NullPointerException("null cancellation handler");
+    }
+
+    this.cancellationHandler = handler;
+    return this;
+  }
+
+
+
+  /**
+   * Sets the transaction lock timeout in milli-seconds (0 means no
+   * limit).
+   *
+   * @param lockTimeout
+   *          The transaction lock timeout in milli-seconds (0 means
+   *          no limit).
+   * @return This backend transaction configuration.
+   */
+  public BackendTxnCfg setLockTimeout(int lockTimeout)
+  {
+    this.lockTimeout = (lockTimeout < 0) ? 0 : lockTimeout;
+    return this;
   }
 }

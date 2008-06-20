@@ -28,11 +28,14 @@ package org.opends.scratch.txn;
 
 
 
+import java.util.List;
+
 import org.opends.scratch.txn.dummy.ConditionResult;
 import org.opends.scratch.txn.dummy.DN;
 import org.opends.scratch.txn.dummy.DirectoryException;
 import org.opends.scratch.txn.dummy.Entry;
 import org.opends.scratch.txn.dummy.Filter;
+import org.opends.scratch.txn.dummy.Modification;
 import org.opends.scratch.txn.dummy.Scope;
 
 
@@ -58,6 +61,14 @@ import org.opends.scratch.txn.dummy.Scope;
  * either through calling {@link #commit()} or {@link #abort()}. In
  * addition, if an exception is encountered during transaction
  * processing, the transaction is aborted.
+ * <h2>TODO</h2>
+ * <ul>
+ * <li>cancellation detection handling and processing
+ * <li>controls (e.g. paged results).
+ * <li>should referral handling be responsibility of the core server
+ * or the backend?
+ * <li>modify DN uses a subordinate rename plugin
+ * </ul>
  */
 public interface BackendTxn
 {
@@ -88,13 +99,16 @@ public interface BackendTxn
    * <code>false</code> indicating that the underlying backend will
    * not be modified as a result of this add.
    * <p>
-   * Implementations are not required to check if the parent entry
-   * exists, nor are they required to lock the parent entry, nor are
-   * they required to validate the provided entry against the schema.
+   * Implementations can assume:
+   * <ul>
+   * <li>the parent entry exists
+   * <li>the parent entry is locked {@link LockType#SHARED}
+   * <li>the entry to be added conforms to the schema
+   * </ul>
    * <p>
-   * Implementations must ensure that the added entry is write locked
-   * until this backend transaction completes in order to prevent
-   * concurrent access to the added entry.
+   * Implementations must ensure that the added entry is exclusive
+   * locked until this backend transaction completes in order to
+   * prevent concurrent access to the added entry.
    *
    * @param entry
    *          The entry to be added.
@@ -143,25 +157,33 @@ public interface BackendTxn
    * dead-locks with other hierarchical operations (e.g. adds,
    * renames, and searches).
    * <p>
-   * Implementations are not required to check if the parent entry
-   * exists, nor are they required to lock the parent entry, nor are
-   * they required to perform any schema checks.
+   * Implementations can assume:
+   * <ul>
+   * <li>the parent entry exists
+   * <li>the apex entry to be deleted exists
+   * <li>the parent entry is locked {@link LockType#SHARED}
+   * <li>the apex entry to be deleted is locked
+   * {@link LockType#EXCLUSIVE}
+   * <li>non-apex entries within the subtree to be deleted are not
+   * locked
+   * <li>all schema validation has been performed.
+   * </ul>
    * <p>
-   * Implementations must ensure that any deleted entries are write
-   * locked until this backend transaction completes in order to
-   * prevent concurrent access to the deleted entries.
+   * Implementations must ensure that any deleted entries are
+   * exclusive locked until this backend transaction completes in
+   * order to prevent concurrent access to the deleted entries.
    *
    * @param dn
    *          The name of the entry at the apex of the subtree to be
    *          deleted.
-   * @return <code>true</code> if any entries were deleted.
+   * @return The number of entries which were deleted.
    * @throws DirectoryException
    *           If a problem occurs while trying to delete the subtree.
    * @throws IllegalStateException
    *           If this backend transaction has already been committed
    *           or aborted.
    */
-  boolean deleteSubtree(DN dn) throws DirectoryException, IllegalStateException;
+  int deleteSubtree(DN dn) throws DirectoryException, IllegalStateException;
 
 
 
@@ -374,8 +396,8 @@ public interface BackendTxn
 
 
   /**
-   * Renames a subtree of entries whose apex is specified by the
-   * provided DN.
+   * Renames a subtree of entries whose apex is specified by the DN of
+   * the provided entry.
    * <p>
    * Implementations must ensure that any entries contained within the
    * subtree are renamed. Typically this involves performing a
@@ -383,54 +405,88 @@ public interface BackendTxn
    * dead-locks with other hierarchical operations (e.g. adds, subtree
    * deletes, and searches).
    * <p>
-   * Implementations are not required to check if the old or new
-   * parent entries exist, nor are they required to lock the old or
-   * new parent entries, nor are they required to perform any schema
-   * checks.
+   * Implementations can assume:
+   * <ul>
+   * <li>the old parent entry exists
+   * <li>the new parent entry exists (if applicable)
+   * <li>the entry to be renamed exists
+   * <li>the old parent entry is locked {@link LockType#SHARED}
+   * <li>the new parent entry is locked {@link LockType#SHARED}
+   * <li>the entry to be renamed is locked {@link LockType#EXCLUSIVE}
+   * <li>non-apex entries within the subtree to be renamed are not
+   * locked
+   * <li>the entry to be renamed conforms to the schema
+   * <li><code>oldEntry</code>, <code>newEntry</code>, and
+   * <code>modifications</code> are consistent with each other: the
+   * DNs are different and the modifications correspond to the
+   * differences between the old and new entry.
+   * </ul>
    * <p>
-   * Implementations must ensure that any renamed entries are write
-   * locked until this backend transaction completes in order to
-   * prevent concurrent access to the renamed entries.
+   * Implementations must ensure that any renamed entries are
+   * exclusive locked until this backend transaction completes in
+   * order to prevent concurrent access to the renamed entries.
    *
-   * @param oldDN
-   *          The name of the entry at the apex of the subtree to be
-   *          renamed.
+   * @param oldEntry
+   *          The existing apex entry before it was renamed and any
+   *          modifications were made.
    * @param newEntry
-   *          The renamed apex entry.
+   *          The renamed apex entry with the modifications applied.
+   * @param modifications
+   *          The list of modifications that were applied to
+   *          <code>oldEntry</code> in order to rename it to
+   *          <code>newEntry</code>, this includes modifications
+   *          implied by the renaming.
+   * @return The number of entries which were renamed.
    * @throws DirectoryException
-   *           If a problem occurs while trying to rename the subtree.
+   *           If a problem occurs while trying to rename the entry.
    * @throws IllegalStateException
    *           If this backend transaction has already been committed
    *           or aborted.
    */
-  void renameSubtree(DN oldDN, Entry newEntry) throws DirectoryException,
+  int renameSubtree(Entry oldEntry, Entry newEntry,
+      List<Modification> modifications) throws DirectoryException,
       IllegalStateException;
 
 
 
   /**
-   * Replaces an entry regardless of whether or not an entry with the
-   * same name already exists.
+   * Replaces an existing entry with the provided modified entry.
    * <p>
-   * Implementations are not required to check if the parent entry
-   * exists, nor are they required to lock the parent entry, nor are
-   * they required to validate the provided entry against the schema.
+   * Implementations can assume:
+   * <ul>
+   * <li>the parent entry exists
+   * <li>the entry to be replaced exists
+   * <li>the parent entry is locked {@link LockType#SHARED}
+   * <li>the entry to be replaced is locked
+   * {@link LockType#EXCLUSIVE}
+   * <li>the entry to be replaced conforms to the schema
+   * <li><code>oldEntry</code>, <code>newEntry</code>, and
+   * <code>modifications</code> are consistent with each other: the
+   * DNs are the same and the modifications correspond to the
+   * differences between the old and new entry.
+   * </ul>
    * <p>
-   * Implementations must ensure that the replaced entry is write
-   * locked until this backend transaction completes in order to
-   * prevent concurrent access to the replaced entry.
+   * Implementations must ensure that the replaced entry remains
+   * exclusive locked until this backend transaction completes in
+   * order to prevent concurrent access to the modified entry.
    *
-   * @param entry
-   *          The entry to be replaced.
-   * @return <code>false</code> if an existing entry was replaced,
-   *         or <code>true</code> if there was no existing entry.
+   * @param oldEntry
+   *          The existing entry before any modifications were made.
+   * @param newEntry
+   *          The new version of the entry with the modifications
+   *          applied.
+   * @param modifications
+   *          The list of modifications that were applied to
+   *          <code>oldEntry</code> in order to transform it to
+   *          <code>newEntry</code>.
    * @throws DirectoryException
    *           If a problem occurs while trying to replace the entry.
    * @throws IllegalStateException
    *           If this backend transaction has already been committed
    *           or aborted.
    */
-  boolean replaceEntry(Entry entry) throws DirectoryException,
+  void replaceEntry(Entry oldEntry, Entry newEntry,
+      List<Modification> modifications) throws DirectoryException,
       IllegalStateException;
 
 
