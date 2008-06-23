@@ -1,16 +1,63 @@
 <style type="text/css">
-div#excontentarea {position:absolute; top:33px; left:23px; width:609px;height:306px; overflow:auto}
-div#exwindowtitle {position:absolute;top:10px;left:174px;width:320px;height:16px; font-size:12px;font-weight:bold }
-div#exquitbutton {position:absolute; top:367px; left:444px; width:180px; height:25px;text-align:right;}
-div#exbottombar {position:absolute; top:359px; left:9px; width:623px;height:40px;background-color:#d6d9df;border-top:solid 1px #808080}
-div#exwindowbucket {position:absolute;top:0px;left:0px}
- div#excontentarea .ConTblCl1Div_sun4 {margin-top:17px}
- div#excontentarea .ConTblCl2Div_sun4 {margin-top:12px}
- div#excontentarea .IndentedControls {margin:3px 0px 0px 25px} 
-
+div#excontentarea {
+	position:absolute;
+	top:33px;
+	left:23px;
+	width:609px;
+	height:306px;
+	overflow:auto
+}
+div#exwindowtitle {
+	position:absolute;
+	top:10px;
+	left:174px;
+	width:320px;
+	height:16px;
+	font-size:12px;
+	font-weight:bold
+}
+div#exclosebox {
+	position:absolute;
+	top:9px;
+	left:610px;
+	width:20px;
+	height:16px;
+}
+div#exquitbutton {
+	position:absolute;
+	top:367px;
+	left:444px;
+	width:180px;
+	height:25px;
+	text-align:right;
+}
+div#exbottombar {
+	position:absolute;
+	top:359px;
+	left:9px;
+	width:623px;
+	height:40px;
+	background-color:#d6d9df;
+	border-top:solid 1px #808080
+}
+div#exwindowbucket {
+	position:absolute;
+	top:0px;
+	left:0px
+}
+div#excontentarea .ConTblCl1Div_sun4 {
+	margin-top:17px
+}
+div#excontentarea .ConTblCl2Div_sun4 {
+	margin-top:12px
+}
+div#excontentarea .IndentedControls {
+	margin:3px 0px 0px 25px
+}
 </style>
 <div id="exwindowbucket"><img src="backupdialog.png" width="646" height="414" /></div>
 <div id="exwindowtitle"> - Export to LDIF</div>
+<div id="exclosebox" onclick="closeSubWin()" style="cursor:pointer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
 <div id="excontentarea">
   <table style="margin-top:10px" border="0" cellspacing="0" cellpadding="0" title="">
     <tr>
@@ -30,7 +77,7 @@ div#exwindowbucket {position:absolute;top:0px;left:0px}
         </div></td>
       <td ><div class="ConTblCl2Div_sun4">
           <input type="text" class="TxtFld_sun4" size="50"/>
-&nbsp;&nbsp;
+          &nbsp;&nbsp;
           <input type="button" class="Btn2_sun4" onclick="alert('Opens local file browser.')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
        onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Browse..."/>
           <div class="IndentedControls">
@@ -68,8 +115,12 @@ div#exwindowbucket {position:absolute;top:0px;left:0px}
         </div></td>
     </tr>
   </table>
-   <div id="showexcl" style="margin:20px 0px 0px" onclick="document.getElementById('exclusion').style.display='block';document.getElementById('hideexcl').style.display='block';document.getElementById('showexcl').style.display='none';"><img style="margin-top:-1px" src="../../mockups/suntheme/images/tree/tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="22" align="absmiddle" /><label id="username" for="pwd" class="LblLev2Txt_sun4">Data Exclusion Options</label></div>
-    <div id="hideexcl" style="margin:20px 0px 0px;display:none" onclick="document.getElementById('exclusion').style.display='none';document.getElementById('hideexcl').style.display='none';document.getElementById('showexcl').style.display='block';"><img style="margin-top:-1px" src="../../mockups/suntheme/images/tree/tree_handledowntopns.png" alt="Data Exclusion Options" width="16" height="22" align="absmiddle"/><label id="username" for="pwd" class="LblLev2Txt_sun4">Data Exclusion Options</label></div>
+  <div id="showexcl" style="margin:20px 0px 0px" onclick="document.getElementById('exclusion').style.display='block';document.getElementById('hideexcl').style.display='block';document.getElementById('showexcl').style.display='none';"><img style="margin-top:-1px" src="../../mockups/suntheme/images/tree/tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="22" align="absmiddle" />
+    <label id="username" for="pwd" class="LblLev2Txt_sun4">Data Exclusion Options</label>
+  </div>
+  <div id="hideexcl" style="margin:20px 0px 0px;display:none" onclick="document.getElementById('exclusion').style.display='none';document.getElementById('hideexcl').style.display='none';document.getElementById('showexcl').style.display='block';"><img style="margin-top:-1px" src="../../mockups/suntheme/images/tree/tree_handledowntopns.png" alt="Data Exclusion Options" width="16" height="22" align="absmiddle"/>
+    <label id="username" for="pwd" class="LblLev2Txt_sun4">Data Exclusion Options</label>
+  </div>
   <div id="exclusion" style="display:none">
     <table  border="0" cellspacing="0" cellpadding="0" title="">
       <tr>
@@ -100,8 +151,12 @@ div#exwindowbucket {position:absolute;top:0px;left:0px}
       </tr>
     </table>
   </div>
-  <div id="showincl" style="margin:10px 0px 0px" onclick="document.getElementById('inclusion').style.display='block';document.getElementById('hideincl').style.display='block';document.getElementById('showincl').style.display='none';"><img style="margin-top:-1px" src="../../mockups/suntheme/images/tree/tree_handlerighttopns.png" alt="Data inclusion Options" width="16" height="22" align="absmiddle" /><label id="username" for="pwd" class="LblLev2Txt_sun4">Data Inclusion Options</label></div>
-    <div id="hideincl" style="margin:10px 0px 0px;display:none" onclick="document.getElementById('inclusion').style.display='none';document.getElementById('hideincl').style.display='none';document.getElementById('showincl').style.display='block';"><img style="margin-top:-1px" src="../../mockups/suntheme/images/tree/tree_handledowntopns.png" alt="Data inclusion Options" width="16" height="22" align="absmiddle"/><label id="username" for="pwd" class="LblLev2Txt_sun4">Data Inclusion Options</label></div>
+  <div id="showincl" style="margin:10px 0px 0px" onclick="document.getElementById('inclusion').style.display='block';document.getElementById('hideincl').style.display='block';document.getElementById('showincl').style.display='none';"><img style="margin-top:-1px" src="../../mockups/suntheme/images/tree/tree_handlerighttopns.png" alt="Data inclusion Options" width="16" height="22" align="absmiddle" />
+    <label id="username" for="pwd" class="LblLev2Txt_sun4">Data Inclusion Options</label>
+  </div>
+  <div id="hideincl" style="margin:10px 0px 0px;display:none" onclick="document.getElementById('inclusion').style.display='none';document.getElementById('hideincl').style.display='none';document.getElementById('showincl').style.display='block';"><img style="margin-top:-1px" src="../../mockups/suntheme/images/tree/tree_handledowntopns.png" alt="Data inclusion Options" width="16" height="22" align="absmiddle"/>
+    <label id="username" for="pwd" class="LblLev2Txt_sun4">Data Inclusion Options</label>
+  </div>
   <div id="inclusion" style="display:none;margin-top:5px">
     <table  border="0" cellspacing="0" cellpadding="0" title="">
       <tr>
@@ -141,5 +196,4 @@ div#exwindowbucket {position:absolute;top:0px;left:0px}
   <input type="button" class="Btn2_sun4" onclick="closeSubWin();" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
        onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Cancel"/>
 </div>
-</body>
-</html>
+</body></html>

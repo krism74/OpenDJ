@@ -1,0 +1,218 @@
+<style type="text/css">
+div#alwindowtitle {
+	position:absolute;
+	top:10px;
+	left:174px;
+	width:320px;
+	height:16px;
+	font-size:12px;
+	font-weight:bold
+}
+div#alclosebox {
+	position:absolute;
+	top:9px;
+	left:630px;
+	width:20px;
+	height:16px;
+}
+div#alfilterarea {
+	position:absolute;
+	top:31px;
+	left:9px;
+	width:648px;
+	height:40px;
+	border-bottom :solid 1px #ccc;
+	background-color:#d6d9df;
+	border-bottom:solid 1px #E1E3E7
+}
+div#alcontentarea {
+	position:absolute;
+	top:73px;
+	left:9px;
+	width:646px;
+	height:440px;
+	border-top:1px solid #595E6D;
+	border-left:1px solid #595E6D;
+	border-bottom:1px solid #595E6D;
+	background-color:#d6d9df;
+	overflow:auto
+}
+div#albottombar {
+	position:absolute;
+	top:516px;
+	left:9px;
+	width:648px;
+	height:40px;
+	background-color:#d6d9df;
+	border-top:solid 1px #E1E3E7
+}
+div#alquitbutton {
+	position:absolute;
+	top:527px;
+	left:450px;
+	width:200px;
+	height:20px;
+	text-align:right
+}
+div#alstatusarea {
+	position:absolute;
+	top:527px;
+	left:24px;
+	width:450px;
+	height:20px;
+}
+div#alwindowbucket {
+	position:absolute;
+	top:0px;
+	left:0px
+}
+</style>
+<div id="alwindowbucket" ><img src="browsedialog.png" width="671" height="572" /></div>
+<div id="alwindowtitle"> - Access Log</div>
+<div id="alclosebox" onclick="closeSubWin()" style="cursor:pointer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+<div id="alfilterarea">
+  <div style="padding:10px">
+    <label id="username" for="pwd" class="LblLev2Txt_sun4">Filter:</label>
+    <select name="SearchData.ComboNumberResults" id="SearchData.ComboNumberResults" class="MnuStd_sun4">
+      <option class="MnuStdOpt_sun4" selected>Entire Log Entry</option>
+      <option class="MnuStdOpt_sun4">Operation Type</option>
+      <option class="MnuStdOpt_sun4">Connection ID</option>
+      <option class="MnuStdOpt_sun4">Details</option>
+    </select>
+    <input type="text" class="TxtFld_sun4" size="30" value=""/>
+    &nbsp;
+    <input type="button" class="Btn2_sun4" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Apply"/>
+  </div>
+</div>
+</div>
+</div>
+<div id="alcontentarea">
+  <table width="100%" class="info-table" border="0" cellspacing="0" cellpadding="0" >
+    <tr>
+      <th nowrap="nowrap">Time</th>
+      <th nowrap="nowrap">Operation Type </th>
+      <th nowrap="nowrap">Connection ID</th>
+      <th nowrap="nowrap">Details</th>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">11/Apr/2008:15:16:22 -0600</td>
+      <td>SEARCH</td>
+      <td>3</td>
+      <td>op=1 msgID=2 base="cn=config" scope=wholeSubtree filter="(objectclass=ds-cfg-root-dn-user)" attrs="ds-cfg-alternate-bind-dn"</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">11/Apr/2008:15:16:22 -0600</td>
+      <td>BIND</td>
+      <td>3</td>
+      <td>op=0 msgID=1 result="Success" authDN="cn=Directory Manager,cn=Root DNs,cn=config" etime=23</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">11/Apr/2008:15:16:22 -0600</td>
+      <td>BIND</td>
+      <td>3</td>
+      <td>op=0 msgID=1 type=SIMPLE dn="cn=Directory Manager"</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">11/Apr/2008:15:16:22 -0600</td>
+      <td>CONNECT</td>
+      <td>3</td>
+      <td>from=172.20.25.212 to=172.20.25.212 protocol=LDAP</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">11/Apr/2008:15:16:22 -0600</td>
+      <td>DISCONNECT</td>
+      <td>2</td>
+      <td>reason="Client Unbind"</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">11/Apr/2008:15:16:22 -0600</td>
+      <td>UNBIND</td>
+      <td>2</td>
+      <td>op=2 msgID=3</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">11/Apr/2008:15:16:22 -0600</td>
+      <td>SEARCH</td>
+      <td>2</td>
+      <td>op=1 msgID=2 result="Success" nentries=1 etime=8</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">11/Apr/2008:15:16:22 -0600</td>
+      <td>SEARCH</td>
+      <td>2</td>
+      <td>op=1 msgID=2 base="cn=config" scope=baseObject filter="(objectclass=*)" attrs="dn"</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">11/Apr/2008:15:16:22 -0600</td>
+      <td>BIND</td>
+      <td>2</td>
+      <td>op=0 msgID=1 result="Success" authDN="cn=Directory Manager,cn=Root DNs,cn=config" etime=4</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">11/Apr/2008:15:16:22 -0600</td>
+      <td>BIND</td>
+      <td>2</td>
+      <td>op=0 msgID=1 type=SIMPLE dn="cn=Directory Manager"</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">11/Apr/2008:15:16:22 -0600</td>
+      <td>CONNECT</td>
+      <td>2</td>
+      <td>from=172.20.25.212 to=172.20.25.212 protocol=LDAP</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">11/Apr/2008:15:16:13 -0600</td>
+      <td>DISCONNECT</td>
+      <td>1</td>
+      <td>reason="Client Disconnect"</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">11/Apr/2008:15:16:13 -0600</td>
+      <td>CONNECT</td>
+      <td>1</td>
+      <td>from=127.0.0.1 to=127.0.0.1 protocol=LDAP</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">11/Apr/2008:15:15:55 -0600</td>
+      <td>DISCONNECT</td>
+      <td>0</td>
+      <td>reason="Client Unbind"</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">11/Apr/2008:15:15:55 -0600</td>
+      <td>UNBIND</td>
+      <td>0</td>
+      <td>op=1 msgID=2</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">11/Apr/2008:15:15:55 -0600</td>
+      <td>BIND</td>
+      <td>0</td>
+      <td>op=0 msgID=1 result="Success" authDN="cn=Directory Manager,cn=Root DNs,cn=config" etime=90</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">11/Apr/2008:15:15:54 -0600</td>
+      <td>BIND</td>
+      <td>0</td>
+      <td>op=0 msgID=1 type=SIMPLE dn="cn=Directory Manager"</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">11/Apr/2008:15:15:54 -0600</td>
+      <td>CONNECT</td>
+      <td>0</td>
+      <td>from=172.20.25.212 to=172.20.25.212 protocol=LDAP</td>
+    </tr>
+  </table>
+</div>
+<div id="albottombar"></div>
+<div id="alstatusarea">
+  <input id="accesscb" type="checkbox" class="Cb_sun4" checked onclick="if (this.checked==1) { handleUpdateCB('ac_live') } else { handleUpdateCB('ac_man')};" />
+  <label for="accesscb">&nbsp;Enable Live Updating&nbsp;&nbsp;</label>
+  <input id="accessRefresh" type="button" disabled="disabled" class="Btn2Dis_sun4" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'" onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Refresh" onclick="alert('Manually refreshes the log viewer.')"/>
+</div>
+<div id="alquitbutton">
+  <input type="button" class="Btn2_sun4" onclick="closeSubWin()" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Close"/>
+</div>
+</body></html>

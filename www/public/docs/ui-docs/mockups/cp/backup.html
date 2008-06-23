@@ -1,17 +1,64 @@
 <style type="text/css">
 /*Backup Dialog */
-div#bkcontentarea {position:absolute; top:33px; left:23px; width:609px;height:306px; overflow:auto}
-div#bkwindowtitle {position:absolute;top:10px;left:174px;width:320px;height:16px; font-size:12px;font-weight:bold }
-div#bkquitbutton {position:absolute; top:367px; left:444px; width:180px; height:25px;text-align:right;}
-div#bkbottombar {position:absolute; top:359px; left:9px; width:623px;height:40px;background-color:#d6d9df;border-top:solid 1px #808080}
-div#bkwindowbucket {position:absolute;top:0px;left:0px}
-div#bkcontentarea .ConTblCl1Div_sun4 {margin-top:17px}
-div#bkcontentarea .ConTblCl2Div_sun4 {margin-top:12px}
-div#bkcontentarea .IndentedControls {margin:3px 0px 0px 25px} 
-
+div#bkcontentarea {
+	position:absolute;
+	top:33px;
+	left:23px;
+	width:609px;
+	height:306px;
+	overflow:auto
+}
+div#bkwindowtitle {
+	position:absolute;
+	top:10px;
+	left:174px;
+	width:320px;
+	height:16px;
+	font-size:12px;
+	font-weight:bold
+}
+div#bkclosebox {
+	position:absolute;
+	top:9px;
+	left:610px;
+	width:20px;
+	height:16px;
+}
+div#bkquitbutton {
+	position:absolute;
+	top:367px;
+	left:444px;
+	width:180px;
+	height:25px;
+	text-align:right;
+}
+div#bkbottombar {
+	position:absolute;
+	top:359px;
+	left:9px;
+	width:623px;
+	height:40px;
+	background-color:#d6d9df;
+	border-top:solid 1px #808080
+}
+div#bkwindowbucket {
+	position:absolute;
+	top:0px;
+	left:0px
+}
+div#bkcontentarea .ConTblCl1Div_sun4 {
+	margin-top:17px
+}
+div#bkcontentarea .ConTblCl2Div_sun4 {
+	margin-top:12px
+}
+div#bkcontentarea .IndentedControls {
+	margin:3px 0px 0px 25px
+}
 </style>
 <div id="bkwindowbucket"><img src="backupdialog.png" width="646" height="414" /></div>
 <div id="bkwindowtitle"> - Run Backup</div>
+<div id="bkclosebox" onclick="closeSubWin()" style="cursor:pointer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
 <div id="bkcontentarea">
   <table style="margin-top:10px" border="0" cellspacing="0" cellpadding="0" title="">
     <tr>
@@ -25,21 +72,21 @@ div#bkcontentarea .IndentedControls {margin:3px 0px 0px 25px}
           </select>
           </span> </div></td>
     </tr>
-<tr>
-  <td nowrap="nowrap" align="left" valign="top"><div class="ConTblCl1Div_sun4">
-      <label id="username" for="pwd" class="LblLev2Txt_sun4">Backup Type:</label>
-    </div></td>
-  <td ><div class="ConTblCl2Div_sun4">
-      <div class="RbGrp_sun4">
-        <div style="margin:3px 0px">
-          <input type="radio" class="RbSpn_sun4" checked name="import-type" onClick="document.getElementById('backupfile').value='20070507081557';"/>
-          Full Backup</span></div>
-        <div style="margin:3px 0px">
-          <input type="radio" class="RbSpn_sun4" name="import-type" onClick="document.getElementById('backupfile').value=' ';"/>
-          Incremental Backup (Specify Parent Backup File Below)</span></div>
-      </div>
-    </div></td>
-</tr>
+    <tr>
+      <td nowrap="nowrap" align="left" valign="top"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4">Backup Type:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4">
+          <div class="RbGrp_sun4">
+            <div style="margin:3px 0px">
+              <input type="radio" class="RbSpn_sun4" checked name="import-type" onclick="document.getElementById('backupfile').value='20070507081557';"/>
+              Full Backup</span></div>
+            <div style="margin:3px 0px">
+              <input type="radio" class="RbSpn_sun4" name="import-type" onclick="document.getElementById('backupfile').value=' ';"/>
+              Incremental Backup (Specify Parent Backup File Below)</span></div>
+          </div>
+        </div></td>
+    </tr>
     <tr>
       <td align="left" valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4">
           <label id="username" for="pwd" class="LblLev2Txt_sun4">Backup  File:</label>
@@ -48,15 +95,16 @@ div#bkcontentarea .IndentedControls {margin:3px 0px 0px 25px}
           <table border="0" cellspacing="0" cellpadding="0">
             <tr>
               <td><input type="text" class="TxtFld_sun4" size="40" value="/local/OpenDS-0.9.0/bak"/></td>
-              <td>&nbsp;&nbsp;<strong>/</strong>&nbsp;&nbsp;<input id="backupfile" type="text" class="TxtFld_sun4" size="18" value="20070507081557"/></td>
+              <td>&nbsp;&nbsp;<strong>/</strong>&nbsp;&nbsp;
+                <input id="backupfile" type="text" class="TxtFld_sun4" size="18" value="20070507081557"/></td>
             </tr>
             <tr>
-              <td align="right"><input type="button" class="Btn2_sun4" style="margin-top:5px " onClick="alert('Opens local file browser.')" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
-       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="Browse..."/></td>
+              <td align="right"><input type="button" class="Btn2_sun4" style="margin-top:5px " onclick="alert('Opens local file browser.')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Browse..."/></td>
               <td>&nbsp;</td>
             </tr>
           </table>
-          </div></td>
+        </div></td>
     </tr>
     <tr>
       <td nowrap="nowrap" align="left" valign="top"><div class="ConTblCl1Div_sun4">
@@ -70,7 +118,7 @@ div#bkcontentarea .IndentedControls {margin:3px 0px 0px 25px}
             <input type="checkbox" class="Cb_sun4" />
             Encrypt Data</div>
           <div style="margin-top:5px" >
-            <input type="checkbox" class="Cb_sun4" onClick="if (this.checked==true) {
+            <input type="checkbox" class="Cb_sun4" onclick="if (this.checked==true) {
 			 document.getElementById('signhash').className='CbSpn_sun4';document.getElementById('signhash').disabled=false;
 			} else {
 			document.getElementById('signhash').className='CbDis_sun4';document.getElementById('signhash').disabled=true;
@@ -79,15 +127,15 @@ div#bkcontentarea .IndentedControls {margin:3px 0px 0px 25px}
           <div class="IndentedControls">
             <input id="signhash" type="checkbox" class="CbDis_sun4" disabled />
             Sign Message Digest Hash </div>
-          </div></td>
+        </div></td>
     </tr>
   </table>
   <p>&nbsp;</p>
 </div>
 <div id="bkbottombar"></div>
 <div id="bkquitbutton">
-  <input type="button" class="Btn1_sun4" onClick="loadFile('progress.html')" onMouseDown="if (this.disabled==0) this.className='Btn1Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn1_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn1Hov_sun4'"
-       onMouseOut="if (this.disabled==0) this.className='Btn1_sun4'" value="OK"/>
-  <input type="button" class="Btn2_sun4" onClick="closeSubWin()" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
-       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="Cancel"/>
+  <input type="button" class="Btn1_sun4" onclick="loadFile('progress.html')" onmousedown="if (this.disabled==0) this.className='Btn1Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn1_sun4'" onmouseover="if (this.disabled==0) this.className='Btn1Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn1_sun4'" value="OK"/>
+  <input type="button" class="Btn2_sun4" onclick="closeSubWin()" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Cancel"/>
 </div>

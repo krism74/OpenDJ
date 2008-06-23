@@ -1,15 +1,63 @@
 <style type="text/css">
-div#imquitbutton {position:absolute; top:448px; left:421px; width:200px;height:20px;text-align:right}
-div#imcontentarea {position:absolute; top:31px; left:23px; width:609px;height:408px; overflow:auto;}
-div#imwindowtitle {position:absolute;top:10px;left:174px;width:320px;height:16px; font-size:12px;font-weight:bold }
-div#imwindowbucket {position:absolute;top:0px;left:0px}
-div#imbottombar {position:absolute; top:438px; left:9px; width:623px;height:40px;background-color:#d6d9df;border-top:solid 1px #808080}
-div#imcontentarea .ConTblCl1Div_sun4 {margin-top:17px}
-div#imcontentarea .ConTblCl2Div_sun4 {margin-top:12px}
-div#imcontentarea .IndentedControls {margin:3px 0px 0px 25px} 
+div#imquitbutton {
+	position:absolute;
+	top:448px;
+	left:421px;
+	width:200px;
+	height:20px;
+	text-align:right
+}
+div#imcontentarea {
+	position:absolute;
+	top:31px;
+	left:23px;
+	width:609px;
+	height:408px;
+	overflow:auto;
+}
+div#imwindowtitle {
+	position:absolute;
+	top:10px;
+	left:174px;
+	width:320px;
+	height:16px;
+	font-size:12px;
+	font-weight:bold
+}
+div#imclosebox {
+	position:absolute;
+	top:9px;
+	left:610px;
+	width:20px;
+	height:16px;
+}
+div#imwindowbucket {
+	position:absolute;
+	top:0px;
+	left:0px
+}
+div#imbottombar {
+	position:absolute;
+	top:438px;
+	left:9px;
+	width:623px;
+	height:40px;
+	background-color:#d6d9df;
+	border-top:solid 1px #808080
+}
+div#imcontentarea .ConTblCl1Div_sun4 {
+	margin-top:17px
+}
+div#imcontentarea .ConTblCl2Div_sun4 {
+	margin-top:12px
+}
+div#imcontentarea .IndentedControls {
+	margin:3px 0px 0px 25px
+}
 </style>
 <div id="imwindowbucket"><img src="progressdialog.png" width="646" height="494" /></div>
 <div id="imwindowtitle"> - Import LDIF</div>
+<div id="imclosebox" onclick="closeSubWin()" style="cursor:pointer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
 <div id="imcontentarea">
   <table style="margin-top:10px" border="0" cellspacing="0" cellpadding="0" title="">
     <tr>
@@ -29,9 +77,9 @@ div#imcontentarea .IndentedControls {margin:3px 0px 0px 25px}
         </div></td>
       <td ><div class="ConTblCl2Div_sun4">
           <input type="text" class="TxtFld_sun4" size="50"/>
-&nbsp;&nbsp;
-          <input type="button" class="Btn2_sun4" onClick="alert('Opens local file browser.')" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
-       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="Browse..."/>
+          &nbsp;&nbsp;
+          <input type="button" class="Btn2_sun4" onclick="alert('Opens local file browser.')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Browse..."/>
           <div class="IndentedControls">
             <input type="checkbox" class="Cb_sun4" />
             Data in File is Compressed (.gzip)</div>
@@ -47,10 +95,10 @@ div#imcontentarea .IndentedControls {margin:3px 0px 0px 25px}
       <td ><div class="ConTblCl2Div_sun4">
           <div class="RbGrp_sun4">
             <div style="margin:3px 0px">
-              <input type="radio" class="RbSpn_sun4" checked name="import-type" onClick="document.getElementById('replacematching').className='CbDis_sun4';document.getElementById('replacematching').disabled=true;"/>
+              <input type="radio" class="RbSpn_sun4" checked name="import-type" onclick="document.getElementById('replacematching').className='CbDis_sun4';document.getElementById('replacematching').disabled=true;"/>
               Overwrite Any Existing Data</span></div>
             <div style="margin:3px 0px">
-              <input type="radio" class="RbSpn_sun4" name="import-type" onClick="document.getElementById('replacematching').className='CbSpn_sun4';document.getElementById('replacematching').disabled=false;"/>
+              <input type="radio" class="RbSpn_sun4" name="import-type" onclick="document.getElementById('replacematching').className='CbSpn_sun4';document.getElementById('replacematching').disabled=false;"/>
               Append to Existing Data</span></div>
           </div>
           <div class="IndentedControls">
@@ -73,7 +121,7 @@ div#imcontentarea .IndentedControls {margin:3px 0px 0px 25px}
           <label id="username" for="pwd" class="LblLev2Txt_sun4">Rejects File:</label>
         </div></td>
       <td ><div class="ConTblCl2Div_sun4">
-          <input type="checkbox" class="Cb_sun4" onClick="if (this.checked==true) {
+          <input type="checkbox" class="Cb_sun4" onclick="if (this.checked==true) {
 	    document.getElementById('rejectpath').className='TxtFld_sun4';document.getElementById('rejectpath').disabled=false;
 	    document.getElementById('rejectbrowse').className='Btn2_sun4';document.getElementById('rejectbrowse').disabled=false;
 	    document.getElementById('rejectoverwrite').className='CbSpn_sun4';document.getElementById('rejectoverwrite').disabled=false;
@@ -85,19 +133,19 @@ div#imcontentarea .IndentedControls {margin:3px 0px 0px 25px}
           Write Rejected Entries to a File</div>
         <div class="IndentedControls">
           <input id="rejectpath" type="text" class="TxtFldDis_sun4" disabled size="40"/>
-&nbsp;
-          <input type="button" disabled class="Btn2Dis_sun4" id="rejectbrowse" onClick="alert('Opens local file browser.')" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
-       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="Browse..."/>
+          &nbsp;
+          <input type="button" disabled class="Btn2Dis_sun4" id="rejectbrowse" onclick="alert('Opens local file browser.')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Browse..."/>
         </div>
         <div class="IndentedControls">
           <input id="rejectoverwrite" type="checkbox" class="CbDis_sun4" disabled />
           If file exists, overwrite contents of file instead of appending.</div></td>
     </tr>
   </table>
-  <div id="showexcl" style="margin:20px 0px 0px" onClick="document.getElementById('exclusion').style.display='block';document.getElementById('hideexcl').style.display='block';document.getElementById('showexcl').style.display='none';"><img style="margin-top:-1px" src="../../mockups/suntheme/images/tree/tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="22" align="absmiddle" />
+  <div id="showexcl" style="margin:20px 0px 0px" onclick="document.getElementById('exclusion').style.display='block';document.getElementById('hideexcl').style.display='block';document.getElementById('showexcl').style.display='none';"><img style="margin-top:-1px" src="../../mockups/suntheme/images/tree/tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="22" align="absmiddle" />
     <label id="username" for="pwd" class="LblLev2Txt_sun4">Data Exclusion Options</label>
   </div>
-  <div id="hideexcl" style="margin:20px 0px 0px;display:none" onClick="document.getElementById('exclusion').style.display='none';document.getElementById('hideexcl').style.display='none';document.getElementById('showexcl').style.display='block';"><img style="margin-top:-1px" src="../../mockups/suntheme/images/tree/tree_handledowntopns.png" alt="Data Exclusion Options" width="16" height="22" align="absmiddle"/>
+  <div id="hideexcl" style="margin:20px 0px 0px;display:none" onclick="document.getElementById('exclusion').style.display='none';document.getElementById('hideexcl').style.display='none';document.getElementById('showexcl').style.display='block';"><img style="margin-top:-1px" src="../../mockups/suntheme/images/tree/tree_handledowntopns.png" alt="Data Exclusion Options" width="16" height="22" align="absmiddle"/>
     <label id="username" for="pwd" class="LblLev2Txt_sun4">Data Exclusion Options</label>
   </div>
   <div id="exclusion" style="display:none;margin-left:12px">
@@ -128,12 +176,14 @@ div#imcontentarea .IndentedControls {margin:3px 0px 0px 25px}
             <textarea cols="50" rows=" " class="TxtFld_sun4"></textarea>
           </div></td>
       </tr>
-    </table><br/><br/>
+    </table>
+    <br/>
+    <br/>
   </div>
-  <div id="showincl" style="margin:10px 0px 0px" onClick="document.getElementById('inclusion').style.display='block';document.getElementById('hideincl').style.display='block';document.getElementById('showincl').style.display='none';"><img style="margin-top:-1px" src="../../mockups/suntheme/images/tree/tree_handlerighttopns.png" alt="Data inclusion Options" width="16" height="22" align="absmiddle" />
+  <div id="showincl" style="margin:10px 0px 0px" onclick="document.getElementById('inclusion').style.display='block';document.getElementById('hideincl').style.display='block';document.getElementById('showincl').style.display='none';"><img style="margin-top:-1px" src="../../mockups/suntheme/images/tree/tree_handlerighttopns.png" alt="Data inclusion Options" width="16" height="22" align="absmiddle" />
     <label id="username" for="pwd" class="LblLev2Txt_sun4">Data Inclusion Options</label>
   </div>
-  <div id="hideincl" style="margin:10px 0px 0px;display:none" onClick="document.getElementById('inclusion').style.display='none';document.getElementById('hideincl').style.display='none';document.getElementById('showincl').style.display='block';"><img style="margin-top:-1px" src="../../mockups/suntheme/images/tree/tree_handledowntopns.png" alt="Data inclusion Options" width="16" height="22" align="absmiddle"/>
+  <div id="hideincl" style="margin:10px 0px 0px;display:none" onclick="document.getElementById('inclusion').style.display='none';document.getElementById('hideincl').style.display='none';document.getElementById('showincl').style.display='block';"><img style="margin-top:-1px" src="../../mockups/suntheme/images/tree/tree_handledowntopns.png" alt="Data inclusion Options" width="16" height="22" align="absmiddle"/>
     <label id="username" for="pwd" class="LblLev2Txt_sun4">Data Inclusion Options</label>
   </div>
   <div id="inclusion" style="display:none;margin-top:5px;margin-left:12px">
@@ -164,14 +214,16 @@ div#imcontentarea .IndentedControls {margin:3px 0px 0px 25px}
             <textarea cols="50" rows=" " class="TxtFld_sun4"></textarea>
           </div></td>
       </tr>
-    </table><br/><br/>
+    </table>
+    <br/>
+    <br/>
   </div>
 </div>
 <div id="imbottombar"></div>
 <div id="imquitbutton">
-  <input type="button" class="Btn1_sun4" onClick="loadFile('progress.html')" onMouseDown="if (this.disabled==0) this.className='Btn1Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn1_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn1Hov_sun4'"
-       onMouseOut="if (this.disabled==0) this.className='Btn1_sun4'" value="OK"/>
-  <input type="button" class="Btn2_sun4" onClick="closeSubWin();" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
-       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="Cancel"/>
+  <input type="button" class="Btn1_sun4" onclick="loadFile('progress.html')" onmousedown="if (this.disabled==0) this.className='Btn1Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn1_sun4'" onmouseover="if (this.disabled==0) this.className='Btn1Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn1_sun4'" value="OK"/>
+  <input type="button" class="Btn2_sun4" onclick="closeSubWin();" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Cancel"/>
 </div>
 </body></html>

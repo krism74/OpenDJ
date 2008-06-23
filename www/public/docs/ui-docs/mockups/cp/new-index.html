@@ -1,0 +1,111 @@
+<style type="text/css">
+div#nicontentarea {
+	position:absolute;
+	top:33px;
+	left:29px;
+	width:519px;
+	height:269px;
+	overflow:auto
+}
+div#niwindowtitle {
+	position:absolute;
+	top:10px;
+	left:174px;
+	width:320px;
+	height:16px;
+	font-size:12px;
+	font-weight:bold
+}
+div#niclosebox {
+	position:absolute;
+	top:9px;
+	left:518px;
+	width:20px;
+	height:18px;
+}
+div#niquitbutton {
+	position:absolute;
+	top:273px;
+	left:354px;
+	width:180px;
+	height:25px;
+	text-align:right;
+}
+div#nibottombar {
+	position:absolute;
+	top:263px;
+	left:9px;
+	width:533px;
+	height:40px;
+	background-color:#d6d9df;
+	border-top:solid 1px #808080
+}
+div#niwindowbucket {
+	position:absolute;
+	top:0px;
+	left:0px
+}
+div#nicontentarea .ConTblCl1Div_sun4 {
+	margin-top:14px
+}
+div#nicontentarea .ConTblCl2Div_sun4 {
+	margin-top:12px
+}
+div#nicontentarea .IndentedControls {
+	margin:3px 0px 0px 25px
+}
+</style>
+<div id="niwindowbucket"><img src="neworgdialog.png" width="556" height="317" /></div>
+<div id="niwindowtitle"> - New Index </div>
+<div id="niclosebox" onclick="closeSubWin2()" style="cursor:pointer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+<div id="nicontentarea">
+  <!--<div style="margin:15px 10px 0px 0px" class="help_sun4">New User Dialog Help Text.</div> -->
+  <table style="margin-top:10px" border="0" cellspacing="0" cellpadding="0" title="">
+        <tr title="The attribute to be indexed">
+          <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Attribute:</span></div></td>
+          <td><div class="ConTblCl2Div_sun4">              <select name="PropertySheet.LoginShellValue" id="index-attr" class="MnuStd_sun4">
+                <option class="MnuStdOpt_sun4" value="other" selected> </option>
+                <option class="MnuStdOpt_sun4" value="other" selected>sn</option>
+                <option class="MnuStdOpt_sun4" value="other">some other attribute...</option>
+              </select>
+</div></td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Entry Limit:</span> </div></td>
+          <td><div class="ConTblCl2Div_sun4">
+              <input title="The maximum number of entries that may be allowed to match any given index key" type="text" class="TxtFld_sun4" size="14" value="4000"/>
+            </div></td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Index Type:</span> </div></td>
+          <td><div class="ConTblCl2Div_sun4"> <span title="Used to efficiently identify which entries are approximately equal to a given assertion value..">
+              <input id="approximate" type="checkbox" class="CB_sun4" />
+              <label for="approximate">&nbsp;Approximate</label>
+              </span><br />
+              <span title="Used to identify entries containing an attribute value that exactly matches a given assertion value.">
+              <input id="equality" type="checkbox" checked class="CB_sun4" />
+              <label for="equality">&nbsp;Equality</label>
+              </span><br />
+              <span title="Used to identify entries that have values that are greater than or equal to, or less than or equal to, a given assertion value.">
+              <input id="ordering" type="checkbox" class="CB_sun4" />
+              <label for="ordering">&nbsp;Ordering</label>
+              </span><br />
+              <span title="Used to identify entries that contain at least one value for a given attribute.">
+              <input id="presence" type="checkbox" checked class="CB_sun4" />
+              <label for="presence">&nbsp;Presence</label>
+              </span><br />
+              <span title="Used to identify entries that contain an attribute value matching a given substring assertion.">
+              <input id="substring" type="checkbox" checked class="CB_sun4" />
+              <label for="substring">&nbsp;Substring</label>
+              </span><br />
+            </div></td>
+        </tr>
+  </table>
+</div>
+<div id="nibottombar"></div>
+<div id="niquitbutton">
+  <input type="button" class="Btn1_sun4" onclick="closeSubWin2()" onmousedown="if (this.disabled==0) this.className='Btn1Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn1_sun4'" onmouseover="if (this.disabled==0) this.className='Btn1Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn1_sun4'" value="OK"/>
+  <input type="button" class="Btn2_sun4" onclick="closeSubWin2()" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Cancel"/>
+</div>

@@ -1,0 +1,208 @@
+<style type="text/css">
+div#rlwindowtitle {
+	position:absolute;
+	top:10px;
+	left:174px;
+	width:320px;
+	height:16px;
+	font-size:12px;
+	font-weight:bold
+}
+div#rlclosebox {
+	position:absolute;
+	top:9px;
+	left:630px;
+	width:20px;
+	height:16px;
+}
+div#rlfilterarea {
+	position:absolute;
+	top:31px;
+	left:9px;
+	width:648px;
+	height:40px;
+	border-bottom :solid 1px #ccc;
+	background-color:#d6d9df;
+	border-bottom:solid 1px #E1E3E7
+}
+div#rlcontentarea {
+	position:absolute;
+	top:73px;
+	left:9px;
+	width:646px;
+	height:440px;
+	border-top:1px solid #595E6D;
+	border-left:1px solid #595E6D;
+	border-bottom:1px solid #595E6D;
+	background-color:#d6d9df;
+	overflow:auto
+}
+div#rlbottombar {
+	position:absolute;
+	top:516px;
+	left:9px;
+	width:648px;
+	height:40px;
+	background-color:#d6d9df;
+	border-top:solid 1px #E1E3E7
+}
+div#rlquitbutton {
+	position:absolute;
+	top:527px;
+	left:450px;
+	width:200px;
+	height:20px;
+	text-align:right
+}
+div#rlstatusarea {
+	position:absolute;
+	top:527px;
+	left:24px;
+	width:450px;
+	height:20px;
+}
+div#rlwindowbucket {
+	position:absolute;
+	top:0px;
+	left:0px
+}
+</style>
+<div id="rlwindowbucket" ><img src="browsedialog.png" width="671" height="572" /></div>
+<div id="rlwindowtitle"> - Replication Log</div>
+<div id="rlclosebox" onclick="closeSubWin()" style="cursor:pointer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+<div id="rlfilterarea">
+  <div style="padding:10px">
+    <label id="username" for="pwd" class="LblLev2Txt_sun4">Filter:</label>
+    <select name="SearchData.ComboNumberResults" id="SearchData.ComboNumberResults" class="MnuStd_sun4">
+      <option class="MnuStdOpt_sun4" selected>Entire Log Entry</option>
+      <option class="MnuStdOpt_sun4">Category</option>
+      <option class="MnuStdOpt_sun4">Severity</option>
+      <option class="MnuStdOpt_sun4">Message</option>
+    </select>
+    <input type="text" class="TxtFld_sun4" size="30" value=""/>
+    &nbsp;
+    <input type="button" class="Btn2_sun4" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Apply"/>
+  </div>
+</div>
+</div>
+</div>
+<div id="rlcontentarea">
+  <table width="100%" class="info-table" border="0" cellspacing="0" cellpadding="0" >
+    <tr>
+      <th>Time</th>
+      <th>Category </th>
+      <th>Severity</th>
+      <th>ID</th>
+      <th>Message</th>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">14/Apr/2008:11:27:56 -0600</td>
+      <td>SYNC</td>
+      <td>NOTICE</td>
+      <td>29814</td>
+      <td>Directory Server 29814 bde.central.sun.com cn=schema has disconnected from this replication server</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">14/Apr/2008:11:27:50 -0600</td>
+      <td>SYNC</td>
+      <td>NOTICE</td>
+      <td>15138832</td>
+      <td>Directory Server 32259 bde.central.sun.com cn=admin data has disconnected from this replication server</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">14/Apr/2008:11:27:45 -0600</td>
+      <td>SYNC</td>
+      <td>MILD_ERROR</td>
+      <td>14876751</td>
+      <td>The following error has been received : On suffix dc=example,dc=com. server 24470 presented generation ID=4034969018 when expected generation ID=3211313. Consequently, replication is degraded for that server</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">14/Apr/2008:11:27:30 -0600</td>
+      <td>SYNC</td>
+      <td>NOTICE</td>
+      <td>15138912</td>
+      <td>Replication is up but degraded for domain dc=example,dc=com with replication server bde.central.sun.com/172.20.25.212:8989 - local data generation is 4034969018 - replication server data generation is 3211313 - This may be only temporary or require a full resynchronization</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">14/Apr/2008:11:27:30 -0600</td>
+      <td>SYNC</td>
+      <td>NOTICE</td>
+      <td>15138912</td>
+      <td>Found 2 replication server(s) with up to date changes for suffix dc=example,dc=com</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">14/Apr/2008:11:27:30 -0600</td>
+      <td>SYNC</td>
+      <td>NOTICE</td>
+      <td>15138832</td>
+      <td>Directory Server 24470 bde.central.sun.com dc=example,dc=com has disconnected from this replication server</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">14/Apr/2008:11:27:28 -0600</td>
+      <td>SYNC</td>
+      <td>NOTICE</td>
+      <td>15138878</td>
+      <td>Replication is up and running for domain cn=schema with replication server</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">14/Apr/2008:11:27:28 -0600</td>
+      <td>SYNC</td>
+      <td>NOTICE</td>
+      <td>15138834</td>
+      <td>Found 2 replication server(s) with up to date changes for suffix cn=schema</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">14/Apr/2008:11:27:28 -0600</td>
+      <td>SYNC</td>
+      <td>NOTICE</td>
+      <td>15138832</td>
+      <td>Directory Server 8777 bde.central.sun.com cn=schema has disconnected from this replication server</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">14/Apr/2008:11:27:26 -0600</td>
+      <td>SYNC</td>
+      <td>MILD_ERROR</td>
+      <td>14876751</td>
+      <td>The following error has been received : On suffix cn=admin data. server 15364 presented generation ID=2839290022 when expected generation ID=1037698673. Consequently, replication is degraded for that server</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">14/Apr/2008:11:27:26 -0600</td>
+      <td>SYNC</td>
+      <td>NOTICE</td>
+      <td>15138912</td>
+      <td>Replication is up but degraded for domain cn=admin data with replication server bde.central.sun.com/172.20.25.212:8989 - local data generation is 2839290022 - replication server data generation is 1037698673 - This may be only temporary or require a full resynchronization </td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">14/Apr/2008:11:27:26 -0600</td>
+      <td>SYNC</td>
+      <td>MILD_ERROR</td>
+      <td>1487651</td>
+      <td>The following error has been received : On suffix cn=admin data. server 8705 presented generation ID=2839290022 when expected generation ID=1037698673. Consequently, replication is degraded for that server</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">14/Apr/2008:11:27:26 -0600</td>
+      <td>SYNC</td>
+      <td>NOTICE</td>
+      <td>15138834</td>
+      <td>Found 2 replication server(s) with up to date changes for suffix cn=admin data</td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap">14/Apr/2008:11:27:26 -0600</td>
+      <td>SYNC</td>
+      <td>NOTICE</td>
+      <td>15138832</td>
+      <td>Directory Server 15364 bde.central.sun.com cn=admin data has disconnected from this replication server</td>
+    </tr>
+  </table>
+</div>
+<div id="rlbottombar"></div>
+<div id="rlstatusarea">
+  <input id="replcb" type="checkbox" class="Cb_sun4" checked onclick="if (this.checked==1) { handleUpdateCB('rp_live') } else { handleUpdateCB('rp_man')};" /><label for="replcb">&nbsp;Enable Live Updating&nbsp;&nbsp;</label>
+  <input id="replRefresh" type="button" disabled="disabled" class="Btn2Dis_sun4" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'" onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Refresh" onclick="alert('Manually refreshes the log viewer.')"/>
+</div>
+<div id="rlquitbutton">
+  <input type="button" class="Btn2_sun4" onclick="closeSubWin()" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Close"/>
+</div>
+</body></html>

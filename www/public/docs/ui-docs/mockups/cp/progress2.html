@@ -35,13 +35,13 @@ div#progdetails{width:534px;height:226px;padding:10px;border:1px solid #C7CAD0;b
       <div id="progbar">
         <div id="progbardiv"  style="float:left"> <img id="progimg" src="prog1.png" width="423" height="15" /></div>
         <div>&nbsp;&nbsp;&nbsp;
-          <input type="button" class="Btn2_sun4" id="cancelbutton" style="margin-top:-5px" onClick="if (confirm('Confirm Cancellation\n\nAre you sure you want to cancel the operation? All changes will be backed out and your server will be left in its previous state.')){ canceled=true; };" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
-       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="Cancel"/>
+          <input type="button" class="Btn2_sun4" id="cancelbutton" style="margin-top:-5px" onclick="if (confirm('Confirm Cancellation\n\nAre you sure you want to cancel the operation? All changes will be backed out and your server will be left in its previous state.')){ canceled=true; };" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Cancel"/>
         </div>
       </div>
       <div id="progtime" style="margin:5px 0px; font-size:11px">15% Complete (About 10 Seconds Remaining)</div>
     </div>
-    <div style="margin-top:15px;margin-bottom:3px;font-weight:bold;font-size:14px">Details:</div>
+    <div style="margin-top:15px;margin-bottom:3px;font-weight:bold;font-size:14px"><img src="tree_handledowntopns.png" alt="Collapse Details" width="16" height="11" />Details:</div>
     <div id="progdetailsouter">
       <div id="progdetailsmiddle">
         <div id="progdetails"> Info and output. </div>
@@ -51,7 +51,7 @@ div#progdetails{width:534px;height:226px;padding:10px;border:1px solid #C7CAD0;b
 </div>
 <div id="pgbottombar"></div>
 <div id="pgquitbutton">
-  <input type="button" disabled class="Btn1Dis_sun4" id="windowbutton" onClick="loadFile('restore.html')" onMouseDown="if (this.disabled==0) this.className='Btn1Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn1_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn1Hov_sun4'"
-       onMouseOut="if (this.disabled==0) this.className='Btn1_sun4'" value="Close"/>
+  <input type="button" disabled class="Btn1Dis_sun4" id="windowbutton" onclick="loadFile('restore.html')" onmousedown="if (this.disabled==0) this.className='Btn1Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn1_sun4'" onmouseover="if (this.disabled==0) this.className='Btn1Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn1_sun4'" value="Close"/>
 </div>
 <script type="text/javascript" language="javascript">makeProgress()</script>

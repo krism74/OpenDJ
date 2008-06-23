@@ -1,0 +1,174 @@
+<style type="text/css">
+div#inquitbutton {
+	position:absolute;
+	top:368px;
+	left:444px;
+	width:180px;
+	height:25px;
+	text-align:right;
+}
+div#inbottombar {
+	position:absolute;
+	top:359px;
+	left:9px;
+	width:623px;
+	height:40px;
+	background-color:#d6d9df;
+	border-top:solid 1px #808080
+}
+div#incontentarea {
+	position:absolute;
+	top:31px;
+	left:23px;
+	width:609px;
+	height:408px;
+	overflow:auto;
+}
+div#inwindowtitle {
+	position:absolute;
+	top:10px;
+	left:174px;
+	width:320px;
+	height:16px;
+	font-size:12px;
+	font-weight:bold
+}
+div#inclosebox {
+	position:absolute;
+	top:9px;
+	left:610px;
+	width:20px;
+	height:16px;
+}
+div#inwindowbucket {
+	position:absolute;
+	top:0px;
+	left:0px
+}
+div#incontentarea .ConTblCl1Div_sun4 {
+	margin-top:17px
+}
+div#incontentarea .ConTblCl2Div_sun4 {
+	margin-top:12px
+}
+div#incontentarea .IndentedControls {
+	margin:3px 0px 0px 30px
+}
+div#incontentarea .AddRmvLbl2_sun4 {
+	background:none;
+	font-weight:normal;
+	margin:0px 0px -3px;
+	padding:0px;
+	border:none;
+}
+</style>
+<div id="inwindowbucket"><img src="backupdialog.png" width="646" height="414" /></div>
+<div id="inwindowtitle"> - Verify Indexes </div>
+<div id="inclosebox" onclick="closeSubWin()" style="cursor:pointer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+<div id="incontentarea">
+  <table style="margin-top:10px" border="0" cellspacing="0" cellpadding="0" title="">
+    <tr>
+      <td nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4">Base DN:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4"><span class="ConTblCl2Div">
+          <select name="PropertySheet.LoginShellValue" id="psLbl5" class="MnuStd_sun4">
+            <optgroup class="MnuStdOpt_sun4" label="userRoot">
+            <option class="MnuStdOpt_sun4" value="other" selected>dc=example,dc=com</option>
+            <option class="MnuStdOpt_sun4" value="other">dc=example2,dc=com</option>
+            </optgroup>
+            <optgroup class="MnuStdOpt_sun4" label="sumpnElse">
+            <option class="MnuStdOpt_sun4" value="other">dc=example3,dc=com</option>
+            </optgroup>
+          </select>
+          </span> </div></td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap" align="left" valign="top"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4">Action:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4">
+          <div class="RbGrp_sun4">
+            <div style="margin:3px 0px">
+              <input id="rb1" type="radio" class="RbSpn_sun4" checked name="import-type" onclick="handleRB(1)"/>
+              Verify Entry Contents are Properly Indexed </span>
+              <form action="#" method="post" name="theform" id="theform">
+                <div class="IndentedControls">
+                  <table style="margin-top:-8px; margin-left:-3px">
+                    <tr>
+                      <td valign="top"><div class="AddRmvHrzDiv_sun4">
+                          <label class="AddRmvLbl2_sun4" for="availnodes">Available Indexes:</label>
+                          <select name="availnodes" id="availnodes" class="Lst_sun4" size="5" multiple="multiple" onchange="if (this.length != 1) { deselectAll(document.theform.selnodes); handleButtonsAvail(document.theform, document.theform.selnodes)}" ondblclick="if (this.length != 1) { shiftBetween(document.theform.availnodes, document.theform.selnodes,0); handleButtonsSel(document.theform, document.theform.availnodes);return false;}">
+                            <option class="LstOptDis_sun4" value="ignoreMe" disabled="disabled"> ____________________</option>
+                          </select>
+                        </div>
+                      <td valign="top"><div class="AddRmvHrzDiv_sun4">
+                          <table class="AddRmvBtnTbl_sun4">
+                            <tr>
+                              <td align="center" width="85px"><div class="AddRmvHrzWin_sun4">
+                                  <input name="add" 
+                    type="button"  disabled="disabled" class="Btn2Dis_sun4" id="add" 
+                    onclick="shiftBetween(document.theform.availnodes, document.theform.selnodes,0); handleButtonsSel(document.theform, document.theform.availnodes);return false;" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'"
+
+                    onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'" 
+                    onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="    Add      &gt;">
+                                </div>
+                                <div class="AddRmvHrzBwn_sun4">
+                                  <input name="remove" 
+                    type="button" class="Btn2_sun4" id="remove" 
+                    onclick="shiftBetween(document.theform.selnodes, document.theform.availnodes,0); handleButtonsAvail(document.theform, document.theform.selnodes);return false;" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'"                     onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'" 
+                    onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="&lt;    Remove   ">
+                                </div></td>
+                            </tr>
+                          </table>
+                        </div></td>
+                      <td valign="top"><div class="AddRmvHrzDiv_sun4">
+                          <label class="AddRmvLbl2_sun4" for="selnodes">Selected Indexes:</label>
+                          <select name="selnodes" id="selnodes" class="Lst_sun4" size="5" multiple="multiple" onchange="if (this.length != 1) { deselectAll(document.theform.availnodes);handleButtonsSel(document.theform, document.theform.availnodes);}" ondblclick="if (this.length != 1) { shiftBetween(document.theform.selnodes, document.theform.availnodes,0); handleButtonsAvail(document.theform, document.theform.selnodes);return false;}">
+                            <option class="LstOpt_sun4" selected>cn</option>
+                            <option class="LstOpt_sun4">sn</option>
+                            <option class="LstOpt_sun4">uid</option>
+                            <option class="LstOpt_sun4" value="other">dn2id</option>
+                            <option class="LstOpt_sun4" value="other">id2children</option>
+                            <option class="LstOpt_sun4" value="other">id2entry</option>
+                            <option class="LstOpt_sun4" value="other">id2subtree</option>
+                            <option class="LstOptDis_sun4" value="ignoreMe" disabled="disabled"> ____________________</option>
+                          </select>
+                        </div></td>
+                    </tr>
+                  </table>
+                </div>
+              </form>
+            </div>
+            <div style="margin:10px 0px">
+              <input type="radio" class="RbSpn_sun4" name="import-type" onclick="handleRB(2)"/>
+              Verify  All Index Key Entry ID's are Clean and Refer to Existing Entries </span>
+              <div class="IndentedControls"> Index:&nbsp;&nbsp;
+                <select id="cleanindex" name="PropertySheet.LoginShellValue" class="MnuStdDis_sun4" disabled>
+                  <optgroup class="MnuStdOpt_sun4" label="Index Databases">
+                  <option class="MnuStdOpt_sun4" value="other">dn2id</option>
+                  <option class="MnuStdOpt_sun4" value="other">id2children</option>
+                  <option class="MnuStdOpt_sun4" value="other" selected>id2entry</option>
+                  <option class="MnuStdOpt_sun4" value="other">id2subtree</option>
+                  </optgroup>
+                  <optgroup class="MnuStdOpt_sun4" label="Attribute Indeces">
+                  <option class="MnuStdOpt_sun4" value="other">cn</option>
+                  <option class="MnuStdOpt_sun4" value="other">sn</option>
+                  <option class="MnuStdOpt_sun4" value="other">uid</option>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div></td>
+    </tr>
+  </table>
+</div>
+<div id="inbottombar"></div>
+<div id="inquitbutton">
+  <input type="button" class="Btn1_sun4" onclick="loadFile('progress.html')" onmousedown="if (this.disabled==0) this.className='Btn1Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn1_sun4'" onmouseover="if (this.disabled==0) this.className='Btn1Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn1_sun4'" value="OK"/>
+  <input type="button" class="Btn2_sun4" onclick="closeSubWin()" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Cancel"/>
+</div>
+<script type="text/javascript">handleButtonsSel(document.theform, document.theform.availnodes);</script>
