@@ -1,154 +1,14 @@
-<style type="text/css">
-div#smwindowtitle {
-	position:absolute;
-	top:10px;
-	left:174px;
-	width:320px;
-	height:16px;
-	font-size:12px;
-	font-weight:bold
-}
-div#smclosebox {
-	position:absolute;
-	top:9px;
-	left:630px;
-	width:20px;
-	height:16px;
-}
-div#smfilterarea {
-	position:absolute;
-	top:31px;
-	left:9px;
-	width:648px;
-	height:40px;
-	border-bottom :solid 1px #ccc;
-	background-color:#d6d9df;
-	border-bottom:solid 1px #E1E3E7
-}
-div#smbrowsearea {
-	position:absolute;
-	top:73px;
-	left:9px;
-	width:179px;
-	height:440px;
-	border-top:1px solid #595E6D;
-	border-right:1px solid #595E6D;
-	border-bottom:1px solid #595E6D;
-	overflow:auto;
-	background-color:#ffffff;
-}
-div#smcontentarea {
-	position:absolute;
-	top:73px;
-	left:197px;
-	width:459px;
-	height:440px;
-	border-top:1px solid #595E6D;
-	border-left:1px solid #595E6D;
-	border-bottom:1px solid #595E6D;
-	background-color:#d6d9df;
-	overflow:auto
-}
-div#smsplitter {
-	position:absolute;
-	top:73px;
-	left:189px;
-	width:8px;
-	height:442px;
-	background-image:url(splitterbk.png);
-	text-align:center;
-}
-div#smbottombar {
-	position:absolute;
-	top:516px;
-	left:9px;
-	width:648px;
-	height:40px;
-	background-color:#d6d9df;
-	border-top:solid 1px #E1E3E7
-}
-div#smquitbutton {
-	position:absolute;
-	top:527px;
-	left:450px;
-	width:200px;
-	height:20px;
-	text-align:right
-}
-div#smstatusarea {
-	position:absolute;
-	top:527px;
-	left:24px;
-	width:450px;
-	height:20px;
-}
-div#smwindowbucket {
-	position:absolute;
-	top:0px;
-	left:0px
-}
-div#smcontentarea .ConTblCl1Div_sun4 {
-	margin-top:13px;
-	margin-left:0px
-}
-div#smcontentarea .ConTblCl2Div_sun4 {
-	margin-top:8px
-}
-div#smcontentarea .IndentedControls {
-	margin:3px 0px 0px 25px
-}
- div#smbrowsearea img {
-	padding-bottom:0px !important;
-	margin-bottom:-2px !important;
-	margin-top:-2px !important;
-} 
-div#smcontentarea .AddRmvLbl2_sun4 {
-	background:none;
-	font-weight:normal;
-	margin:0px 0px -3px;
-	padding:0px;
-	border:none;
-}
-/*div#mymenu {
-	border:outset 1px #666;
-	background-color:rgb(244,244,244);
-	-moz-opacity:0.9;
-	color:#000;
-	position:absolute;
-	display:none;
-	font-size:11px;
-}
-a.mymenuitem:link, a.mymenuitem:visited {
-	font-weight:normal;
-	font-size:11px;
-	width:100px;
-	text-decoration:none;
-	color:#000;
-	padding:3px 6px;
-	display:block
-}
-a.mymenuitem:hover {
-	width:100px;
-	text-decoration:none;
-	color:#fff;
-	background-color:#0066CC;
-}
-.mymenusep {
-	padding:0px 2px;
-} */
-</style>
 <div id="smwindowbucket" ><img src="browsedialog.png" width="671" height="572" /></div>
-<!-- <div id="smwindowtitle"> - Schema Editor</div> -->
-<div id="smwindowtitle"> - Schema Browser</div>
+<div id="smwindowtitle"> - Schema Editor</div>
 <div id="smclosebox" onclick="closeSubWin()" style="cursor:pointer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
 <div id="smsplitter"><img style="margin-top:200px" src="splittervert.png" alt="" height="19" width="4" border="0" /></div>
 <div id="smfilterarea">
   <div style="padding:10px">
-    <!--    <input type="button" class="Btn2_sun4" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
-       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="New Class..."/>
     <input type="button" class="Btn2_sun4" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
-       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="New Attribute..."/>
-    <img src="../../mockups/suntheme/images/table/actions_separator.gif" alt=" " width="18" height="18" align="absmiddle"> -->
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="New Class..." onclick="loadFile2('new-class.html')"/>
+    <input type="button" class="Btn2_sun4" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="New Attribute..." onclick="loadFile2('new-attribute.html')"/>
+    <img src="../../mockups/suntheme/images/table/actions_separator.gif" alt=" " width="18" height="18" align="absmiddle">
     <label id="username" for="pwd" class="LblLev2Txt_sun4">Filter:</label>
     <select name="SearchData.ComboNumberResults" id="SearchData.ComboNumberResults" class="MnuStd_sun4">
       <option class="MnuStdOpt_sun4" selected>Name</option>
@@ -157,15 +17,15 @@ a.mymenuitem:hover {
       <option class="MnuStdOpt_sun4">Required attributes</option>
       <option class="MnuStdOpt_sun4">Optional attributes</option>
     </select>
-    <input type="text" class="TxtFld_sun4" size="16" value="person"/>
+    <input type="text" class="TxtFld_sun4" size="14" value="person"/>
     &nbsp;
     <input type="button" class="Btn2_sun4" onclick="applySchemaFilter()" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
        onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Apply"/>
   </div>
 </div>
-<div id="smbrowsearea" oncontextmenu="document.getElementById('mymenu').style.left = event.clientX + scrollLeft + 'px';document.getElementById('mymenu').style.top = event.clientY + scrollTop + 'px';document.getElementById('mymenu').style.display = 'block';document.getElementById('mymenu').style.display='block';return false;">
+<div id="smbrowsearea" oncontextmenu="document.getElementById('mymenu').style.left = event.clientX-35 + 'px';document.getElementById('mymenu').style.top = event.clientY-35 + 'px';document.getElementById('mymenu').style.display = 'block';return false;">
   <div id="progressarea" style="margin:20px;display:none"><img src="../../mockups/suntheme/images/progressBar/asynch-1F.gif" width="30" height="30" align="absmiddle" /> Loading Schema...</div>
-  <div id="browsetree">
+  <div id="browsetree" >
     <table border="0" cellspacing="0" cellpadding="0" width="100%" style="margin-top:5px ">
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_handledowntop.png" alt="" height="22" width="16" border="0" /></td>
@@ -229,12 +89,12 @@ a.mymenuitem:hover {
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_handledowntop.png" alt="" height="22" width="16" border="0" /></td>
         <td colspan="2" width="90%">Custom Object Classes</td>
       </tr>
-      <tr id="selectedEditableClass"  onclick="selectEditableClass()">
+      <tr id="selectedEditableClass" onclick="selectEditableClass()" >
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
         <td width="90%">&nbsp;&nbsp;disOrganPerson</td>
       </tr>
-      <tr onclick="selectEditableClass()">
+      <tr onclick="selectEditableClass()" >
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linelastnode.png" alt="" height="22" width="16" border="0" /></td>
         <td width="90%">&nbsp;&nbsp;&uuml;berOrganPerson</td>
@@ -337,7 +197,8 @@ a.mymenuitem:hover {
   </div>
 </div>
 <div id="smcontentarea">
-  <div id="readonlyattribute" style="margin:0px 10px 10px; display:none">
+  <div id="readonlyattribute" style="margin:10px; display:none">
+  <div><label class="LblLev1Txt_sun4">Attribute&nbsp;Details&nbsp;-&nbsp;</label>cn</div>
     <table border="0" cellpadding="0" cellspacing="0">
       <tbody>
         <tr>
@@ -373,7 +234,7 @@ a.mymenuitem:hover {
               <label for="ViewObjectclass.RequiredAttributesList">Required By:</label>
               </span></div></td>
           <td><div class="ConTblCl2Div_sun4">
-              <select style="width:100%" name="ViewObjectclass.RequiredAttributesList" id="ViewObjectclass.RequiredAttributesList" class="Lst_sun4" size="7" multiple="multiple">
+              <select style="width:100%" name="ViewObjectclass.RequiredAttributesList" id="ViewObjectclass.RequiredAttributesList" class="Lst_sun4" size="7" multiple="multiple" ondblclick="alert('Navigate to doubleclicked item')">
                 <option class="LstOpt_sun4" value="cn">groupOfCertificates</option>
                 <option class="LstOpt_sun4" value="objectClass">groupOfNames</option>
                 <option class="LstOpt_sun4" value="sn">groupOfURLs</option>
@@ -385,7 +246,7 @@ a.mymenuitem:hover {
               <label for="ViewObjectclass.RequiredAttributesList">Allowed By:</label>
               </span></div></td>
           <td><div class="ConTblCl2Div_sun4">
-              <select style="width:100%"  name="ViewObjectclass.AllowedAttributesList" id="ViewObjectclass.AllowedAttributesList" class="Lst" size="7" multiple="multiple">
+              <select style="width:100%"  name="ViewObjectclass.AllowedAttributesList" id="ViewObjectclass.AllowedAttributesList" class="Lst" size="7" multiple="multiple" ondblclick="alert('Navigate to doubleclicked item')">
                 <option class="LstOpt_sun4" value="audio">document</option>
                 <option class="LstOpt_sun4" value="businessCategory">mailGroup</option>
               </select>
@@ -393,7 +254,8 @@ a.mymenuitem:hover {
         </tr>
     </table>
   </div>
-  <div id="editableattribute" style="margin:0px 10px 10px; display:none">
+  <div id="editableattribute" style="margin:10px; display:none">
+  <div><label class="LblLev1Txt_sun4">Attribute&nbsp;Details&nbsp;-&nbsp;</label>disOrganizationalLevel</div>
     <table border="0" cellpadding="0" cellspacing="0">
       <tbody>
         <tr>
@@ -446,9 +308,33 @@ a.mymenuitem:hover {
               <input type="checkbox" checked class="CB_sun4" />
               &nbsp;Allow Multiple Values For Attribute</div></td>
         </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">
+              <label for="ViewObjectclass.RequiredAttributesList">Required By:</label>
+              </span></div></td>
+          <td><div class="ConTblCl2Div_sun4">
+              <select style="width:100%" name="ViewObjectclass.RequiredAttributesList" id="ViewObjectclass.RequiredAttributesList" class="Lst_sun4" size="7" multiple="multiple" ondblclick="alert('Navigate to doubleclicked item. If unsaved changes, prompt to save before navigating')">
+                <option class="LstOpt_sun4" value="cn">groupOfCertificates</option>
+                <option class="LstOpt_sun4" value="objectClass">groupOfNames</option>
+                <option class="LstOpt_sun4" value="sn">groupOfURLs</option>
+              </select>
+            </div></td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">
+              <label for="ViewObjectclass.RequiredAttributesList">Allowed By:</label>
+              </span></div></td>
+          <td><div class="ConTblCl2Div_sun4">
+              <select style="width:100%"  name="ViewObjectclass.AllowedAttributesList" id="ViewObjectclass.AllowedAttributesList" class="Lst" size="7" multiple="multiple" ondblclick="alert('Navigate to doubleclicked item. If unsaved changes, prompt to save before navigating')">
+                <option class="LstOpt_sun4" value="audio">document</option>
+                <option class="LstOpt_sun4" value="businessCategory">mailGroup</option>
+              </select>
+            </div></td>
+        </tr>
     </table>
   </div>
-  <div id="readonlyclass" style="margin:0px 10px 10px; display:block">
+  <div id="readonlyclass" style="margin:10px; display:block">
+  <div><label class="LblLev1Txt_sun4">ObjectClass&nbsp;Details&nbsp;-&nbsp;</label>inetOrgPerson</div>
     <table border="0" cellpadding="0" cellspacing="0">
       <tbody>
         <tr>
@@ -476,7 +362,7 @@ a.mymenuitem:hover {
               <label for="ViewObjectclass.RequiredAttributesList">Required Attributes:</label>
               </span></div></td>
           <td><div class="ConTblCl2Div_sun4">
-              <select style="width:100%" name="ViewObjectclass.RequiredAttributesList" id="ViewObjectclass.RequiredAttributesList" class="Lst_sun4" size="5" multiple="multiple">
+              <select style="width:100%" name="ViewObjectclass.RequiredAttributesList" id="ViewObjectclass.RequiredAttributesList" class="Lst_sun4" size="5" multiple="multiple" ondblclick="alert('Navigate to doubleclicked item')">
                 <option class="LstOpt_sun4" value="cn">cn (*)</option>
                 <option class="LstOpt_sun4" value="objectClass">objectClass (*)</option>
                 <option class="LstOpt_sun4" value="sn">sn (*)</option>
@@ -491,7 +377,7 @@ a.mymenuitem:hover {
               <label for="ViewObjectclass.RequiredAttributesList">Allowed Attributes:</label>
               </span></div></td>
           <td><div class="ConTblCl2Div_sun4">
-              <select style="width:100%"  name="ViewObjectclass.AllowedAttributesList" id="ViewObjectclass.AllowedAttributesList" class="Lst" size="9" multiple="multiple">
+              <select style="width:100%"  name="ViewObjectclass.AllowedAttributesList" id="ViewObjectclass.AllowedAttributesList" class="Lst" size="9" multiple="multiple" ondblclick="alert('Navigate to doubleclicked item')">
                 <option class="LstOpt_sun4" value="audio">audio</option>
                 <option class="LstOpt_sun4" value="businessCategory">businessCategory</option>
                 <option class="LstOpt_sun4" value="carLicense">carLicense</option>
@@ -548,7 +434,8 @@ a.mymenuitem:hover {
         </tr>
     </table>
   </div>
-  <div id="editableclass" style="margin:5px 10px 10px;display:none;">
+  <div id="editableclass" style="margin:10px;display:none;">
+  <div><label class="LblLev1Txt_sun4">ObjectClass&nbsp;Details&nbsp;-&nbsp;</label>disOrganizationalPerson</div>
     <table border="0" cellpadding="0" cellspacing="0">
       <tbody>
         <tr>
@@ -883,16 +770,22 @@ a.mymenuitem:hover {
       </tr>
     </table>
   </div>
-  <div id="panelbuttons" style="margin:10px;padding-top:10px; display:none;border-top:solid 1px #e5e5e5; text-align:right">
-    <input type="button" class="Btn2_sun4" id="deleteEntry" onclick="alert('Deletes class after confirmation')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
-       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Delete..."/>
-    <input  type="button" class="Btn2_sun4" id="saveEntry" onclick="alert('Saves changes user made to class')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+</div>
+</div>
+</div>  
+<div id="panelbuttons">
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td valign="top"><div style="margin:0px 10px"><input type="button" class="Btn2_sun4" id="deleteEntry" onclick="confirm('Confirm Deletion\n\nAre you sure you want to delete the selected class? This operation cannot be undone.');" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Delete Class..."/></div>
+        </td>
+        <td align="right" valign="t"><div style="margin:0px 10px"><input  type="button" class="Btn2_sun4" id="saveEntry" onclick="alert('Saves changes user made to class')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
        onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Save Changes"/>
+        </div></td>
+      </tr>
+    </table>
   </div>
-</div>
-</div>
-<p>&nbsp;</p>
-</div>
+
 <div id="smbottombar"></div>
 <div id="smstatusarea">
   <input type="checkbox" class="Cb_sun4" checked onclick="applyFilter()" />
@@ -901,9 +794,8 @@ a.mymenuitem:hover {
   <input type="button" class="Btn2_sun4" onclick="closeSubWin()" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
        onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Close"/>
 </div>
-<div id="mymenu" onclick="document.getElementById('mymenu').style.display='none';"> <a href="#" class="mymenuitem">New Class...</a>
+<div id="mymenu" onclick="document.getElementById('mymenu').style.display='none';">
+  <a href="#" onclick="loadFile2('new-class.html')" class="mymenuitem">New Class...</a> <a href="#" onclick="loadFile2('new-attribute.html')" class="mymenuitem">New Attribute...</a>
   <div class="mymenusep">--------------------------</div>
-  <a href="#" class="mymenuitem">Copy</a> <a href="#" class="mymenuitem">Paste</a>
-  <div class="mymenusep">--------------------------</div>
-  <a href="javascript:confirm('Confirm Deletion\n\nAre you sure you want to delete the selected class? This operation cannot be undone.');" class="mymenuitem">Delete Class...</a> </div>
-</body></html>
+  <a href="javascript:confirm('Confirm Deletion\n\nAre you sure you want to delete the selected items? *note: use _items_ if multiple items selected* This operation cannot be undone.');document.getElementById('mymenu').style.display='none';" class="mymenuitem">Delete...</a> </div>
+  <script type="text/javascript" language="javascript">selectStandardClass()</script>

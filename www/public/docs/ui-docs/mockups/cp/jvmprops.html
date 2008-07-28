@@ -1,0 +1,124 @@
+<div id="jpwindowbucket"><img src="progressdialog.png" width="646" height="494" /></div>
+<div id="jpwindowtitle"> - Java Virtual Machine Tuning</div>
+<div id="jpclosebox" onclick="closeSubWin()" style="cursor:pointer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+<div id="jpcontentarea">
+  <table style="margin-top:10px" border="0" cellspacing="0" cellpadding="0" title="">
+    <tr>
+      <td nowrap="nowrap" align="left" valign="top"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4"> JVM Home:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4">
+          <div class="RbGrp_sun4">
+            <div style="margin:3px 0px">
+              <input type="radio" class="RbSpn_sun4" checked name="jvm" onclick="document.getElementById('replacematching').className='CbDis_sun4';document.getElementById('replacematching').disabled=true;"/>
+              Use Environment Default: /usr/bin/java/</span></div>
+            <div style="margin:3px 0px">
+              <input type="radio" class="RbSpn_sun4" name="jvm" onclick="document.getElementById('replacematching').className='CbSpn_sun4';document.getElementById('replacematching').disabled=false;"/>
+              Use Custom</span></div>
+          </div>
+          <div class="IndentedControls">
+            <input type="text" class="TxtFldDis_sun4" id="customjvm" disabled="disabled" size="30"/>
+            &nbsp;&nbsp;
+            <input type="button" class="Btn2Dis_sun4" id="customjvmbuttons" disabled="disabled" onclick="alert('Opens local file browser.')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Browse..."/>
+          </div>
+        </div></td>
+    </tr>
+    <tr>
+      <td nowrap="nowrap" align="left" valign="top"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4"> JVM Arguments:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4">
+          <input type="checkbox" class="Cb_sun4" onclick="alert('enables/disables checkboxes below')" />
+          Allow Command-Level Arguments to Override Environment Defaults
+          <!--        <div class="RbGrp_sun4">
+            <div style="margin:3px 0px">
+              <input type="radio" class="RbSpn_sun4" checked name="import-type" onclick="document.getElementById('replacematching').className='CbDis_sun4';document.getElementById('replacematching').disabled=true;"/>
+              Use Environment Default Arguments</span></div>
+            <div style="margin:3px 0px">
+              <input type="radio" class="RbSpn_sun4" name="import-type" onclick="document.getElementById('replacematching').className='CbSpn_sun4';document.getElementById('replacematching').disabled=false;"/>
+              Use Custom Arguments</span>
+              <div class="IndentedControls">
+                <input type="text" class="TxtFldDis_sun4" id="customjvm" disabled="disabled" size="30"/>
+              </div>
+            </div>
+          </div>
+-->
+          <div class="IndentedControls">
+            <table  border="0" cellpadding="5" class="info-table">
+              <tr>
+                <th scope="col">Command</th>
+                <th scope="col">Argument</th>
+              </tr>
+              <tr>
+                <td>Start Server</td>
+                <td nowrap="nowrap"><input type="text" class="TxtFldDis_sun4" id="customjvm2" disabled="disabled" size="30" value="-server" />
+                  <input type="checkbox" class="Cb_sun4" onclick="alert('enables/disables text field and values')" />
+                  Override Default </td>
+              </tr>
+              <tr>
+                <td>Stop Server</td>
+                <td nowrap="nowrap"><input type="text" class="TxtFldDis_sun4" id="customjvm2" disabled="disabled" size="30" />
+                  <input type="checkbox" class="Cb_sun4" onclick="alert('enables/disables text field and values')" />
+                  Override Default </td>
+              </tr>
+              <tr>
+                <td>Import LDIF (Online)</td>
+                <td nowrap="nowrap"><input type="text" class="TxtFldDis_sun4" id="customjvm2" disabled="disabled" size="30" value="-server" />
+                  <input type="checkbox" class="Cb_sun4" onclick="alert('enables/disables text field and values')" />
+                  Override Default </td>
+              </tr>
+              <tr>
+                <td>Import LDIF (Offline)</td>
+                <td nowrap="nowrap"><input type="text" class="TxtFldDis_sun4" id="customjvm2" disabled="disabled" size="30" />
+                  <input type="checkbox" class="Cb_sun4" onclick="alert('enables/disables text field and values')" />
+                  Override Default </td>
+              </tr>
+              <tr>
+                <td>Export LDIF (Online)</td>
+                <td nowrap="nowrap"><input type="text" class="TxtFldDis_sun4" id="customjvm2" disabled="disabled" size="30" value="-server" />
+                  <input type="checkbox" class="Cb_sun4" onclick="alert('enables/disables text field and values')" />
+                  Override Default </td>
+              </tr>
+              <tr>
+                <td>Export LDIF (Offline)</td>
+                <td nowrap="nowrap"><input type="text" class="TxtFldDis_sun4" id="customjvm2" disabled="disabled" size="30" />
+                  <input type="checkbox" class="Cb_sun4" onclick="alert('enables/disables text field and values')" />
+                  Override Default </td>
+              </tr>
+              <tr>
+                <td>Backup</td>
+                <td nowrap="nowrap"><input type="text" class="TxtFldDis_sun4" id="customjvm2" disabled="disabled" size="30" value="-server" />
+                  <input type="checkbox" class="Cb_sun4" onclick="alert('enables/disables text field and values')" />
+                  Override Default </td>
+              </tr>
+              <tr>
+                <td>Restore</td>
+                <td nowrap="nowrap"><input type="text" class="TxtFldDis_sun4" id="customjvm2" disabled="disabled" size="30" />
+                  <input type="checkbox" class="Cb_sun4" onclick="alert('enables/disables text field and values')" />
+                  Override Default </td>
+              </tr>
+              <tr>
+                <td>etc...</td>
+                <td nowrap="nowrap"><input type="text" class="TxtFldDis_sun4" id="customjvm2" disabled="disabled" size="30" />
+                  <input type="checkbox" class="Cb_sun4" onclick="alert('enables/disables text field and values')" />
+                  Override Default </td>
+              </tr>
+            </table>
+          </div>
+        </div></td>
+    </tr>
+    <!--    <tr>
+      <td nowrap="nowrap" align="left" valign="top" colspan="2"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4"> Command-Level Tuning:</label>
+        </div></td>
+    </tr>-->
+  </table>
+</div>
+<div id="jpbottombar"></div>
+<div id="jpquitbutton">
+  <input type="button" class="Btn1_sun4" onclick="loadFile('progress.html')" onmousedown="if (this.disabled==0) this.className='Btn1Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn1_sun4'" onmouseover="if (this.disabled==0) this.className='Btn1Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn1_sun4'" value="OK"/>
+  <input type="button" class="Btn2_sun4" onclick="closeSubWin();" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Cancel"/>
+</div>

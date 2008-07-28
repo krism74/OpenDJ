@@ -1,32 +1,21 @@
-<style type="text/css">
-div#wncontentarea {position:absolute; top:33px; left:23px; width:609px;height:166px; overflow:auto}
-div#wnwindowtitle {position:absolute;top:10px;left:174px;width:320px;height:16px; font-size:12px;font-weight:bold }
-div#wnquitbutton {position:absolute; top:216px; left:444px; width:180px; height:25px;text-align:right;}
-div#wnbottombar {position:absolute; top:208px; left:9px; width:623px;height:40px;background-color:#d6d9df;border-top:solid 1px #808080}
-div#wnwindowbucket {position:absolute;top:0px;left:0px}
- div#wncontentarea .ConTblCl1Div_sun4 {margin-top:14px}
- div#wncontentarea .ConTblCl2Div_sun4 {margin-top:12px}
- div#wncontentarea .IndentedControls {margin:3px 0px 0px 25px} 
-
-</style>
 <div id="wnwindowbucket"><img src="winservicedialog.png" width="646" height="263" /></div>
 <div id="wnwindowtitle"> - Windows Service Configuration</div>
 <div id="wncontentarea">
-<div style="margin:15px 10px 0px 0px" class="help_sun4">This page indicates whether this OpenDS instance is configured to run as a Windows Service. To manage auto-start and other features, run the Windows Service Control Manager.</div> 
+  <div style="margin:15px 10px 0px 0px" class="help_sun4">This page indicates whether this OpenDS instance is configured to run as a Windows Service. To manage auto-start and other features, run the Windows Service Control Manager.</div>
   <table style="margin-top:10px" border="0" cellspacing="0" cellpadding="0" title="">
-<tr>
-  <td nowrap="nowrap" align="left" valign="top"><div class="ConTblCl1Div_sun4">
-      <label id="username" for="pwd" class="LblLev2Txt_sun4">Windows Service Integration:</label>
-    </div></td>
-  <td ><div class="ConTblCl2Div_sun4">Disabled&nbsp;&nbsp;&nbsp;<input type="button" class="Btn2_sun4" onClick="loadFile('progress.html')" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+    <tr>
+      <td nowrap="nowrap" align="left" valign="top"><div class="ConTblCl1Div_sun4">
+          <label id="username" for="pwd" class="LblLev2Txt_sun4">Windows Service Integration:</label>
+        </div></td>
+      <td ><div class="ConTblCl2Div_sun4">Disabled&nbsp;&nbsp;&nbsp;
+          <input type="button" class="Btn2_sun4" onclick="loadFile('progress.html')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
        onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Enable"/>
-    </div></td>
-</tr>
-</table>
+        </div></td>
+    </tr>
+  </table>
 </div>
 <div id="wnbottombar"></div>
 <div id="wnquitbutton">
-  <input type="button" class="Btn1_sun4" onClick="closeSubWin()" onMouseDown="if (this.disabled==0) this.className='Btn1Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn1_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn1Hov_sun4'"
+  <input type="button" class="Btn1_sun4" onclick="closeSubWin()" onmousedown="if (this.disabled==0) this.className='Btn1Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn1_sun4'" onmouseover="if (this.disabled==0) this.className='Btn1Hov_sun4'"
        onmouseout="if (this.disabled==0) this.className='Btn1_sun4'" value="Close"/>
-  
 </div>

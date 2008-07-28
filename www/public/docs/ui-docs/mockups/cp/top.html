@@ -29,6 +29,7 @@
 <head>
 <title>Opends Control Panel UI Spec</title>
 <link rel="stylesheet" type="text/css" href="../../mockups/suntheme/css/css_master.css" />
+<link rel="stylesheet" type="text/css" href="cp.css" />
 <script language='javascript' src='opends-utilities.js'></script>
 <script language='javascript' src='add-rmv.js'></script>
 <script language='javascript' src='cp-utilities.js'></script>
@@ -39,354 +40,17 @@ var ib_menu_showing = 0;
 var br_menu_showing = 0;
 var cp_menu_showing = 0;
 </script>
-<style type="text/css">
-div#cpmenuarea {
-	position:absolute;
-	top:35px;
-	left:15px;
-	width:641px;
-	height:24px;
-	border-bottom:solid 1px #595E6D;
-}
-div#buttonbar {
-	position:absolute;
-	top:59px;
-	left:15px;
-	width:186px;
-	height:558px;
-	overflow:auto;
-	padding-top:1px;
-border-left: solid 1px #595E6D;
-border-bottom: solid 1px #595E6D;
-
-}
-div#splitter {
-	position:absolute;
-	top:59px;
-	left:202px;
-	width:8px;
-	height:559px;
-	background-image:url(splitterbk.png);
-	border-left: solid 1px #595E6D;
-	text-align:center;
-}
-
-div#contentarea {
-	position:absolute;
-	top:60px;
-	left:211px; 
-	width:411px; 
-/*	left:202px;
-	width:411px;*/
-	height:558px;
-	font-size:11px;
-	border: solid 1px #595E6D;
-	border-top:none;
-	padding:0px 15px 0px 18px;
-	background-color:#FFFFFF; 
-}
-div#quitbutton {
-	position:absolute;
-	top:590px;
-	left:562px;
-	width:80px;
-	height:20px;
-	text-align:right
-}
-div#cpfilemenu {
-	border:outset 2px #9EA3AD;
-	border-top:none;
-	background-color:#d6d9df;
-	color:#000;
-	position:absolute;
-	top:56px;
-	left:18px;
-	padding-top:5px;
-	display:block;
-	font-size:12px;
-	white-space:nowrap;
-	display:none;
-}
-div#cphelpmenu {
-	border:outset 2px #9EA3AD;
-	border-top:none;
-	background-color:#d6d9df;
-	color:#000;
-	position:absolute;
-	top:56px;
-	left:50px;
-	padding-top:5px;
-	display:block;
-	font-size:12px;
-	white-space:nowrap;
-	display:none;
-}
-a.menubaritem:link, a.menubaritem:visited {
-	font-weight:normal;
-	font-size:12px;
-	text-decoration:none;
-	color:#000;
-	padding:5px 5px;
-}
-a.menubaritem:hover {
-	text-decoration:none;
-	color:#fff;
-	background-color:#4b6983;
-	/*	background-color:#90B7D0; */
-}
-
-a.menubaritem:active {
-	text-decoration:none;
-	color:#fff;
-	background-color:#2e4050;
-	/*	background-color:#90B7D0; */
-}
-
-a.mymenuitem:link, a.mymenuitem:visited {
-	font-weight:normal;
-	font-size:12px;
-	width:135px;
-	text-decoration:none;
-	color:#000;
-	padding:3px 6px;
-	display:block
-}
-a.mymenuitem:hover {
-	width:135px;
-	text-decoration:none;
-	color:#fff;
-	background-color:#4b6983;
-/*	background-color:#90B7D0; */
-}
-
-a.mymenuitem:active {
-	width:135px;
-	text-decoration:none;
-	color:#fff;
-	background-color:#2e4050;
-}
-
-.mymenusep {
-	padding:0px 5px;
-}
-
-
-body {
-	font-family:Arial, Helvetica, sans-serif;
-	font-size:12px;
-}
-.info-table {
-	border:solid 1px #000;
-	border-collapse:collapse;
-	font-size:12px;
-}
-.info-table th {
-	border: solid 1px #B5B5B5;
-	padding:3px 5px;
-	background: #fff url(accordiontitlebk.png) left bottom repeat-x;
-	font-weight:bold;
-	text-align:left;
-	vertical-align:bottom;
-	font-size:11px
-}
-.info-table td {
-	border: solid 1px #B5B5B5;
-	padding:3px 5px;
-	vertical-align:top;
-	font-size:11px;
-	background-color:#fff
-}
-a.cplink:link, a.cplink:visited {
-	font-size:11px;
-	font-weight:normal;
-	text-decoration:none;
-	color:#000;
-	padding:4px 0px 3px 22px;
-	display:block
-}
-a.cplink:hover {
-	text-decoration:none;
-/*	color:#000;
-	background-color: #bbd4e5; */
-	color:#fff;
-	background-color:#4b6983;
-
-}
-a.cplink:active {
-	text-decoration:none;
-	color:#fff;
-	background-color:#2e4050;
-
-/*	background: #bbd4e5 url(accordiontitleselactive.png) left bottom repeat-x; */
-}
-div#menus {
-/* border:solid 1px #595E6D; */
-border-bottom:1px solid #9297a1;
-}
-
-.cpmenu {
-/*	margin-top:-1px; */
-	border-top:1px solid #9297a1;
-	border-left:1px solid #9297a1; 
-	border-right:1px solid #9297a1;
-/*	border-bottom:1px solid #a5a7ac;*/
-
-}
-a.cpmenulabel:link, a.cpmenulabel:visited {
-	font-size:11px;
-	padding:4px 6px;
-	display:block;
-	color:#000;
-	font-weight:bold;
-	text-align:left;
-	border-top: solid 1px #f5f8ff;
-/*	border-left: solid 1px #f5f8ff; */
-/*	background: #fff url(accordiontitlebk.png) left bottom repeat-x; */
-}
-a.cpmenulabel:hover {
-	text-decoration:none;
-/*	background: #fff url(accordiontitlehover.png) left bottom repeat-x; */
-}
-a.cpmenulabel:active {
-	text-decoration:none;
-/*	background: #fff url(accordiontitleactive.png) left bottom repeat-x; */
-}
-a.cpmenulabelsel:link, a.cpmenulabelsel:visited {
-	font-size:11px;
-	padding:4px 6px;
-	display:block;
-	color:#000;
-	font-weight:bold;
-	text-align:left;
-	border-top: solid 1px #f5f8ff; 
-/*	border-left: solid 1px #f5f8ff;*/
-/*	background: #fff url(accordiontitlesel.png) left bottom repeat-x; */
-}
-a.cpmenulabelsel:hover {
-	text-decoration:none;
-/*	background: #fff url(accordiontitleselhover.png) left bottom repeat-x; */
-}
-a.cpmenulabelsel:active {
-	text-decoration:none;
-/*	background: #fff url(accordiontitleselactive.png) left bottom repeat-x;*/
-}
-.cpoption {
-	cursor:pointer;
-	font-weight:normal;
-}
-.cpoptionlabel {
-}
-.cpoptions {
-	cursor:pointer;
-	font-weight:normal;
-	padding:1px 0px 0px;
-/*		background-color:#e4e7ed; */
-	background-color:#ffffff; 
-	border-top:1px solid #9297a1;
-	border-left:1px solid #9297a1;
-	border-right:1px solid #9297a1;
-/*	border-top:1px solid #B1B1B1;
-	border-bottom:1px solid #808080;*/
-}
-.ConTblCl1Div_sun4 {
-	margin-left:0px
-}
-#content-inner {
-	position:absolute;
-	top:35px;
-	left:35px;
-}
-#content-inner2 {
-	position:absolute;
-	top:50px;
-	left:50px;
-}
-.Btn2_sun4 {
-	font-size:12px;
-	padding:0px 8px 1px;
-	background: url(secondary-enabled.png) repeat-x top;
-	-moz-border-radius:5px;
-	border-top-color:#888B91;
-	border-right-color:#62656B;
-	border-bottom-color:#3C3F45;
-	border-left-color:#62656B;
-}
-.Btn2Hov_sun4 {
-	font-size:12px;
-	padding:0px 8px 1px;
-	background: url(secondary-hover.png) repeat-x top;
-	-moz-border-radius:5px;
-	border-top-color:#6A6E75;
-	border-right-color:#3B3E46;
-	border-bottom-color:#0B0F16;
-	border-left-color:#3B3E46;
-}
-.Btn2Down_sun4 {
-	font-size:12px;
-	padding:0px 8px 1px;
-	margin:0px 2px 0px 1px;
-	background: url(secondary-down.png) repeat-x top;
-	-moz-border-radius:5px;
-	border-top:1px solid #6A6E75;
-	border-right:1px solid #3B3E46;
-	border-bottom:1px solid #0B0F16;
-	border-left:1px solid #3B3E46;
-}
-.Btn2Dis_sun4 {
-	font-size:12px;
-	padding:0px 8px 1px;
-	-moz-border-radius:5px;
-}
-.Btn1_sun4 {
-	font-size:12px;
-	padding:0px 8px 1px;
-	background: url(primary-enabled.png) repeat-x top;
-	-moz-border-radius:5px;
-	border-top-color:#556A7D;
-	border-right-color:#2A3F52;
-	border-bottom-color:#091E31;
-	border-left-color:#2A3F52;
-}
-.Btn1Hov_sun4 {
-	font-size:12px;
-	padding:0px 8px 1px;
-	background: url(primary-hover.png) repeat-x top;
-	-moz-border-radius:5px;
-	border-top-color:#2A455C;
-	border-right-color:#0E2840;
-	border-bottom-color:#000000;
-	border-left-color:#0E2840;
-}
-.Btn1Down_sun4 {
-	font-size:12px;
-	padding:0px 8px 1px;
-	margin:0px 2px 0px 1px;
-	background: url(primary-down.png) repeat-x top;
-	-moz-border-radius:5px;
-	border-top:1px solid #2A455C;
-	border-right:1px solid #000F27;
-	border-bottom:1px solid #000;
-	border-left:1px solid #000F27;
-}
-.Btn1Dis_sun4 {
-	font-size:12px;
-	padding:0px 8px 1px;
-	-moz-border-radius:5px;
-}
-</style>
 </head>
 <body style="margin:0px" onclick="if (document.getElementById('mymenu')) {document.getElementById('mymenu').style.display='none'}">
 <img src="conpanelac.png" width="673" height="640" />
 <div id="cpmenuarea" >
-  <div style="padding: 5px"> <a class="menubaritem" href="#" onclick="if (cp_menu_showing==0) {cp_menu_showing = 1;document.getElementById('cpfilemenu').style.display = 'block'; return 0; } else {document.getElementById('cpfilemenu').style.display = 'none';document.getElementById('cphelpmenu').style.display = 'none';cp_menu_showing = 0;return 0;} " onmouseover="if (cp_menu_showing==1) {document.getElementById('cpfilemenu').style.display = 'block';document.getElementById('cphelpmenu').style.display = 'none';return 0;} "><span style="text-decoration:underline">F</span>ile</a> <a class="menubaritem" href="#" onclick="if (cp_menu_showing==0) {cp_menu_showing = 1;document.getElementById('cphelpmenu').style.display = 'block'; return 0; } else {document.getElementById('cpfilemenu').style.display = 'none';document.getElementById('cphelpmenu').style.display = 'none';cp_menu_showing = 0;return 0;} " onmouseover="if (cp_menu_showing==1) {document.getElementById('cpfilemenu').style.display = 'none';document.getElementById('cphelpmenu').style.display = 'block';return 0;} "><span style="text-decoration:underline">H</span>elp</a>
+  <div style="padding: 5px"> <a class="menubaritem" href="javascript:void(0)" onclick="if (cp_menu_showing==0) {cp_menu_showing = 1;document.getElementById('cpfilemenu').style.display = 'block'; return 0; } else {document.getElementById('cpfilemenu').style.display = 'none';document.getElementById('cphelpmenu').style.display = 'none';cp_menu_showing = 0;return 0;} " onmouseover="if (cp_menu_showing==1) {document.getElementById('cpfilemenu').style.display = 'block';document.getElementById('cphelpmenu').style.display = 'none';return 0;} "><span style="text-decoration:underline">F</span>ile</a> <a class="menubaritem" href="javascript:void(0)" onclick="if (cp_menu_showing==0) {cp_menu_showing = 1;document.getElementById('cphelpmenu').style.display = 'block'; return 0; } else {document.getElementById('cpfilemenu').style.display = 'none';document.getElementById('cphelpmenu').style.display = 'none';cp_menu_showing = 0;return 0;} " onmouseover="if (cp_menu_showing==1) {document.getElementById('cpfilemenu').style.display = 'none';document.getElementById('cphelpmenu').style.display = 'block';return 0;} "><span style="text-decoration:underline">H</span>elp</a>
     <div style="position:absolute;left:73px;top:0px;height:24px;width:571px;" onclick="document.getElementById('cpfilemenu').style.display = 'none';document.getElementById('cphelpmenu').style.display = 'none';cp_menu_showing = 0;return 0; ">&nbsp;</div>
   </div>
 </div>
-<div style="background-color:#FFFFFF; position:absolute;top:60px;left:15px;height:1px;width:643" >&nbsp;</div>
 <div id="buttonbar">
   <div id="menus">
-    <div class='cpmenu' onclick="TrocaMenu('sub1')"> <a class="cpmenulabelsel" id="sub1lnk" href="#"><img id="sub1img" style="margin-top:-1px" src="tree_handledowntopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Directory Data</a>
-      <!-- <div class="cpmenulabel"><img id="sub1img" style="margin-top:-1px" src="tree_handledowntopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle"/>Directory Data</div>-->
+    <div class='cpmenu' onclick="TrocaMenu('sub1')"> <a class="cpmenulabelsel" id="sub1lnk" href="javascript:void(0)"><img id="sub1img" style="margin-top:-1px" src="tree_handledowntopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Directory Data</a>
     </div>
     <div class='cpoptions' id='sub1' style="display:block">
       <div class='cpoption'>
@@ -409,44 +73,44 @@ a.cpmenulabelsel:active {
       </div>
     </div>
     <!--   <div class='cpmenu' onclick="TrocaMenu('sub3')">
-<a class="cpmenulabel" id="sub3lnk" href="#"><img id="sub3img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Password Policies</a>
+<a class="cpmenulabel" id="sub3lnk" href="javascript:void(0)"><img id="sub3img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Password Policies</a>
     </div>
     <div class='cpoptions' id='sub3' style="display:none">
       <div class='cpoption'>
-        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="#">Default Policy</a></div>
+        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="javascript:void(0)">Default Policy</a></div>
       </div>
       <div class='cpoption'>
-        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="#">New Policy...</a></div>
+        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="javascript:void(0)">New Policy...</a></div>
       </div>
       <div class='cpoption'>
-        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="#">Manage Policies</a></div>
+        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="javascript:void(0)">Manage Policies</a></div>
       </div>
     </div>
     <div class='cpmenu' onclick="TrocaMenu('sub4')">
-<a class="cpmenulabel" id="sub4lnk" href="#"><img id="sub4img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Access Control</a>
+<a class="cpmenulabel" id="sub4lnk" href="javascript:void(0)"><img id="sub4img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Access Control</a>
     </div>
     <div class='cpoptions' id='sub4' style="display:none">
       <div class='cpoption'>
-        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="#">New ACI...</a></div>
+        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="javascript:void(0)">New ACI...</a></div>
       </div>
       <div class='cpoption'>
-        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="#">Manage Access Controls</a></div>
+        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="javascript:void(0)">Manage Access Controls</a></div>
       </div>
     </div>
   -->
-    <div class='cpmenu' onclick="TrocaMenu('sub5')"> <a class="cpmenulabel" id="sub5lnk" href="#"><img id="sub5img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Schema Management" width="16" height="11" align="absmiddle" border="0"/>Schema</a> </div>
+    <div class='cpmenu' onclick="TrocaMenu('sub5')"> <a class="cpmenulabel" id="sub5lnk" href="javascript:void(0)"><img id="sub5img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Schema Management" width="16" height="11" align="absmiddle" border="0"/>Schema</a> </div>
     <div class='cpoptions' id='sub5' style="display:none">
       <!--    <div class='cpoption'>
-        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="#">New Attribute...</a></div>
+        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="javascript:void(0)">New Attribute...</a></div>
       </div>
       <div class='cpoption'>
-        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="#">New Class...</a></div>
+        <div class="cpoptionlabel"><a id="cplink" style="color:#999" class="cplink" href="javascript:void(0)">New Class...</a></div>
       </div> -->
       <div class='cpoption'>
         <div class="cpoptionlabel"><a id="schema_manager" class="cplink" href="javascript:loadFile('classes.html')" onclick="clicked='schema_manager'">Browse Schema</a></div>
       </div>
     </div>
-    <div class='cpmenu' onclick="TrocaMenu('sub9')"> <a class="cpmenulabel" id="sub9lnk" href="#"><img id="sub9img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Replication</a> </div>
+    <div class='cpmenu' onclick="TrocaMenu('sub9')"> <a class="cpmenulabel" id="sub9lnk" href="javascript:void(0)"><img id="sub9img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Replication</a> </div>
     <div class='cpoptions' id='sub9' style="display:none">
       <div class='cpoption'>
         <div class="cpoptionlabel"><a id="replication_status" class="cplink" href="javascript:loadFile('replstatus.html');" onclick="clicked='replication_status'">Replication Status</a></div>
@@ -455,7 +119,7 @@ a.cpmenulabelsel:active {
         <div class="cpoptionlabel"><a id="replication_logs" class="cplink" href="javascript:loadFile('replog.html');" onclick="clicked='replication_logs'">Replication Log</a></div>
       </div>
     </div>
-    <div class='cpmenu' onclick="TrocaMenu('sub2')" > <a class="cpmenulabel" id="sub2lnk" href="#"><img id="sub2img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Indexes</a> </div>
+    <div class='cpmenu' onclick="TrocaMenu('sub2')" > <a class="cpmenulabel" id="sub2lnk" href="javascript:void(0)"><img id="sub2img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Indexes</a> </div>
     <div class='cpoptions' id='sub2' style="display:none">
       <div class='cpoption'>
         <div class="cpoptionlabel"><a id="index_browse" class="cplink" href="javascript:loadFile('index-browse.html')" onclick="clicked='index_browse'">Browse Indexes</a></div>
@@ -467,7 +131,7 @@ a.cpmenulabelsel:active {
         <div class="cpoptionlabel"><a id="repair_index" class="cplink" href="javascript:loadFile('repairindex.html');" onclick="clicked='repair_index'">Rebuild Indexes...</a></div>
       </div>
     </div>
-    <div class='cpmenu' onclick="TrocaMenu('sub6')"> <a class="cpmenulabel"  id="sub6lnk" href="#"><img id="sub6img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Logs" width="16" height="11" align="absmiddle" border="0"/>Server Logs</a> </div>
+    <div class='cpmenu' onclick="TrocaMenu('sub6')"> <a class="cpmenulabel"  id="sub6lnk" href="javascript:void(0)"><img id="sub6img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Logs" width="16" height="11" align="absmiddle" border="0"/>Server Logs</a> </div>
     <div class='cpoptions' id='sub6' style="display:none">
       <div class='cpoption'>
         <div class="cpoptionlabel"><a id="error_logs" class="cplink" href="javascript:loadFile('errorlog.html');" onclick="clicked='error_logs'">Error Log</a></div>
@@ -477,35 +141,35 @@ a.cpmenulabelsel:active {
       </div>
     </div>
     <!--    <div class='cpmenu' onclick="TrocaMenu('sub8')">
-<a class="cpmenulabel" id="sub8lnk" href="#"><img id="sub8img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Scheduled Tasks</a>
+<a class="cpmenulabel" id="sub8lnk" href="javascript:void(0)"><img id="sub8img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Scheduled Tasks</a>
     </div>
     <div class='cpoptions' id='sub8' style="display:none">
       <div class='cpoption'>
-        <div class="cpoptionlabel"><a id="cplink" class="cplink" style="color:#999" href="#">New Task...</a></div>
+        <div class="cpoptionlabel"><a id="cplink" class="cplink" style="color:#999" href="javascript:void(0)">New Task...</a></div>
       </div>
       <div class='cpoption'>
-        <div class="cpoptionlabel"><a id="cplink" class="cplink" style="color:#999" href="#">Manage Tasks</a></div>
+        <div class="cpoptionlabel"><a id="cplink" class="cplink" style="color:#999" href="javascript:void(0)">Manage Tasks</a></div>
       </div>
     </div>
     <div class='cpmenu' onclick="TrocaMenu('sub7')">
-<a class="cpmenulabel" id="sub7lnk" href="#"><img id="sub7img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Administrative Users</a>
+<a class="cpmenulabel" id="sub7lnk" href="javascript:void(0)"><img id="sub7img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Administrative Users</a>
     </div>
     <div class='cpoptions' id='sub7' style="display:none">
       <div class='cpoption'>
-        <div class="cpoptionlabel"><a id="cplink" class="cplink" style="color:#999" href="#">New Admin User...</a></div>
+        <div class="cpoptionlabel"><a id="cplink" class="cplink" style="color:#999" href="javascript:void(0)">New Admin User...</a></div>
       </div>
       <div class='cpoption'>
-        <div class="cpoptionlabel"><a id="cplink" class="cplink" style="color:#999" href="#">Manage Admin Users</a></div>
+        <div class="cpoptionlabel"><a id="cplink" class="cplink" style="color:#999" href="javascript:void(0)">Manage Admin Users</a></div>
       </div>
     </div>
     -->
-    <div class='cpmenu' onclick="TrocaMenu('sub0')"> <a class="cpmenulabel" id="sub0lnk" href="#"><img id="sub0img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Runtime Options</a> </div>
+    <div class='cpmenu' onclick="TrocaMenu('sub0')"> <a class="cpmenulabel" id="sub0lnk" href="javascript:void(0)"><img id="sub0img" style="margin-top:-1px" src="tree_handlerighttopns.png" alt="Data Exclusion Options" width="16" height="11" align="absmiddle" border="0"/>Runtime Options</a> </div>
     <div class='cpoptions' id='sub0' style="display:none">
       <div class='cpoption'>
         <div class="cpoptionlabel"><a id="windows_service" class="cplink"href="javascript:loadFile('winservice.html');" onclick="clicked='windows_service'">Windows Service</a></div>
       </div>
       <div class='cpoption'>
-        <div class="cpoptionlabel"><a id="autostart" class="cplink" style="color:#999" href="#">Unix Autostart</a></div>
+        <div class="cpoptionlabel"><a id="jvm_props" class="cplink"href="javascript:loadFile('jvmprops.html');" onclick="clicked='jvm_props'">JVM Tuning</a></div>
       </div>
     </div>
   </div>
@@ -517,16 +181,15 @@ a.cpmenulabelsel:active {
       <td align="left"><span class="LblLev1Txt_sun4">Server Status</span> </td>
     </tr>
   </table>
-  <table border="0" cellspacing="0" cellpadding="0" title="">
+   <table border="0" cellspacing="0" cellpadding="0" title="">
     <tr>
       <td nowrap="nowrap" align="left"><div class="ConTblCl1Div_sun4">
           <label id="username" for="pwd" class="LblLev2Txt_sun4">Server Run Status:</label>
         </div></td>
-      <td ><div class="ConTblCl2Div_sun4">Started&nbsp;&nbsp;
+      <td><div class="ConTblCl2Div_sun4">Started&nbsp;<span style="font-size:24px">&nbsp;</span>
           <input class="Btn2_sun4" type="button" value="Stop" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
        onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" onclick="loadFile('progress.html')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'"/>
-          <input type="button" class="Btn2_sun4" onclick="loadFile('progress.html')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
-       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Restart"/>
+          <input type="button" class="Btn2_sun4" onclick="loadFile('progress.html')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'" onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Restart"/>
         </div></td>
     </tr>
     <tr>
@@ -621,9 +284,9 @@ a.cpmenulabelsel:active {
 </div>
 <div id="splitter"><img style="margin-top:250px" src="splittervert.png" alt="" height="19" width="4" border="0" /></div>
 <div id="cpfilemenu" > 
-  <a href="#" class="mymenuitem" onclick="document.getElementById('cpfilemenu').style.display='none';cp_menu_showing = 0;alert('Closes Application.')">Exit</a> 
+  <a href="javascript:void(0)" class="mymenuitem" onclick="document.getElementById('cpfilemenu').style.display='none';cp_menu_showing = 0;alert('Closes Application.')">Exit</a> 
 </div>
-<div id="cphelpmenu" > <a href="#" class="mymenuitem" onclick="document.getElementById('cphelpmenu').style.display='none';cp_menu_showing = 0;alert('Opens Admin Guide in browser window.')">Administration Guide</a> <a href="#" class="mymenuitem" onclick="document.getElementById('cphelpmenu').style.display='none';cp_menu_showing = 0;alert('Opens Wiki in browser window.')">Documentation Wiki</a> </div>
+<div id="cphelpmenu" > <a href="javascript:void(0)" class="mymenuitem" onclick="document.getElementById('cphelpmenu').style.display='none';cp_menu_showing = 0;alert('Opens Admin Guide in browser window.')">Administration Guide</a> <a href="javascript:void(0)" class="mymenuitem" onclick="document.getElementById('cphelpmenu').style.display='none';cp_menu_showing = 0;alert('Opens Wiki in browser window.')">Documentation Wiki</a> </div>
 <!-- <div id="quitbutton">
   <input type="button" class="Btn2_sun4" onclick="alert('Quits Application')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
        onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Quit"/> -->

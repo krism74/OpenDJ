@@ -1,226 +1,3 @@
-<style type="text/css">
-div#brwindowtitle {
-	position:absolute;
-	top:10px;
-	left:174px;
-	width:320px;
-	height:16px;
-	font-size:12px;
-	font-weight:bold
-}
-div#brclosebox {
-	position:absolute;
-	top:9px;
-	left:630px;
-	width:20px;
-	height:16px;
-}
-div#brmenuarea {
-	position:absolute;
-	top:31px;
-	left:9px;
-	width:648px;
-	height:23px;
-	background-color:#d6d9df;
-	border-bottom:solid 1px #595E6D;
-}
-div#brfilterarea {
-	position:absolute;
-	top:56px;
-	left:9px;
-	width:648px;
-	height:40px;
-	border-bottom :solid 1px #ccc;
-	background-color:#d6d9df;
-	border-bottom:solid 1px #E1E3E7;
-	border-top:1px solid #E1E3E7;
-}
-div#brbrowsearea {
-	position:absolute;
-	top:98px;
-	left:9px;
-	width:198px;
-	height:415px;
-	border-top:1px solid #595E6D;
-	border-right:1px solid #595E6D;
-	border-bottom:1px solid #595E6D;
-	overflow:auto;
-}
-div#brcontentarea {
-	position:absolute;
-	top:98px;
-	left:216px;
-	width:440px;
-	height:385px;
-	border-top:1px solid #595E6D;
-	border-left:1px solid #595E6D;
-	background-color:#d6d9df;
-	overflow:auto;
-}
-div#brentryactions {
-	position:absolute;
-	padding-top:6px;
-	top:484px;
-	left:216px;
-	width:440px;
-	height:25px;
-	text-align:right;
-	background-color:#d6d9df;
-	border-left:1px solid #595E6D;
-	border-bottom:1px solid #595E6D;
-}
-div#brsplitter {
-	position:absolute;
-	top:98px;
-	left:208px;
-	width:8px;
-	height:417px;
-	background-image:url(splitterbk.png);
-	text-align:center;
-}
-div#brbottombar {
-	position:absolute;
-	top:516px;
-	left:9px;
-	width:648px;
-	height:40px;
-	background-color:#d6d9df;
-	border-top:solid 1px #E1E3E7
-}
-div#brquitbutton {
-	position:absolute;
-	top:527px;
-	left:450px;
-	width:200px;
-	height:20px;
-	text-align:right
-}
-div#brstatusarea {
-	position:absolute;
-	top:527px;
-	left:24px;
-	width:450px;
-	height:20px;
-}
-div#brwindowbucket {
-	position:absolute;
-	top:0px;
-	left:0px
-}
-div#brbrowsearea img {
-	padding-bottom:0px !important;
-	margin-bottom:-2px !important;
-	margin-top:-2px !important;
-}
-div#mymenu {
-	border:outset 1px #595E6D;
-	background-color:#d6d9df;
-	color:#000;
-	position:absolute;
-	display:none;
-	font-size:11px;
-	white-space:nowrap
-}
-div#brfilemenu {
-	border:outset 2px #9EA3AD;
-	border-top:none;
-	background-color:#d6d9df;
-	color:#000;
-	position:absolute;
-	top:55px;
-	left:15px;
-	padding-top:5px;
-	display:block;
-	font-size:12px;
-	white-space:nowrap;
-	display:none;
-}
-div#breditmenu {
-	border:outset 2px #9EA3AD;
-	border-top:none;
-	background-color:#d6d9df;
-	color:#000;
-	position:absolute;
-	top:55px;
-	left:45px;
-	padding-top:5px;
-	display:block;
-	font-size:12px;
-	white-space:nowrap;
-	display:none;
-}
-div#brentriesmenu {
-	border:outset 2px #9EA3AD;
-	border-top:none;
-	background-color:#d6d9df;
-	color:#000;
-	position:absolute;
-	top:55px;
-	left:80px;
-	padding-top:5px;
-	display:block;
-	font-size:12px;
-	white-space:nowrap;
-	display:none;
-}
-div#brviewmenu {
-	border:outset 2px #9EA3AD;
-	border-top:none;
-	background-color:#d6d9df;
-	color:#000;
-	position:absolute;
-	top:55px;
-	left:130px;
-	padding-top:5px;
-	display:block;
-	font-size:12px;
-	white-space:nowrap;
-	display:none;
-}
-div#brhelpmenu {
-	border:outset 2px #9EA3AD;
-	border-top:none;
-	background-color:#d6d9df;
-	color:#000;
-	position:absolute;
-	top:55px;
-	left:170px;
-	padding-top:5px;
-	display:block;
-	font-size:12px;
-	white-space:nowrap;
-	display:none;
-}
-/*a.menubaritem:link, a.menubaritem:visited {
-	font-weight:normal;
-	font-size:12px;
-	text-decoration:none;
-	color:#000;
-	padding:5px 5px;
-}
-a.menubaritem:hover {
-	text-decoration:none;
-	background-color:#90B7D0;
-}
-a.mymenuitem:link, a.mymenuitem:visited {
-	font-weight:normal;
-	font-size:12px;
-	width:135px;
-	text-decoration:none;
-	color:#000;
-	padding:3px 6px;
-	display:block
-}
-a.mymenuitem:hover {
-	width:135px;
-	text-decoration:none;
-	background-color:#90B7D0;
-}
-.mymenusep {
-	padding:0px 5px;
-}
-*/
-</style>
 <div id="brwindowbucket" ><img src="browsedialog.png" width="671" height="572" /></div>
 <div id="brwindowtitle"> - Browse LDAP Entries</div>
 <div id="brclosebox" onclick="closeSubWin()" style="cursor:pointer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
@@ -260,7 +37,7 @@ a.mymenuitem:hover {
       <option class="MnuStdOptDis_sun4">-----------</option>
       <option class="MnuStdOpt_sun4">LDAP Filter:</option>
     </select>
-    <input type="text" class="TxtFld_sun4" size="18" value="jensen"/>
+    <input type="text" class="TxtFld_sun4" size="16" value="jensen"/>
     &nbsp;
     <input type="button" class="Btn2_sun4" onclick="applyFilter()" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
        onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Apply"/>
@@ -369,137 +146,137 @@ a.mymenuitem:hover {
     <table border="0" cellspacing="0" cellpadding="0" width="100%" style="margin-top:5px ">
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_handledowntop.png" alt="" height="22" width="16" border="0" /></td>
-        <td colspan="2" width="90%"><div> &nbsp;&nbsp;ou=People</div></td>
+        <td colspan="2" width="90%"><div> &nbsp;&nbsp;<img src="ds-ou.png" alt="Organizational Unit" width="18" height="18" />&nbsp;ou=People</div></td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=acjensen</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=acjensen</td>
       </tr>
       <tr id="selectedrow">
         <td><img style="margin-left:8px;" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=bjensen</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=bjensen</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=cjensen</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=cjensen</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=djensen</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=djensen</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=ejensen</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=ejensen</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=fjensen</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=fjensen</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=gjensen</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=gjensen</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=hjensen</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=hjensen</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=ijensen</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=ijensen</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=jjensen</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=jjensen</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=kjensen</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=kjensen</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=ljensen</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=ljensen</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=mjensen</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=mjensen</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=njensen</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=njensen</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=ojensen</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=ojensen</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=pjensen</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=pjensen</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=qjensen</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=qjensen</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=rjenson</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=rjenson</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=sjenson</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=sjenson</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=tjenson</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=tjenson</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=ujenson</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=ujenson</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=vjenson</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=vjenson</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=wjenson</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=wjenson</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=xjenson</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=xjenson</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=yjenson</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=yjenson</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
         <td><img src="../../mockups/suntheme/images/tree/tree_linemiddlenode.png" alt="" height="22" width="16" border="0" /></td>
-        <td width="90%">&nbsp;&nbsp;uid=zjenson</td>
+        <td width="90%">&nbsp;&nbsp;<img src="ds-user.png" alt="User" width="18" height="18" />&nbsp;uid=zjenson</td>
       </tr>
       <tr>
         <td><img style="margin-left:8px" src="../../mockups/suntheme/images/tree/tree_linevertical.png" alt="" height="22" width="16" border="0" /></td>
@@ -707,23 +484,19 @@ a.mymenuitem:hover {
   </div>
 </div>
 <div id="brentryactions" >
-  <input type="button" disabled class="Btn2Dis_sun4" id="saveEntry" onclick="alert('Saves changes user made to entry')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
-       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Save Changes"/>
-</div>
-<!--  <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <table width="100%"  border="0" cellspacing="0" cellpadding="0">
     <tr>
       <td><div style="margin:0px 15px">
-            <input type="button" disabled class="Btn2Dis_sun4" id="newEntry" onClick="loadFile2('new-user.html')" onMouseDown="if (this.disabled==0) this.className='Btn2Down_sun4'" onMouseUp="if (this.disabled==0) this.className='Btn2_sun4'" onMouseOver="if (this.disabled==0) this.className='Btn2Hov_sun4'"
-       onMouseOut="if (this.disabled==0) this.className='Btn2_sun4'" value="New Child Entry"/>
-          <input type="button" disabled class="Btn2Dis_sun4" id="deleteEntry" onclick="alert('Deletes entry after confirmation')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
-       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Delete Entry"/>
-        </div> </td>
+          <input type="button" class="Btn2_sun4" id="deleteEntry" onclick="confirm('Confirm Deletion\n\nAre you sure you want to delete the selected entry? This operation cannot be undone.');return false;" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Delete Entry..."/>
+        </div></td>
       <td><div style="margin:0px 10px; text-align:right">
           <input type="button" disabled class="Btn2Dis_sun4" id="saveEntry" onclick="alert('Saves changes user made to entry')" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
        onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Save Changes"/>
         </div></td>
     </tr>
-  </table>-->
+  </table>
+</div>
 </div>
 <p>&nbsp;</p>
 </div>
@@ -742,7 +515,7 @@ a.mymenuitem:hover {
   <div class="mymenusep">
     <hr/>
   </div>
-  <a href="javascript:confirm('Confirm Deletion\n\nAre you sure you want to delete the selected entry? This operation cannot be undone.');" class="mymenuitem">Delete Entry...</a> </div>
+  <a href="javascript:confirm('Confirm Deletion\n\nAre you sure you want to delete the selected entry? *note: use entries if multiple items are selected* This operation cannot be undone.');" class="mymenuitem">Delete...</a> </div>
 <div id="brfilemenu" > <a href="#" class="mymenuitem" onclick="document.getElementById('brfilemenu').style.display='none';br_menu_showing = 0;alert('Opens new ldap browser window.')">New Window</a>
   <div class="mymenusep">
     <hr/>
@@ -757,7 +530,7 @@ a.mymenuitem:hover {
   <div class="mymenusep">
     <hr/>
   </div>
-  <a href="#" onclick="document.getElementById('brentriesmenu').style.display='none';br_menu_showing = 0;confirm('Confirm Deletion\n\nAre you sure you want to delete the selected entry? This operation cannot be undone.');return 0;" class="mymenuitem">Delete Entry...</a> </div>
+  <a href="#" onclick="document.getElementById('brentriesmenu').style.display='none';br_menu_showing = 0;confirm('Confirm Deletion\n\nAre you sure you want to delete the selected entry? *note: use entries if multiple items are selected* This operation cannot be undone.');return false;" class="mymenuitem">Delete...</a> </div>
 <div id="brviewmenu" > <a href="#" class="mymenuitem" onclick="document.getElementById('brviewmenu').style.display='none';br_menu_showing = 0;document.getElementById('brattrview').style.display='none'; document.getElementById('brldifview').style.display='none'; document.getElementById('brsimpleview').style.display='block'; document.getElementById('simpmark').src='check.png';document.getElementById('attrmark').src='blank.png';document.getElementById('ldifmark').src='blank.png';"><img src="check.png" name="checkmark" width="16" height="12" border="0" id="simpmark" />Simplified View</a> <a href="#" class="mymenuitem" onclick="document.getElementById('brviewmenu').style.display='none';br_menu_showing = 0;document.getElementById('brsimpleview').style.display='none'; document.getElementById('brldifview').style.display='none'; document.getElementById('brattrview').style.display='block'; document.getElementById('simpmark').src='blank.png';document.getElementById('attrmark').src='check.png';document.getElementById('ldifmark').src='blank.png';"><img src="blank.png" name="checkmark" width="16" height="12" border="0" id="attrmark" />Attribute View</a> <a href="#" class="mymenuitem" onclick="document.getElementById('brviewmenu').style.display='none';br_menu_showing = 0;document.getElementById('brsimpleview').style.display='none'; document.getElementById('brattrview').style.display='none'; document.getElementById('brldifview').style.display='block';document.getElementById('simpmark').src='blank.png';document.getElementById('attrmark').src='blank.png';document.getElementById('ldifmark').src='check.png';"><img src="blank.png" name="checkmark" width="16" height="12" border="0" id="ldifmark" />LDIF View</a></div>
 <div id="brhelpmenu" > <a href="#" class="mymenuitem" onclick="document.getElementById('brhelpmenu').style.display='none';br_menu_showing = 0;alert('Opens Admin Guide in browser window.')">Administration Guide</a> <a href="#" class="mymenuitem" onclick="document.getElementById('brhelpmenu').style.display='none';br_menu_showing = 0;alert('Opens Wiki in browser window.')">Documentation Wiki</a> </div>
 <script type="text/javascript" language="javascript">selectEntry()</script>

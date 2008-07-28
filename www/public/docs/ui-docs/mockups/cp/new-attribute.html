@@ -1,0 +1,68 @@
+<div id="nawindowbucket"><img src="backupdialog.png" width="646" height="414" /></div>
+<div id="nawindowtitle"> - New Attribute </div>
+<div id="naclosebox" onclick="closeSubWin2()" style="cursor:pointer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+<div id="nacontentarea">
+    <table border="0" cellpadding="0" cellspacing="0">
+      <tbody>
+    <tr>
+      <td nowrap="nowrap" align="left" valign="top"><div class="ConTblCl1Div_sun4"> &nbsp; </div></td>
+      <td ><div style=" text-align:right;margin:12px 10px 3px"><img src="required.gif" alt="Required" width="7" height="14">&nbsp;Indicates required field</div></td>
+    </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Name:<img src="required.gif" alt="Required" width="7" height="14"></span></div></td>
+          <td><div class="ConTblCl2Div_sun4"><input type="text" class="TxtFld_sun4" size="50" value=" "/></div></td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">OID:</span> </div></td>
+          <td><div class="ConTblCl2Div_sun4">
+<input type="text" class="TxtFld_sun4" size="50" value=" "/>            </div></td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Aliases:</span> </div></td>
+          <td><div class="ConTblCl2Div_sun4">
+              <input type="text" class="TxtFld_sun4" size="50" value=" "/>
+              <br>
+              Separate with commas.</div></td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Description:</span> </div></td>
+          <td><div class="ConTblCl2Div_sun4">
+              <input type="text" class="TxtFld_sun4" size="50" value=""/>
+            </div></td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">Syntax:</span></div></td>
+          <td><div class="ConTblCl2Div_sun4">
+              <select name="NewSchemaAttribute.SyntaxComboBox" id="NewSchemaAttribute.SyntaxComboBox" class="MnuStd_sun4">
+                <option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.24">GeneralizedTime</option>
+                <option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.50">TelephoneNumber</option>
+                <option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.7">Boolean</option>
+                <option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.5">Binary</option>
+                <option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.15" selected="selected">DirectoryString</option>
+                <option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.41">Postal Address</option>
+                <option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.12">DN</option>
+                <option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.40">OctetString</option>
+                <option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.4401.1.1.1">URI</option>
+                <option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.11">Country String</option>
+                <option class="MnuStdOp_sun4t" value="1.3.6.1.4.1.1466.115.121.1.27">INTEGER</option>
+                <option class="MnuStdOpt_sun4" value="1.3.6.1.4.1.1466.115.121.1.26">IA5String</option>
+              </select>
+            </div></td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><div class="ConTblCl1Div_sun4"><span class="LblLev2Txt_sun4">
+              <label for="ViewObjectclass.RequiredAttributesList">Multivalued:</label>
+              </span></div></td>
+          <td><div class="ConTblCl2Div_sun4">
+              <input type="checkbox" checked class="CB_sun4" />
+              &nbsp;Allow Multiple Values For Attribute</div></td>
+        </tr>
+    </table>
+</div>
+<div id="nabottombar"></div>
+<div id="naquitbutton">
+  <input type="button" class="Btn1_sun4" onclick="closeSubWin2()" onmousedown="if (this.disabled==0) this.className='Btn1Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn1_sun4'" onmouseover="if (this.disabled==0) this.className='Btn1Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn1_sun4'" value="OK"/>
+  <input type="button" class="Btn2_sun4" onclick="closeSubWin2()" onmousedown="if (this.disabled==0) this.className='Btn2Down_sun4'" onmouseup="if (this.disabled==0) this.className='Btn2_sun4'" onmouseover="if (this.disabled==0) this.className='Btn2Hov_sun4'"
+       onmouseout="if (this.disabled==0) this.className='Btn2_sun4'" value="Cancel"/>
+</div>
