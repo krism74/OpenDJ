@@ -1,7 +1,7 @@
 
 Lightweight Directory Access Protocol (LDAP) Parameters per [RFC4520]
  
-(last updated 2007-08-09) 
+(last updated 2008-06-27) 
  
 Registries included below:
 - Protocol Mechanism
@@ -33,7 +33,7 @@ Object Identifier          Type  Description                                    
 1.3.6.1.1.13.2              C    LDAP Post-read Control                           [RFC4527]
 1.3.6.1.1.14                F    Modify-Increment                                 [RFC4525]
 1.3.6.1.4.1.1466.101.119.1  E    Dynamic Refresh                                  [RFC2589]
-1.3.6.1.4.1.1466.20037      E    StartTLS                                         [RFC4511], [RFC4513]
+1.3.6.1.4.1.1466.20037      E    StartTLS                                         [RFC4511][RFC4513]
 1.3.6.1.4.1.4203.1.5.1      F    All Op Attrs                                     [RFC3673]
 1.3.6.1.4.1.4203.1.5.2      F    OC AD Lists                                      [RFC4529]
 1.3.6.1.4.1.4203.1.5.3      F    True/False filters                               [RFC4526]
@@ -726,29 +726,29 @@ Registration Procedures: Standards Action
 
 Name                         Code Owner  Reference
 ---------------------------  ---- -----  ---------
-bindRequest                     0  IESG  [RFC4513][RFC-ietf-ldapbis-protocol-32.txt]
-bindResponse                    1  IESG  [RFC4513][RFC-ietf-ldapbis-protocol-32.txt]
-unbindRequest                   2  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
-searchRequest                   3  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
-searchResEntry                  4  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
-searchResDone                   5  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
-modifyRequest                   6  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
-modifyResponse                  7  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
-addRequest                      8  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
-addResponse                     9  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
-delRequest                     10  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
-delResponse                    11  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
-modDNRequest                   12  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
-modDNResponse                  13  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
-compareRequest                 14  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
-compareResponse                15  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
-abandonRequest                 16  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
+bindRequest                     0  IESG  [RFC4513][RFC4511]
+bindResponse                    1  IESG  [RFC4513][RFC4511]
+unbindRequest                   2  IESG  [RFC4511]
+searchRequest                   3  IESG  [RFC4511]
+searchResEntry                  4  IESG  [RFC4511]
+searchResDone                   5  IESG  [RFC4511]
+modifyRequest                   6  IESG  [RFC4511]
+modifyResponse                  7  IESG  [RFC4511]
+addRequest                      8  IESG  [RFC4511]
+addResponse                     9  IESG  [RFC4511]
+delRequest                     10  IESG  [RFC4511]
+delResponse                    11  IESG  [RFC4511]
+modDNRequest                   12  IESG  [RFC4511]
+modDNResponse                  13  IESG  [RFC4511]
+compareRequest                 14  IESG  [RFC4511]
+compareResponse                15  IESG  [RFC4511]
+abandonRequest                 16  IESG  [RFC4511]
 reserved                    17-18  IESG
-searchResRef                   19  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
+searchResRef                   19  IESG  [RFC4511]
 reserved                    20-22  IESG
-extendedReq                    23  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
-extendedResp                   24  IESG  [RFC-ietf-ldapbis-protocol-32.txt]
-intermediateResponse           25  IESG  [RFC3771]
+extendedReq                    23  IESG  [RFC4511]
+extendedResp                   24  IESG  [RFC4511]
+intermediateResponse           25  IESG  [RFC4511]
 
 resultCode values - per [RFC4520]
 Registration Procedures: 
@@ -890,9 +890,9 @@ Registration Procedures:
 
 Name              URLString Value  Owner Reference
 ----------------  --------- -----  ----- -------------------
-baseObject        base          0   IESG [Protocol][LDAPURL]
-singleLevel       one           1   IESG [Protocol][LDAPURL]
-wholeSubtree      sub           2   IESG [Protocol][LDAPURL]
+baseObject        base          0   IESG [RFC4511][RFC4516]
+singleLevel       one           1   IESG [RFC4511][RFC4516]
+wholeSubtree      sub           2   IESG [RFC4511][RFC4516]
 
 
 LDAP Filter Choices - per [RFC4520]
@@ -900,16 +900,16 @@ Registration Procedures: Standards Action
 
 Name              Value  Owner Reference
 ----------------  -----  ----- ---------
-and                   0   IESG [Protocol]
-or                    1   IESG [Protocol]
-not                   2   IESG [Protocol]
-equalityMatch         3   IESG [Protocol]
-substrings            4   IESG [Protocol]
-greaterOrEqual        5   IESG [Protocol]
-lessOrEqual           6   IESG [Protocol]
-present               7   IESG [Protocol]
-approxMatch           8   IESG [Protocol]
-extensibleMatch       9   IESG [Protocol]
+and                   0   IESG [RFC4511]
+or                    1   IESG [RFC4511]
+not                   2   IESG [RFC4511]
+equalityMatch         3   IESG [RFC4511]
+substrings            4   IESG [RFC4511]
+greaterOrEqual        5   IESG [RFC4511]
+lessOrEqual           6   IESG [RFC4511]
+present               7   IESG [RFC4511]
+approxMatch           8   IESG [RFC4511]
+extensibleMatch       9   IESG [RFC4511]
 
 
 LDAP ModifyRequest Operations - per [RFC4520]
@@ -921,9 +921,9 @@ Registration Procedures:
 
 Name              Value  Owner Reference
 ----------------  -----  ----- ---------
-add                   0   IESG [Protocol]
-delete                1   IESG [Protocol]
-replace               2   IESG [Protocol]
+add                   0   IESG [RFC4511]
+delete                1   IESG [RFC4511]
+replace               2   IESG [RFC4511]
 increment             3   IESG [RFC4525]
 
 
@@ -989,22 +989,46 @@ References
 
 [RFC4370]  R. Weltman, "LDAP Proxied Authorization Control", RFC 4370, February 2006.
 
+[RFC4373]  R. Harrison, J. Sermersheim and Y. Dong, "LDAP Bulk Update/Replication 
+           Protocol", RFC 4373, January 2006.
+
 [RFC4403]  B. Bergeson, K. Boogert, and V. Nanjundaswamy, "LDAP Schema for UDDIv3",
            RFC 4403, February 2006.
 
-[RFC4532]  K. Zeilenga, 'LDAP "Who am I?" Operation', RFC 4532, June 2006.
-
-[RFC4533]  K. Zeilenga and J.H. Choi, "The LDAP Content Synchronization Operation",
-           RFC 4533, June 2006.
+[RFC4511]  Sermersheim, J., "LDAP: The Protocol", RFC 4511, June 2006.
 
 [RFC4512]  K. Zeilenga, Ed., "LDAP: Directory Information Models", RFC 4512, 
            June 2006.
+           
+[RFC4513]  Harrison, R., "LDAP: Authentication Methods and Connection 
+           Level Security Mechanisms", RFC 4513, June 2006.
+
+[RFC4516]  M. Smith, Ed., T. Howes, "Lightweight Directory Access Protocol (LDAP): 
+           Uniform Resource Locator", RFC 4516, June 2006.
+
+[RFC4517]  S. Legg, "Lightweight Directory Access Protocol (LDAP): Syntaxes and 
+           Matching Rules", RFC 4517, June 2006.
+
+[RFC4519]  A. Sciberras, "LDAP: Schema for User Applications", RFC 4519,
+           June 2006.
+
+[RFC4520]  K. D. Zeilenga, "IANA Considerations for LDAP", RFC 4520, June 2006.
+
+[RFC4522]  S. Legg, "Lightweight Directory Access Protocol (LDAP): The Binary 
+           Encoding Option", RFC 4522, June 2006.
+
+[RFC4523]  K. Zeilenga, "Lightweight Directory Access Protocol (LDAP) schema
+           definitions for X.509 Certificates", RFC 4523, June 2006.
+
+[RFC4524]  K. D. Zeilenga, "COSINE LDAP/X.500 Schema", RFC 4524, June 2006.
+
+[RFC4525]  K. Zeilenga, "LDAP Modify-Increment Extension",  RFC 4525, June 2006.
 
 [RFC4526]  K. Zeilenga, "LDAP Absolute True and False Filters", RFC 4526, June 2006.
 
-[RFC4528]  K. Zeilenga, "The LDAP Assertion Control", RFC 4528, June 2006.
-
 [RFC4527]  K. Zeilenga, "LDAP Read Entry Controls", RFC 4527, June 2006.
+
+[RFC4528]  K. Zeilenga, "The LDAP Assertion Control", RFC 4528, June 2006.
 
 [RFC4529]  K. Zeilenga, "Requesting Attributes by Object Class in the Lightweight 
            Directory Access Protocol", RFC 4529, June 2006.
@@ -1012,42 +1036,19 @@ References
 [RFC4530]  K. Zeilenga, "Lightweight Directory Access Protocol (LDAP) 
            entryUUID operational attribute", RFC 4530, June 2006.
 
-[RFC4525]  K. Zeilenga, "LDAP Modify-Increment Extension",  RFC 4525, June 2006.
-
-[RFC4523]  K. Zeilenga, "Lightweight Directory Access Protocol (LDAP) schema
-           definitions for X.509 Certificates", RFC 4523, June 2006.
-
-[RFC4373]  R. Harrison, J. Sermersheim and Y. Dong, "LDAP Bulk Update/Replication 
-           Protocol", RFC 4373, January 2006.
-
-[RFC4517]  S. Legg, "Lightweight Directory Access Protocol (LDAP): Syntaxes and 
-           Matching Rules", RFC 4517, June 2006.
-
-[RFC4524]  K. D. Zeilenga, "COSINE LDAP/X.500 Schema", RFC 4524, June 2006.
-
-[RFC4513]  Harrison, R., "LDAP: Authentication Methods and Connection 
-           Level Security Mechanisms", RFC 4513, June 2006.
-
-[RFC4522]  S. Legg, "Lightweight Directory Access Protocol (LDAP): The Binary 
-           Encoding Option", RFC 4522, June 2006.
-
-[RFC4519]  A. Sciberras, "LDAP: Schema for User Applications", RFC 4519,
-           June 2006.
-
 [RFC4531]  K. Zeilenga, "LDAP Turn Operation", RFC 4531, June 2006.
 
-[RFC4520]  K. D. Zeilenga, "IANA Considerations for LDAP", RFC 4520, June 2006.
+[RFC4532]  K. Zeilenga, 'LDAP "Who am I?" Operation', RFC 4532, June 2006.
 
-[RFC4511]  Sermersheim, J., "LDAP: The Protocol", RFC 4511, June 2006.
+[RFC4533]  K. Zeilenga and J.H. Choi, "The LDAP Content Synchronization Operation",
+           RFC 4533, June 2006.
 
 [RFC4876]  B. Neal-Joslin, Ed., L. Howard, M. Ansari, "A Configuration 
            Profile Schema for LDAP-based agents", RFC 4876, May 2007.
 
 [RFC5052]  Kurt D. Zeilenga, "The LDAP entryDN Operational Attribute",
            RFC 5020, August 2007.
-		
-[LDAPURL]  Smith, M. (editor), "LDAP: Uniform Resource Locator",
-           draft-ietf-ldapbis-url-xx.txt, a work in progress.
+
 
 People
 ------
@@ -1058,7 +1059,7 @@ People
 [Wahl]     Mark Wahl, <Mark.Wahl&informed-control.com>, 10 November 2006.
 
 
-(registry created 27 August 2003) 
+(registry created 2003-08-27) 
  
 [] 
 
