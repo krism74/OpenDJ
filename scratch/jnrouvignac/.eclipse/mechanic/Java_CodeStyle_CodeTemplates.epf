@@ -1,0 +1,19 @@
+# @title Java - Code Style - Code Templates
+# @description Settings for Eclipse Preferences > Java > Code Style > Code Templates
+# @task_type LASTMOD
+#
+# Created by the Workspace Mechanic Preference Recorder
+#Tue Feb 19 13:57:53 CET 2013
+file_export_version=3.0
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.codeComplete.argumentPrefixes=
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.codeComplete.argumentSuffixes=
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.codeComplete.fieldPrefixes=
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.codeComplete.fieldSuffixes=
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.codeComplete.localPrefixes=
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.codeComplete.localSuffixes=
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.codeComplete.staticFieldPrefixes=
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.codeComplete.staticFinalFieldPrefixes=
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.codeComplete.staticFinalFieldSuffixes=
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.codeComplete.staticFieldSuffixes=
+/instance/org.eclipse.jdt.ui/org.eclipse.jdt.ui.text.custom_code_templates=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><templates><template autoinsert\="false" context\="filecomment_context" deleted\="false" description\="Comment for created Java files" enabled\="true" id\="org.eclipse.jdt.ui.text.codetemplates.filecomment" name\="filecomment">/*\n * Copyright ${year} ForgeRock, Inc.\n *\n * The contents of this file are subject to the terms of the Common Development and\n * Distribution License (the License). You may not use this file except in compliance with the\n * License.\n *\n * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the\n * specific language governing permission and limitations under the License.\n *\n * When distributing Covered Software, include this CDDL Header Notice in each file and include\n * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL\n * Header, with the fields enclosed by brackets [] replaced by your own identifying\n * information\: "Portions copyright [year] [name of copyright owner]".\n */</template></templates>
+

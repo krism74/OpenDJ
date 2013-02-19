@@ -1,0 +1,10 @@
+# @title Java - Editor - Content Assist - Advanced
+# @description Settings for Eclipse Preferences > Java > Editor > Content Assist > Advanced
+# @task_type LASTMOD
+#
+# Created by the Workspace Mechanic Preference Recorder
+#Tue Feb 19 14:25:28 CET 2013
+file_export_version=3.0
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.timeoutForParameterNameFromAttachedJavadoc=50
+/instance/org.eclipse.jdt.ui/content_assist_category_order=org.eclipse.jdt.ui.templateProposalCategory\:0\u0000org.eclipse.jdt.ui.swtProposalCategory\:65536\u0000org.eclipse.jdt.ui.javaNoTypeProposalCategory\:65537\u0000org.eclipse.jdt.ui.javaTypeProposalCategory\:65538\u0000org.eclipse.jdt.ui.textProposalCategory\:65539\u0000org.eclipse.jdt.ui.javaAllProposalCategory\:65540\u0000org.eclipse.mylyn.java.ui.javaAllProposalCategory\:6\u0000org.eclipse.recommenders.rcp.category.completion\:7\u0000org.eclipse.recommenders.completion.rcp.chain.category\:8\u0000org.eclipse.recommenders.subwords.rcp.category\:9\u0000org.eclipse.recommenders.completion.rcp.templates.category\:10\u0000
+/instance/org.eclipse.jdt.ui/content_assist_disabled_computers=org.eclipse.jdt.ui.swtProposalCategory\u0000org.eclipse.jdt.ui.javaNoTypeProposalCategory\u0000org.eclipse.jdt.ui.javaTypeProposalCategory\u0000org.eclipse.jdt.ui.textProposalCategory\u0000org.eclipse.jdt.ui.javaAllProposalCategory\u0000org.eclipse.recommenders.completion.rcp.chain.category\u0000org.eclipse.recommenders.subwords.rcp.category\u0000org.eclipse.recommenders.completion.rcp.templates.category\u0000
