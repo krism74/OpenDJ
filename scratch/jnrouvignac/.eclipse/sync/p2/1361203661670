@@ -4,12 +4,7 @@
   <ius size='11'>
 <!--Eclipse MarketPlace - TODO test these
 JDeodorant - automatically fixes bad smells: feature envy, type checking, long methods, god class
-AutoRefresher - automatically refreshes files using native file system events
-Mouse Feed - Pops-up the shortkey for menu actions - great to learn short keys
 DBeaver - Like TOAD but for any DB
-Cut Copy Paste Plus - Multiple paste history - cycles through clipboard
-Unnecessary code detector - As described
-egit - Git integration into Eclipse -->
 -->
     <!-- Eclipse update site -->
     <iu id='epp.package.java' name='Eclipse IDE for Java Developers' version='1.4.2.20120213-0813'>
@@ -25,16 +20,45 @@ egit - Git integration into Eclipse -->
         <repository location='http://kane-toolkit.googlecode.com/svn/trunk/eclipse-sync'/>
       </repositories>
     </iu>
+    <!-- Workspace Mechanic - Workspace preferences synchronization -->
+    <iu id='com.google.eclipse.mechanic.feature.group' name='Workspace Mechanic' version='0.3.4'>
+      <repositories size='1'>
+        <repository location='http://workspacemechanic.eclipselabs.org.codespot.com/git.update/mechanic'/>
+      </repositories>
+    </iu>
+    <!-- Mouse Feed - Pops-up the shortkey for menu actions - great to learn short keys -->
+    <iu id='com.mousefeed.feature.feature.group' name='MouseFeed' version='1.0.1.201103081613'>
+      <repositories size='1'>
+        <repository location='http://download.sigasi.com/update/mousefeed/'/>
+      </repositories>
+    </iu>
+    <!-- Cut Copy Paste Plus - Multiple paste history - cycles through clipboard -->
+    <iu id='CutCopyPastePlusFeature.feature.group' name='Cut Copy Paste Plus Feature' version='1.0.3'>
+      <repositories size='1'>
+        <repository location='http://sandipchitaleseclipseplugins.googlecode.com/svn/trunk/CutCopyPastePlusUpdateSite/site.xml'/>
+      </repositories>
+    </iu>
     <!-- EclEmma - Code coverage tool -->
     <iu id='com.mountainminds.eclemma.feature.feature.group' name='EclEmma Java Code Coverage' version='2.2.0.201210261515'>
       <repositories size='1'>
         <repository location='http://update.eclemma.org/'/>
       </repositories>
     </iu>
-    <!-- Workspace Mechanic - Workspace preferences synchronization -->
-    <iu id='com.google.eclipse.mechanic.feature.group' name='Workspace Mechanic' version='0.3.4'>
+    <!-- Unnecessary code detector - As described -->
+    <iu id='org.ucdetector.feature.feature.group' name='UCDetector' version='1.10.0'>
       <repositories size='1'>
-        <repository location='http://workspacemechanic.eclipselabs.org.codespot.com/git.update/mechanic'/>
+        <repository location='http://ucdetector.sourceforge.net/update/'/>
+      </repositories>
+    </iu>
+    <!-- EGit - Git integration into Eclipse -->
+    <iu id='org.eclipse.egit.feature.group' name='Eclipse EGit' version='2.2.0.201212191850-r'>
+      <repositories size='1'>
+        <repository location='http://download.eclipse.org/egit/updates-2.2'/>
+      </repositories>
+    </iu>
+    <iu id='org.eclipse.jgit.feature.group' name='Eclipse JGit' version='2.2.0.201212191850-r'>
+      <repositories size='1'>
+        <repository location='http://download.eclipse.org/egit/updates-2.2'/>
       </repositories>
     </iu>
     <!-- Subclipse - Subversion integration into Eclipse -->
