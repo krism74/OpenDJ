@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?p2f version='1.0.0'?>
 <p2f version='1.0.0'>
-  <ius size='11'>
+  <ius size='17'>
 <!--Eclipse MarketPlace - TODO test these
 JDeodorant - automatically fixes bad smells: feature envy, type checking, long methods, god class
 DBeaver - Like TOAD but for any DB
@@ -36,6 +36,12 @@ DBeaver - Like TOAD but for any DB
     <iu id='CutCopyPastePlusFeature.feature.group' name='Cut Copy Paste Plus Feature' version='1.0.3'>
       <repositories size='1'>
         <repository location='http://sandipchitaleseclipseplugins.googlecode.com/svn/trunk/CutCopyPastePlusUpdateSite/site.xml'/>
+      </repositories>
+    </iu>
+    <!-- TestNG - TestNG integration into Eclipse -->
+    <iu id='org.testng.eclipse.feature.group' name='TestNG' version='6.8.0.20121120_1820'>
+      <repositories size='1'>
+        <repository location='http://beust.com/eclipse'/>
       </repositories>
     </iu>
     <!-- EclEmma - Code coverage tool -->
