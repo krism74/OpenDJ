@@ -2,15 +2,27 @@
 <?p2f version='1.0.0'?>
 <p2f version='1.0.0'>
   <ius size='11'>
-    <!-- Eclipse Mylyn - Provides a task oriented wokspace -->
-    <iu id='org.tigris.subversion.subclipse.graph.feature.feature.group' name='Subversion Revision Graph' version='1.1.1'>
+<!--Eclipse MarketPlace - TODO test these
+JDeodorant - automatically fixes bad smells: feature envy, type checking, long methods, god class
+AutoRefresher - automatically refreshes files using native file system events
+Mouse Feed - Pops-up the shortkey for menu actions - great to learn short keys
+DBeaver - Like TOAD but for any DB
+Cut Copy Paste Plus - Multiple paste history - cycles through clipboard
+Unnecessary code detector - As described
+egit - Git integration into Eclipse -->
+-->
+    <!-- Eclipse update site -->
+    <iu id='epp.package.java' name='Eclipse IDE for Java Developers' version='1.4.2.20120213-0813'>
+    <!--iu id='epp.package.java' name='Eclipse IDE for Java Developers' version='1.5.1.20120920-0737'--> <!-- To be used with Juno -->
       <repositories size='1'>
-        <repository location='http://subclipse.tigris.org/update_1.8.x'/>
+        <repository location='http://download.eclipse.org/releases/indigo'/>
+        <!--repository location='http://download.eclipse.org/releases/juno'/-->
       </repositories>
     </iu>
-    <iu id='org.tigris.subversion.subclipse.mylyn.feature.group' name='Subclipse Integration for Mylyn 3.x (Optional)' version='3.0.0'>
+    <!-- Eclipse Sync - Like Firefox sync -->
+    <iu id='org.eclipselab.eclipsesync.feature.feature.group' name='Eclipse Sync Core Feature' version='0.1.0.201202251235'>
       <repositories size='1'>
-        <repository location='http://subclipse.tigris.org/update_1.8.x'/>
+        <repository location='http://kane-toolkit.googlecode.com/svn/trunk/eclipse-sync'/>
       </repositories>
     </iu>
     <!-- EclEmma - Code coverage tool -->
@@ -25,13 +37,13 @@
         <repository location='http://workspacemechanic.eclipselabs.org.codespot.com/git.update/mechanic'/>
       </repositories>
     </iu>
-    <!-- Eclipse Sync	Like Firefox sync -->
-    <iu id='org.eclipselab.eclipsesync.feature.feature.group' name='Eclipse Sync Core Feature' version='0.1.0.201202251235'>
+    <!-- Subclipse - Subversion integration into Eclipse -->
+    <iu id='org.tigris.subversion.subclipse.feature.group' name='Subclipse (Required)' version='1.8.18'>
       <repositories size='1'>
-        <repository location='http://kane-toolkit.googlecode.com/svn/trunk/eclipse-sync'/>
+        <repository location='http://subclipse.tigris.org/update_1.8.x'/>
       </repositories>
     </iu>
-    <iu id='com.collabnet.subversion.merge.feature.feature.group' name='CollabNet Merge Client' version='3.0.13'>
+    <iu id='org.tigris.subversion.clientadapter.feature.feature.group' name='Subversion Client Adapter (Required)' version='1.8.3'>
       <repositories size='1'>
         <repository location='http://subclipse.tigris.org/update_1.8.x'/>
       </repositories>
@@ -41,35 +53,25 @@
         <repository location='http://subclipse.tigris.org/update_1.8.x'/>
       </repositories>
     </iu>
-    <iu id='org.tigris.subversion.subclipse.feature.group' name='Subclipse (Required)' version='1.8.18'>
-      <repositories size='1'>
-        <repository location='http://subclipse.tigris.org/update_1.8.x'/>
-      </repositories>
-    </iu>
-    <iu id='epp.package.java' name='Eclipse IDE for Java Developers' version='1.4.2.20120213-0813'>
-    <!--iu id='epp.package.java' name='Eclipse IDE for Java Developers' version='1.5.1.20120920-0737'--> <!-- To be used with Juno -->
-      <repositories size='1'>
-        <repository location='http://download.eclipse.org/releases/indigo'/>
-        <!--repository location='http://download.eclipse.org/releases/juno'/-->
-      </repositories>
-    </iu>
-    <iu id='org.tigris.subversion.clientadapter.feature.feature.group' name='Subversion Client Adapter (Required)' version='1.8.3'>
-      <repositories size='1'>
-        <repository location='http://subclipse.tigris.org/update_1.8.x'/>
-      </repositories>
-    </iu>
     <iu id='org.tigris.subversion.clientadapter.svnkit.feature.feature.group' name='SVNKit Client Adapter (Not required)' version='1.7.8.1'>
       <repositories size='1'>
         <repository location='http://subclipse.tigris.org/update_1.8.x'/>
       </repositories>
     </iu>
-<!--Eclipse MarketPlace - TODO test these
-JDeodorant	automatically fixes bad smells: feature envy, type checking, long methods, god class
-AutoRefresher	automatically refreshes files using native file system events
-Mouse Feed	Pops-up the shortkey for menu actions - great to learn short keys
-DBeaver	Like TOAD but for any DB
-Cut Copy Paste Plus	Multiple paste history - cycles through clipboard
-Unnecessary code detector	As described
--->
+    <iu id='org.tigris.subversion.subclipse.graph.feature.feature.group' name='Subversion Revision Graph' version='1.1.1'>
+      <repositories size='1'>
+        <repository location='http://subclipse.tigris.org/update_1.8.x'/>
+      </repositories>
+    </iu>
+    <iu id='org.tigris.subversion.subclipse.mylyn.feature.group' name='Subclipse Integration for Mylyn 3.x (Optional)' version='3.0.0'>
+      <repositories size='1'>
+        <repository location='http://subclipse.tigris.org/update_1.8.x'/>
+      </repositories>
+    </iu>
+    <iu id='com.collabnet.subversion.merge.feature.feature.group' name='CollabNet Merge Client' version='3.0.13'>
+      <repositories size='1'>
+        <repository location='http://subclipse.tigris.org/update_1.8.x'/>
+      </repositories>
+    </iu>
   </ius>
 </p2f>
