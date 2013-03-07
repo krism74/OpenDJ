@@ -1,0 +1,13 @@
+# @title General - Workspace
+# @description Settings for Eclipse Preferences > General > Workspace
+# @task_type LASTMOD
+#
+# Created by the Workspace Mechanic Preference Recorder
+#Wed Feb 20 10:53:39 CET 2013
+file_export_version=3.0
+/bundle_defaults/org.eclipse.jdt.apt.core/org.eclipse.jdt.apt.aptEnabled=false
+/bundle_defaults/org.eclipse.jdt.apt.core/org.eclipse.jdt.apt.genSrcDir=.apt_generated
+/bundle_defaults/org.eclipse.jdt.apt.core/org.eclipse.jdt.apt.processorOptions=
+/bundle_defaults/org.eclipse.jdt.apt.core/org.eclipse.jdt.apt.reconcileEnabled=true
+/instance/org.eclipse.core.resources/refresh.enabled=false
+/instance/org.eclipse.core.resources/refresh.lightweight.enabled=false

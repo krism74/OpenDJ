@@ -1,0 +1,11 @@
+# @title Java - Installed JREs
+# @description Settings for Eclipse Preferences > Java > Installed JREs
+# @task_type LASTMOD
+#
+# Created by the Workspace Mechanic Preference Recorder
+#Fri Feb 22 09:31:50 CET 2013
+file_export_version=3.0
+/bundle_defaults/org.eclipse.jdt.launching/org.eclipse.jdt.launching.PREF_STRICTLY_COMPATIBLE_JRE_NOT_AVAILABLE=warning
+/bundle_defaults/org.eclipse.jdt.launching/org.eclipse.jdt.launching.PREF_CONNECT_TIMEOUT=20000
+/default/org.eclipse.jdt.core/org.eclipse.jdt.core.builder.resourceCopyExclusionFilter=*.launch
+/instance/org.eclipse.jdt.launching/org.eclipse.jdt.launching.PREF_VM_XML=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<vmSettings defaultVM\="57,org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType13,1361202202533">\n<vmType id\="org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType">\n<vm id\="1361202202533" javadocURL\="http\://download.oracle.com/javase/7/docs/api/" name\="java-7-openjdk-amd64" path\="/usr/lib/jvm/java-7-openjdk-amd64" vmargs\="-Dorg.opends.server.BuildRoot\=/home/jnrouvignac/workspace/OpenDS/"/>\n</vmType>\n</vmSettings>\n

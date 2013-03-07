@@ -1,0 +1,8 @@
+# @title Search - History... - Configure
+# @description Settings for Eclipse Window > Show view... > Search > History... > Configure
+# @task_type LASTMOD
+#
+# Created by the Workspace Mechanic Preference Recorder
+#Fri Feb 22 12:38:17 CET 2013
+file_export_version=3.0
+/instance/org.eclipse.search/org.eclipse.search.limitHistory=50

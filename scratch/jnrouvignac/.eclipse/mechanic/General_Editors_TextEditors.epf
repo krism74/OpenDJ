@@ -1,0 +1,10 @@
+# @title General - Editors - Text Editors
+# @description Settings for Eclipse Preferences > General > Editors > Text Editors
+# @task_type LASTMOD
+#
+# Created by the Workspace Mechanic Preference Recorder
+#Tue Feb 19 17:41:08 CET 2013
+file_export_version=3.0
+/instance/org.eclipse.ui.editors/lineNumberRuler=true
+/instance/org.eclipse.ui.editors/printMargin=true
+/instance/org.eclipse.ui.editors/printMarginColumn=80

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?p2f version='1.0.0'?>
 <p2f version='1.0.0'>
-  <ius size='17'>
+  <ius size='16'>
 <!--Eclipse MarketPlace - TODO test these
 JDeodorant - automatically fixes bad smells: feature envy, type checking, long methods, god class
 DBeaver - Like TOAD but for any DB
@@ -74,11 +74,6 @@ DBeaver - Like TOAD but for any DB
       </repositories>
     </iu>
     <iu id='org.tigris.subversion.clientadapter.feature.feature.group' name='Subversion Client Adapter (Required)' version='1.8.3'>
-      <repositories size='1'>
-        <repository location='http://subclipse.tigris.org/update_1.8.x'/>
-      </repositories>
-    </iu>
-    <iu id='org.tigris.subversion.clientadapter.javahl.feature.feature.group' name='Subversion JavaHL Native Library Adapter' version='1.7.8.1'>
       <repositories size='1'>
         <repository location='http://subclipse.tigris.org/update_1.8.x'/>
       </repositories>

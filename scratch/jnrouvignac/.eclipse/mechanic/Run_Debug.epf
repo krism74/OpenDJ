@@ -1,0 +1,9 @@
+# @title Run/Debug
+# @description Settings for Eclipse Preferences > Run/Debug
+# @task_type LASTMOD
+#
+# Created by the Workspace Mechanic Preference Recorder
+#Tue Mar 05 09:50:52 CET 2013
+file_export_version=3.0
+/instance/org.eclipse.debug.ui/org.eclipse.debug.ui.skip_breakpoints_during_run_to_line=true
+
