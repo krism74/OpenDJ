@@ -8,3 +8,4 @@ file_export_version=3.0
 /instance/org.eclipse.ui.editors/lineNumberRuler=true
 /instance/org.eclipse.ui.editors/printMargin=true
 /instance/org.eclipse.ui.editors/printMarginColumn=80
+/instance/org.eclipse.ui.editors/spacesForTabs=true

@@ -1,0 +1,8 @@
+# @title Java - Code Coverage
+# @description Settings for Eclipse Preferences > Java > Code Coverage
+# @task_type LASTMOD
+#
+# Created by the Workspace Mechanic Preference Recorder
+#Tue Feb 19 15:58:29 CET 2013
+file_export_version=3.0
+/instance/com.mountainminds.eclemma.ui/com.mountainminds.eclemma.ui.default_scope_same_project_only=true
