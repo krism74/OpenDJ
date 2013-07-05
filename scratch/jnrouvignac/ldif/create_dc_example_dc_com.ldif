@@ -1,0 +1,28 @@
+dn: dc=com
+objectclass: top
+objectclass: domain
+dc: com
+
+dn: dc=example,dc=com
+objectclass: top
+objectclass: domain
+dc: example
+
+dn: ou=Groups, dc=example,dc=com
+objectclass: top
+objectclass: organizationalunit
+ou: Groups
+
+dn: cn=Directory Administrators, ou=Groups, dc=example,dc=com
+cn: Directory Administrators
+objectclass: top
+objectclass: groupofuniquenames
+ou: Groups
+uniquemember: uid=kvaughan, ou=People, dc=example,dc=com
+uniquemember: uid=rdaugherty, ou=People, dc=example,dc=com
+uniquemember: uid=hmiller, ou=People, dc=example,dc=com
+
+dn: ou=People, dc=example,dc=com
+objectclass: top
+objectclass: organizationalunit
+ou: People

@@ -1,0 +1,4 @@
+dn: uid=newuser,ou=People,dc=example,dc=com
+changetype: modify
+add: description
+description: A second new user's entry

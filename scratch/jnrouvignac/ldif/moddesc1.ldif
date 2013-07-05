@@ -1,0 +1,4 @@
+dn: uid=newuser,ou=People,dc=example,dc=com
+changetype: modify
+replace: description
+description: description 1

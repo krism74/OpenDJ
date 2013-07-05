@@ -1,0 +1,21 @@
+dn: uid=newuser,ou=People,dc=example,dc=com
+uid: newuser
+facsimileTelephoneNumber: +1 408 555 1213
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: top
+givenName: New
+cn: New User
+cn: Real Name
+telephoneNumber: +1 408 555 1212
+sn: Jensen
+roomNumber: 1234
+homeDirectory: /home/newuser
+uidNumber: 10389
+mail: newuser@example.com
+l: South Pole
+ou: Product Development
+ou: People
+gidNumber: 10636

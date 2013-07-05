@@ -1,0 +1,1 @@
+tests/staf-tests/functional-tests/shared/data/backends/Example.ldif
