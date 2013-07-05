@@ -53,7 +53,7 @@ do
     echo "##################################################################################################"
     echo "# Setting up and starting server $DIR, debugging on port 800$IDX"
     echo "##################################################################################################"
-    if [ "$IDX" -eq "0" ]
+    if [[ "$DIR" == *DS* ]]
     then
         if [ "$IDX" -eq "" ]
         then
@@ -64,10 +64,11 @@ do
                     --clearBackend
                     # -D "cn=Directory Manager" -w admin
         else
-            ./setup --cli -d 1000000 -D "$BIND_DN" -w $PASSWORD -n -p 150$IDX --adminConnectorPort 450$IDX -b "$BASE_DN" -O
+            ./setup --cli -d 1000 -D "$BIND_DN" -w $PASSWORD -n -p 150$IDX --adminConnectorPort 450$IDX -b "$BASE_DN" -O
         fi
     else
-        ./setup --cli            -D "$BIND_DN" -w $PASSWORD -n -p 150$IDX --adminConnectorPort 450$IDX -b "$BASE_DN" -O
+        # so far we only consider RSs or DSRSs
+        ./setup --cli             -D "$BIND_DN" -w $PASSWORD -n -p 150$IDX --adminConnectorPort 450$IDX -b "$BASE_DN" -O
     fi
 
     OPENDJ_JAVA_ARGS="-agentlib:jdwp=transport=dt_socket,address=localhost:800$IDX,server=y,suspend=n" bin/start-ds
@@ -82,7 +83,13 @@ do
 
 
 
-    if [ "$IDX" -gt "0" ]
+    if [[ "$DIR" == *DSRS* ]]
+    then
+        : # empty for now
+    elif [[ "$DIR" == *DS* ]]
+    then
+        : # empty for now
+    elif [[ "$DIR" == *RS* ]]
     then
         echo
         echo "##################################################################################################"
@@ -91,17 +98,15 @@ do
         bin/dsreplication enable \
             --adminUID admin --adminPassword $PASSWORD --baseDN "$BASE_DN" --trustAll --no-prompt \
             --host1 $HOSTNAME     --port1 4500    --bindDN1 "$BIND_DN" --bindPassword1 $PASSWORD --noReplicationServer1 \
-            --host2 $HOSTNAME     --port2 450$IDX --bindDN2 "$BIND_DN" --bindPassword2 $PASSWORD --replicationPort2 890$IDX --onlyReplicationServer2
+            --host2 $HOSTNAME     --port2 450$IDX --bindDN2 "$BIND_DN" --bindPassword2 $PASSWORD --replicationPort2 890$IDX #--onlyReplicationServer2
         echo "Done."
 
         echo
         echo "##################################################################################################"
         echo "# Setting replication group #$IDX for ${REPLICA_DIRS[$IDX]}"
         echo "##################################################################################################"
-        bin/dsconfig set-replication-server-prop \
-            --provider-name "Multimaster Synchronization" --trustAll --no-prompt \
-            --hostname $HOSTNAME  --port 450$IDX  --bindDN "$BIND_DN"  --bindPassword $PASSWORD \
-            --set group-id:$IDX
+        bin/dsconfig -h $HOSTNAME -p 450$IDX -D "$BIND_DN" -w $PASSWORD --trustAll --no-prompt \
+                     set-replication-server-prop   --provider-name "Multimaster Synchronization" --set group-id:$IDX
         echo "Done."
     fi
 
@@ -119,20 +124,9 @@ echo "##########################################################################
 IDX=0
 DIR=${REPLICA_DIRS[$IDX]}
 cd $DIR
-bin/dsreplication initialize-all \
-            --adminUID admin --adminPassword admin --baseDN "$BASE_DN" --trustAll --no-prompt \
-            --hostname $HOSTNAME  --port 450$IDX
+
+bin/dsreplication    initialize-all --adminUID admin \
+                     -h $HOSTNAME -p 450$IDX -b "$BASE_DN" -w $PASSWORD --trustAll --no-prompt
+
 cd ..
-
-
-# du -sh /ssddata/OpenDJ-2.5.0_*/ | sort
-# df -h /ssddata/
-# TODO JNR enable combined logs
-# TODO JNR force only 1 file for logs/access
-
-## should take approx 5.5 min for 1500 ops/s
-# time bin/modrate -p 1500 -D "cn=directory manager" -w admin --noRebind --numConnections 4 --numThreads 4  \
-#            -b "uid=user.%d,ou=people,dc=example,dc=com" --argument "inc(0,500000)" --argument "randstr(16)" 'description:%2$s' --maxIterations 1
-
-
 
