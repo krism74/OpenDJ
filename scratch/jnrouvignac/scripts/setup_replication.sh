@@ -10,12 +10,15 @@ HOSTNAME=jeannoel-laptop
 BIND_DN="cn=Directory Manager"
 PASSWORD=admin
 BASE_DN="dc=example,dc=com"
+# Naming is important here:
+# DS   means: deploy a DS only node
+#   RS means: deploy a RS only node
+# DSRS means: deploy a node which is both DS and RS
 REPLICA_DIRS=( OpenDJ-2.7.0_DS1_group1 \
-               OpenDJ-2.7.0_RS1_group1 \
-               OpenDJ-2.7.0_RS2_group2 \
-               OpenDJ-2.7.0_RS3_group3 \
+               OpenDJ-2.7.0_DSRS1_group1 \
+               OpenDJ-2.7.0_DSRS2_group2 \
+               OpenDJ-2.7.0_DSRS3_group3 \
              )
-
 
 
 
@@ -23,6 +26,10 @@ REPLICA_DIRS=( OpenDJ-2.7.0_DS1_group1 \
 for IDX in ${!REPLICA_DIRS[*]}
 do
     DIR="$BASE_DIR/${REPLICA_DIRS[$IDX]}"
+
+    ###################################
+    # Stop/Kill previous server
+    ###################################
     if [ -e "$DIR" ]
     then
         cd $DIR
@@ -48,12 +55,15 @@ do
     cp -r $PACKAGE_DIR $DIR
 
 
+    ###################################
+    # Setup
+    ###################################
     cd $DIR
     echo
     echo "##################################################################################################"
     echo "# Setting up and starting server $DIR, debugging on port 800$IDX"
     echo "##################################################################################################"
-    #SETUP_ARGS=""
+    SETUP_ARGS=""
     if [[ "$DIR" == *DS* ]] # This also includes DSRSs
     then
         # import initial data
@@ -85,16 +95,20 @@ do
     bin/dsconfig     -h $HOSTNAME -p 450$IDX -D "$BIND_DN" -w $PASSWORD --trustAll --no-prompt \
                      set-log-retention-policy-prop --policy-name "File Count Retention Policy" --set number-of-files:1
 
+    ###################################
+    # Replication
+    ###################################
+    if [[ "$DIR" == *RS* ]]
+    then
+        RS_ARGS=""
+        if [[ "$DIR" == *DSRS* ]]
+        then
+            : # empty for now
+        elif [[ "$DIR" == *RS* ]]
+        then
+            RS_ARGS="--onlyReplicationServer2"
+        fi
 
-
-    if [[ "$DIR" == *DSRS* ]]
-    then
-        : # empty for now
-    elif [[ "$DIR" == *DS* ]]
-    then
-        : # empty for now
-    elif [[ "$DIR" == *RS* ]]
-    then
         echo
         echo "##################################################################################################"
         echo "# Creating replication link: ${REPLICA_DIRS[0]} => ${REPLICA_DIRS[$IDX]}"
@@ -102,7 +116,7 @@ do
         bin/dsreplication enable \
             --adminUID admin --adminPassword $PASSWORD --baseDN "$BASE_DN" --trustAll --no-prompt \
             --host1 $HOSTNAME     --port1 4500    --bindDN1 "$BIND_DN" --bindPassword1 $PASSWORD --noReplicationServer1 \
-            --host2 $HOSTNAME     --port2 450$IDX --bindDN2 "$BIND_DN" --bindPassword2 $PASSWORD --replicationPort2 890$IDX #--onlyReplicationServer2
+            --host2 $HOSTNAME     --port2 450$IDX --bindDN2 "$BIND_DN" --bindPassword2 $PASSWORD --replicationPort2 890$IDX $RS_ARGS
         echo "Done."
 
         echo
@@ -118,7 +132,7 @@ do
     cd ..
 done
 
-# let RS3 start
+# let last node finish startup
 sleep 10
 
 echo
@@ -129,6 +143,8 @@ IDX=0
 DIR=${REPLICA_DIRS[$IDX]}
 cd $DIR
 
+# Next command is only useful when there is more than one DS
+# TODO need validation there is more than one DS
 bin/dsreplication    initialize-all --adminUID admin \
                      -h $HOSTNAME -p 450$IDX -b "$BASE_DN" -w $PASSWORD --trustAll --no-prompt
 
