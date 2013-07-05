@@ -6,7 +6,7 @@ DATETIME=`date +%Y%m%d_%H%M%S`
 BASE_DIR="/ssddata"
 SETUP_DIR="$BASE_DIR/${PACKAGE_DIR}_$DATETIME"
 SERVER_PID_FILE="logs/server.pid"
-HOSTNAME=jeannoel-laptop.local
+HOSTNAME=jeannoel-laptop
 BIND_DN="cn=Directory Manager"
 PASSWORD=admin
 BASE_DN="dc=example,dc=com"
@@ -23,7 +23,7 @@ REPLICA_DIRS=( OpenDJ-2.7.0_DS1_group1 \
 for IDX in ${!REPLICA_DIRS[*]}
 do
     DIR="$BASE_DIR/${REPLICA_DIRS[$IDX]}"
-    if [ -e $DIR ]
+    if [ -e "$DIR" ]
     then
         cd $DIR
         echo
@@ -53,23 +53,27 @@ do
     echo "##################################################################################################"
     echo "# Setting up and starting server $DIR, debugging on port 800$IDX"
     echo "##################################################################################################"
-    if [[ "$DIR" == *DS* ]]
+    #SETUP_ARGS=""
+    if [[ "$DIR" == *DS* ]] # This also includes DSRSs
     then
-        if [ "$IDX" -eq "" ]
+        # import initial data
+        # bin/import-ldif \
+        #         --backendID userRoot \
+        #         --ldifFile ~/ldif/Example.ldif \
+        #         --clearBackend
+        #         # -D "cn=Directory Manager" -w admin
+        if [ -z "${DATA_INITIALIZED}" ]
         then
-            # import initial data
-            bin/import-ldif \
-                    --backendID userRoot \
-                    --ldifFile ~/ldif/Example.ldif \
-                    --clearBackend
-                    # -D "cn=Directory Manager" -w admin
-        else
-            ./setup --cli -d 1000 -D "$BIND_DN" -w $PASSWORD -n -p 150$IDX --adminConnectorPort 450$IDX -b "$BASE_DN" -O
+            SETUP_ARGS="$SETUP_ARGS -d 1000"
+            DATA_INITIALIZED=1
         fi
-    else
-        # so far we only consider RSs or DSRSs
-        ./setup --cli             -D "$BIND_DN" -w $PASSWORD -n -p 150$IDX --adminConnectorPort 450$IDX -b "$BASE_DN" -O
+
+        SETUP_ARGS="$SETUP_ARGS -b $BASE_DN"
+    elif [[ "$DIR" == *RS* ]]
+    then
+        : # empty for now
     fi
+    ./setup --cli -D "$BIND_DN" -w $PASSWORD -n -p 150$IDX --adminConnectorPort 450$IDX  $SETUP_ARGS  -O
 
     OPENDJ_JAVA_ARGS="-agentlib:jdwp=transport=dt_socket,address=localhost:800$IDX,server=y,suspend=n" bin/start-ds
 
