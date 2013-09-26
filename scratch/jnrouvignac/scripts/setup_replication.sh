@@ -26,6 +26,26 @@ REPLICA_DIRS=( OpenDJ-2.7.0_DS1_group1 \
 for IDX in ${!REPLICA_DIRS[*]}
 do
     DIR="$BASE_DIR/${REPLICA_DIRS[$IDX]}"
+    unset IS_DSRS
+    unset IS_DS_ONLY
+    unset IS_RS_ONLY
+    unset IS_DS
+    unset IS_RS
+
+    if [[ "$DIR" == *DSRS* ]]
+    then
+        IS_DSRS=1
+        IS_DS=1
+        IS_RS=1
+    elif [[ "$DIR" == *DS* ]]
+    then
+        IS_DS_ONLY=1
+        IS_DS=1
+    elif [[ "$DIR" == *RS* ]]
+    then
+        IS_RS_ONLY=1
+        IS_RS=1
+    fi
 
     ###################################
     # Stop/Kill previous server
@@ -64,7 +84,7 @@ do
     echo "# Setting up and starting server $DIR, debugging on port 800$IDX"
     echo "##################################################################################################"
     SETUP_ARGS=""
-    if [[ "$DIR" == *DS* ]] # This also includes DSRSs
+    if [ -n ${IS_DS} ]
     then
         # import initial data
         # bin/import-ldif \
@@ -79,7 +99,7 @@ do
         fi
 
         SETUP_ARGS="$SETUP_ARGS -b $BASE_DN"
-    elif [[ "$DIR" == *RS* ]]
+    elif [ -n ${IS_RS} ]
     then
         : # empty for now
     fi
@@ -98,13 +118,13 @@ do
     ###################################
     # Replication
     ###################################
-    if [[ "$DIR" == *RS* ]]
+    if [ -n ${IS_RS} -a ${IDX} -ne 0 ]
     then
         RS_ARGS=""
-        if [[ "$DIR" == *DSRS* ]]
+        if [ -n ${IS_DSRS} ]
         then
             : # empty for now
-        elif [[ "$DIR" == *RS* ]]
+        elif [ -n ${IS_RS_ONLY} ]
         then
             RS_ARGS="--onlyReplicationServer2"
         fi
