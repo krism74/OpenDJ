@@ -3,8 +3,7 @@
 BUILD_DIR=`pwd`
 PACKAGE_DIR="${BUILD_DIR}/build/package/OpenDJ-2.7.0"
 DATETIME=`date +%Y%m%d_%H%M%S`
-BASE_DIR="/ssddata"
-SETUP_DIR="$BASE_DIR/${PACKAGE_DIR}_$DATETIME"
+SETUP_DIR="${PACKAGE_DIR}_$DATETIME"
 HOSTNAME=localhost
 ADMIN_PORT=4444
 DEBUG_PORT=8000
@@ -45,24 +44,26 @@ then
 fi
 # TODO also clear $SETUP_DIR/.locks/*.lock ?
 
-if [ -n "$DEBUG_PORT" ]
-then
-    SETUP_ARGS="-O"
-fi
+SETUP_ARGS="-d 1000"
+#if [ -n "$DEBUG_PORT" ]
+#then
+#    SETUP_ARGS="$SETUP_ARGS -O"
+#fi
 
 # -O will prevent the server from starting
 $SETUP_DIR/setup --cli -w "$PASSWORD" -n -p 1389 --adminConnectorPort "$ADMIN_PORT" -b "$BASE_DN" $SETUP_ARGS --enableStartTLS --generateSelfSignedCertificate
+#--httpPort 8080
 
 # import initial data
-$SETUP_DIR/bin/import-ldif \
-        --backendID userRoot \
-        --ldifFile $BUILD_DIR/tests/staf-tests/functional-tests/shared/data/backends/Example.ldif \
-        --clearBackend
+#$SETUP_DIR/bin/import-ldif \
+#        --backendID userRoot \
+#        --ldifFile $BUILD_DIR/tests/staf-tests/functional-tests/shared/data/backends/Example.ldif \
+#        --clearBackend
 #        -D "cn=Directory Manager" -w admin
 
 if [ -n "$DEBUG_PORT" ]
 then
-    OPENDJ_JAVA_ARGS="-agentlib:jdwp=transport=dt_socket,address=localhost:$DEBUG_PORT,server=y,suspend=n" \
+    OPENDJ_JAVA_ARGS="-agentlib:jdwp=transport=dt_socket,address=$DEBUG_PORT,server=y,suspend=n" \
         $SETUP_DIR/bin/start-ds &
 
     # start jdb on debug port to catch first debug session

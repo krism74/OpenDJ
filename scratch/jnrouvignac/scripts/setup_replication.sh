@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+#set -x
+
 BUILD_DIR=`pwd`
 PACKAGE_DIR="${BUILD_DIR}/build/package/OpenDJ-2.7.0"
 DATETIME=`date +%Y%m%d_%H%M%S`
@@ -14,10 +16,11 @@ BASE_DN="dc=example,dc=com"
 # DS   means: deploy a DS only node
 #   RS means: deploy a RS only node
 # DSRS means: deploy a node which is both DS and RS
-REPLICA_DIRS=( OpenDJ-2.7.0_DS1_group1 \
-               OpenDJ-2.7.0_DSRS1_group1 \
-               OpenDJ-2.7.0_DSRS2_group2 \
-               OpenDJ-2.7.0_DSRS3_group3 \
+REPLICA_DIRS=( OpenDJ-2.7.0_0_DSRS \
+               OpenDJ-2.7.0_1_DSRS \
+               OpenDJ-2.7.0_2_DSRS \
+               OpenDJ-2.7.0_3_DSRS \
+               OpenDJ-2.7.0_4_DSRS \
              )
 
 
@@ -57,6 +60,7 @@ do
         echo "##################################################################################################"
         echo "# Stopping server $DIR"
         echo "##################################################################################################"
+        bin/stop-ds
         if [ -e $SERVER_PID_FILE ]
         then
             SERVER_PID=`cat $SERVER_PID_FILE`
@@ -65,7 +69,6 @@ do
             kill -KILL $SERVER_PID
             set -e
         fi
-        bin/stop-ds
         cd ..
 
         echo rm -rf $DIR
@@ -105,15 +108,30 @@ do
     fi
     ./setup --cli -D "$BIND_DN" -w $PASSWORD -n -p 150$IDX --adminConnectorPort 450$IDX  $SETUP_ARGS  -O
 
-    OPENDJ_JAVA_ARGS="-agentlib:jdwp=transport=dt_socket,address=localhost:800$IDX,server=y,suspend=n" bin/start-ds
-
+    OPENDJ_JAVA_ARGS="-agentlib:jdwp=transport=dt_socket,address=800$IDX,server=y,suspend=n" bin/start-ds
+    # OPENDJ_JAVA_ARGS="$OPENDJ_JAVA_ARGS -Djavax.net.debug=all" # For SSL debug
 
     # enable combined logs
     bin/dsconfig     -h $HOSTNAME -p 450$IDX -D "$BIND_DN" -w $PASSWORD --trustAll --no-prompt \
                      set-log-publisher-prop        --publisher-name "File-Based Access Logger" --set log-format:combined
-    # keep only 1 file for logs/access
+    # keep only 1 file for logs/access to avoid staturating the disk
     bin/dsconfig     -h $HOSTNAME -p 450$IDX -D "$BIND_DN" -w $PASSWORD --trustAll --no-prompt \
                      set-log-retention-policy-prop --policy-name "File Count Retention Policy" --set number-of-files:1
+
+    # enable debug logs + create debug target
+    bin/dsconfig -h $HOSTNAME -p 450$IDX -D "$BIND_DN" -w $PASSWORD --trustAll --no-prompt \
+                     set-log-publisher-prop        --publisher-name "File-Based Debug Logger" --set enabled:true --set default-debug-level:disabled
+    bin/dsconfig -h $HOSTNAME -p 450$IDX -D "$BIND_DN" -w $PASSWORD --trustAll --no-prompt \
+                     create-debug-target           --publisher-name "File-Based Debug Logger" --set debug-level:all --type generic --target-name org.opends.server.replication.service.ReplicationBroker
+    bin/dsconfig -h $HOSTNAME -p 450$IDX -D "$BIND_DN" -w $PASSWORD --trustAll --no-prompt \
+                     create-debug-target           --publisher-name "File-Based Debug Logger" --set debug-level:all --type generic --target-name org.opends.server.replication.service.ReplicationDomain
+    bin/dsconfig -h $HOSTNAME -p 450$IDX -D "$BIND_DN" -w $PASSWORD --trustAll --no-prompt \
+                     create-debug-target           --publisher-name "File-Based Debug Logger" --set debug-level:all --type generic --target-name org.opends.server.replication.protocol.Session
+    # need to restart the server for the debug log changes to take effect. @see OPENDJ-1289
+    bin/stop-ds
+    sleep 2
+    OPENDJ_JAVA_ARGS="-agentlib:jdwp=transport=dt_socket,address=800$IDX,server=y,suspend=n" bin/start-ds
+
 
     ###################################
     # Replication
@@ -145,6 +163,7 @@ do
         echo "##################################################################################################"
         bin/dsconfig -h $HOSTNAME -p 450$IDX -D "$BIND_DN" -w $PASSWORD --trustAll --no-prompt \
                      set-replication-server-prop   --provider-name "Multimaster Synchronization" --set group-id:$IDX
+
         echo "Done."
     fi
 
