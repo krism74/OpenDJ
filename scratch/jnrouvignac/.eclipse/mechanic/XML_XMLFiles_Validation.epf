@@ -1,0 +1,21 @@
+# @title XML > XML Files > Editor
+# @description Settings for Eclipse Preferences > XML > XML Files > Editor
+# @task_type LASTMOD
+#
+# Created by the Workspace Mechanic Preference Recorder
+#Thu Aug 22 14:17:00 CEST 2013
+file_export_version=3.0
+/instance/org.eclipse.wst.xml.core/attributeHasNoValue=2
+/instance/org.eclipse.wst.xml.core/endTagWithAttributes=2
+/instance/org.eclipse.wst.xml.core/indicateNoGrammar=1
+/instance/org.eclipse.wst.xml.core/indiciateNoDocumentElement=-1
+/instance/org.eclipse.wst.xml.core/markupValidation=true
+/instance/org.eclipse.wst.xml.core/missingClosingBracket=2
+/instance/org.eclipse.wst.xml.core/missingClosingQuote=2
+/instance/org.eclipse.wst.xml.core/missingEndTag=2
+/instance/org.eclipse.wst.xml.core/missingQuotes=2
+/instance/org.eclipse.wst.xml.core/missingStartTag=2
+/instance/org.eclipse.wst.xml.core/missingTagName=2
+/instance/org.eclipse.wst.xml.core/namespaceInPITarget=2
+/instance/org.eclipse.wst.xml.core/whitespaceAtStart=2
+/instance/org.eclipse.wst.xml.core/whitespaceBeforeTagName=2

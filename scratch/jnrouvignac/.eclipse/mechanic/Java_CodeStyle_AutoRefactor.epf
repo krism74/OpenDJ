@@ -1,0 +1,9 @@
+# @title Java - Code Style - AutoRefactor
+# @description Settings for Eclipse Preferences > Java > AutoRefactor
+# @task_type LASTMOD
+#
+# Created by the Workspace Mechanic Preference Recorder
+#Fri Aug 09 17:27:24 CEST 2013
+file_export_version=3.0
+/instance/org.autorefactor.plugin/add_angle_brackets_to_statement_bodies=false
+/instance/org.autorefactor.plugin/remove_this_for_non_static_method_access=false

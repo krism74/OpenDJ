@@ -5,5 +5,5 @@
 # Created by the Workspace Mechanic Preference Recorder
 #Wed Feb 20 12:13:44 CET 2013
 file_export_version=3.0
-/instance/org.eclipse.jdt.ui/editor_folding_default_headers=false
+/instance/org.eclipse.jdt.ui/editor_folding_default_headers=true
 

@@ -1,0 +1,10 @@
+# @title XML > XML Files > Editor
+# @description Settings for Eclipse Preferences > XML > XML Files > Editor
+# @task_type LASTMOD
+#
+# Created by the Workspace Mechanic Preference Recorder
+#Thu Aug 22 14:17:00 CEST 2013
+file_export_version=3.0
+/instance/org.eclipse.wst.xml.core/clearAllBlankLines=true
+/instance/org.eclipse.wst.xml.core/indentationChar=space
+/instance/org.eclipse.wst.xml.core/indentationSize=4

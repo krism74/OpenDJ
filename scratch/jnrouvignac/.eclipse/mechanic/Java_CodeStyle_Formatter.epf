@@ -373,6 +373,7 @@ file_export_version=3.0
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.insert_new_line_before_finally_in_try_statement=insert
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.insert_new_line_before_while_in_do_statement=insert
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.lineSplit=80
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.tabulation.char=space
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.tabulation.size=2
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.use_on_off_tags=true
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.wrap_outer_expressions_when_nested=false

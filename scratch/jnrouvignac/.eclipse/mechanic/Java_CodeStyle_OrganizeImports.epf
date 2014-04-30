@@ -5,5 +5,6 @@
 # Created by the Workspace Mechanic Preference Recorder
 #Tue Feb 19 14:20:01 CET 2013
 file_export_version=3.0
+/instance/org.eclipse.jdt.ui/org.eclipse.jdt.ui.ondemandthreshold=5
 /instance/org.eclipse.jdt.ui/org.eclipse.jdt.ui.staticondemandthreshold=1
-/instance/org.eclipse.jdt.ui/org.eclipse.jdt.ui.importorder=\#org;java;javax;org;com;
+/instance/org.eclipse.jdt.ui/org.eclipse.jdt.ui.importorder=java;javax;org;com;\#org;
