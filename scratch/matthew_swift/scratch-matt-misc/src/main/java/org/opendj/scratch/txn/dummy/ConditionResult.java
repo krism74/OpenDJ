@@ -24,36 +24,14 @@
  *
  *      Portions Copyright 2008 Sun Microsystems, Inc.
  */
-package org.opends.scratch.txn;
-
-
-
-import org.opends.scratch.txn.dummy.Entry;
-import org.opends.scratch.txn.dummy.Reference;
+package org.opendj.scratch.txn.dummy;
 
 
 
 /**
- * A call-back interface for processing backend search results.
+ * A condition result. No changes - already defined in core server.
  */
-public interface SearchResultHandler
+public final class ConditionResult
 {
-
-  /**
-   * Handles an entry returned from a backend search.
-   *
-   * @param entry
-   *          The entry.
-   */
-  void handleEntry(Entry entry);
-
-
-
-  /**
-   * Handles a reference returned from a backend search.
-   *
-   * @param reference
-   *          The reference.
-   */
-  void handleReference(Reference reference);
+  // No changes.
 }

@@ -24,56 +24,36 @@
  *
  *      Portions Copyright 2008 Sun Microsystems, Inc.
  */
-package org.opends.scratch.txn;
+package org.opendj.scratch.txn;
+
+
+
+import org.opendj.scratch.txn.dummy.Entry;
+import org.opendj.scratch.txn.dummy.Reference;
 
 
 
 /**
- * The type of lock to be taken on during transacted backend
- * operations.
+ * A call-back interface for processing backend search results.
  */
-public enum LockType
+public interface SearchResultHandler
 {
-  /**
-   * Read committed isolation. A read lock will be taken on the entry
-   * and released immediately afterwards.
-   */
-  READ_COMMITTED("READ_COMMITTED"),
 
   /**
-   * Repeatable read isolation with a shared lock. A shared lock will
-   * be taken on the entry and held until the transaction is either
-   * committed or aborted.
+   * Handles an entry returned from a backend search.
+   *
+   * @param entry
+   *          The entry.
    */
-  SHARED("SHARED"),
-
-  /**
-   * Repeatable read isolation with an exclusive lock. A exclusive
-   * lock will be taken on the entry and held until the transaction is
-   * either committed or aborted.
-   */
-  EXCLUSIVE("EXCLUSIVE");
-
-  // String representation.
-  private final String name;
-
-
-
-  // Constructor.
-  private LockType(String name)
-  {
-    this.name = name;
-  }
+  void handleEntry(Entry entry);
 
 
 
   /**
-   * {@inheritDoc}
+   * Handles a reference returned from a backend search.
+   *
+   * @param reference
+   *          The reference.
    */
-  @Override
-  public String toString()
-  {
-    return name;
-  }
-
+  void handleReference(Reference reference);
 }

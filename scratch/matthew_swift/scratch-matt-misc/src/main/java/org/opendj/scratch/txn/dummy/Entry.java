@@ -24,14 +24,14 @@
  *
  *      Portions Copyright 2008 Sun Microsystems, Inc.
  */
-package org.opends.scratch.txn.dummy;
+package org.opendj.scratch.txn.dummy;
 
 
 
 /**
- * A reference. No changes - already defined in core server.
+ * An Entry. No changes - already defined in core server.
  */
-public final class Reference
+public final class Entry
 {
   // No changes.
 }

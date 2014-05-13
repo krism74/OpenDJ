@@ -24,18 +24,56 @@
  *
  *      Portions Copyright 2008 Sun Microsystems, Inc.
  */
-package org.opends.scratch.txn.dummy;
+package org.opendj.scratch.txn;
 
 
 
 /**
- * A directory exception. No changes - already defined in core server.
+ * The type of lock to be taken on during transacted backend
+ * operations.
  */
-public final class DirectoryException extends Exception
+public enum LockType
 {
+  /**
+   * Read committed isolation. A read lock will be taken on the entry
+   * and released immediately afterwards.
+   */
+  READ_COMMITTED("READ_COMMITTED"),
 
-  // Dummy UID.
-  private static final long serialVersionUID = 1L;
+  /**
+   * Repeatable read isolation with a shared lock. A shared lock will
+   * be taken on the entry and held until the transaction is either
+   * committed or aborted.
+   */
+  SHARED("SHARED"),
 
-  // No changes.
+  /**
+   * Repeatable read isolation with an exclusive lock. A exclusive
+   * lock will be taken on the entry and held until the transaction is
+   * either committed or aborted.
+   */
+  EXCLUSIVE("EXCLUSIVE");
+
+  // String representation.
+  private final String name;
+
+
+
+  // Constructor.
+  private LockType(String name)
+  {
+    this.name = name;
+  }
+
+
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String toString()
+  {
+    return name;
+  }
+
 }

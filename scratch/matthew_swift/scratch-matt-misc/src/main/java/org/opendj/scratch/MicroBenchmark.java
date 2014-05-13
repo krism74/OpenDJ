@@ -1,4 +1,4 @@
-package org.opends.scratch;
+package org.opendj.scratch;
 
 
 

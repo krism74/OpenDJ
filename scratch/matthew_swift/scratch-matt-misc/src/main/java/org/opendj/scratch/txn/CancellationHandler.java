@@ -24,14 +24,43 @@
  *
  *      Portions Copyright 2008 Sun Microsystems, Inc.
  */
-package org.opends.scratch.txn.dummy;
+package org.opendj.scratch.txn;
+
+
+
+import org.opendj.scratch.txn.dummy.CanceledOperationException;
 
 
 
 /**
- * A condition result. No changes - already defined in core server.
+ * A call-back interface which backend implementations should use to
+ * determine if the active operation should be aborted.
  */
-public final class ConditionResult
+public interface CancellationHandler
 {
-  // No changes.
+
+  /**
+   * A default cancellation handler which is never canceled.
+   */
+  public static final CancellationHandler DEFAULT = new CancellationHandler()
+  {
+
+    @Override
+    public void checkIfCanceled() throws CanceledOperationException
+    {
+      // Do nothing.
+    }
+
+  };
+
+
+
+  /**
+   * Checks to see if the active operation has been canceled in which
+   * case {@link CanceledOperationException} will be thrown.
+   *
+   * @throws CanceledOperationException
+   *           If the active operation should be canceled.
+   */
+  void checkIfCanceled() throws CanceledOperationException;
 }

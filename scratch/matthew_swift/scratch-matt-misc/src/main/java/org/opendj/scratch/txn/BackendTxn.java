@@ -24,19 +24,19 @@
  *
  *      Portions Copyright 2008 Sun Microsystems, Inc.
  */
-package org.opends.scratch.txn;
+package org.opendj.scratch.txn;
 
 
 
 import java.util.List;
 
-import org.opends.scratch.txn.dummy.ConditionResult;
-import org.opends.scratch.txn.dummy.DN;
-import org.opends.scratch.txn.dummy.DirectoryException;
-import org.opends.scratch.txn.dummy.Entry;
-import org.opends.scratch.txn.dummy.Filter;
-import org.opends.scratch.txn.dummy.Modification;
-import org.opends.scratch.txn.dummy.Scope;
+import org.opendj.scratch.txn.dummy.ConditionResult;
+import org.opendj.scratch.txn.dummy.DN;
+import org.opendj.scratch.txn.dummy.DirectoryException;
+import org.opendj.scratch.txn.dummy.Entry;
+import org.opendj.scratch.txn.dummy.Filter;
+import org.opendj.scratch.txn.dummy.Modification;
+import org.opendj.scratch.txn.dummy.Scope;
 
 
 

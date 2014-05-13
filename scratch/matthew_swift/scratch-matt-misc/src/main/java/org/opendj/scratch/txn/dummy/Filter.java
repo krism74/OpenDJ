@@ -24,7 +24,7 @@
  *
  *      Portions Copyright 2008 Sun Microsystems, Inc.
  */
-package org.opends.scratch.txn.dummy;
+package org.opendj.scratch.txn.dummy;
 
 
 

@@ -24,14 +24,14 @@
  *
  *      Portions Copyright 2008 Sun Microsystems, Inc.
  */
-package org.opends.scratch.txn.dummy;
+package org.opendj.scratch.txn.dummy;
 
 
 
 /**
- * An search scope. No changes - already defined in core server.
+ * A modification. No changes - already defined in core server.
  */
-public final class Scope
+public final class Modification
 {
   // No changes.
 }
