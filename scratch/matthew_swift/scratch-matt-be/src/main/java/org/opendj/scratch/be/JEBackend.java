@@ -1,10 +1,8 @@
 package org.opendj.scratch.be;
 
-import static com.sleepycat.je.EnvironmentConfig.CHECKPOINTER_WAKEUP_INTERVAL;
-import static com.sleepycat.je.EnvironmentConfig.CLEANER_LOOK_AHEAD_CACHE_SIZE;
-import static com.sleepycat.je.EnvironmentConfig.LOG_FAULT_READ_SIZE;
-import static com.sleepycat.je.EnvironmentConfig.LOG_ITERATOR_READ_SIZE;
 import static org.forgerock.opendj.ldap.ErrorResultException.newErrorResult;
+import static org.opendj.scratch.be.Util.createDbDir;
+import static org.opendj.scratch.be.Util.internalError;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,12 +11,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.forgerock.opendj.io.ASN1;
 import org.forgerock.opendj.io.ASN1Reader;
-import org.forgerock.opendj.io.ASN1Writer;
 import org.forgerock.opendj.io.LDAP;
 import org.forgerock.opendj.ldap.Attribute;
 import org.forgerock.opendj.ldap.AttributeDescription;
 import org.forgerock.opendj.ldap.ByteString;
-import org.forgerock.opendj.ldap.ByteStringBuilder;
 import org.forgerock.opendj.ldap.DN;
 import org.forgerock.opendj.ldap.DecodeException;
 import org.forgerock.opendj.ldap.DecodeOptions;
@@ -27,8 +23,6 @@ import org.forgerock.opendj.ldap.Entry;
 import org.forgerock.opendj.ldap.ErrorResultException;
 import org.forgerock.opendj.ldap.ResultCode;
 import org.forgerock.opendj.ldap.requests.ModifyRequest;
-import org.forgerock.opendj.ldap.schema.CoreSchema;
-import org.forgerock.opendj.ldap.schema.MatchingRule;
 import org.forgerock.opendj.ldif.EntryReader;
 
 import com.sleepycat.je.Database;
@@ -43,31 +37,21 @@ import com.sleepycat.je.Transaction;
 import com.sleepycat.je.TransactionConfig;
 
 public final class JEBackend implements Backend {
-    private static final class WriteBuffer {
-        private final ByteStringBuilder builder = new ByteStringBuilder();
-        private final ASN1Writer asn1Writer = ASN1.getWriter(builder, 2048);
-    }
+    private static final File DB_DIR = new File("jeBackend");
 
     private final DecodeOptions decodeOptions = new DecodeOptions();
-    private final AttributeDescription employeeNumberAD = AttributeDescription
-            .valueOf("employeeNumber");
-    private final ThreadLocal<WriteBuffer> threadLocalBuffer = new ThreadLocal<WriteBuffer>() {
-        @Override
-        protected WriteBuffer initialValue() {
-            return new WriteBuffer();
-        };
-    };
+    private final AttributeDescription descriptionAD = AttributeDescription.valueOf("description");
 
-    private Database dn2id = null;
-    private Database employeeNumber2id = null;
     private Environment env = null;
     private Database id2entry = null;
+    private Database dn2id = null;
+    private Database description2id = null;
 
     @Override
     public void close() {
-        if (employeeNumber2id != null) {
-            employeeNumber2id.close();
-            employeeNumber2id = null;
+        if (description2id != null) {
+            description2id.close();
+            description2id = null;
         }
         if (dn2id != null) {
             dn2id.close();
@@ -84,20 +68,19 @@ public final class JEBackend implements Backend {
     }
 
     @Override
-    public void importEntries(final EntryReader reader, final Map<String, String> options)
+    public void importEntries(final EntryReader entries, final Map<String, String> options)
             throws Exception {
+        createDbDir(DB_DIR);
         initialize(options, true);
         try {
-            long nextEntryId = 0;
-            while (reader.hasNext()) {
-                final Entry entry = reader.readEntry();
-                final DatabaseEntry dbId = encodeEntryId(nextEntryId++);
+            for (int nextEntryId = 0; entries.hasNext(); nextEntryId++) {
+                final Entry entry = entries.readEntry();
+                final DatabaseEntry dbId = encodeEntryId(nextEntryId);
                 dn2id.put(null, encodeDn(entry.getName()), dbId);
-                final ByteString encodedEmployeeNumber = encodeEmployeeNumber(entry);
-                if (encodedEmployeeNumber != null) {
-                    final DatabaseEntry key =
-                            new DatabaseEntry(encodedEmployeeNumber.toByteArray());
-                    employeeNumber2id.put(null, key, dbId);
+                final ByteString encodedDescription = encodeDescription(entry);
+                if (encodedDescription != null) {
+                    final DatabaseEntry key = new DatabaseEntry(encodedDescription.toByteArray());
+                    description2id.put(null, key, dbId);
                 }
                 id2entry.put(null, dbId, encodeEntry(entry));
             }
@@ -119,20 +102,20 @@ public final class JEBackend implements Backend {
             // Read entry and apply updates.
             final DatabaseEntry dbId = readDn2Id(txn, request.getName());
             final Entry entry = readId2Entry(txn, dbId, true);
-            final ByteString oldEmployeeNumberKey = encodeEmployeeNumber(entry);
+            final ByteString oldDescriptionKey = encodeDescription(entry);
             Entries.modifyEntry(entry, request);
-            final ByteString newEmployeeNumberKey = encodeEmployeeNumber(entry);
-            // Update employeeNumber index.
-            final int comparison = oldEmployeeNumberKey.compareTo(newEmployeeNumberKey);
+            final ByteString newDescriptionKey = encodeDescription(entry);
+            // Update description index.
+            final int comparison = oldDescriptionKey.compareTo(newDescriptionKey);
             if (comparison != 0) {
-                final DatabaseEntry oldKey = new DatabaseEntry(oldEmployeeNumberKey.toByteArray());
-                final DatabaseEntry newKey = new DatabaseEntry(newEmployeeNumberKey.toByteArray());
+                final DatabaseEntry oldKey = new DatabaseEntry(oldDescriptionKey.toByteArray());
+                final DatabaseEntry newKey = new DatabaseEntry(newDescriptionKey.toByteArray());
                 if (comparison < 0) {
-                    employeeNumber2id.delete(txn, oldKey);
-                    employeeNumber2id.put(txn, newKey, dbId);
+                    description2id.delete(txn, oldKey);
+                    description2id.put(txn, newKey, dbId);
                 } else {
-                    employeeNumber2id.put(txn, newKey, dbId);
-                    employeeNumber2id.delete(txn, oldKey);
+                    description2id.put(txn, newKey, dbId);
+                    description2id.delete(txn, oldKey);
                 }
             }
             // Update id2entry index.
@@ -154,26 +137,23 @@ public final class JEBackend implements Backend {
         }
     }
 
+    private ByteString encodeDescription(final Entry entry) throws DecodeException {
+        final Attribute descriptionAttribute = entry.getAttribute(descriptionAD);
+        if (descriptionAttribute == null) {
+            return null;
+        }
+        final ByteString descriptionValue = descriptionAttribute.firstValue();
+        return descriptionAD.getAttributeType().getEqualityMatchingRule().normalizeAttributeValue(
+                descriptionValue);
+    }
+
     private DatabaseEntry encodeDn(final DN dn) throws ErrorResultException {
         final ByteString dnKey = ByteString.valueOf(dn.toNormalizedString());
         return new DatabaseEntry(dnKey.toByteArray());
     }
 
-    private ByteString encodeEmployeeNumber(final Entry entry) throws DecodeException {
-        final Attribute employeeNumberAttribute = entry.getAttribute(employeeNumberAD);
-        if (employeeNumberAttribute == null) {
-            return null;
-        }
-        final ByteString employeeNumberValue = employeeNumberAttribute.firstValue();
-        return employeeNumberAD.getAttributeType().getEqualityMatchingRule()
-                .normalizeAttributeValue(employeeNumberValue);
-    }
-
     private DatabaseEntry encodeEntry(final Entry entry) throws IOException {
-        final WriteBuffer buffer = threadLocalBuffer.get();
-        buffer.builder.clearAndTruncate(2048, 2048);
-        LDAP.writeEntry(buffer.asn1Writer, entry);
-        return new DatabaseEntry(buffer.builder.toByteArray());
+        return new DatabaseEntry(Util.encodeEntry(entry));
     }
 
     private DatabaseEntry encodeEntryId(final long entryId) {
@@ -182,37 +162,20 @@ public final class JEBackend implements Backend {
 
     private void initialize(final Map<String, String> options, final boolean isImport)
             throws Exception {
-        final File dbDir = new File("db");
-        dbDir.mkdirs();
-
         final EnvironmentConfig envConfig = new EnvironmentConfig();
         envConfig.setTransactional(!isImport);
         envConfig.setAllowCreate(true);
         envConfig.setLockTimeout(0, TimeUnit.MICROSECONDS);
         envConfig.setDurability(Durability.COMMIT_WRITE_NO_SYNC);
         envConfig.setCachePercent(60);
-        envConfig.setConfigParam(CHECKPOINTER_WAKEUP_INTERVAL, "30 s");
-        if (Runtime.getRuntime().maxMemory() > 256 * 1024 * 1024) {
-            envConfig
-                    .setConfigParam(CLEANER_LOOK_AHEAD_CACHE_SIZE, String.valueOf(2 * 1024 * 1024));
-            envConfig.setConfigParam(LOG_ITERATOR_READ_SIZE, String.valueOf(2 * 1024 * 1024));
-            envConfig.setConfigParam(LOG_FAULT_READ_SIZE, String.valueOf(4 * 1024));
-        }
-        env = new Environment(new File("db"), envConfig);
+        env = new Environment(DB_DIR, envConfig);
 
         final DatabaseConfig dbConfig =
                 new DatabaseConfig().setAllowCreate(true).setKeyPrefixing(true).setTransactional(
                         !isImport).setDeferredWrite(isImport);
         id2entry = env.openDatabase(null, "id2entry", dbConfig);
         dn2id = env.openDatabase(null, "dn2id", dbConfig);
-        employeeNumber2id = env.openDatabase(null, "employeeNumber2id", dbConfig);
-    }
-
-    private ErrorResultException internalError(final Exception e) {
-        if (e instanceof ErrorResultException) {
-            return (ErrorResultException) e;
-        }
-        return newErrorResult(ResultCode.OTHER, e);
+        description2id = env.openDatabase(null, "description2id", dbConfig);
     }
 
     private DatabaseEntry readDn2Id(final Transaction txn, final DN name)

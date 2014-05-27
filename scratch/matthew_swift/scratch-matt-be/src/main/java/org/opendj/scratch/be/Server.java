@@ -88,7 +88,7 @@ public final class Server {
             try {
                 backend.modifyEntry(request);
                 success(resultHandler);
-            } catch (ErrorResultException e) {
+            } catch (final ErrorResultException e) {
                 resultHandler.handleErrorResult(e);
             }
         }
@@ -110,10 +110,10 @@ public final class Server {
                 return;
             }
             try {
-                Entry entry = backend.readEntry(request.getName());
+                final Entry entry = backend.readEntry(request.getName());
                 resultHandler.handleEntry(Responses.newSearchResultEntry(entry));
                 success(resultHandler);
-            } catch (ErrorResultException e) {
+            } catch (final ErrorResultException e) {
                 resultHandler.handleErrorResult(e);
             }
         }
@@ -130,7 +130,7 @@ public final class Server {
     }
 
     private static enum BackendType {
-        JE(JEBackend.class);
+        JE(JEBackend.class), ORIENT(OrientBackend.class);
 
         private final Class<? extends Backend> backendClass;
 
@@ -187,12 +187,8 @@ public final class Server {
                 final AtomicLong entryCount = new AtomicLong();
 
                 @Override
-                public Entry readEntry() throws IOException {
-                    final long count = entryCount.getAndIncrement();
-                    if ((count % 1000) == 0 && count > 0) {
-                        System.out.println("Imported " + count + " entries");
-                    }
-                    return ldif.readEntry();
+                public void close() throws IOException {
+                    ldif.close();
                 }
 
                 @Override
@@ -201,8 +197,12 @@ public final class Server {
                 }
 
                 @Override
-                public void close() throws IOException {
-                    ldif.close();
+                public Entry readEntry() throws IOException {
+                    final long count = entryCount.getAndIncrement();
+                    if (count % 1000 == 0 && count > 0) {
+                        System.out.println("Imported " + count + " entries");
+                    }
+                    return ldif.readEntry();
                 }
             };
             try {
