@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-#set -x
+set -x
 
 BUILD_DIR=`pwd`
 PACKAGE_DIR="${BUILD_DIR}/build/package/OpenDJ-2.7.0"
@@ -18,12 +18,44 @@ BASE_DN="dc=example,dc=com"
 # DSRS means: deploy a node which is both DS and RS
 REPLICA_DIRS=( OpenDJ-2.7.0_0_DSRS \
                OpenDJ-2.7.0_1_DSRS \
-               OpenDJ-2.7.0_2_DSRS \
-               OpenDJ-2.7.0_3_DSRS \
-               OpenDJ-2.7.0_4_DSRS \
              )
 
 
+
+DIR="$BASE_DIR/${REPLICA_DIRS[0]}"
+unset IS_DSRS
+unset IS_DS_ONLY
+unset IS_RS_ONLY
+unset IS_DS
+unset IS_RS
+
+if [[ "$DIR" == *DSRS* ]]
+then
+    IS_DSRS=1
+    IS_DS=1
+    IS_RS=1
+elif [[ "$DIR" == *DS* ]]
+then
+    IS_DS_ONLY=1
+    IS_DS=1
+elif [[ "$DIR" == *RS* ]]
+then
+    IS_RS_ONLY=1
+    IS_RS=1
+fi
+
+DSREPLICATION_ENABLE_ARGS_0=""
+if [ -n "${IS_DS_ONLY}" ]
+then
+    DSREPLICATION_ENABLE_ARGS_0="${DSREPLICATION_ENABLE_ARGS_0} --noReplicationServer1"
+elif [ -n "${IS_RS}" ]
+then
+    DSREPLICATION_ENABLE_ARGS_0="${DSREPLICATION_ENABLE_ARGS_0} --replicationPort1 8900"
+    if [ -n "${IS_RS_ONLY}" ]
+    then
+        DSREPLICATION_ENABLE_ARGS_0="${DSREPLICATION_ENABLE_ARGS_0} --onlyReplicationServer1"
+    fi
+fi
 
 
 for IDX in ${!REPLICA_DIRS[*]}
@@ -136,15 +168,19 @@ do
     ###################################
     # Replication
     ###################################
-    if [ -n ${IS_RS} -a ${IDX} -ne 0 ]
+    if [ ${IDX} -ne 0 ]
     then
-        RS_ARGS=""
-        if [ -n ${IS_DSRS} ]
+        DSREPLICATION_ENABLE_ARGS=""
+        if [ -n "${IS_DS_ONLY}" ]
         then
-            : # empty for now
-        elif [ -n ${IS_RS_ONLY} ]
+            DSREPLICATION_ENABLE_ARGS="${DSREPLICATION_ENABLE_ARGS} --noReplicationServer2"
+        elif [ -n "${IS_RS}" ]
         then
-            RS_ARGS="--onlyReplicationServer2"
+            DSREPLICATION_ENABLE_ARGS="${DSREPLICATION_ENABLE_ARGS} --replicationPort2 890$IDX"
+            if [ -n "${IS_RS_ONLY}" ]
+            then
+                DSREPLICATION_ENABLE_ARGS="${DSREPLICATION_ENABLE_ARGS} --onlyReplicationServer2"
+            fi
         fi
 
         echo
@@ -153,8 +189,8 @@ do
         echo "##################################################################################################"
         bin/dsreplication enable \
             --adminUID admin --adminPassword $PASSWORD --baseDN "$BASE_DN" --trustAll --no-prompt \
-            --host1 $HOSTNAME     --port1 4500    --bindDN1 "$BIND_DN" --bindPassword1 $PASSWORD --noReplicationServer1 \
-            --host2 $HOSTNAME     --port2 450$IDX --bindDN2 "$BIND_DN" --bindPassword2 $PASSWORD --replicationPort2 890$IDX $RS_ARGS
+            --host1 $HOSTNAME     --port1 4500    --bindDN1 "$BIND_DN" --bindPassword1 $PASSWORD $DSREPLICATION_ENABLE_ARGS_0 \
+            --host2 $HOSTNAME     --port2 450$IDX --bindDN2 "$BIND_DN" --bindPassword2 $PASSWORD $DSREPLICATION_ENABLE_ARGS
         echo "Done."
 
         echo
