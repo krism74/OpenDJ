@@ -13,6 +13,7 @@ import org.forgerock.opendj.ldap.Attribute;
 import org.forgerock.opendj.ldap.AttributeDescription;
 import org.forgerock.opendj.ldap.ByteString;
 import org.forgerock.opendj.ldap.ByteStringBuilder;
+import org.forgerock.opendj.ldap.DN;
 import org.forgerock.opendj.ldap.DecodeException;
 import org.forgerock.opendj.ldap.DecodeOptions;
 import org.forgerock.opendj.ldap.Entry;
@@ -66,9 +67,16 @@ final class Util {
         if (descriptionAttribute == null) {
             return null;
         }
-        final ByteString descriptionValue = descriptionAttribute.firstValue();
+        return encodeDescription(descriptionAttribute.firstValue());
+    }
+
+    static ByteString encodeDescription(final ByteString description) throws DecodeException {
         return AD_DESCRIPTION.getAttributeType().getEqualityMatchingRule().normalizeAttributeValue(
-                descriptionValue);
+                description);
+    }
+
+    static byte[] encodeDn(final DN dn) {
+        return ByteString.valueOf(dn.toNormalizedString()).toByteArray();
     }
 
     static byte[] encodeEntry(final Entry entry) throws IOException {

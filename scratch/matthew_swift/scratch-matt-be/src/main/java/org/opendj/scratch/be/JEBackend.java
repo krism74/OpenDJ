@@ -11,12 +11,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.forgerock.opendj.io.ASN1;
-import org.forgerock.opendj.io.ASN1Reader;
-import org.forgerock.opendj.io.LDAP;
 import org.forgerock.opendj.ldap.ByteString;
 import org.forgerock.opendj.ldap.DN;
-import org.forgerock.opendj.ldap.DecodeOptions;
 import org.forgerock.opendj.ldap.Entries;
 import org.forgerock.opendj.ldap.Entry;
 import org.forgerock.opendj.ldap.ErrorResultException;
@@ -125,7 +121,7 @@ public final class JEBackend implements Backend {
     }
 
     @Override
-    public Entry readEntry(final DN name) throws ErrorResultException {
+    public Entry readEntryByDN(final DN name) throws ErrorResultException {
         try {
             return readId2Entry(null, readDn2Id(null, name), false);
         } catch (final Exception e) {
@@ -133,9 +129,23 @@ public final class JEBackend implements Backend {
         }
     }
 
+    @Override
+    public Entry readEntryByDescription(ByteString description) throws ErrorResultException {
+        try {
+            final DatabaseEntry dbKey =
+                    new DatabaseEntry(encodeDescription(description).toByteArray());
+            final DatabaseEntry dbId = new DatabaseEntry();
+            if (description2id.get(null, dbKey, dbId, LockMode.READ_COMMITTED) != OperationStatus.SUCCESS) {
+                throw newErrorResult(ResultCode.NO_SUCH_OBJECT);
+            }
+            return readId2Entry(null, dbId, false);
+        } catch (final Exception e) {
+            throw internalError(e);
+        }
+    }
+
     private DatabaseEntry encodeDn(final DN dn) throws ErrorResultException {
-        final ByteString dnKey = ByteString.valueOf(dn.toNormalizedString());
-        return new DatabaseEntry(dnKey.toByteArray());
+        return new DatabaseEntry(Util.encodeDn(dn));
     }
 
     private DatabaseEntry encodeEntry(final Entry entry) throws IOException {

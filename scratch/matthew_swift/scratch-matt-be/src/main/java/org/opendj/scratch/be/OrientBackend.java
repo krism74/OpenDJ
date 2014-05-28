@@ -1,9 +1,6 @@
 package org.opendj.scratch.be;
 
-import static org.opendj.scratch.be.Util.createDbDir;
-import static org.opendj.scratch.be.Util.decodeEntry;
-import static org.opendj.scratch.be.Util.encodeDescription;
-import static org.opendj.scratch.be.Util.internalError;
+import static org.opendj.scratch.be.Util.*;
 
 import java.io.File;
 import java.util.Map;
@@ -138,16 +135,29 @@ public final class OrientBackend implements Backend {
     }
 
     @Override
-    public Entry readEntry(final DN name) throws ErrorResultException {
+    public Entry readEntryByDN(final DN name) throws ErrorResultException {
         final DbHolder dbHolder = threadLocalDb.get();
-        final byte[] dnKey = encodeDn(name);
-        final ORecordId id = (ORecordId) dbHolder.dn2entry.get(dnKey);
-        final ORecordBytes entryRecord = dbHolder.db.getRecord(id);
-        return decodeEntry(entryRecord.toStream());
+        try {
+            final byte[] dnKey = encodeDn(name);
+            final ORecordId id = (ORecordId) dbHolder.dn2entry.get(dnKey);
+            final ORecordBytes entryRecord = dbHolder.db.getRecord(id);
+            return decodeEntry(entryRecord.toStream());
+        } catch (final Exception e) {
+            throw internalError(e);
+        }
     }
 
-    private byte[] encodeDn(final DN dn) throws ErrorResultException {
-        return ByteString.valueOf(dn.toNormalizedString()).toByteArray();
+    @Override
+    public Entry readEntryByDescription(ByteString description) throws ErrorResultException {
+        final DbHolder dbHolder = threadLocalDb.get();
+        try {
+            final byte[] descriptionKey = encodeDescription(description).toByteArray();
+            final ORecordId id = (ORecordId) dbHolder.description2entry.get(descriptionKey);
+            final ORecordBytes entryRecord = dbHolder.db.getRecord(id);
+            return decodeEntry(entryRecord.toStream());
+        } catch (final Exception e) {
+            throw internalError(e);
+        }
     }
 
 }

@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.forgerock.opendj.ldap.AbstractFilterVisitor;
+import org.forgerock.opendj.ldap.ByteString;
 import org.forgerock.opendj.ldap.Connections;
 import org.forgerock.opendj.ldap.Entry;
 import org.forgerock.opendj.ldap.ErrorResultException;
@@ -105,16 +107,45 @@ public final class Server {
         public void handleSearch(final RequestContext requestContext, final SearchRequest request,
                 final IntermediateResponseHandler intermediateResponseHandler,
                 final SearchResultHandler resultHandler) {
-            if (request.getScope() != SearchScope.BASE_OBJECT) {
-                unsupported(resultHandler);
-                return;
-            }
-            try {
-                final Entry entry = backend.readEntry(request.getName());
-                resultHandler.handleEntry(Responses.newSearchResultEntry(entry));
-                success(resultHandler);
-            } catch (final ErrorResultException e) {
-                resultHandler.handleErrorResult(e);
+            if (request.getScope() == SearchScope.BASE_OBJECT) {
+                try {
+                    final Entry entry = backend.readEntryByDN(request.getName());
+                    resultHandler.handleEntry(Responses.newSearchResultEntry(entry));
+                    success(resultHandler);
+                } catch (final ErrorResultException e) {
+                    resultHandler.handleErrorResult(e);
+                }
+            } else {
+                try {
+                    final ByteString description =
+                            request.getFilter().accept(
+                                    new AbstractFilterVisitor<ByteString, Void>() {
+                                        @Override
+                                        public ByteString visitEqualityMatchFilter(Void p,
+                                                String attributeDescription,
+                                                ByteString assertionValue) {
+                                            if (attributeDescription
+                                                    .equalsIgnoreCase("description")) {
+                                                return assertionValue;
+                                            }
+                                            return visitDefaultFilter(p);
+                                        }
+
+                                        @Override
+                                        public ByteString visitDefaultFilter(Void p) {
+                                            throw new UnsupportedOperationException();
+                                        }
+                                    }, null);
+                    try {
+                        final Entry entry = backend.readEntryByDescription(description);
+                        resultHandler.handleEntry(Responses.newSearchResultEntry(entry));
+                        success(resultHandler);
+                    } catch (final ErrorResultException e) {
+                        resultHandler.handleErrorResult(e);
+                    }
+                } catch (UnsupportedOperationException e) {
+                    unsupported(resultHandler);
+                }
             }
         }
 

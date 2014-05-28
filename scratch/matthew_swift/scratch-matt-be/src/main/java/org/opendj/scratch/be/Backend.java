@@ -2,6 +2,7 @@ package org.opendj.scratch.be;
 
 import java.util.Map;
 
+import org.forgerock.opendj.ldap.ByteString;
 import org.forgerock.opendj.ldap.DN;
 import org.forgerock.opendj.ldap.Entry;
 import org.forgerock.opendj.ldap.ErrorResultException;
@@ -18,6 +19,8 @@ public interface Backend {
 
     void modifyEntry(ModifyRequest request) throws ErrorResultException;
 
-    Entry readEntry(DN name) throws ErrorResultException;
+    Entry readEntryByDN(DN name) throws ErrorResultException;
+
+    Entry readEntryByDescription(ByteString description) throws ErrorResultException;
 
 }
