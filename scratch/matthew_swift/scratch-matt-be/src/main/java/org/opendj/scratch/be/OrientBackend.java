@@ -121,7 +121,7 @@ public final class OrientBackend implements Backend {
                 if (comparison != 0) {
                     // FIXME: is this under txn? Does the order matter?
                     dbHolder.description2entry.remove(oldDescriptionKey.toByteArray());
-                    dbHolder.description2entry.put(oldDescriptionKey.toByteArray(), entryRecord);
+                    dbHolder.description2entry.put(newDescriptionKey.toByteArray(), entryRecord);
                 }
                 dbHolder.db.commit();
                 return;
