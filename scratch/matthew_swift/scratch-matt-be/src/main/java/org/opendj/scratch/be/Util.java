@@ -6,14 +6,24 @@ import java.io.File;
 import java.io.IOException;
 
 import org.forgerock.opendj.io.ASN1;
+import org.forgerock.opendj.io.ASN1Reader;
 import org.forgerock.opendj.io.ASN1Writer;
 import org.forgerock.opendj.io.LDAP;
+import org.forgerock.opendj.ldap.Attribute;
+import org.forgerock.opendj.ldap.AttributeDescription;
+import org.forgerock.opendj.ldap.ByteString;
 import org.forgerock.opendj.ldap.ByteStringBuilder;
+import org.forgerock.opendj.ldap.DecodeException;
+import org.forgerock.opendj.ldap.DecodeOptions;
 import org.forgerock.opendj.ldap.Entry;
 import org.forgerock.opendj.ldap.ErrorResultException;
 import org.forgerock.opendj.ldap.ResultCode;
 
 final class Util {
+    private static final DecodeOptions DECODE_OPTIONS = new DecodeOptions();
+    private static final AttributeDescription AD_DESCRIPTION = AttributeDescription
+            .valueOf("description");
+
     private static final class WriteBuffer {
         private final ByteStringBuilder builder;
         private final ASN1Writer asn1Writer;
@@ -40,6 +50,25 @@ final class Util {
         } else {
             dbDir.mkdirs();
         }
+    }
+
+    static Entry decodeEntry(final byte[] data) throws ErrorResultException {
+        final ASN1Reader asn1Reader = ASN1.getReader(data);
+        try {
+            return LDAP.readEntry(asn1Reader, DECODE_OPTIONS);
+        } catch (final IOException e) {
+            throw internalError(e);
+        }
+    }
+
+    static ByteString encodeDescription(final Entry entry) throws DecodeException {
+        final Attribute descriptionAttribute = entry.getAttribute(AD_DESCRIPTION);
+        if (descriptionAttribute == null) {
+            return null;
+        }
+        final ByteString descriptionValue = descriptionAttribute.firstValue();
+        return AD_DESCRIPTION.getAttributeType().getEqualityMatchingRule().normalizeAttributeValue(
+                descriptionValue);
     }
 
     static byte[] encodeEntry(final Entry entry) throws IOException {

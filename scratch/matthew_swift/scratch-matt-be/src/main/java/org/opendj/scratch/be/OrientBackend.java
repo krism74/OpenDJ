@@ -1,23 +1,18 @@
 package org.opendj.scratch.be;
 
 import static org.opendj.scratch.be.Util.createDbDir;
+import static org.opendj.scratch.be.Util.decodeEntry;
+import static org.opendj.scratch.be.Util.encodeDescription;
 import static org.opendj.scratch.be.Util.internalError;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.forgerock.opendj.io.ASN1;
-import org.forgerock.opendj.io.ASN1Reader;
-import org.forgerock.opendj.io.LDAP;
-import org.forgerock.opendj.ldap.Attribute;
-import org.forgerock.opendj.ldap.AttributeDescription;
 import org.forgerock.opendj.ldap.ByteString;
 import org.forgerock.opendj.ldap.DN;
-import org.forgerock.opendj.ldap.DecodeException;
-import org.forgerock.opendj.ldap.DecodeOptions;
+import org.forgerock.opendj.ldap.Entries;
 import org.forgerock.opendj.ldap.Entry;
 import org.forgerock.opendj.ldap.ErrorResultException;
 import org.forgerock.opendj.ldap.requests.ModifyRequest;
@@ -25,11 +20,13 @@ import org.forgerock.opendj.ldif.EntryReader;
 
 import com.orientechnologies.common.serialization.types.OBinaryTypeSerializer;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.exception.OConcurrentModificationException;
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.index.OIndex;
 import com.orientechnologies.orient.core.index.ORuntimeKeyIndexDefinition;
 import com.orientechnologies.orient.core.intent.OIntentMassiveInsert;
 import com.orientechnologies.orient.core.record.impl.ORecordBytes;
+import com.orientechnologies.orient.core.tx.OTransaction.TXTYPE;
 
 public final class OrientBackend implements Backend {
     private static final class DbHolder {
@@ -52,9 +49,6 @@ public final class OrientBackend implements Backend {
     private final Queue<ODatabaseDocumentTx> activeDbConnections =
             new ConcurrentLinkedQueue<ODatabaseDocumentTx>();
 
-    private final DecodeOptions decodeOptions = new DecodeOptions();
-    private final AttributeDescription descriptionAD = AttributeDescription.valueOf("description");
-
     private final ThreadLocal<DbHolder> threadLocalDb = new ThreadLocal<DbHolder>() {
         @Override
         protected DbHolder initialValue() {
@@ -75,6 +69,8 @@ public final class OrientBackend implements Backend {
     public void importEntries(final EntryReader entries, final Map<String, String> options)
             throws Exception {
         createDbDir(DB_DIR);
+        //        OGlobalConfiguration.USE_WAL.setValue(false);
+        //        OGlobalConfiguration.TX_USE_LOG.setValue(false);
         final ODatabaseDocumentTx db = new ODatabaseDocumentTx(DB_URL).create();
         final OIndex<?> dn2entry =
                 db.getMetadata().getIndexManager().createIndex("dn2entry", "UNIQUE",
@@ -88,13 +84,12 @@ public final class OrientBackend implements Backend {
         try {
             while (entries.hasNext()) {
                 final Entry entry = entries.readEntry();
-                final ORecordBytes id2entry = new ORecordBytes(db, Util.encodeEntry(entry));
-                id2entry.save();
-
-                dn2entry.put(encodeDn(entry.getName()), id2entry);
+                final ORecordBytes entryRecord = new ORecordBytes(db, Util.encodeEntry(entry));
+                entryRecord.save();
+                dn2entry.put(encodeDn(entry.getName()), entryRecord);
                 final ByteString encodedDescription = encodeDescription(entry);
                 if (encodedDescription != null) {
-                    description2entry.put(encodedDescription.toByteArray(), id2entry);
+                    description2entry.put(encodedDescription.toByteArray(), entryRecord);
                 }
             }
         } finally {
@@ -104,37 +99,51 @@ public final class OrientBackend implements Backend {
 
     @Override
     public void initialize(final Map<String, String> options) throws Exception {
-
+        //        OGlobalConfiguration.TX_USE_LOG.setValue(true);
+        //        OGlobalConfiguration.USE_WAL.setValue(true);
     }
 
     @Override
     public void modifyEntry(final ModifyRequest request) throws ErrorResultException {
-        // TODO Auto-generated method stub
-
+        final DbHolder dbHolder = threadLocalDb.get();
+        final byte[] dnKey = encodeDn(request.getName());
+        while (true) {
+            dbHolder.db.begin(TXTYPE.OPTIMISTIC);
+            try {
+                final ORecordId id = (ORecordId) dbHolder.dn2entry.get(dnKey);
+                final ORecordBytes entryRecord = dbHolder.db.getRecord(id);
+                final Entry entry = decodeEntry(entryRecord.toStream());
+                final ByteString oldDescriptionKey = encodeDescription(entry);
+                Entries.modifyEntry(entry, request);
+                final ByteString newDescriptionKey = encodeDescription(entry);
+                entryRecord.setDirty();
+                entryRecord.fromStream(Util.encodeEntry(entry));
+                entryRecord.save();
+                // Update description index.
+                final int comparison = oldDescriptionKey.compareTo(newDescriptionKey);
+                if (comparison != 0) {
+                    // FIXME: is this under txn? Does the order matter?
+                    dbHolder.description2entry.remove(oldDescriptionKey.toByteArray());
+                    dbHolder.description2entry.put(oldDescriptionKey.toByteArray(), entryRecord);
+                }
+                dbHolder.db.commit();
+                return;
+            } catch (OConcurrentModificationException e) {
+                // Retry.
+            } catch (Exception e) {
+                dbHolder.db.rollback();
+                throw internalError(e);
+            }
+        }
     }
 
     @Override
     public Entry readEntry(final DN name) throws ErrorResultException {
-        final DbHolder db = threadLocalDb.get();
-        final byte[] key = encodeDn(name);
-        final ORecordId id = (ORecordId) db.dn2entry.get(key);
-        final ORecordBytes entry = db.db.getRecord(id);
-        final ASN1Reader asn1Reader = ASN1.getReader(entry.toStream());
-        try {
-            return LDAP.readEntry(asn1Reader, decodeOptions);
-        } catch (final IOException e) {
-            throw internalError(e);
-        }
-    }
-
-    private ByteString encodeDescription(final Entry entry) throws DecodeException {
-        final Attribute descriptionAttribute = entry.getAttribute(descriptionAD);
-        if (descriptionAttribute == null) {
-            return null;
-        }
-        final ByteString descriptionValue = descriptionAttribute.firstValue();
-        return descriptionAD.getAttributeType().getEqualityMatchingRule().normalizeAttributeValue(
-                descriptionValue);
+        final DbHolder dbHolder = threadLocalDb.get();
+        final byte[] dnKey = encodeDn(name);
+        final ORecordId id = (ORecordId) dbHolder.dn2entry.get(dnKey);
+        final ORecordBytes entryRecord = dbHolder.db.getRecord(id);
+        return decodeEntry(entryRecord.toStream());
     }
 
     private byte[] encodeDn(final DN dn) throws ErrorResultException {

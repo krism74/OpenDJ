@@ -2,6 +2,8 @@ package org.opendj.scratch.be;
 
 import static org.forgerock.opendj.ldap.ErrorResultException.newErrorResult;
 import static org.opendj.scratch.be.Util.createDbDir;
+import static org.opendj.scratch.be.Util.decodeEntry;
+import static org.opendj.scratch.be.Util.encodeDescription;
 import static org.opendj.scratch.be.Util.internalError;
 
 import java.io.File;
@@ -12,11 +14,8 @@ import java.util.concurrent.TimeUnit;
 import org.forgerock.opendj.io.ASN1;
 import org.forgerock.opendj.io.ASN1Reader;
 import org.forgerock.opendj.io.LDAP;
-import org.forgerock.opendj.ldap.Attribute;
-import org.forgerock.opendj.ldap.AttributeDescription;
 import org.forgerock.opendj.ldap.ByteString;
 import org.forgerock.opendj.ldap.DN;
-import org.forgerock.opendj.ldap.DecodeException;
 import org.forgerock.opendj.ldap.DecodeOptions;
 import org.forgerock.opendj.ldap.Entries;
 import org.forgerock.opendj.ldap.Entry;
@@ -38,9 +37,6 @@ import com.sleepycat.je.TransactionConfig;
 
 public final class JEBackend implements Backend {
     private static final File DB_DIR = new File("jeBackend");
-
-    private final DecodeOptions decodeOptions = new DecodeOptions();
-    private final AttributeDescription descriptionAD = AttributeDescription.valueOf("description");
 
     private Environment env = null;
     private Database id2entry = null;
@@ -137,16 +133,6 @@ public final class JEBackend implements Backend {
         }
     }
 
-    private ByteString encodeDescription(final Entry entry) throws DecodeException {
-        final Attribute descriptionAttribute = entry.getAttribute(descriptionAD);
-        if (descriptionAttribute == null) {
-            return null;
-        }
-        final ByteString descriptionValue = descriptionAttribute.firstValue();
-        return descriptionAD.getAttributeType().getEqualityMatchingRule().normalizeAttributeValue(
-                descriptionValue);
-    }
-
     private DatabaseEntry encodeDn(final DN dn) throws ErrorResultException {
         final ByteString dnKey = ByteString.valueOf(dn.toNormalizedString());
         return new DatabaseEntry(dnKey.toByteArray());
@@ -195,12 +181,7 @@ public final class JEBackend implements Backend {
         if (id2entry.get(txn, dbId, dbEntry, lockMode) != OperationStatus.SUCCESS) {
             throw newErrorResult(ResultCode.NO_SUCH_OBJECT);
         }
-        final ASN1Reader asn1Reader = ASN1.getReader(dbEntry.getData());
-        try {
-            return LDAP.readEntry(asn1Reader, decodeOptions);
-        } catch (final IOException e) {
-            throw internalError(e);
-        }
+        return decodeEntry(dbEntry.getData());
     }
 
 }
