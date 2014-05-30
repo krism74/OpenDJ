@@ -1,7 +1,7 @@
 package org.opendj.scratch.be;
 
 import static org.forgerock.opendj.ldap.ErrorResultException.newErrorResult;
-import static org.opendj.scratch.be.Util.createDbDir;
+import static org.opendj.scratch.be.Util.clearAndCreateDbDir;
 import static org.opendj.scratch.be.Util.decodeEntry;
 import static org.opendj.scratch.be.Util.encodeDescription;
 import static org.opendj.scratch.be.Util.internalError;
@@ -35,9 +35,9 @@ public final class JEBackend implements Backend {
     private static final File DB_DIR = new File("jeBackend");
 
     private Environment env = null;
-    private Database id2entry = null;
-    private Database dn2id = null;
     private Database description2id = null;
+    private Database dn2id = null;
+    private Database id2entry = null;
 
     @Override
     public void close() {
@@ -62,7 +62,7 @@ public final class JEBackend implements Backend {
     @Override
     public void importEntries(final EntryReader entries, final Map<String, String> options)
             throws Exception {
-        createDbDir(DB_DIR);
+        clearAndCreateDbDir(DB_DIR);
         initialize(options, true);
         try {
             for (int nextEntryId = 0; entries.hasNext(); nextEntryId++) {
@@ -121,16 +121,7 @@ public final class JEBackend implements Backend {
     }
 
     @Override
-    public Entry readEntryByDN(final DN name) throws ErrorResultException {
-        try {
-            return readId2Entry(null, readDn2Id(null, name), false);
-        } catch (final Exception e) {
-            throw internalError(e);
-        }
-    }
-
-    @Override
-    public Entry readEntryByDescription(ByteString description) throws ErrorResultException {
+    public Entry readEntryByDescription(final ByteString description) throws ErrorResultException {
         try {
             final DatabaseEntry dbKey =
                     new DatabaseEntry(encodeDescription(description).toByteArray());
@@ -144,8 +135,17 @@ public final class JEBackend implements Backend {
         }
     }
 
+    @Override
+    public Entry readEntryByDN(final DN name) throws ErrorResultException {
+        try {
+            return readId2Entry(null, readDn2Id(null, name), false);
+        } catch (final Exception e) {
+            throw internalError(e);
+        }
+    }
+
     private DatabaseEntry encodeDn(final DN dn) throws ErrorResultException {
-        return new DatabaseEntry(Util.encodeDn(dn));
+        return new DatabaseEntry(Util.encodeDn(dn).toByteArray());
     }
 
     private DatabaseEntry encodeEntry(final Entry entry) throws IOException {

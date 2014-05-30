@@ -19,8 +19,8 @@ public interface Backend {
 
     void modifyEntry(ModifyRequest request) throws ErrorResultException;
 
-    Entry readEntryByDN(DN name) throws ErrorResultException;
-
     Entry readEntryByDescription(ByteString description) throws ErrorResultException;
+
+    Entry readEntryByDN(DN name) throws ErrorResultException;
 
 }

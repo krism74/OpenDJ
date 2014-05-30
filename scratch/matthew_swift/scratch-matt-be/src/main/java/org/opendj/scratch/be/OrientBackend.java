@@ -65,7 +65,7 @@ public final class OrientBackend implements Backend {
     @Override
     public void importEntries(final EntryReader entries, final Map<String, String> options)
             throws Exception {
-        createDbDir(DB_DIR);
+        clearAndCreateDbDir(DB_DIR);
         //        OGlobalConfiguration.USE_WAL.setValue(false);
         //        OGlobalConfiguration.TX_USE_LOG.setValue(false);
         final ODatabaseDocumentTx db = new ODatabaseDocumentTx(DB_URL).create();
@@ -103,7 +103,7 @@ public final class OrientBackend implements Backend {
     @Override
     public void modifyEntry(final ModifyRequest request) throws ErrorResultException {
         final DbHolder dbHolder = threadLocalDb.get();
-        final byte[] dnKey = encodeDn(request.getName());
+        final byte[] dnKey = encodeDn(request.getName()).toByteArray();
         while (true) {
             dbHolder.db.begin(TXTYPE.OPTIMISTIC);
             try {
@@ -125,9 +125,9 @@ public final class OrientBackend implements Backend {
                 }
                 dbHolder.db.commit();
                 return;
-            } catch (OConcurrentModificationException e) {
+            } catch (final OConcurrentModificationException e) {
                 // Retry.
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 dbHolder.db.rollback();
                 throw internalError(e);
             }
@@ -135,11 +135,11 @@ public final class OrientBackend implements Backend {
     }
 
     @Override
-    public Entry readEntryByDN(final DN name) throws ErrorResultException {
+    public Entry readEntryByDescription(final ByteString description) throws ErrorResultException {
         final DbHolder dbHolder = threadLocalDb.get();
         try {
-            final byte[] dnKey = encodeDn(name);
-            final ORecordId id = (ORecordId) dbHolder.dn2entry.get(dnKey);
+            final byte[] descriptionKey = encodeDescription(description).toByteArray();
+            final ORecordId id = (ORecordId) dbHolder.description2entry.get(descriptionKey);
             final ORecordBytes entryRecord = dbHolder.db.getRecord(id);
             return decodeEntry(entryRecord.toStream());
         } catch (final Exception e) {
@@ -148,11 +148,11 @@ public final class OrientBackend implements Backend {
     }
 
     @Override
-    public Entry readEntryByDescription(ByteString description) throws ErrorResultException {
+    public Entry readEntryByDN(final DN name) throws ErrorResultException {
         final DbHolder dbHolder = threadLocalDb.get();
         try {
-            final byte[] descriptionKey = encodeDescription(description).toByteArray();
-            final ORecordId id = (ORecordId) dbHolder.description2entry.get(descriptionKey);
+            final byte[] dnKey = encodeDn(name).toByteArray();
+            final ORecordId id = (ORecordId) dbHolder.dn2entry.get(dnKey);
             final ORecordBytes entryRecord = dbHolder.db.getRecord(id);
             return decodeEntry(entryRecord.toStream());
         } catch (final Exception e) {

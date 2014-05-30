@@ -121,19 +121,19 @@ public final class Server {
                             request.getFilter().accept(
                                     new AbstractFilterVisitor<ByteString, Void>() {
                                         @Override
-                                        public ByteString visitEqualityMatchFilter(Void p,
-                                                String attributeDescription,
-                                                ByteString assertionValue) {
+                                        public ByteString visitDefaultFilter(final Void p) {
+                                            throw new UnsupportedOperationException();
+                                        }
+
+                                        @Override
+                                        public ByteString visitEqualityMatchFilter(final Void p,
+                                                final String attributeDescription,
+                                                final ByteString assertionValue) {
                                             if (attributeDescription
                                                     .equalsIgnoreCase("description")) {
                                                 return assertionValue;
                                             }
                                             return visitDefaultFilter(p);
-                                        }
-
-                                        @Override
-                                        public ByteString visitDefaultFilter(Void p) {
-                                            throw new UnsupportedOperationException();
                                         }
                                     }, null);
                     try {
@@ -143,7 +143,7 @@ public final class Server {
                     } catch (final ErrorResultException e) {
                         resultHandler.handleErrorResult(e);
                     }
-                } catch (UnsupportedOperationException e) {
+                } catch (final UnsupportedOperationException e) {
                     unsupported(resultHandler);
                 }
             }
@@ -161,7 +161,7 @@ public final class Server {
     }
 
     private static enum BackendType {
-        JE(JEBackend.class), ORIENT(OrientBackend.class);
+        JE(JEBackend.class), MAP(MapDBBackend.class), ORIENT(OrientBackend.class);
 
         private final Class<? extends Backend> backendClass;
 
@@ -210,40 +210,42 @@ public final class Server {
             return 1;
         }
         try {
-            // Import data.
-            System.out.println("Importing " + numberOfEntries + " entries...");
-            final EntryGenerator ldif =
-                    new EntryGenerator().setConstant("numusers", numberOfEntries);
-            final EntryReader countedLdif = new EntryReader() {
-                final AtomicLong entryCount = new AtomicLong();
+            if (numberOfEntries > 0) {
+                // Import data.
+                System.out.println("Importing " + numberOfEntries + " entries...");
+                final EntryGenerator ldif =
+                        new EntryGenerator().setConstant("numusers", numberOfEntries);
+                final EntryReader countedLdif = new EntryReader() {
+                    final AtomicLong entryCount = new AtomicLong();
 
-                @Override
-                public void close() throws IOException {
+                    @Override
+                    public void close() throws IOException {
+                        ldif.close();
+                    }
+
+                    @Override
+                    public boolean hasNext() throws IOException {
+                        return ldif.hasNext();
+                    }
+
+                    @Override
+                    public Entry readEntry() throws IOException {
+                        final long count = entryCount.getAndIncrement();
+                        if (count % 1000 == 0 && count > 0) {
+                            System.out.println("Imported " + count + " entries");
+                        }
+                        return ldif.readEntry();
+                    }
+                };
+                try {
+                    backend.importEntries(countedLdif, backendOptions);
+                } catch (final Exception e) {
+                    System.out.println("Error importing entries");
+                    e.printStackTrace();
+                    return 1;
+                } finally {
                     ldif.close();
                 }
-
-                @Override
-                public boolean hasNext() throws IOException {
-                    return ldif.hasNext();
-                }
-
-                @Override
-                public Entry readEntry() throws IOException {
-                    final long count = entryCount.getAndIncrement();
-                    if (count % 1000 == 0 && count > 0) {
-                        System.out.println("Imported " + count + " entries");
-                    }
-                    return ldif.readEntry();
-                }
-            };
-            try {
-                backend.importEntries(countedLdif, backendOptions);
-            } catch (final Exception e) {
-                System.out.println("Error importing entries");
-                e.printStackTrace();
-                return 1;
-            } finally {
-                ldif.close();
             }
 
             // Create server.

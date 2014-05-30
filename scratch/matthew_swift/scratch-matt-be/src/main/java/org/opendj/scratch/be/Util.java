@@ -21,19 +21,20 @@ import org.forgerock.opendj.ldap.ErrorResultException;
 import org.forgerock.opendj.ldap.ResultCode;
 
 final class Util {
-    private static final DecodeOptions DECODE_OPTIONS = new DecodeOptions();
-    private static final AttributeDescription AD_DESCRIPTION = AttributeDescription
-            .valueOf("description");
-
     private static final class WriteBuffer {
-        private final ByteStringBuilder builder;
         private final ASN1Writer asn1Writer;
+        private final ByteStringBuilder builder;
 
         private WriteBuffer() {
             builder = new ByteStringBuilder();
             asn1Writer = ASN1.getWriter(builder, 2048);
         }
     }
+
+    private static final AttributeDescription AD_DESCRIPTION = AttributeDescription
+            .valueOf("description");
+
+    private static final DecodeOptions DECODE_OPTIONS = new DecodeOptions();
 
     private static final ThreadLocal<WriteBuffer> threadLocalBuffer =
             new ThreadLocal<WriteBuffer>() {
@@ -43,7 +44,7 @@ final class Util {
                 };
             };
 
-    static void createDbDir(final File dbDir) {
+    static void clearAndCreateDbDir(final File dbDir) {
         if (dbDir.exists()) {
             for (final File child : dbDir.listFiles()) {
                 child.delete();
@@ -62,6 +63,11 @@ final class Util {
         }
     }
 
+    static ByteString encodeDescription(final ByteString description) throws DecodeException {
+        return AD_DESCRIPTION.getAttributeType().getEqualityMatchingRule().normalizeAttributeValue(
+                description);
+    }
+
     static ByteString encodeDescription(final Entry entry) throws DecodeException {
         final Attribute descriptionAttribute = entry.getAttribute(AD_DESCRIPTION);
         if (descriptionAttribute == null) {
@@ -70,13 +76,8 @@ final class Util {
         return encodeDescription(descriptionAttribute.firstValue());
     }
 
-    static ByteString encodeDescription(final ByteString description) throws DecodeException {
-        return AD_DESCRIPTION.getAttributeType().getEqualityMatchingRule().normalizeAttributeValue(
-                description);
-    }
-
-    static byte[] encodeDn(final DN dn) {
-        return ByteString.valueOf(dn.toNormalizedString()).toByteArray();
+    static ByteString encodeDn(final DN dn) {
+        return ByteString.valueOf(dn.toNormalizedString());
     }
 
     static byte[] encodeEntry(final Entry entry) throws IOException {
