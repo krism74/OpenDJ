@@ -154,6 +154,8 @@ public final class MapDBBackend implements Backend {
     @Override
     public void close() {
         if (db != null) {
+            db.commit();
+            db.compact();
             db.close();
             db = null;
         }
@@ -189,12 +191,19 @@ public final class MapDBBackend implements Backend {
 
     @Override
     public void initialize(final Map<String, String> options) throws Exception {
+        final boolean useCache = options.containsKey("useCache");
         final int cacheSize =
                 options.containsKey("cacheSize") ? Integer.valueOf(options.get("cacheSize"))
-                        : 100000;
-        db =
-                DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().closeOnJvmShutdown()
-                        .cacheLRUEnable().cacheSize(cacheSize).make();
+                        : 32768;
+        if (useCache) {
+            db =
+                    DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().closeOnJvmShutdown()
+                            .cacheSize(cacheSize).commitFileSyncDisable().make();
+        } else {
+            db =
+                    DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().closeOnJvmShutdown()
+                            .cacheDisable().commitFileSyncDisable().make();
+        }
         id2entry = db.getTreeMap("id2entry");
         dn2id = db.getTreeMap("dn2id");
         description2id = db.getTreeMap("description2id");
@@ -218,6 +227,7 @@ public final class MapDBBackend implements Backend {
             }
             // Update id2entry index.
             id2entry.put(entryId, encodeEntry(entry));
+            db.commit();
         } catch (final Exception e) {
             throw internalError(e);
         } finally {
