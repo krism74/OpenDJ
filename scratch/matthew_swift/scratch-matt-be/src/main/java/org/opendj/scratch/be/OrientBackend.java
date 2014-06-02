@@ -81,9 +81,9 @@ public final class OrientBackend implements Backend {
         try {
             while (entries.hasNext()) {
                 final Entry entry = entries.readEntry();
-                final ORecordBytes entryRecord = new ORecordBytes(db, Util.encodeEntry(entry));
+                final ORecordBytes entryRecord = new ORecordBytes(db, encodeEntry(entry));
                 entryRecord.save();
-                dn2entry.put(encodeDn(entry.getName()), entryRecord);
+                dn2entry.put(encodeDn(entry.getName()).toByteArray(), entryRecord);
                 final ByteString encodedDescription = encodeDescription(entry);
                 if (encodedDescription != null) {
                     description2entry.put(encodedDescription.toByteArray(), entryRecord);
@@ -114,7 +114,7 @@ public final class OrientBackend implements Backend {
                 Entries.modifyEntry(entry, request);
                 final ByteString newDescriptionKey = encodeDescription(entry);
                 entryRecord.setDirty();
-                entryRecord.fromStream(Util.encodeEntry(entry));
+                entryRecord.fromStream(encodeEntry(entry));
                 entryRecord.save();
                 // Update description index.
                 final int comparison = oldDescriptionKey.compareTo(newDescriptionKey);
