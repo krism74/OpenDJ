@@ -5,6 +5,8 @@ use strict;
 use MIME::Base64 ();
 
 sub base64_decode() {
+    print "="x80 . "\n";
+    print "base64:: $_\n\n";
     print "".MIME::Base64::decode($_)."\n";
 }
 

@@ -16,9 +16,16 @@ BASE_DN="dc=example,dc=com"
 # DS   means: deploy a DS only node
 #   RS means: deploy a RS only node
 # DSRS means: deploy a node which is both DS and RS
-REPLICA_DIRS=( OpenDJ-2.7.0_0_DSRS \
-               OpenDJ-2.7.0_1_DSRS \
+REPLICA_DIRS=( \
+OpenDJ-2.7.0_0_DSRS \
+OpenDJ-2.7.0_1_DSRS \
              )
+DEBUG_TARGETS=( \
+#org.opends.server.replication.server.ReplicationServerDomain \
+#org.opends.server.replication.service.ReplicationBroker \
+#org.opends.server.replication.service.ReplicationDomain \
+#org.opends.server.replication.protocol.Session \
+              )
 
 
 
@@ -150,19 +157,22 @@ do
     bin/dsconfig     -h $HOSTNAME -p 450$IDX -D "$BIND_DN" -w $PASSWORD --trustAll --no-prompt \
                      set-log-retention-policy-prop --policy-name "File Count Retention Policy" --set number-of-files:1
 
-    # enable debug logs + create debug target
+    # enable debug logs + create debug targets
     bin/dsconfig -h $HOSTNAME -p 450$IDX -D "$BIND_DN" -w $PASSWORD --trustAll --no-prompt \
                      set-log-publisher-prop        --publisher-name "File-Based Debug Logger" --set enabled:true --set default-debug-level:disabled
-    bin/dsconfig -h $HOSTNAME -p 450$IDX -D "$BIND_DN" -w $PASSWORD --trustAll --no-prompt \
-                     create-debug-target           --publisher-name "File-Based Debug Logger" --set debug-level:all --type generic --target-name org.opends.server.replication.service.ReplicationBroker
-    bin/dsconfig -h $HOSTNAME -p 450$IDX -D "$BIND_DN" -w $PASSWORD --trustAll --no-prompt \
-                     create-debug-target           --publisher-name "File-Based Debug Logger" --set debug-level:all --type generic --target-name org.opends.server.replication.service.ReplicationDomain
-    bin/dsconfig -h $HOSTNAME -p 450$IDX -D "$BIND_DN" -w $PASSWORD --trustAll --no-prompt \
-                     create-debug-target           --publisher-name "File-Based Debug Logger" --set debug-level:all --type generic --target-name org.opends.server.replication.protocol.Session
-    # need to restart the server for the debug log changes to take effect. @see OPENDJ-1289
-    bin/stop-ds
-    sleep 2
-    OPENDJ_JAVA_ARGS="-agentlib:jdwp=transport=dt_socket,address=800$IDX,server=y,suspend=n" bin/start-ds
+    for CLAZZ in ${DEBUG_TARGETS}
+    do
+        bin/dsconfig -h $HOSTNAME -p 450$IDX -D "$BIND_DN" -w $PASSWORD --trustAll --no-prompt \
+                     create-debug-target        --publisher-name "File-Based Debug Logger" --set debug-level:all --set include-throwable-cause:true --type generic --target-name $CLAZZ
+    done
+
+    if [ -n "${DEBUG_TARGETS}"  -a  ${#DEBUG_TARGETS[@]} -ne 0 ]
+    then
+        # need to restart the server for the debug log changes to take effect. @see OPENDJ-1289
+        bin/stop-ds
+        sleep 2
+        OPENDJ_JAVA_ARGS="-agentlib:jdwp=transport=dt_socket,address=800$IDX,server=y,suspend=n" bin/start-ds
+    fi
 
 
     ###################################
