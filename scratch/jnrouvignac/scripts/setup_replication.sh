@@ -207,14 +207,19 @@ do
             --host2 $HOSTNAME     --port2 450$IDX --bindDN2 "$BIND_DN" --bindPassword2 $PASSWORD $DSREPLICATION_ENABLE_ARGS
         echo "Done."
 
+        echo
+        echo "##################################################################################################"
+        echo "# Setting replication group #$IDX for ${REPLICA_DIRS[$IDX]}"
+        echo "##################################################################################################"
         if [ -n "${IS_RS}" ]
         then
-            echo
-            echo "##################################################################################################"
-            echo "# Setting replication group #$IDX for ${REPLICA_DIRS[$IDX]}"
-            echo "##################################################################################################"
             bin/dsconfig -h $HOSTNAME -p 450$IDX -D "$BIND_DN" -w $PASSWORD --trustAll --no-prompt \
                          set-replication-server-prop   --provider-name "Multimaster Synchronization" --set group-id:$IDX
+        fi
+        if [ -n "${IS_DS}" ]
+        then
+            bin/dsconfig -h $HOSTNAME -p 450$IDX -D "$BIND_DN" -w $PASSWORD --trustAll --no-prompt \
+                         set-replication-domain-prop   --provider-name "Multimaster Synchronization" --set group-id:$IDX  --domain-name dc=example,dc=com
         fi
 
         echo "Done."
