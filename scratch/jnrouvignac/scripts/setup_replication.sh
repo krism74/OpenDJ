@@ -2,8 +2,9 @@
 
 set -x
 
+VERSION=OpenDJ-2.7.0
 BUILD_DIR=`pwd`
-PACKAGE_DIR="${BUILD_DIR}/build/package/OpenDJ-2.7.0"
+PACKAGE_DIR="${BUILD_DIR}/build/package/${VERSION}"
 DATETIME=`date +%Y%m%d_%H%M%S`
 BASE_DIR="/ssddata"
 SETUP_DIR="$BASE_DIR/${PACKAGE_DIR}_$DATETIME"
@@ -17,8 +18,9 @@ BASE_DN="dc=example,dc=com"
 #   RS means: deploy a RS only node
 # DSRS means: deploy a node which is both DS and RS
 REPLICA_DIRS=( \
-OpenDJ-2.7.0_0_DSRS \
-OpenDJ-2.7.0_1_DSRS \
+${VERSION}_0_DSRS \
+${VERSION}_1_RS \
+${VERSION}_2_DS \
              )
 DEBUG_TARGETS=( \
 #org.opends.server.replication.server.ReplicationServerDomain \
@@ -28,6 +30,8 @@ DEBUG_TARGETS=( \
               )
 
 
+
+rm -rf $BASE_DIR/${VERSION}*
 
 DIR="$BASE_DIR/${REPLICA_DIRS[0]}"
 unset IS_DSRS
@@ -203,12 +207,15 @@ do
             --host2 $HOSTNAME     --port2 450$IDX --bindDN2 "$BIND_DN" --bindPassword2 $PASSWORD $DSREPLICATION_ENABLE_ARGS
         echo "Done."
 
-        echo
-        echo "##################################################################################################"
-        echo "# Setting replication group #$IDX for ${REPLICA_DIRS[$IDX]}"
-        echo "##################################################################################################"
-        bin/dsconfig -h $HOSTNAME -p 450$IDX -D "$BIND_DN" -w $PASSWORD --trustAll --no-prompt \
-                     set-replication-server-prop   --provider-name "Multimaster Synchronization" --set group-id:$IDX
+        if [ -n "${IS_RS}" ]
+        then
+            echo
+            echo "##################################################################################################"
+            echo "# Setting replication group #$IDX for ${REPLICA_DIRS[$IDX]}"
+            echo "##################################################################################################"
+            bin/dsconfig -h $HOSTNAME -p 450$IDX -D "$BIND_DN" -w $PASSWORD --trustAll --no-prompt \
+                         set-replication-server-prop   --provider-name "Multimaster Synchronization" --set group-id:$IDX
+        fi
 
         echo "Done."
     fi
