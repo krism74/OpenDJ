@@ -161,7 +161,8 @@ public final class Server {
     }
 
     private static enum BackendType {
-        JE(JEBackend.class), MAP(MapDBBackend.class), ORIENT(OrientBackend.class);
+        JE(JEBackend.class), MAP(MapDBBackend.class), ORIENT(OrientBackend.class), ROCKS(
+                RocksDBBackend.class);
 
         private final Class<? extends Backend> backendClass;
 

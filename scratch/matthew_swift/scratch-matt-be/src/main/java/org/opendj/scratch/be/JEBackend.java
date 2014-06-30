@@ -32,7 +32,7 @@ import com.sleepycat.je.Transaction;
 import com.sleepycat.je.TransactionConfig;
 
 public final class JEBackend implements Backend {
-    private static final File DB_DIR = new File("jeBackend");
+    private static final File DB_DIR = new File("target/jeBackend");
 
     private Environment env = null;
     private Database description2id = null;
@@ -144,7 +144,7 @@ public final class JEBackend implements Backend {
         }
     }
 
-    private DatabaseEntry encodeDn(final DN dn) throws ErrorResultException {
+    private DatabaseEntry encodeDn(final DN dn) {
         return new DatabaseEntry(Util.encodeDn(dn).toByteArray());
     }
 

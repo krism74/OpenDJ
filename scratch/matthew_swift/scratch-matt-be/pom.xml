@@ -36,6 +36,13 @@
       <artifactId>mapdb</artifactId>
       <version>1.0.1</version>
     </dependency>
+    <dependency>
+      <groupId>org.rocksdb</groupId>
+      <artifactId>rocksdb</artifactId>
+      <version>0.1</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/lib/rocksdbjni.jar</systemPath>
+    </dependency>
   </dependencies>
 
   <build>

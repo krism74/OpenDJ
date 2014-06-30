@@ -40,7 +40,7 @@ public final class OrientBackend implements Backend {
 
     }
 
-    private static final File DB_DIR = new File("orientBackend");
+    private static final File DB_DIR = new File("target/orientBackend");
     private static final String DB_URL = "plocal:" + DB_DIR.getAbsolutePath();
 
     private final Queue<ODatabaseDocumentTx> activeDbConnections =

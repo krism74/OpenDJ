@@ -135,7 +135,7 @@ public final class MapDBBackend implements Backend {
 
     private static final BTreeKeySerializer<ByteString> BYTE_STRING_KEY_SERIALIZER =
             new ByteStringKeySerializer();
-    private static final File DB_DIR = new File("mapBackend");
+    private static final File DB_DIR = new File("target/mapBackend");
     private static final File DB_FILE = new File(DB_DIR, "db");
 
     /**
