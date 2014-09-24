@@ -10,7 +10,7 @@ import org.forgerock.opendj.ldap.ByteStringBuilder;
 import org.forgerock.opendj.ldap.DN;
 import org.forgerock.opendj.ldap.Entries;
 import org.forgerock.opendj.ldap.Entry;
-import org.forgerock.opendj.ldap.ErrorResultException;
+import org.forgerock.opendj.ldap.LdapException;
 import org.forgerock.opendj.ldap.requests.ModifyRequest;
 import org.forgerock.opendj.ldif.EntryReader;
 import org.rocksdb.Options;
@@ -85,7 +85,7 @@ public final class RocksDBBackend implements Backend {
     }
 
     @Override
-    public void modifyEntry(final ModifyRequest request) throws ErrorResultException {
+    public void modifyEntry(final ModifyRequest request) throws LdapException {
         final WriteBatch batchUpdate = new WriteBatch();
         final WriteOptions writeOptions = new WriteOptions();
         try {
@@ -120,7 +120,7 @@ public final class RocksDBBackend implements Backend {
     }
 
     @Override
-    public Entry readEntryByDescription(final ByteString description) throws ErrorResultException {
+    public Entry readEntryByDescription(final ByteString description) throws LdapException {
         try {
             return decodeEntry(db.get(db.get(toDescriptionKey(encodeDescription(description)))));
         } catch (final Exception e) {
@@ -129,7 +129,7 @@ public final class RocksDBBackend implements Backend {
     }
 
     @Override
-    public Entry readEntryByDN(final DN name) throws ErrorResultException {
+    public Entry readEntryByDN(final DN name) throws LdapException {
         try {
             return decodeEntry(db.get(db.get(encodeDnKey(name))));
         } catch (final Exception e) {

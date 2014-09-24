@@ -1,6 +1,6 @@
 package org.opendj.scratch.be;
 
-import static org.forgerock.opendj.ldap.ErrorResultException.newErrorResult;
+import static org.forgerock.opendj.ldap.LdapException.newErrorResult;
 import static org.opendj.scratch.be.Util.clearAndCreateDbDir;
 import static org.opendj.scratch.be.Util.decodeEntry;
 import static org.opendj.scratch.be.Util.encodeDescription;
@@ -15,7 +15,7 @@ import org.forgerock.opendj.ldap.ByteString;
 import org.forgerock.opendj.ldap.DN;
 import org.forgerock.opendj.ldap.Entries;
 import org.forgerock.opendj.ldap.Entry;
-import org.forgerock.opendj.ldap.ErrorResultException;
+import org.forgerock.opendj.ldap.LdapException;
 import org.forgerock.opendj.ldap.ResultCode;
 import org.forgerock.opendj.ldap.requests.ModifyRequest;
 import org.forgerock.opendj.ldif.EntryReader;
@@ -87,7 +87,7 @@ public final class JEBackend implements Backend {
     }
 
     @Override
-    public void modifyEntry(final ModifyRequest request) throws ErrorResultException {
+    public void modifyEntry(final ModifyRequest request) throws LdapException {
         final TransactionConfig config = new TransactionConfig();
         final Transaction txn = env.beginTransaction(null, config);
         try {
@@ -121,7 +121,7 @@ public final class JEBackend implements Backend {
     }
 
     @Override
-    public Entry readEntryByDescription(final ByteString description) throws ErrorResultException {
+    public Entry readEntryByDescription(final ByteString description) throws LdapException {
         try {
             final DatabaseEntry dbKey =
                     new DatabaseEntry(encodeDescription(description).toByteArray());
@@ -136,7 +136,7 @@ public final class JEBackend implements Backend {
     }
 
     @Override
-    public Entry readEntryByDN(final DN name) throws ErrorResultException {
+    public Entry readEntryByDN(final DN name) throws LdapException {
         try {
             return readId2Entry(null, readDn2Id(null, name), false);
         } catch (final Exception e) {
@@ -164,6 +164,9 @@ public final class JEBackend implements Backend {
         envConfig.setLockTimeout(0, TimeUnit.MICROSECONDS);
         envConfig.setDurability(Durability.COMMIT_WRITE_NO_SYNC);
         envConfig.setCachePercent(60);
+        envConfig.setConfigParam(EnvironmentConfig.LOCK_N_LOCK_TABLES, String.valueOf("97"));
+        envConfig.setConfigParam(EnvironmentConfig.LOG_FILE_CACHE_SIZE, "10000");
+        envConfig.setConfigParam(EnvironmentConfig.LOG_FILE_MAX, String.valueOf(1024 * 1024 * 100));
         env = new Environment(DB_DIR, envConfig);
 
         final DatabaseConfig dbConfig =
@@ -175,7 +178,7 @@ public final class JEBackend implements Backend {
     }
 
     private DatabaseEntry readDn2Id(final Transaction txn, final DN name)
-            throws ErrorResultException {
+            throws LdapException {
         final DatabaseEntry dbKey = encodeDn(name);
         final DatabaseEntry dbId = new DatabaseEntry();
         if (dn2id.get(txn, dbKey, dbId, LockMode.READ_COMMITTED) != OperationStatus.SUCCESS) {
@@ -185,7 +188,7 @@ public final class JEBackend implements Backend {
     }
 
     private Entry readId2Entry(final Transaction txn, final DatabaseEntry dbId, final boolean isRMW)
-            throws ErrorResultException {
+            throws LdapException {
         final LockMode lockMode = isRMW ? LockMode.RMW : LockMode.READ_COMMITTED;
         final DatabaseEntry dbEntry = new DatabaseEntry();
         if (id2entry.get(txn, dbId, dbEntry, lockMode) != OperationStatus.SUCCESS) {

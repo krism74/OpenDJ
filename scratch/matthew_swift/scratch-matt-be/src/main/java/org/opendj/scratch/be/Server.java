@@ -1,15 +1,22 @@
 package org.opendj.scratch.be;
 
+import static java.util.concurrent.Executors.newFixedThreadPool;
+import static org.forgerock.util.Utils.closeSilently;
+
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.forgerock.opendj.ldap.AbstractFilterVisitor;
 import org.forgerock.opendj.ldap.ByteString;
 import org.forgerock.opendj.ldap.Connections;
 import org.forgerock.opendj.ldap.Entry;
-import org.forgerock.opendj.ldap.ErrorResultException;
+import org.forgerock.opendj.ldap.LdapException;
 import org.forgerock.opendj.ldap.IntermediateResponseHandler;
 import org.forgerock.opendj.ldap.LDAPClientContext;
 import org.forgerock.opendj.ldap.LDAPListener;
@@ -39,10 +46,24 @@ import org.forgerock.opendj.ldif.EntryReader;
 
 public final class Server {
     private static class BackendHandler implements RequestHandler<RequestContext> {
+        private final Executor threadPool;
         private final Backend backend;
 
         private BackendHandler(final Backend impl) {
             this.backend = impl;
+            final String strategy =
+                    System.getProperty("org.forgerock.opendj.transport.useWorkerThreads");
+            if (strategy == null || Boolean.valueOf(strategy)) {
+                this.threadPool = new Executor() {
+                    @Override
+                    public void execute(Runnable command) {
+                        command.run();
+                    }
+                };
+            } else {
+                this.threadPool =
+                        newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+            }
         }
 
         @Override
@@ -87,12 +108,17 @@ public final class Server {
         public void handleModify(final RequestContext requestContext, final ModifyRequest request,
                 final IntermediateResponseHandler intermediateResponseHandler,
                 final ResultHandler<Result> resultHandler) {
-            try {
-                backend.modifyEntry(request);
-                success(resultHandler);
-            } catch (final ErrorResultException e) {
-                resultHandler.handleErrorResult(e);
-            }
+            threadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        backend.modifyEntry(request);
+                        success(resultHandler);
+                    } catch (final LdapException e) {
+                        resultHandler.handleError(e);
+                    }
+                }
+            });
         }
 
         @Override
@@ -106,47 +132,53 @@ public final class Server {
         @Override
         public void handleSearch(final RequestContext requestContext, final SearchRequest request,
                 final IntermediateResponseHandler intermediateResponseHandler,
-                final SearchResultHandler resultHandler) {
-            if (request.getScope() == SearchScope.BASE_OBJECT) {
-                try {
-                    final Entry entry = backend.readEntryByDN(request.getName());
-                    resultHandler.handleEntry(Responses.newSearchResultEntry(entry));
-                    success(resultHandler);
-                } catch (final ErrorResultException e) {
-                    resultHandler.handleErrorResult(e);
-                }
-            } else {
-                try {
-                    final ByteString description =
-                            request.getFilter().accept(
-                                    new AbstractFilterVisitor<ByteString, Void>() {
-                                        @Override
-                                        public ByteString visitDefaultFilter(final Void p) {
-                                            throw new UnsupportedOperationException();
-                                        }
+                final SearchResultHandler entryHandler, final ResultHandler<Result> resultHandler) {
+            threadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    if (request.getScope() == SearchScope.BASE_OBJECT) {
+                        try {
+                            final Entry entry = backend.readEntryByDN(request.getName());
+                            entryHandler.handleEntry(Responses.newSearchResultEntry(entry));
+                            success(resultHandler);
+                        } catch (final LdapException e) {
+                            resultHandler.handleError(e);
+                        }
+                    } else {
+                        try {
+                            final ByteString description =
+                                    request.getFilter().accept(
+                                            new AbstractFilterVisitor<ByteString, Void>() {
+                                                @Override
+                                                public ByteString visitDefaultFilter(final Void p) {
+                                                    throw new UnsupportedOperationException();
+                                                }
 
-                                        @Override
-                                        public ByteString visitEqualityMatchFilter(final Void p,
-                                                final String attributeDescription,
-                                                final ByteString assertionValue) {
-                                            if (attributeDescription
-                                                    .equalsIgnoreCase("description")) {
-                                                return assertionValue;
-                                            }
-                                            return visitDefaultFilter(p);
-                                        }
-                                    }, null);
-                    try {
-                        final Entry entry = backend.readEntryByDescription(description);
-                        resultHandler.handleEntry(Responses.newSearchResultEntry(entry));
-                        success(resultHandler);
-                    } catch (final ErrorResultException e) {
-                        resultHandler.handleErrorResult(e);
+                                                @Override
+                                                public ByteString visitEqualityMatchFilter(
+                                                        final Void p,
+                                                        final String attributeDescription,
+                                                        final ByteString assertionValue) {
+                                                    if (attributeDescription
+                                                            .equalsIgnoreCase("description")) {
+                                                        return assertionValue;
+                                                    }
+                                                    return visitDefaultFilter(p);
+                                                }
+                                            }, null);
+                            try {
+                                final Entry entry = backend.readEntryByDescription(description);
+                                entryHandler.handleEntry(Responses.newSearchResultEntry(entry));
+                                success(resultHandler);
+                            } catch (final LdapException e) {
+                                resultHandler.handleError(e);
+                            }
+                        } catch (final UnsupportedOperationException e) {
+                            unsupported(resultHandler);
+                        }
                     }
-                } catch (final UnsupportedOperationException e) {
-                    unsupported(resultHandler);
                 }
-            }
+            });
         }
 
         private void success(final ResultHandler<Result> resultHandler) {
@@ -154,7 +186,7 @@ public final class Server {
         }
 
         private void unsupported(final ResultHandler<? extends Result> resultHandler) {
-            resultHandler.handleErrorResult(ErrorResultException
+            resultHandler.handleError(LdapException
                     .newErrorResult(ResultCode.UNWILLING_TO_PERFORM));
         }
 
@@ -216,12 +248,21 @@ public final class Server {
                 System.out.println("Importing " + numberOfEntries + " entries...");
                 final EntryGenerator ldif =
                         new EntryGenerator().setConstant("numusers", numberOfEntries);
+                final AtomicLong entryCount = new AtomicLong();
+                final long startTime = System.currentTimeMillis();
+                final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+                scheduler.scheduleAtFixedRate(new Runnable() {
+                    @Override
+                    public void run() {
+                        dumpImportStats(entryCount, startTime);
+                    }
+                }, 5, 5, TimeUnit.SECONDS);
                 final EntryReader countedLdif = new EntryReader() {
-                    final AtomicLong entryCount = new AtomicLong();
-
                     @Override
                     public void close() throws IOException {
                         ldif.close();
+                        scheduler.shutdown();
+                        dumpImportStats(entryCount, startTime);
                     }
 
                     @Override
@@ -231,10 +272,7 @@ public final class Server {
 
                     @Override
                     public Entry readEntry() throws IOException {
-                        final long count = entryCount.getAndIncrement();
-                        if (count % 1000 == 0 && count > 0) {
-                            System.out.println("Imported " + count + " entries");
-                        }
+                        entryCount.getAndIncrement();
                         return ldif.readEntry();
                     }
                 };
@@ -245,7 +283,7 @@ public final class Server {
                     e.printStackTrace();
                     return 1;
                 } finally {
-                    ldif.close();
+                    closeSilently(countedLdif);
                 }
             }
 
@@ -272,5 +310,14 @@ public final class Server {
             backend.close();
         }
         return 0;
+    }
+
+    private static void dumpImportStats(final AtomicLong entryCount, final long startTime) {
+        final long currentTime = System.currentTimeMillis();
+        final long offsetTime = (currentTime - startTime) / 1000l;
+        final long count = entryCount.get();
+        final long rate = offsetTime > 0 ? count / offsetTime : 0l;
+        System.out.println("Imported " + count + " entries in " + offsetTime
+                + " seconds at a rate of " + rate + "/s");
     }
 }

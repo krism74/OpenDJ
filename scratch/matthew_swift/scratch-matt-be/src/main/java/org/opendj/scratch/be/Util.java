@@ -1,6 +1,6 @@
 package org.opendj.scratch.be;
 
-import static org.forgerock.opendj.ldap.ErrorResultException.newErrorResult;
+import static org.forgerock.opendj.ldap.LdapException.newErrorResult;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import org.forgerock.opendj.ldap.DN;
 import org.forgerock.opendj.ldap.DecodeException;
 import org.forgerock.opendj.ldap.DecodeOptions;
 import org.forgerock.opendj.ldap.Entry;
-import org.forgerock.opendj.ldap.ErrorResultException;
+import org.forgerock.opendj.ldap.LdapException;
 import org.forgerock.opendj.ldap.ResultCode;
 
 final class Util {
@@ -54,7 +54,7 @@ final class Util {
         }
     }
 
-    static Entry decodeEntry(final byte[] data) throws ErrorResultException {
+    static Entry decodeEntry(final byte[] data) throws LdapException {
         final ASN1Reader asn1Reader = ASN1.getReader(data);
         try {
             return LDAP.readEntry(asn1Reader, DECODE_OPTIONS);
@@ -87,9 +87,9 @@ final class Util {
         return buffer.builder.toByteArray();
     }
 
-    static ErrorResultException internalError(final Exception e) {
-        if (e instanceof ErrorResultException) {
-            return (ErrorResultException) e;
+    static LdapException internalError(final Exception e) {
+        if (e instanceof LdapException) {
+            return (LdapException) e;
         }
         return newErrorResult(ResultCode.OTHER, e);
     }

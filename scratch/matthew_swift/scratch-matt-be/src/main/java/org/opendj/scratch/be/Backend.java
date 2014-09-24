@@ -5,7 +5,7 @@ import java.util.Map;
 import org.forgerock.opendj.ldap.ByteString;
 import org.forgerock.opendj.ldap.DN;
 import org.forgerock.opendj.ldap.Entry;
-import org.forgerock.opendj.ldap.ErrorResultException;
+import org.forgerock.opendj.ldap.LdapException;
 import org.forgerock.opendj.ldap.requests.ModifyRequest;
 import org.forgerock.opendj.ldif.EntryReader;
 
@@ -17,10 +17,10 @@ public interface Backend {
 
     void initialize(Map<String, String> options) throws Exception;
 
-    void modifyEntry(ModifyRequest request) throws ErrorResultException;
+    void modifyEntry(ModifyRequest request) throws LdapException;
 
-    Entry readEntryByDescription(ByteString description) throws ErrorResultException;
+    Entry readEntryByDescription(ByteString description) throws LdapException;
 
-    Entry readEntryByDN(DN name) throws ErrorResultException;
+    Entry readEntryByDN(DN name) throws LdapException;
 
 }

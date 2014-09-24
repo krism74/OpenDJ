@@ -11,11 +11,12 @@ import org.forgerock.opendj.ldap.ByteString;
 import org.forgerock.opendj.ldap.DN;
 import org.forgerock.opendj.ldap.Entries;
 import org.forgerock.opendj.ldap.Entry;
-import org.forgerock.opendj.ldap.ErrorResultException;
+import org.forgerock.opendj.ldap.LdapException;
 import org.forgerock.opendj.ldap.requests.ModifyRequest;
 import org.forgerock.opendj.ldif.EntryReader;
 
 import com.orientechnologies.common.serialization.types.OBinaryTypeSerializer;
+import com.orientechnologies.orient.core.config.OGlobalConfiguration;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.exception.OConcurrentModificationException;
 import com.orientechnologies.orient.core.id.ORecordId;
@@ -96,12 +97,12 @@ public final class OrientBackend implements Backend {
 
     @Override
     public void initialize(final Map<String, String> options) throws Exception {
-        //        OGlobalConfiguration.TX_USE_LOG.setValue(true);
-        //        OGlobalConfiguration.USE_WAL.setValue(true);
+        OGlobalConfiguration.CACHE_LEVEL2_ENABLED.setValue(true);
+        OGlobalConfiguration.CACHE_LEVEL2_SIZE.setValue(100000);
     }
 
     @Override
-    public void modifyEntry(final ModifyRequest request) throws ErrorResultException {
+    public void modifyEntry(final ModifyRequest request) throws LdapException {
         final DbHolder dbHolder = threadLocalDb.get();
         final byte[] dnKey = encodeDn(request.getName()).toByteArray();
         while (true) {
@@ -135,7 +136,7 @@ public final class OrientBackend implements Backend {
     }
 
     @Override
-    public Entry readEntryByDescription(final ByteString description) throws ErrorResultException {
+    public Entry readEntryByDescription(final ByteString description) throws LdapException {
         final DbHolder dbHolder = threadLocalDb.get();
         try {
             final byte[] descriptionKey = encodeDescription(description).toByteArray();
@@ -148,7 +149,7 @@ public final class OrientBackend implements Backend {
     }
 
     @Override
-    public Entry readEntryByDN(final DN name) throws ErrorResultException {
+    public Entry readEntryByDN(final DN name) throws LdapException {
         final DbHolder dbHolder = threadLocalDb.get();
         try {
             final byte[] dnKey = encodeDn(name).toByteArray();
