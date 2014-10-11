@@ -1,6 +1,7 @@
 package org.opendj.scratch.be;
 
 import static java.util.concurrent.Executors.newFixedThreadPool;
+import static org.forgerock.opendj.ldap.LdapException.newLdapException;
 import static org.forgerock.util.Utils.closeSilently;
 
 import java.io.IOException;
@@ -186,8 +187,7 @@ public final class Server {
         }
 
         private void unsupported(final ResultHandler<? extends Result> resultHandler) {
-            resultHandler.handleError(LdapException
-                    .newErrorResult(ResultCode.UNWILLING_TO_PERFORM));
+            resultHandler.handleError(newLdapException(ResultCode.UNWILLING_TO_PERFORM));
         }
 
     }
@@ -247,7 +247,8 @@ public final class Server {
                 // Import data.
                 System.out.println("Importing " + numberOfEntries + " entries...");
                 final EntryGenerator ldif =
-                        new EntryGenerator().setConstant("numusers", numberOfEntries);
+                        new EntryGenerator(Server.class.getResourceAsStream("test.template"))
+                                .setConstant("numusers", numberOfEntries);
                 final AtomicLong entryCount = new AtomicLong();
                 final long startTime = System.currentTimeMillis();
                 final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);

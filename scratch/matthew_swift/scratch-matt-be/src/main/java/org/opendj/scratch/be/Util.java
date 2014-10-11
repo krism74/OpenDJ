@@ -1,6 +1,6 @@
 package org.opendj.scratch.be;
 
-import static org.forgerock.opendj.ldap.LdapException.newErrorResult;
+import static org.forgerock.opendj.ldap.LdapException.newLdapException;
 
 import java.io.File;
 import java.io.IOException;
@@ -91,7 +91,7 @@ final class Util {
         if (e instanceof LdapException) {
             return (LdapException) e;
         }
-        return newErrorResult(ResultCode.OTHER, e);
+        return newLdapException(ResultCode.OTHER, e);
     }
 
     private Util() {

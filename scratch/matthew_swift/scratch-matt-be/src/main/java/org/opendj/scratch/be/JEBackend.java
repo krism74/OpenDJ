@@ -1,6 +1,6 @@
 package org.opendj.scratch.be;
 
-import static org.forgerock.opendj.ldap.LdapException.newErrorResult;
+import static org.forgerock.opendj.ldap.LdapException.newLdapException;
 import static org.opendj.scratch.be.Util.clearAndCreateDbDir;
 import static org.opendj.scratch.be.Util.decodeEntry;
 import static org.opendj.scratch.be.Util.encodeDescription;
@@ -127,7 +127,7 @@ public final class JEBackend implements Backend {
                     new DatabaseEntry(encodeDescription(description).toByteArray());
             final DatabaseEntry dbId = new DatabaseEntry();
             if (description2id.get(null, dbKey, dbId, LockMode.READ_COMMITTED) != OperationStatus.SUCCESS) {
-                throw newErrorResult(ResultCode.NO_SUCH_OBJECT);
+                throw newLdapException(ResultCode.NO_SUCH_OBJECT);
             }
             return readId2Entry(null, dbId, false);
         } catch (final Exception e) {
@@ -182,7 +182,7 @@ public final class JEBackend implements Backend {
         final DatabaseEntry dbKey = encodeDn(name);
         final DatabaseEntry dbId = new DatabaseEntry();
         if (dn2id.get(txn, dbKey, dbId, LockMode.READ_COMMITTED) != OperationStatus.SUCCESS) {
-            throw newErrorResult(ResultCode.NO_SUCH_OBJECT);
+            throw newLdapException(ResultCode.NO_SUCH_OBJECT);
         }
         return dbId;
     }
@@ -192,7 +192,7 @@ public final class JEBackend implements Backend {
         final LockMode lockMode = isRMW ? LockMode.RMW : LockMode.READ_COMMITTED;
         final DatabaseEntry dbEntry = new DatabaseEntry();
         if (id2entry.get(txn, dbId, dbEntry, lockMode) != OperationStatus.SUCCESS) {
-            throw newErrorResult(ResultCode.NO_SUCH_OBJECT);
+            throw newLdapException(ResultCode.NO_SUCH_OBJECT);
         }
         return decodeEntry(dbEntry.getData());
     }
