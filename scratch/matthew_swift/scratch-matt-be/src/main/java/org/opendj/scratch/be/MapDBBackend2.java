@@ -5,7 +5,6 @@ import static org.opendj.scratch.be.Util.*;
 
 import java.io.File;
 import java.util.Map;
-import java.util.concurrent.ConcurrentNavigableMap;
 
 import org.forgerock.opendj.ldap.ByteString;
 import org.forgerock.opendj.ldap.DN;
@@ -14,13 +13,11 @@ import org.forgerock.opendj.ldap.Entry;
 import org.forgerock.opendj.ldap.LdapException;
 import org.forgerock.opendj.ldap.requests.ModifyRequest;
 import org.forgerock.opendj.ldif.EntryReader;
-import org.forgerock.util.Utils;
 import org.mapdb.BTreeMap;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.Fun;
 import org.mapdb.Serializer;
-import org.mapdb.TxBlock;
 import org.mapdb.TxMaker;
 import org.mapdb.TxRollbackException;
 
