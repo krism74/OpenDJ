@@ -17,11 +17,11 @@ import org.forgerock.opendj.ldap.AbstractFilterVisitor;
 import org.forgerock.opendj.ldap.ByteString;
 import org.forgerock.opendj.ldap.Connections;
 import org.forgerock.opendj.ldap.Entry;
-import org.forgerock.opendj.ldap.LdapException;
 import org.forgerock.opendj.ldap.IntermediateResponseHandler;
 import org.forgerock.opendj.ldap.LDAPClientContext;
 import org.forgerock.opendj.ldap.LDAPListener;
 import org.forgerock.opendj.ldap.LDAPListenerOptions;
+import org.forgerock.opendj.ldap.LdapException;
 import org.forgerock.opendj.ldap.RequestContext;
 import org.forgerock.opendj.ldap.RequestHandler;
 import org.forgerock.opendj.ldap.ResultCode;
@@ -193,8 +193,15 @@ public final class Server {
     }
 
     private static enum BackendType {
-        JE(JEBackend.class), MAP(MapDBBackend.class), MAP2(MapDBBackend2.class), ORIENT(
-                OrientBackend.class), ROCKS(RocksDBBackend.class);
+
+        // @formatter:off
+        JE(JEBackend.class),
+        MAP(MapDBBackend.class),
+        MAP2(MapDBBackend2.class),
+        ORIENT(OrientBackend.class),
+        ROCKS(RocksDBBackend.class),
+        PERSISTIT(PersistItBackend.class);
+        // @formatter:on
 
         private final Class<? extends Backend> backendClass;
 

@@ -129,7 +129,7 @@ public final class OrientBackend implements Backend {
                 // Retry.
             } catch (final Exception e) {
                 dbHolder.db.rollback();
-                throw internalError(e);
+                throw adaptException(e);
             }
         }
     }
@@ -143,7 +143,7 @@ public final class OrientBackend implements Backend {
             final ORecordBytes entryRecord = dbHolder.db.getRecord(id);
             return decodeEntry(entryRecord.toStream());
         } catch (final Exception e) {
-            throw internalError(e);
+            throw adaptException(e);
         }
     }
 
@@ -156,7 +156,7 @@ public final class OrientBackend implements Backend {
             final ORecordBytes entryRecord = dbHolder.db.getRecord(id);
             return decodeEntry(entryRecord.toStream());
         } catch (final Exception e) {
-            throw internalError(e);
+            throw adaptException(e);
         }
     }
 

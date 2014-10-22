@@ -4,7 +4,7 @@ import static org.forgerock.opendj.ldap.LdapException.newLdapException;
 import static org.opendj.scratch.be.Util.clearAndCreateDbDir;
 import static org.opendj.scratch.be.Util.decodeEntry;
 import static org.opendj.scratch.be.Util.encodeDescription;
-import static org.opendj.scratch.be.Util.internalError;
+import static org.opendj.scratch.be.Util.adaptException;
 
 import java.io.File;
 import java.io.IOException;
@@ -114,7 +114,7 @@ public final class JEBackend implements Backend {
             id2entry.put(txn, dbId, encodeEntry(entry));
             txn.commit();
         } catch (final Exception e) {
-            throw internalError(e);
+            throw adaptException(e);
         } finally {
             txn.abort();
         }
@@ -131,7 +131,7 @@ public final class JEBackend implements Backend {
             }
             return readId2Entry(null, dbId, false);
         } catch (final Exception e) {
-            throw internalError(e);
+            throw adaptException(e);
         }
     }
 
@@ -140,7 +140,7 @@ public final class JEBackend implements Backend {
         try {
             return readId2Entry(null, readDn2Id(null, name), false);
         } catch (final Exception e) {
-            throw internalError(e);
+            throw adaptException(e);
         }
     }
 

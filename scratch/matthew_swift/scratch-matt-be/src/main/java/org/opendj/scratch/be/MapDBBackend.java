@@ -107,7 +107,7 @@ public final class MapDBBackend implements Backend {
             id2entry.put(entryId, encodeEntry(entry));
             db.commit();
         } catch (final Exception e) {
-            throw internalError(e);
+            throw adaptException(e);
         }
     }
 
@@ -117,7 +117,7 @@ public final class MapDBBackend implements Backend {
             return decodeEntry(id2entry.get(description2id.get(encodeDescription(description)
                     .toByteArray())));
         } catch (final Exception e) {
-            throw internalError(e);
+            throw adaptException(e);
         }
     }
 
@@ -126,7 +126,7 @@ public final class MapDBBackend implements Backend {
         try {
             return decodeEntry(id2entry.get(dn2id.get(encodeDn(name).toByteArray())));
         } catch (final Exception e) {
-            throw internalError(e);
+            throw adaptException(e);
         }
     }
 

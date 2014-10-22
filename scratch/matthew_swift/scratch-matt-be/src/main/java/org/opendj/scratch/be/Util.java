@@ -59,7 +59,7 @@ final class Util {
         try {
             return LDAP.readEntry(asn1Reader, DECODE_OPTIONS);
         } catch (final IOException e) {
-            throw internalError(e);
+            throw adaptException(e);
         }
     }
 
@@ -87,7 +87,7 @@ final class Util {
         return buffer.builder.toByteArray();
     }
 
-    static LdapException internalError(final Exception e) {
+    static LdapException adaptException(final Exception e) {
         if (e instanceof LdapException) {
             return (LdapException) e;
         }

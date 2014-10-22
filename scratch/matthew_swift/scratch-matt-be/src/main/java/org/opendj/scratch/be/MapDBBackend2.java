@@ -108,7 +108,7 @@ public final class MapDBBackend2 implements Backend {
                 // try again
             } catch (final Exception e) {
                 txn.rollback();
-                throw internalError(e);
+                throw adaptException(e);
             } finally {
                 txn.close();
             }
@@ -124,7 +124,7 @@ public final class MapDBBackend2 implements Backend {
             return decodeEntry(id2entry.get(description2id.get(encodeDescription(description)
                     .toByteArray())));
         } catch (final Exception e) {
-            throw internalError(e);
+            throw adaptException(e);
         } finally {
             txn.close();
         }
@@ -138,7 +138,7 @@ public final class MapDBBackend2 implements Backend {
             BTreeMap<byte[], Long> dn2id = txn.getTreeMap("dn2id");
             return decodeEntry(id2entry.get(dn2id.get(encodeDn(name).toByteArray())));
         } catch (final Exception e) {
-            throw internalError(e);
+            throw adaptException(e);
         } finally {
             txn.close();
         }

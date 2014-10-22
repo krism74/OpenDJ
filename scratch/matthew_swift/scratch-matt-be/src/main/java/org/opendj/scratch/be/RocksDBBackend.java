@@ -112,7 +112,7 @@ public final class RocksDBBackend implements Backend {
             batchUpdate.put(entryId, encodeEntry(entry));
             db.write(writeOptions, batchUpdate);
         } catch (final Exception e) {
-            throw internalError(e);
+            throw adaptException(e);
         } finally {
             writeOptions.dispose();
             batchUpdate.dispose();
@@ -124,7 +124,7 @@ public final class RocksDBBackend implements Backend {
         try {
             return decodeEntry(db.get(db.get(toDescriptionKey(encodeDescription(description)))));
         } catch (final Exception e) {
-            throw internalError(e);
+            throw adaptException(e);
         }
     }
 
@@ -133,7 +133,7 @@ public final class RocksDBBackend implements Backend {
         try {
             return decodeEntry(db.get(db.get(encodeDnKey(name))));
         } catch (final Exception e) {
-            throw internalError(e);
+            throw adaptException(e);
         }
     }
 
