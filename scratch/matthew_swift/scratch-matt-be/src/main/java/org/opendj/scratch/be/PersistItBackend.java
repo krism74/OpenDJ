@@ -7,7 +7,6 @@ import static org.opendj.scratch.be.Util.decodeEntry;
 import static org.opendj.scratch.be.Util.encodeEntry;
 
 import java.io.File;
-import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Properties;
 
@@ -89,10 +88,8 @@ public final class PersistItBackend implements Backend {
     }
 
     private Key encodeDn(final Key key, final DN dn) {
-        return keyOf(key, dn.toNormalizedString().getBytes(utf8));
+        return keyOf(key, dn.toIrreversibleNormalizedByteString().toByteArray());
     }
-
-    private final Charset utf8 = Charset.forName("UTF-8");
 
     private Key keyOf(final Key key, final byte[] bytes) {
         return key.clear().appendByteArray(bytes, 0, bytes.length);
@@ -104,7 +101,7 @@ public final class PersistItBackend implements Backend {
         properties.setProperty("datapath", DB_DIR.toString());
         properties.setProperty("logpath", DB_DIR.toString());
         properties.setProperty("logfile", "${logpath}/dj_${timestamp}.log");
-        properties.setProperty("buffer.count.16384", "8K");
+        properties.setProperty("buffer.count.16384", "64K");
         properties.setProperty("volume.1", "${datapath}/dj,create,pageSize:16K,"
                 + "initialSize:50M,extensionSize:1M,maximumSize:10G");
         properties.setProperty("journalpath", "${datapath}/dj_journal");
@@ -134,12 +131,14 @@ public final class PersistItBackend implements Backend {
                         encodeDescription(ex.getKey(), newDescriptionKey);
                         ex.getValue().putByteArray(dbId);
                         ex.store();
+                        db.releaseExchange(ex);
                     }
                     // Update id2entry index.
                     final Exchange ex = db.getExchange(volume, "id2entry", false);
                     keyOf(ex.getKey(), dbId);
                     ex.getValue().putByteArray(encodeEntry(entry));
                     ex.store();
+                    db.releaseExchange(ex);
                     txn.commit();
                     break;
                 } catch (RollbackException e) {
@@ -198,36 +197,48 @@ public final class PersistItBackend implements Backend {
 
     private byte[] readDn2Id(final Transaction txn, final DN name) throws Exception {
         final Exchange ex = db.getExchange(volume, "dn2id", false);
-        encodeDn(ex.getKey(), name);
-        ex.fetch();
-        final Value dbId = ex.getValue();
-        if (!dbId.isDefined()) {
-            throw newLdapException(ResultCode.NO_SUCH_OBJECT);
+        try {
+            encodeDn(ex.getKey(), name);
+            ex.fetch();
+            final Value dbId = ex.getValue();
+            if (!dbId.isDefined()) {
+                throw newLdapException(ResultCode.NO_SUCH_OBJECT);
+            }
+            return dbId.getByteArray();
+        } finally {
+            db.releaseExchange(ex);
         }
-        return dbId.getByteArray();
     }
 
     private byte[] readDescription2Id(Transaction txn, ByteString description) throws Exception {
         final Exchange ex = db.getExchange(volume, "description2id", false);
-        keyOf(ex.getKey(), description.toByteArray());
-        ex.fetch();
-        final Value dbId = ex.getValue();
-        if (!dbId.isDefined()) {
-            throw newLdapException(ResultCode.NO_SUCH_OBJECT);
+        try {
+            keyOf(ex.getKey(), description.toByteArray());
+            ex.fetch();
+            final Value dbId = ex.getValue();
+            if (!dbId.isDefined()) {
+                throw newLdapException(ResultCode.NO_SUCH_OBJECT);
+            }
+            return dbId.getByteArray();
+        } finally {
+            db.releaseExchange(ex);
         }
-        return dbId.getByteArray();
     }
 
     private Entry readId2Entry(final Transaction txn, final byte[] dbId, final boolean isRMW)
             throws Exception {
         final Exchange ex = db.getExchange(volume, "id2entry", false);
-        keyOf(ex.getKey(), dbId);
-        ex.fetch();
-        final Value dbEntry = ex.getValue();
-        if (!dbEntry.isDefined()) {
-            throw newLdapException(ResultCode.NO_SUCH_OBJECT);
+        try {
+            keyOf(ex.getKey(), dbId);
+            ex.fetch();
+            final Value dbEntry = ex.getValue();
+            if (!dbEntry.isDefined()) {
+                throw newLdapException(ResultCode.NO_SUCH_OBJECT);
+            }
+            return decodeEntry(dbEntry.getByteArray());
+        } finally {
+            db.releaseExchange(ex);
         }
-        return decodeEntry(dbEntry.getByteArray());
     }
 
 }
