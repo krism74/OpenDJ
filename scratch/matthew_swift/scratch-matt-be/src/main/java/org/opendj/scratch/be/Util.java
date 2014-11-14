@@ -77,7 +77,7 @@ final class Util {
     }
 
     static ByteString encodeDn(final DN dn) {
-        return ByteString.valueOf(dn.toNormalizedString());
+        return dn.toIrreversibleNormalizedByteString();
     }
 
     static byte[] encodeEntry(final Entry entry) throws IOException {
