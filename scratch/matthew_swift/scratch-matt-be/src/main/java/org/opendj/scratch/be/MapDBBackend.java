@@ -44,8 +44,16 @@ public final class MapDBBackend implements Backend {
         DB db =
                 DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().asyncWriteEnable()
                         .commitFileSyncDisable().transactionDisable().closeOnJvmShutdown().make();
-        ConcurrentNavigableMap<Long, byte[]> id2entry =
-                db.createTreeMap("id2entry").valueSerializer(Serializer.BYTE_ARRAY).makeLongMap();
+        ConcurrentNavigableMap<Long, byte[]> id2entry;
+        if (options.containsKey("valuesOutsideNodes")) {
+            id2entry =
+                    db.createTreeMap("id2entry").valueSerializer(Serializer.BYTE_ARRAY)
+                            .valuesOutsideNodesEnable().makeLongMap();
+        } else {
+            id2entry =
+                    db.createTreeMap("id2entry").valueSerializer(Serializer.BYTE_ARRAY)
+                            .makeLongMap();
+        }
         ConcurrentNavigableMap<byte[], Long> dn2id =
                 db.createTreeMap("dn2id").comparator(Fun.BYTE_ARRAY_COMPARATOR).keySerializer(
                         Serializer.BYTE_ARRAY).make();

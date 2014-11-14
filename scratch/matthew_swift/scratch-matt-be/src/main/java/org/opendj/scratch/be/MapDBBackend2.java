@@ -5,6 +5,7 @@ import static org.opendj.scratch.be.Util.*;
 
 import java.io.File;
 import java.util.Map;
+import java.util.concurrent.ConcurrentNavigableMap;
 
 import org.forgerock.opendj.ldap.ByteString;
 import org.forgerock.opendj.ldap.DN;
@@ -39,12 +40,20 @@ public final class MapDBBackend2 implements Backend {
         DB db =
                 DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().asyncWriteEnable()
                         .commitFileSyncDisable().transactionDisable().closeOnJvmShutdown().make();
-        BTreeMap<Long, byte[]> id2entry =
-                db.createTreeMap("id2entry").valueSerializer(Serializer.BYTE_ARRAY).makeLongMap();
-        BTreeMap<byte[], Long> dn2id =
+        ConcurrentNavigableMap<Long, byte[]> id2entry;
+        if (options.containsKey("valuesOutsideNodes")) {
+            id2entry =
+                    db.createTreeMap("id2entry").valueSerializer(Serializer.BYTE_ARRAY)
+                            .valuesOutsideNodesEnable().makeLongMap();
+        } else {
+            id2entry =
+                    db.createTreeMap("id2entry").valueSerializer(Serializer.BYTE_ARRAY)
+                            .makeLongMap();
+        }
+        ConcurrentNavigableMap<byte[], Long> dn2id =
                 db.createTreeMap("dn2id").comparator(Fun.BYTE_ARRAY_COMPARATOR).keySerializer(
                         Serializer.BYTE_ARRAY).make();
-        BTreeMap<byte[], Long> description2id =
+        ConcurrentNavigableMap<byte[], Long> description2id =
                 db.createTreeMap("description2id").comparator(Fun.BYTE_ARRAY_COMPARATOR)
                         .keySerializer(Serializer.BYTE_ARRAY).make();
         try {
