@@ -1,7 +1,9 @@
 package org.opendj.scratch.be;
 
 import static java.util.concurrent.Executors.newFixedThreadPool;
+import static org.forgerock.opendj.ldap.Connections.newLDAPListener;
 import static org.forgerock.opendj.ldap.LdapException.newLdapException;
+import static org.forgerock.opendj.ldap.responses.Responses.newSearchResultEntry;
 import static org.forgerock.util.Utils.closeSilently;
 
 import java.io.IOException;
@@ -14,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.forgerock.opendj.ldap.AbstractFilterVisitor;
+import org.forgerock.opendj.ldap.AttributeFilter;
 import org.forgerock.opendj.ldap.ByteString;
 import org.forgerock.opendj.ldap.Connections;
 import org.forgerock.opendj.ldap.Entry;
@@ -134,13 +137,16 @@ public final class Server {
         public void handleSearch(final RequestContext requestContext, final SearchRequest request,
                 final IntermediateResponseHandler intermediateResponseHandler,
                 final SearchResultHandler entryHandler, final ResultHandler<Result> resultHandler) {
+            final AttributeFilter attributeFilter =
+                    new AttributeFilter(request.getAttributes()).typesOnly(request.isTypesOnly());
             threadPool.execute(new Runnable() {
                 @Override
                 public void run() {
                     if (request.getScope() == SearchScope.BASE_OBJECT) {
                         try {
                             final Entry entry = backend.readEntryByDN(request.getName());
-                            entryHandler.handleEntry(Responses.newSearchResultEntry(entry));
+                            final Entry filteredEntry = attributeFilter.filteredViewOf(entry);
+                            entryHandler.handleEntry(newSearchResultEntry(filteredEntry));
                             success(resultHandler);
                         } catch (final LdapException e) {
                             resultHandler.handleError(e);
@@ -160,8 +166,7 @@ public final class Server {
                                                         final Void p,
                                                         final String attributeDescription,
                                                         final ByteString assertionValue) {
-                                                    if (attributeDescription
-                                                            .equalsIgnoreCase("description")) {
+                                                    if (attributeDescription.equalsIgnoreCase("description")) {
                                                         return assertionValue;
                                                     }
                                                     return visitDefaultFilter(p);
@@ -169,7 +174,8 @@ public final class Server {
                                             }, null);
                             try {
                                 final Entry entry = backend.readEntryByDescription(description);
-                                entryHandler.handleEntry(Responses.newSearchResultEntry(entry));
+                                final Entry filteredEntry = attributeFilter.filteredViewOf(entry);
+                                entryHandler.handleEntry(newSearchResultEntry(filteredEntry));
                                 success(resultHandler);
                             } catch (final LdapException e) {
                                 resultHandler.handleError(e);
@@ -303,7 +309,7 @@ public final class Server {
             LDAPListener listener = null;
             try {
                 backend.initialize(backendOptions);
-                listener = new LDAPListener(localPort, connectionHandler, options);
+                listener = newLDAPListener(localPort, connectionHandler, options);
                 System.out.println("Press any key to stop the server...");
                 System.in.read();
             } catch (final Exception e) {
