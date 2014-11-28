@@ -198,6 +198,7 @@ public final class Server {
         JE(JEBackend.class),
         MAP(MapDBBackend.class),
         MAP2(MapDBBackend2.class),
+        MAP3(MapDBBackend3.class),
         ORIENT(OrientBackend.class),
         ROCKS(RocksDBBackend.class),
         PERSISTIT(PersistItBackend.class);
