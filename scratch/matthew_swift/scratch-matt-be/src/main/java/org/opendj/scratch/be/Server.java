@@ -1,7 +1,6 @@
 package org.opendj.scratch.be;
 
 import static java.util.concurrent.Executors.newFixedThreadPool;
-import static org.forgerock.opendj.ldap.Connections.newLDAPListener;
 import static org.forgerock.opendj.ldap.LdapException.newLdapException;
 import static org.forgerock.opendj.ldap.responses.Responses.newSearchResultEntry;
 import static org.forgerock.util.Utils.closeSilently;
@@ -202,6 +201,7 @@ public final class Server {
 
         // @formatter:off
         JE(JEBackend.class),
+        MAPMEM(MapDBMemBackend.class),
         MAP(MapDBBackend.class),
         MAP2(MapDBBackend2.class),
         MAP3(MapDBBackend3.class),
@@ -309,7 +309,7 @@ public final class Server {
             LDAPListener listener = null;
             try {
                 backend.initialize(backendOptions);
-                listener = newLDAPListener(localPort, connectionHandler, options);
+                listener = new LDAPListener(localPort, connectionHandler, options);
                 System.out.println("Press any key to stop the server...");
                 System.in.read();
             } catch (final Exception e) {
