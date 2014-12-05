@@ -55,7 +55,11 @@ final class Util {
     }
 
     static Entry decodeEntry(final byte[] data) throws LdapException {
-        final ASN1Reader asn1Reader = ASN1.getReader(data);
+        return decodeEntry(data, data.length);
+    }
+
+    static Entry decodeEntry(final byte[] data, final int length) throws LdapException {
+        final ASN1Reader asn1Reader = ASN1.getReader(ByteString.wrap(data, 0, length));
         try {
             return LDAP.readEntry(asn1Reader, DECODE_OPTIONS);
         } catch (final IOException e) {

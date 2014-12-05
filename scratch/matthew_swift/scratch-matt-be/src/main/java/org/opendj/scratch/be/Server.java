@@ -165,7 +165,8 @@ public final class Server {
                                                         final Void p,
                                                         final String attributeDescription,
                                                         final ByteString assertionValue) {
-                                                    if (attributeDescription.equalsIgnoreCase("description")) {
+                                                    if (attributeDescription
+                                                            .equalsIgnoreCase("description")) {
                                                         return assertionValue;
                                                     }
                                                     return visitDefaultFilter(p);
@@ -198,7 +199,6 @@ public final class Server {
     }
 
     private static enum BackendType {
-
         // @formatter:off
         JE(JEBackend.class),
         MAPMEM(MapDBMemBackend.class),
@@ -207,7 +207,8 @@ public final class Server {
         MAP3(MapDBBackend3.class),
         ORIENT(OrientBackend.class),
         ROCKS(RocksDBBackend.class),
-        PERSISTIT(PersistItBackend.class);
+        PERSISTIT(PersistItBackend.class),
+        XODUS(XodusBackend.class);
         // @formatter:on
 
         private final Class<? extends Backend> backendClass;
