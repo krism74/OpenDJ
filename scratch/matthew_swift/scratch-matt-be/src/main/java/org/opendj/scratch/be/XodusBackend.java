@@ -180,6 +180,7 @@ public final class XodusBackend implements Backend {
             throws Exception {
         final EnvironmentConfig envConfig = new EnvironmentConfig();
         envConfig.setLogFileSize(100 * 1024);
+        envConfig.setLogCachePageSize(2 * 1024 * 1024);
         env = Environments.newInstance(DB_DIR, envConfig);
         final StoreConfig storeConfig = isImport ? WITHOUT_DUPLICATES_WITH_PREFIXING : USE_EXISTING;
         env.executeInTransaction(new TransactionalExecutable() {
