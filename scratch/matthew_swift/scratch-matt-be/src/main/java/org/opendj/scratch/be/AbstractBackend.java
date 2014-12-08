@@ -20,85 +20,107 @@ import org.forgerock.opendj.ldap.LdapException;
 import org.forgerock.opendj.ldap.requests.ModifyRequest;
 import org.forgerock.opendj.ldif.EntryReader;
 
-public final class PocBackend implements Backend {
+public abstract class AbstractBackend implements Backend {
 
-    private interface Storage extends Closeable {
+    interface Storage extends Closeable {
 
-        void update(UpdateTransaction updateTransaction);
-
-        <T> T read(ReadTransaction<T> readTransaction);
-
+        @Override
         void close();
-
-        void open(Map<String, String> options);
-
-        void startImport();
-
-        void endImport();
 
         void createTree(TreeName tree, Comparator<ByteSequence> comparator);
 
         void deleteTrees(TreeName tree);
+
+        void endImport();
+
+        void open(Map<String, String> options);
+
+        <T> T read(ReadTransaction<T> readTransaction);
+
+        void startImport();
+
+        void update(UpdateTransaction updateTransaction);
     }
 
-    private static final class TreeName {
+    @SuppressWarnings("serial")
+    final class StorageRuntimeException extends RuntimeException {
+
+        public StorageRuntimeException(String message) {
+            super(message);
+        }
+
+        public StorageRuntimeException(String message, Throwable cause) {
+            super(message, cause);
+        }
+
+        public StorageRuntimeException(Throwable cause) {
+            super(cause);
+        }
+    }
+
+    static final class TreeName {
+        public static TreeName of(final String... names) {
+            return new TreeName(Arrays.asList(names));
+        }
+
         private final List<String> names;
 
         public TreeName(final List<String> names) {
             this.names = names;
         }
 
-        public static TreeName of(String... names) {
-            return new TreeName(Arrays.asList(names));
-        }
-
-        public TreeName child(String name) {
-            List<String> newNames = new ArrayList<String>(names.size() + 1);
+        public TreeName child(final String name) {
+            final List<String> newNames = new ArrayList<String>(names.size() + 1);
             newNames.addAll(names);
             newNames.add(name);
             return new TreeName(newNames);
         }
 
+        public List<String> getNames() {
+            return names;
+        }
     }
 
-    private final TreeName suffix = TreeName.of("dc=example,dc=com");
-    private final TreeName id2entry = suffix.child("id2entry");
-    private final TreeName dn2id = suffix.child("dn2id");
-    private final TreeName description2id = suffix.child("description2id");
-
-    public interface UpdateTransaction {
-        void run(Txn txn) throws Exception;
-    }
-
-    public interface ReadTransaction<T> {
-        T run(Txn txn) throws Exception;
-    }
-
-    public interface Txn {
-
-        void put(TreeName tree, ByteString key, ByteString value);
-
-        void remove(TreeName tree, ByteString key);
+    interface Txn {
 
         ByteString get(TreeName tree, ByteString key);
 
         ByteString getRMW(TreeName tree, ByteString key);
 
+        void put(TreeName tree, ByteString key, ByteString value);
+
+        void remove(TreeName tree, ByteString key);
+
+        // TODO: cursoring, contains, etc.
+
     }
 
-    public class StorageRuntimeException extends RuntimeException {
-
+    interface ReadTransaction<T> {
+        T run(Txn txn) throws Exception;
     }
 
-    private final Storage storage = null;
+    interface UpdateTransaction {
+        void run(Txn txn) throws Exception;
+    }
+
+    private final TreeName suffix = TreeName.of("dc=example,dc=com");
+    private final TreeName description2id = suffix.child("description2id");
+    private final TreeName dn2id = suffix.child("dn2id");
+    private final TreeName id2entry = suffix.child("id2entry");
+
+    private final Storage storage;
+
+    AbstractBackend(final Storage storage) {
+        this.storage = storage;
+    }
 
     @Override
-    public void close() {
+    public final void close() {
         storage.close();
     }
 
     @Override
-    public void importEntries(final EntryReader entries, Map<String, String> options)
+    public final void importEntries(final EntryReader entries, final Map<String, String> options)
             throws Exception {
         storage.deleteTrees(suffix);
         storage.createTree(id2entry, ByteSequence.COMPARATOR);
@@ -109,7 +131,7 @@ public final class PocBackend implements Backend {
         try {
             storage.update(new UpdateTransaction() {
                 @Override
-                public void run(Txn txn) throws Exception {
+                public void run(final Txn txn) throws Exception {
                     for (int nextEntryId = 0; entries.hasNext(); nextEntryId++) {
                         final Entry entry = entries.readEntry();
                         final ByteString dbId = ByteString.valueOf(nextEntryId);
@@ -128,14 +150,15 @@ public final class PocBackend implements Backend {
     }
 
     @Override
-    public void initialize(Map<String, String> options) throws Exception {
+    public final void initialize(final Map<String, String> options) throws Exception {
         storage.open(options);
     }
 
     @Override
-    public void modifyEntry(final ModifyRequest request) throws LdapException {
+    public final void modifyEntry(final ModifyRequest request) throws LdapException {
         storage.update(new UpdateTransaction() {
-            public void run(Txn txn) throws Exception {
+            @Override
+            public void run(final Txn txn) throws Exception {
                 final ByteString dbId = readDn2Id(txn, request.getName());
                 final Entry entry = readId2Entry(txn, dbId, true);
                 final ByteString oldDescriptionKey = encodeDescription(entry);
@@ -153,9 +176,10 @@ public final class PocBackend implements Backend {
     }
 
     @Override
-    public Entry readEntryByDescription(final ByteString description) throws LdapException {
+    public final Entry readEntryByDescription(final ByteString description) throws LdapException {
         return storage.read(new ReadTransaction<Entry>() {
-            public Entry run(Txn txn) throws Exception {
+            @Override
+            public Entry run(final Txn txn) throws Exception {
                 final ByteString dbId = readDescription2Id(txn, description);
                 return readId2Entry(txn, dbId, true);
             }
@@ -163,27 +187,28 @@ public final class PocBackend implements Backend {
     }
 
     @Override
-    public Entry readEntryByDN(final DN name) throws LdapException {
+    public final Entry readEntryByDN(final DN name) throws LdapException {
         return storage.read(new ReadTransaction<Entry>() {
-            public Entry run(Txn txn) throws Exception {
+            @Override
+            public Entry run(final Txn txn) throws Exception {
                 final ByteString dbId = readDn2Id(txn, name);
                 return readId2Entry(txn, dbId, true);
             }
         });
     }
 
-    private ByteString readDn2Id(final Txn txn, final DN name) throws StorageRuntimeException {
-        return txn.get(dn2id, name.toIrreversibleNormalizedByteString());
-    }
-
-    private ByteString readDescription2Id(Txn txn, ByteString description)
+    private ByteString readDescription2Id(final Txn txn, final ByteString description)
             throws StorageRuntimeException {
         return txn.get(description2id, description);
     }
 
+    private ByteString readDn2Id(final Txn txn, final DN name) throws StorageRuntimeException {
+        return txn.get(dn2id, name.toIrreversibleNormalizedByteString());
+    }
+
     private Entry readId2Entry(final Txn txn, final ByteString dbId, final boolean isRMW)
             throws LdapException, StorageRuntimeException {
-        ByteString entry = isRMW ? txn.getRMW(id2entry, dbId) : txn.get(id2entry, dbId);
+        final ByteString entry = isRMW ? txn.getRMW(id2entry, dbId) : txn.get(id2entry, dbId);
         return decodeEntry(entry.toByteArray());
     }
 
