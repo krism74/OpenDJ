@@ -24,6 +24,8 @@ public abstract class AbstractBackend implements Backend {
 
     interface Storage extends Closeable {
 
+        void open(Map<String, String> options);
+
         @Override
         void close();
 
@@ -31,15 +33,13 @@ public abstract class AbstractBackend implements Backend {
 
         void deleteTrees(TreeName tree);
 
-        void endImport();
-
-        void open(Map<String, String> options);
-
-        <T> T read(ReadTransaction<T> readTransaction);
-
         void startImport();
 
-        void update(UpdateTransaction updateTransaction);
+        void endImport();
+
+        <T> T read(ReadTransaction<T> readTransaction) throws Exception;
+
+        void update(UpdateTransaction updateTransaction) throws Exception;
     }
 
     @SuppressWarnings("serial")
@@ -58,17 +58,25 @@ public abstract class AbstractBackend implements Backend {
         }
     }
 
+    /*
+     * Assumes name components don't contain a '/'.
+     */
     static final class TreeName {
         public static TreeName of(final String... names) {
             return new TreeName(Arrays.asList(names));
         }
 
         private final List<String> names;
-        private int hashCode;
+        private final String s;
 
         public TreeName(final List<String> names) {
             this.names = names;
-            this.hashCode = names.hashCode();
+            StringBuilder builder = new StringBuilder();
+            for (String name : names) {
+                builder.append('/');
+                builder.append(name);
+            }
+            this.s = builder.toString();
         }
 
         public TreeName child(final String name) {
@@ -84,7 +92,7 @@ public abstract class AbstractBackend implements Backend {
 
         @Override
         public int hashCode() {
-            return hashCode;
+            return s.hashCode();
         }
 
         @Override
@@ -92,7 +100,7 @@ public abstract class AbstractBackend implements Backend {
             if (this == obj) {
                 return true;
             } else if (obj instanceof TreeName) {
-                return names.equals(((TreeName) obj).names);
+                return s.equals(((TreeName) obj).s);
             } else {
                 return false;
             }
@@ -100,7 +108,7 @@ public abstract class AbstractBackend implements Backend {
 
         @Override
         public String toString() {
-            return names.toString();
+            return s;
         }
     }
 
@@ -179,45 +187,57 @@ public abstract class AbstractBackend implements Backend {
 
     @Override
     public final void modifyEntry(final ModifyRequest request) throws LdapException {
-        storage.update(new UpdateTransaction() {
-            @Override
-            public void run(final Txn txn) throws Exception {
-                final ByteString dbId = readDn2Id(txn, request.getName());
-                final Entry entry = readId2Entry(txn, dbId, true);
-                final ByteString oldDescriptionKey = encodeDescription(entry);
-                Entries.modifyEntry(entry, request);
-                final ByteString newDescriptionKey = encodeDescription(entry);
-                final boolean descriptionHasChanged =
-                        oldDescriptionKey.compareTo(newDescriptionKey) != 0;
-                if (descriptionHasChanged) {
-                    txn.remove(description2id, oldDescriptionKey);
-                    txn.put(description2id, newDescriptionKey, dbId);
+        try {
+            storage.update(new UpdateTransaction() {
+                @Override
+                public void run(final Txn txn) throws Exception {
+                    final ByteString dbId = readDn2Id(txn, request.getName());
+                    final Entry entry = readId2Entry(txn, dbId, true);
+                    final ByteString oldDescriptionKey = encodeDescription(entry);
+                    Entries.modifyEntry(entry, request);
+                    final ByteString newDescriptionKey = encodeDescription(entry);
+                    final boolean descriptionHasChanged =
+                            oldDescriptionKey.compareTo(newDescriptionKey) != 0;
+                    if (descriptionHasChanged) {
+                        txn.remove(description2id, oldDescriptionKey);
+                        txn.put(description2id, newDescriptionKey, dbId);
+                    }
+                    txn.put(id2entry, dbId, ByteString.wrap(encodeEntry(entry)));
                 }
-                txn.put(id2entry, dbId, ByteString.wrap(encodeEntry(entry)));
-            }
-        });
+            });
+        } catch (Exception e) {
+            throw Util.adaptException(e);
+        }
     }
 
     @Override
     public final Entry readEntryByDescription(final ByteString description) throws LdapException {
-        return storage.read(new ReadTransaction<Entry>() {
-            @Override
-            public Entry run(final Txn txn) throws Exception {
-                final ByteString dbId = readDescription2Id(txn, description);
-                return readId2Entry(txn, dbId, true);
-            }
-        });
+        try {
+            return storage.read(new ReadTransaction<Entry>() {
+                @Override
+                public Entry run(final Txn txn) throws Exception {
+                    final ByteString dbId = readDescription2Id(txn, description);
+                    return readId2Entry(txn, dbId, true);
+                }
+            });
+        } catch (Exception e) {
+            throw Util.adaptException(e);
+        }
     }
 
     @Override
     public final Entry readEntryByDN(final DN name) throws LdapException {
-        return storage.read(new ReadTransaction<Entry>() {
-            @Override
-            public Entry run(final Txn txn) throws Exception {
-                final ByteString dbId = readDn2Id(txn, name);
-                return readId2Entry(txn, dbId, true);
-            }
-        });
+        try {
+            return storage.read(new ReadTransaction<Entry>() {
+                @Override
+                public Entry run(final Txn txn) throws Exception {
+                    final ByteString dbId = readDn2Id(txn, name);
+                    return readId2Entry(txn, dbId, true);
+                }
+            });
+        } catch (Exception e) {
+            throw Util.adaptException(e);
+        }
     }
 
     private ByteString readDescription2Id(final Txn txn, final ByteString description)
