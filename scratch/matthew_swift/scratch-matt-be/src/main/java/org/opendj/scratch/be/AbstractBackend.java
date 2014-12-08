@@ -64,9 +64,11 @@ public abstract class AbstractBackend implements Backend {
         }
 
         private final List<String> names;
+        private int hashCode;
 
         public TreeName(final List<String> names) {
             this.names = names;
+            this.hashCode = names.hashCode();
         }
 
         public TreeName child(final String name) {
@@ -78,6 +80,27 @@ public abstract class AbstractBackend implements Backend {
 
         public List<String> getNames() {
             return names;
+        }
+
+        @Override
+        public int hashCode() {
+            return hashCode;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            } else if (obj instanceof TreeName) {
+                return names.equals(((TreeName) obj).names);
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public String toString() {
+            return names.toString();
         }
     }
 
