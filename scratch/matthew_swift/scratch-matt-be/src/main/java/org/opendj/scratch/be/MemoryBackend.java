@@ -46,7 +46,12 @@ public final class MemoryBackend extends AbstractBackend {
         }
 
         @Override
-        public void open(Map<String, String> options) {
+        public void initialize(Map<String, String> options) {
+            // Nothing to do.
+        }
+
+        @Override
+        public void open() {
             if (db != null) {
                 throw new IllegalStateException("Already open!");
             }

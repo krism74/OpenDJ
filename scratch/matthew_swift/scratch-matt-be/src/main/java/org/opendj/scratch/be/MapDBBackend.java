@@ -78,6 +78,10 @@ public final class MapDBBackend implements Backend {
     @Override
     public void initialize(final Map<String, String> options) throws Exception {
         this.options = options;
+    }
+
+    @Override
+    public void open() throws Exception {
         final boolean useCache = options.containsKey("useCache");
         final int cacheSize =
                 options.containsKey("cacheSize") ? Integer.valueOf(options.get("cacheSize"))

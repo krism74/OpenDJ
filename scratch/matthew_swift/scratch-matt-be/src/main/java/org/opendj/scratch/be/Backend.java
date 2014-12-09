@@ -15,12 +15,14 @@ public interface Backend {
 
     void importEntries(EntryReader entries) throws Exception;
 
-    void initialize(Map<String, String> options) throws Exception;
+    void open() throws Exception;
 
     void modifyEntry(ModifyRequest request) throws LdapException;
 
     Entry readEntryByDescription(ByteString description) throws LdapException;
 
     Entry readEntryByDN(DN name) throws LdapException;
+
+    void initialize(Map<String, String> options) throws Exception;
 
 }

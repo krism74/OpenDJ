@@ -94,6 +94,11 @@ public final class OrientBackend implements Backend {
     }
 
     @Override
+    public void open() throws Exception {
+        // No op
+    }
+
+    @Override
     public void initialize(final Map<String, String> options) throws Exception {
         // OGlobalConfiguration.CACHE_LEVEL2_ENABLED.setValue(true);
         // OGlobalConfiguration.CACHE_LEVEL2_SIZE.setValue(100000);

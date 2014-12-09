@@ -33,24 +33,26 @@ import com.persistit.exception.RollbackException;
 public final class PersistItBackend implements Backend {
     private static final File DB_DIR = new File("target/persistItBackend");
 
+    private Properties properties;
     private Persistit db;
     private Volume volume;
 
     @Override
-    public void close() {
-        if (db != null) {
-            try {
-                db.close();
-                db = null;
-            } catch (PersistitException e) {
-                throw new IllegalStateException(e);
-            }
-        }
+    public void initialize(Map<String, String> options) throws Exception {
+        properties = new Properties();
+        properties.setProperty("datapath", DB_DIR.toString());
+        properties.setProperty("logpath", DB_DIR.toString());
+        properties.setProperty("logfile", "${logpath}/dj_${timestamp}.log");
+        properties.setProperty("buffer.count.16384", "64K");
+        properties.setProperty("volume.1", "${datapath}/dj,create,pageSize:16K,"
+                + "initialSize:50M,extensionSize:1M,maximumSize:10G");
+        properties.setProperty("journalpath", "${datapath}/dj_journal");
     }
 
     @Override
     public void importEntries(EntryReader entries) throws Exception {
         clearAndCreateDbDir(DB_DIR);
+        open();
         final Tree id2entry = volume.getTree("id2entry", true);
         final Tree dn2id = volume.getTree("dn2id", true);
         final Tree description2id = volume.getTree("description2id", true);
@@ -82,6 +84,25 @@ public final class PersistItBackend implements Backend {
         }
     }
 
+    @Override
+    public void open() throws Exception {
+        db = new Persistit(properties);
+        db.initialize();
+        volume = db.loadVolume("dj");
+    }
+
+    @Override
+    public void close() {
+        if (db != null) {
+            try {
+                db.close();
+                db = null;
+            } catch (PersistitException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+    }
+
     private Key encodeDescription(final Key key, final ByteString encodedDescription) {
         return keyOf(key, encodedDescription.toByteArray());
     }
@@ -92,21 +113,6 @@ public final class PersistItBackend implements Backend {
 
     private Key keyOf(final Key key, final byte[] bytes) {
         return key.clear().appendByteArray(bytes, 0, bytes.length);
-    }
-
-    @Override
-    public void initialize(Map<String, String> options) throws Exception {
-        final Properties properties = new Properties();
-        properties.setProperty("datapath", DB_DIR.toString());
-        properties.setProperty("logpath", DB_DIR.toString());
-        properties.setProperty("logfile", "${logpath}/dj_${timestamp}.log");
-        properties.setProperty("buffer.count.16384", "64K");
-        properties.setProperty("volume.1", "${datapath}/dj,create,pageSize:16K,"
-                + "initialSize:50M,extensionSize:1M,maximumSize:10G");
-        properties.setProperty("journalpath", "${datapath}/dj_journal");
-        db = new Persistit(properties);
-        db.initialize();
-        volume = db.loadVolume("dj");
     }
 
     @Override

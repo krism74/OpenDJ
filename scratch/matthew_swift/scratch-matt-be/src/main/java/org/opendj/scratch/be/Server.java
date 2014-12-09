@@ -201,7 +201,7 @@ public final class Server {
     private static enum BackendType {
         // @formatter:off
         JE(JEBackend.class),
-        MAPMEM(MapDBMemBackend.class),
+        MEM(MemoryBackend.class),
         MAP(MapDBBackend.class),
         MAP2(MapDBBackend2.class),
         MAP3(MapDBBackend3.class),
@@ -217,8 +217,10 @@ public final class Server {
             this.backendClass = backendClass;
         }
 
-        public Backend createBackend() throws Exception {
-            return backendClass.newInstance();
+        public Backend createBackend(Map<String, String> backendOptions) throws Exception {
+            Backend backend = backendClass.newInstance();
+            backend.initialize(backendOptions);
+            return backend;
         }
     }
 
@@ -251,7 +253,7 @@ public final class Server {
         System.out.print("Initializing " + backendType + " backend...");
         final Backend backend;
         try {
-            backend = backendType.createBackend();
+            backend = backendType.createBackend(backendOptions);
         } catch (final Exception e) {
             System.out.println("failed");
             e.printStackTrace();
@@ -309,7 +311,7 @@ public final class Server {
             final LDAPListenerOptions options = new LDAPListenerOptions().setBacklog(4096);
             LDAPListener listener = null;
             try {
-                backend.initialize(backendOptions);
+                backend.open();
                 listener = new LDAPListener(localPort, connectionHandler, options);
                 System.out.println("Press any key to stop the server...");
                 System.in.read();

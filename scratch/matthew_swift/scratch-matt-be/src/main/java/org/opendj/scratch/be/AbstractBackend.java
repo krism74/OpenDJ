@@ -48,13 +48,15 @@ public abstract class AbstractBackend implements Backend {
 
         void deleteTrees(TreeName name);
 
-        void open(Map<String, String> options);
+        void open();
 
         <T> T read(ReadTransaction<T> readTransaction) throws Exception;
 
         Importer startImport();
 
         void update(UpdateTransaction updateTransaction) throws Exception;
+
+        void initialize(Map<String, String> options);
     }
 
     @SuppressWarnings("serial")
@@ -147,6 +149,11 @@ public abstract class AbstractBackend implements Backend {
     }
 
     @Override
+    public void initialize(Map<String, String> options) {
+        storage.initialize(options);
+    }
+
+    @Override
     public final void close() {
         lock.writeLock().lock();
         try {
@@ -186,10 +193,10 @@ public abstract class AbstractBackend implements Backend {
     }
 
     @Override
-    public final void initialize(final Map<String, String> options) throws Exception {
+    public final void open() throws Exception {
         lock.writeLock().lock();
         try {
-            storage.open(options);
+            storage.open();
         } finally {
             lock.writeLock().unlock();
         }

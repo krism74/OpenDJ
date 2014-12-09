@@ -30,6 +30,23 @@ public final class MapDBBackend2 implements Backend {
     private Map<String, String> options;
 
     @Override
+    public void open() throws Exception {
+        final boolean useCache = options.containsKey("useCache");
+        final int cacheSize =
+                options.containsKey("cacheSize") ? Integer.valueOf(options.get("cacheSize"))
+                        : 32768;
+        if (useCache) {
+            txMaker =
+                    DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().closeOnJvmShutdown()
+                            .cacheSize(cacheSize).commitFileSyncDisable().makeTxMaker();
+        } else {
+            txMaker =
+                    DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().closeOnJvmShutdown()
+                            .cacheDisable().commitFileSyncDisable().makeTxMaker();
+        }
+    }
+
+    @Override
     public void close() {
         closeSilently(txMaker);
     }
@@ -74,19 +91,6 @@ public final class MapDBBackend2 implements Backend {
     @Override
     public void initialize(final Map<String, String> options) throws Exception {
         this.options = options;
-        final boolean useCache = options.containsKey("useCache");
-        final int cacheSize =
-                options.containsKey("cacheSize") ? Integer.valueOf(options.get("cacheSize"))
-                        : 32768;
-        if (useCache) {
-            txMaker =
-                    DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().closeOnJvmShutdown()
-                            .cacheSize(cacheSize).commitFileSyncDisable().makeTxMaker();
-        } else {
-            txMaker =
-                    DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().closeOnJvmShutdown()
-                            .cacheDisable().commitFileSyncDisable().makeTxMaker();
-        }
     }
 
     @Override

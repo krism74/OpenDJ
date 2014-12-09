@@ -31,6 +31,26 @@ public final class MapDBBackend3 implements Backend {
     private Map<String, String> options;
 
     @Override
+    public void open() throws Exception {
+        final boolean useCache = options.containsKey("useCache");
+        final int cacheSize =
+                options.containsKey("cacheSize") ? Integer.valueOf(options.get("cacheSize"))
+                        : 32768;
+        if (useCache) {
+            db =
+                    DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().closeOnJvmShutdown()
+                            .cacheSize(cacheSize).commitFileSyncDisable().snapshotEnable().make();
+        } else {
+            db =
+                    DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().closeOnJvmShutdown()
+                            .cacheDisable().commitFileSyncDisable().snapshotEnable().make();
+        }
+        id2entry = db.getTreeMap("id2entry");
+        dn2id = db.getTreeMap("dn2id");
+        description2id = db.getTreeMap("description2id");
+    }
+
+    @Override
     public void close() {
         closeSilently(db);
     }
@@ -40,8 +60,7 @@ public final class MapDBBackend3 implements Backend {
         clearAndCreateDbDir(DB_DIR);
         DB db =
                 DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().asyncWriteEnable()
-                        .commitFileSyncDisable().closeOnJvmShutdown()
-                        .snapshotEnable().make();
+                        .commitFileSyncDisable().closeOnJvmShutdown().snapshotEnable().make();
         ConcurrentNavigableMap<Long, byte[]> id2entry;
         if (options.containsKey("valuesOutsideNodes")) {
             id2entry =
@@ -77,22 +96,6 @@ public final class MapDBBackend3 implements Backend {
     @Override
     public void initialize(final Map<String, String> options) throws Exception {
         this.options = options;
-        final boolean useCache = options.containsKey("useCache");
-        final int cacheSize =
-                options.containsKey("cacheSize") ? Integer.valueOf(options.get("cacheSize"))
-                        : 32768;
-        if (useCache) {
-            db =
-                    DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().closeOnJvmShutdown()
-                            .cacheSize(cacheSize).commitFileSyncDisable().snapshotEnable().make();
-        } else {
-            db =
-                    DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().closeOnJvmShutdown()
-                            .cacheDisable().commitFileSyncDisable().snapshotEnable().make();
-        }
-        id2entry = db.getTreeMap("id2entry");
-        dn2id = db.getTreeMap("dn2id");
-        description2id = db.getTreeMap("description2id");
     }
 
     @Override

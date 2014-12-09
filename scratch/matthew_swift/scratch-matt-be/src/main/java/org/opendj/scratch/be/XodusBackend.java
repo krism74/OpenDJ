@@ -41,8 +41,6 @@ public final class XodusBackend implements Backend {
     private Environment env = null;
     private Store id2entry = null;
 
-    private Map<String, String> options;
-
     @Override
     public void close() {
         if (env != null) {
@@ -55,8 +53,14 @@ public final class XodusBackend implements Backend {
     }
 
     @Override
+    public void initialize(Map<String, String> options) throws Exception {
+        // No op
+    }
+
+    @Override
     public void importEntries(final EntryReader entries) throws Exception {
         clearAndCreateDbDir(DB_DIR);
+        open(true);
         final Transaction txn = env.beginTransaction();
         try {
             for (int nextEntryId = 0; entries.hasNext(); nextEntryId++) {
@@ -78,9 +82,8 @@ public final class XodusBackend implements Backend {
     }
 
     @Override
-    public void initialize(final Map<String, String> options) throws Exception {
-        this.options = options;
-        initialize(options, false);
+    public void open() throws Exception {
+        open(false);
     }
 
     @Override
@@ -177,9 +180,7 @@ public final class XodusBackend implements Backend {
         return new ArrayByteIterable(ByteString.valueOf(entryId).toByteArray());
     }
 
-    // FIXME, this method initializes differently for imports
-    private void initialize(final Map<String, String> options, final boolean isImport)
-            throws Exception {
+    private void open(final boolean isImport) throws Exception {
         final EnvironmentConfig envConfig = new EnvironmentConfig();
         envConfig.setLogFileSize(100 * 1024);
         envConfig.setLogCachePageSize(2 * 1024 * 1024);

@@ -60,8 +60,14 @@ public final class JEBackend implements Backend {
     }
 
     @Override
+    public void initialize(final Map<String, String> options) throws Exception {
+        // No op
+    }
+
+    @Override
     public void importEntries(final EntryReader entries) throws Exception {
         clearAndCreateDbDir(DB_DIR);
+        initialize(true);
         try {
             for (int nextEntryId = 0; entries.hasNext(); nextEntryId++) {
                 final Entry entry = entries.readEntry();
@@ -80,8 +86,8 @@ public final class JEBackend implements Backend {
     }
 
     @Override
-    public void initialize(final Map<String, String> options) throws Exception {
-        initialize(options, false);
+    public void open() throws Exception {
+        initialize(false);
     }
 
     @Override
@@ -154,8 +160,7 @@ public final class JEBackend implements Backend {
         return new DatabaseEntry(ByteString.valueOf(entryId).toByteArray());
     }
 
-    private void initialize(final Map<String, String> options, final boolean isImport)
-            throws Exception {
+    private void initialize(final boolean isImport) throws Exception {
         final EnvironmentConfig envConfig = new EnvironmentConfig();
         envConfig.setTransactional(!isImport);
         envConfig.setAllowCreate(true);
@@ -175,8 +180,7 @@ public final class JEBackend implements Backend {
         description2id = env.openDatabase(null, "description2id", dbConfig);
     }
 
-    private DatabaseEntry readDn2Id(final Transaction txn, final DN name)
-            throws LdapException {
+    private DatabaseEntry readDn2Id(final Transaction txn, final DN name) throws LdapException {
         final DatabaseEntry dbKey = encodeDn(name);
         final DatabaseEntry dbId = new DatabaseEntry();
         if (dn2id.get(txn, dbKey, dbId, LockMode.READ_COMMITTED) != OperationStatus.SUCCESS) {

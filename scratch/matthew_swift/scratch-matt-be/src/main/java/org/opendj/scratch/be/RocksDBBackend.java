@@ -38,12 +38,20 @@ public final class RocksDBBackend implements Backend {
     }
 
     @Override
-    public void importEntries(final EntryReader entries) throws Exception {
-        clearAndCreateDbDir(DB_DIR);
-
+    public void initialize(final Map<String, String> options) throws Exception {
         RocksDB.loadLibrary();
         dbOptions = new Options().setCreateIfMissing(true);
+    }
+
+    @Override
+    public void open() throws Exception {
         db = RocksDB.open(dbOptions, DB_DIR.toString());
+    }
+
+    @Override
+    public void importEntries(final EntryReader entries) throws Exception {
+        clearAndCreateDbDir(DB_DIR);
+        open();
 
         try {
             final ByteStringBuilder builder = new ByteStringBuilder();
@@ -74,13 +82,6 @@ public final class RocksDBBackend implements Backend {
         } finally {
             close();
         }
-    }
-
-    @Override
-    public void initialize(final Map<String, String> options) throws Exception {
-        RocksDB.loadLibrary();
-        dbOptions = new Options().setCreateIfMissing(true);
-        db = RocksDB.open(dbOptions, DB_DIR.toString());
     }
 
     @Override
