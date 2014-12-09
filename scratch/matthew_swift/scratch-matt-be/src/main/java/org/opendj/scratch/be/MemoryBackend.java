@@ -4,7 +4,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentNavigableMap;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.forgerock.opendj.ldap.ByteSequence;
 import org.forgerock.opendj.ldap.ByteString;
@@ -15,101 +14,73 @@ import org.mapdb.Serializer;
 public final class MemoryBackend extends AbstractBackend {
 
     public static final class MapDBMemStorage implements Storage {
-        private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-
         private DB db;
         private final Map<TreeName, ConcurrentNavigableMap<ByteString, ByteString>> trees =
                 new HashMap<TreeName, ConcurrentNavigableMap<ByteString, ByteString>>();
 
         @Override
         public void close() {
-            lock.writeLock().lock();
-            try {
-                if (db != null) {
-                    db.close();
-                    db = null;
-                }
-                trees.clear();
-            } finally {
-                lock.writeLock().unlock();
+            if (db != null) {
+                db.close();
+                db = null;
             }
+            trees.clear();
         }
 
         @Override
         public void createTree(TreeName name, Comparator<ByteSequence> comparator) {
-            lock.writeLock().lock();
-            try {
-                // FIXME: use correct serializers.
-                ConcurrentNavigableMap<ByteString, ByteString> tree =
-                        db.createTreeMap(name.toString()).comparator(comparator).keySerializer(
-                                Serializer.BYTE_ARRAY).valueSerializer(Serializer.BYTE_ARRAY)
-                                .make();
-                trees.put(name, tree);
-            } finally {
-                lock.writeLock().unlock();
-            }
+            // FIXME: use correct serializers.
+            ConcurrentNavigableMap<ByteString, ByteString> tree =
+                    db.createTreeMap(name.toString()).comparator(comparator).keySerializer(
+                            Serializer.BYTE_ARRAY).valueSerializer(Serializer.BYTE_ARRAY).make();
+            trees.put(name, tree);
         }
 
         @Override
         public void deleteTrees(TreeName name) {
             // FIXME: delete subtrees
-            lock.writeLock().lock();
-            try {
-                ConcurrentNavigableMap<ByteString, ByteString> tree = trees.remove(name);
-                if (tree != null) {
-                    db.delete(name.toString());
-                }
-            } finally {
-                lock.writeLock().unlock();
+            ConcurrentNavigableMap<ByteString, ByteString> tree = trees.remove(name);
+            if (tree != null) {
+                db.delete(name.toString());
             }
         }
 
         @Override
         public void open(Map<String, String> options) {
-            lock.writeLock().lock();
-            try {
-                if (db != null) {
-                    throw new IllegalStateException("Already open!");
-                }
-                db =
-                        DBMaker.newMemoryDirectDB().cacheDisable().closeOnJvmShutdown()
-                                .transactionDisable().make();
-            } finally {
-                lock.writeLock().unlock();
+            if (db != null) {
+                throw new IllegalStateException("Already open!");
             }
+            db =
+                    DBMaker.newMemoryDirectDB().cacheDisable().closeOnJvmShutdown()
+                            .transactionDisable().make();
         }
 
         @Override
-        public void startImport() {
-            lock.writeLock().lock();
-        }
+        public Importer startImport() {
+            return new Importer() {
+                @Override
+                public void put(TreeName name, ByteString key, ByteString value) {
+                    trees.get(name).put(key, value);
+                }
 
-        @Override
-        public void endImport() {
-            lock.writeLock().unlock();
+                @Override
+                public void close() {
+                    // Nothing to do.
+                }
+            };
         }
 
         @Override
         public <T> T read(ReadTransaction<T> readTransaction) throws Exception {
-            lock.readLock().lock();
-            try {
-                return readTransaction.run(new MapDBTxn());
-            } finally {
-                lock.readLock().unlock();
-            }
+            return readTransaction.run(new MapDBTxn());
         }
 
         @Override
         public void update(UpdateTransaction updateTransaction) throws Exception {
-            lock.readLock().lock();
-            try {
-                updateTransaction.run(new MapDBTxn());
-            } finally {
-                lock.readLock().unlock();
-            }
+            updateTransaction.run(new MapDBTxn());
         }
 
-        public final class MapDBTxn implements Txn {
+        public final class MapDBTxn implements UpdateTxn {
 
             @Override
             public ByteString get(TreeName name, ByteString key) {

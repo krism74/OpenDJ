@@ -1,5 +1,6 @@
 package org.opendj.scratch.be;
 
+import static org.opendj.scratch.be.Util.adaptException;
 import static org.opendj.scratch.be.Util.decodeEntry;
 import static org.opendj.scratch.be.Util.encodeDescription;
 import static org.opendj.scratch.be.Util.encodeEntry;
@@ -10,6 +11,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.forgerock.opendj.ldap.ByteSequence;
 import org.forgerock.opendj.ldap.ByteString;
@@ -22,22 +24,38 @@ import org.forgerock.opendj.ldif.EntryReader;
 
 public abstract class AbstractBackend implements Backend {
 
+    interface Importer extends Closeable {
+        @Override
+        public void close();
+
+        void put(TreeName name, ByteString key, ByteString value);
+    }
+
+    interface ReadTransaction<T> {
+        T run(ReadTxn txn) throws Exception;
+    }
+
+    interface ReadTxn {
+        ByteString get(TreeName name, ByteString key);
+
+        ByteString getRMW(TreeName name, ByteString key);
+
+        // TODO: cursoring, contains, etc.
+    }
+
     interface Storage extends Closeable {
-
-        void open(Map<String, String> options);
-
         @Override
         void close();
 
-        void createTree(TreeName tree, Comparator<ByteSequence> comparator);
+        void createTree(TreeName name, Comparator<ByteSequence> comparator);
 
-        void deleteTrees(TreeName tree);
+        void deleteTrees(TreeName name);
 
-        void startImport();
-
-        void endImport();
+        void open(Map<String, String> options);
 
         <T> T read(ReadTransaction<T> readTransaction) throws Exception;
+
+        Importer startImport();
 
         void update(UpdateTransaction updateTransaction) throws Exception;
     }
@@ -45,15 +63,15 @@ public abstract class AbstractBackend implements Backend {
     @SuppressWarnings("serial")
     final class StorageRuntimeException extends RuntimeException {
 
-        public StorageRuntimeException(String message) {
+        public StorageRuntimeException(final String message) {
             super(message);
         }
 
-        public StorageRuntimeException(String message, Throwable cause) {
+        public StorageRuntimeException(final String message, final Throwable cause) {
             super(message, cause);
         }
 
-        public StorageRuntimeException(Throwable cause) {
+        public StorageRuntimeException(final Throwable cause) {
             super(cause);
         }
     }
@@ -71,8 +89,8 @@ public abstract class AbstractBackend implements Backend {
 
         public TreeName(final List<String> names) {
             this.names = names;
-            StringBuilder builder = new StringBuilder();
-            for (String name : names) {
+            final StringBuilder builder = new StringBuilder();
+            for (final String name : names) {
                 builder.append('/');
                 builder.append(name);
             }
@@ -86,6 +104,17 @@ public abstract class AbstractBackend implements Backend {
             return new TreeName(newNames);
         }
 
+        @Override
+        public boolean equals(final Object obj) {
+            if (this == obj) {
+                return true;
+            } else if (obj instanceof TreeName) {
+                return s.equals(((TreeName) obj).s);
+            } else {
+                return false;
+            }
+        }
+
         public List<String> getNames() {
             return names;
         }
@@ -96,49 +125,26 @@ public abstract class AbstractBackend implements Backend {
         }
 
         @Override
-        public boolean equals(Object obj) {
-            if (this == obj) {
-                return true;
-            } else if (obj instanceof TreeName) {
-                return s.equals(((TreeName) obj).s);
-            } else {
-                return false;
-            }
-        }
-
-        @Override
         public String toString() {
             return s;
         }
     }
 
-    interface Txn {
-
-        ByteString get(TreeName tree, ByteString key);
-
-        ByteString getRMW(TreeName tree, ByteString key);
-
-        void put(TreeName tree, ByteString key, ByteString value);
-
-        void remove(TreeName tree, ByteString key);
-
-        // TODO: cursoring, contains, etc.
-
-    }
-
-    interface ReadTransaction<T> {
-        T run(Txn txn) throws Exception;
-    }
-
     interface UpdateTransaction {
-        void run(Txn txn) throws Exception;
+        void run(UpdateTxn txn) throws Exception;
     }
 
+    interface UpdateTxn extends ReadTxn {
+        void put(TreeName name, ByteString key, ByteString value);
+
+        void remove(TreeName name, ByteString key);
+    }
+
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private final TreeName suffix = TreeName.of("dc=example,dc=com");
     private final TreeName description2id = suffix.child("description2id");
     private final TreeName dn2id = suffix.child("dn2id");
     private final TreeName id2entry = suffix.child("id2entry");
-
     private final Storage storage;
 
     AbstractBackend(final Storage storage) {
@@ -147,50 +153,61 @@ public abstract class AbstractBackend implements Backend {
 
     @Override
     public final void close() {
-        storage.close();
+        lock.writeLock().lock();
+        try {
+            storage.close();
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 
     @Override
     public final void importEntries(final EntryReader entries, final Map<String, String> options)
             throws Exception {
-        storage.deleteTrees(suffix);
-        storage.createTree(id2entry, ByteSequence.COMPARATOR);
-        storage.createTree(dn2id, ByteSequence.COMPARATOR);
-        storage.createTree(description2id, ByteSequence.COMPARATOR);
-
-        storage.startImport();
+        lock.writeLock().lock();
         try {
-            storage.update(new UpdateTransaction() {
-                @Override
-                public void run(final Txn txn) throws Exception {
-                    for (int nextEntryId = 0; entries.hasNext(); nextEntryId++) {
-                        final Entry entry = entries.readEntry();
-                        final ByteString dbId = ByteString.valueOf(nextEntryId);
-                        txn.put(id2entry, dbId, ByteString.wrap(encodeEntry(entry)));
-                        txn.put(dn2id, dbId, entry.getName().toIrreversibleNormalizedByteString());
-                        final ByteString encodedDescription = encodeDescription(entry);
-                        if (encodedDescription != null) {
-                            txn.put(description2id, encodedDescription, dbId);
-                        }
+            storage.deleteTrees(suffix);
+            storage.createTree(id2entry, ByteSequence.COMPARATOR);
+            storage.createTree(dn2id, ByteSequence.COMPARATOR);
+            storage.createTree(description2id, ByteSequence.COMPARATOR);
+
+            final Importer importer = storage.startImport();
+            try {
+                for (int nextEntryId = 0; entries.hasNext(); nextEntryId++) {
+                    final Entry entry = entries.readEntry();
+                    final ByteString dbId = ByteString.valueOf(nextEntryId);
+                    importer.put(id2entry, dbId, ByteString.wrap(encodeEntry(entry)));
+                    importer.put(dn2id, dbId, entry.getName().toIrreversibleNormalizedByteString());
+                    final ByteString encodedDescription = encodeDescription(entry);
+                    if (encodedDescription != null) {
+                        importer.put(description2id, encodedDescription, dbId);
                     }
                 }
-            });
+            } finally {
+                importer.close();
+            }
         } finally {
-            storage.endImport();
+            lock.writeLock().unlock();
         }
     }
 
     @Override
     public final void initialize(final Map<String, String> options) throws Exception {
-        storage.open(options);
+        lock.writeLock().lock();
+        try {
+            storage.open(options);
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 
     @Override
     public final void modifyEntry(final ModifyRequest request) throws LdapException {
+        lock.readLock().lock();
         try {
             storage.update(new UpdateTransaction() {
                 @Override
-                public void run(final Txn txn) throws Exception {
+                public void run(final UpdateTxn txn) throws Exception {
                     final ByteString dbId = readDn2Id(txn, request.getName());
                     final Entry entry = readId2Entry(txn, dbId, true);
                     final ByteString oldDescriptionKey = encodeDescription(entry);
@@ -205,51 +222,59 @@ public abstract class AbstractBackend implements Backend {
                     txn.put(id2entry, dbId, ByteString.wrap(encodeEntry(entry)));
                 }
             });
-        } catch (Exception e) {
-            throw Util.adaptException(e);
+        } catch (final Exception e) {
+            throw adaptException(e);
+        } finally {
+            lock.readLock().unlock();
         }
     }
 
     @Override
     public final Entry readEntryByDescription(final ByteString description) throws LdapException {
+        lock.readLock().lock();
         try {
             return storage.read(new ReadTransaction<Entry>() {
                 @Override
-                public Entry run(final Txn txn) throws Exception {
+                public Entry run(final ReadTxn txn) throws Exception {
                     final ByteString dbId = readDescription2Id(txn, description);
                     return readId2Entry(txn, dbId, true);
                 }
             });
-        } catch (Exception e) {
-            throw Util.adaptException(e);
+        } catch (final Exception e) {
+            throw adaptException(e);
+        } finally {
+            lock.readLock().unlock();
         }
     }
 
     @Override
     public final Entry readEntryByDN(final DN name) throws LdapException {
+        lock.readLock().lock();
         try {
             return storage.read(new ReadTransaction<Entry>() {
                 @Override
-                public Entry run(final Txn txn) throws Exception {
+                public Entry run(final ReadTxn txn) throws Exception {
                     final ByteString dbId = readDn2Id(txn, name);
                     return readId2Entry(txn, dbId, true);
                 }
             });
-        } catch (Exception e) {
-            throw Util.adaptException(e);
+        } catch (final Exception e) {
+            throw adaptException(e);
+        } finally {
+            lock.readLock().unlock();
         }
     }
 
-    private ByteString readDescription2Id(final Txn txn, final ByteString description)
+    private ByteString readDescription2Id(final ReadTxn txn, final ByteString description)
             throws StorageRuntimeException {
         return txn.get(description2id, description);
     }
 
-    private ByteString readDn2Id(final Txn txn, final DN name) throws StorageRuntimeException {
+    private ByteString readDn2Id(final ReadTxn txn, final DN name) throws StorageRuntimeException {
         return txn.get(dn2id, name.toIrreversibleNormalizedByteString());
     }
 
-    private Entry readId2Entry(final Txn txn, final ByteString dbId, final boolean isRMW)
+    private Entry readId2Entry(final ReadTxn txn, final ByteString dbId, final boolean isRMW)
             throws LdapException, StorageRuntimeException {
         final ByteString entry = isRMW ? txn.getRMW(id2entry, dbId) : txn.get(id2entry, dbId);
         return decodeEntry(entry.toByteArray());
