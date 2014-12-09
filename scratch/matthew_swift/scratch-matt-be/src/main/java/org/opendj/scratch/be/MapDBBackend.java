@@ -1,5 +1,6 @@
 package org.opendj.scratch.be;
 
+import static org.forgerock.util.Utils.closeSilently;
 import static org.opendj.scratch.be.Util.*;
 
 import java.io.File;
@@ -13,29 +14,41 @@ import org.forgerock.opendj.ldap.Entry;
 import org.forgerock.opendj.ldap.LdapException;
 import org.forgerock.opendj.ldap.requests.ModifyRequest;
 import org.forgerock.opendj.ldif.EntryReader;
+import org.mapdb.BTreeMap;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.Fun;
 import org.mapdb.Serializer;
+import org.mapdb.TxMaker;
+import org.mapdb.TxRollbackException;
 
 public final class MapDBBackend implements Backend {
     private static final File DB_DIR = new File("target/mapBackend");
     private static final File DB_FILE = new File(DB_DIR, "db");
 
-    private DB db;
-    private ConcurrentNavigableMap<byte[], Long> description2id;
-    private ConcurrentNavigableMap<byte[], Long> dn2id;
-    private ConcurrentNavigableMap<Long, byte[]> id2entry;
+    private TxMaker txMaker;
     private Map<String, String> options;
 
     @Override
-    public void close() {
-        if (db != null) {
-            db.commit();
-            // db.compact();
-            db.close();
-            db = null;
+    public void open() throws Exception {
+        final boolean useCache = options.containsKey("useCache");
+        final int cacheSize =
+                options.containsKey("cacheSize") ? Integer.valueOf(options.get("cacheSize"))
+                        : 32768;
+        if (useCache) {
+            txMaker =
+                    DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().closeOnJvmShutdown()
+                            .cacheSize(cacheSize).commitFileSyncDisable().makeTxMaker();
+        } else {
+            txMaker =
+                    DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().closeOnJvmShutdown()
+                            .cacheDisable().commitFileSyncDisable().makeTxMaker();
         }
+    }
+
+    @Override
+    public void close() {
+        closeSilently(txMaker);
     }
 
     @Override
@@ -81,65 +94,67 @@ public final class MapDBBackend implements Backend {
     }
 
     @Override
-    public void open() throws Exception {
-        final boolean useCache = options.containsKey("useCache");
-        final int cacheSize =
-                options.containsKey("cacheSize") ? Integer.valueOf(options.get("cacheSize"))
-                        : 32768;
-        if (useCache) {
-            db =
-                    DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().closeOnJvmShutdown()
-                            .cacheSize(cacheSize).commitFileSyncDisable().make();
-        } else {
-            db =
-                    DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().closeOnJvmShutdown()
-                            .cacheDisable().commitFileSyncDisable().make();
-        }
-        id2entry = db.getTreeMap("id2entry");
-        dn2id = db.getTreeMap("dn2id");
-        description2id = db.getTreeMap("description2id");
-    }
-
-    @Override
     public void modifyEntry(final ModifyRequest request) throws LdapException {
-        // FIXME: add transaction support.
-        try {
-            // Read entry and apply updates.
-            final Long entryId = dn2id.get(encodeDn(request.getName()).toByteArray());
-            final Entry entry = decodeEntry(id2entry.get(entryId));
-            final ByteString oldDescriptionKey = encodeDescription(entry);
-            Entries.modifyEntry(entry, request);
-            final ByteString newDescriptionKey = encodeDescription(entry);
-            // Update description index.
-            final int comparison = oldDescriptionKey.compareTo(newDescriptionKey);
-            if (comparison != 0) {
-                description2id.remove(oldDescriptionKey.toByteArray());
-                description2id.put(newDescriptionKey.toByteArray(), entryId);
+        for (;;) {
+            DB txn = txMaker.makeTx();
+            try {
+                BTreeMap<Long, byte[]> id2entry = txn.getTreeMap("id2entry");
+                BTreeMap<byte[], Long> dn2id = txn.getTreeMap("dn2id");
+                BTreeMap<byte[], Long> description2id = txn.getTreeMap("description2id");
+
+                // Read entry and apply updates.
+                final Long entryId = dn2id.get(encodeDn(request.getName()).toByteArray());
+                final Entry entry = decodeEntry(id2entry.get(entryId));
+                final ByteString oldDescriptionKey = encodeDescription(entry);
+                Entries.modifyEntry(entry, request);
+                final ByteString newDescriptionKey = encodeDescription(entry);
+                // Update description index.
+                final int comparison = oldDescriptionKey.compareTo(newDescriptionKey);
+                if (comparison != 0) {
+                    description2id.remove(oldDescriptionKey.toByteArray());
+                    description2id.put(newDescriptionKey.toByteArray(), entryId);
+                }
+                // Update id2entry index.
+                id2entry.put(entryId, encodeEntry(entry));
+                txn.commit();
+                return;
+            } catch (final TxRollbackException e) {
+                // try again
+            } catch (final Exception e) {
+                txn.rollback();
+                throw adaptException(e);
+            } finally {
+                txn.close();
             }
-            // Update id2entry index.
-            id2entry.put(entryId, encodeEntry(entry));
-            db.commit();
-        } catch (final Exception e) {
-            throw adaptException(e);
         }
     }
 
     @Override
     public Entry readEntryByDescription(final ByteString description) throws LdapException {
+        DB txn = txMaker.makeTx();
         try {
+            BTreeMap<Long, byte[]> id2entry = txn.getTreeMap("id2entry");
+            BTreeMap<byte[], Long> description2id = txn.getTreeMap("description2id");
             return decodeEntry(id2entry.get(description2id.get(encodeDescription(description)
                     .toByteArray())));
         } catch (final Exception e) {
             throw adaptException(e);
+        } finally {
+            txn.close();
         }
     }
 
     @Override
     public Entry readEntryByDN(final DN name) throws LdapException {
+        DB txn = txMaker.makeTx();
         try {
+            BTreeMap<Long, byte[]> id2entry = txn.getTreeMap("id2entry");
+            BTreeMap<byte[], Long> dn2id = txn.getTreeMap("dn2id");
             return decodeEntry(id2entry.get(dn2id.get(encodeDn(name).toByteArray())));
         } catch (final Exception e) {
             throw adaptException(e);
+        } finally {
+            txn.close();
         }
     }
 
