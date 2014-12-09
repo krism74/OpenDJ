@@ -74,10 +74,10 @@ final class Util {
 
     static ByteString encodeDescription(final Entry entry) throws DecodeException {
         final Attribute descriptionAttribute = entry.getAttribute(AD_DESCRIPTION);
-        if (descriptionAttribute == null) {
-            return null;
+        if (descriptionAttribute != null) {
+            return encodeDescription(descriptionAttribute.firstValue());
         }
-        return encodeDescription(descriptionAttribute.firstValue());
+        return null;
     }
 
     static ByteString encodeDn(final DN dn) {

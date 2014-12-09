@@ -34,10 +34,10 @@ import com.sleepycat.je.TransactionConfig;
 public final class JEBackend implements Backend {
     private static final File DB_DIR = new File("target/jeBackend");
 
-    private Environment env = null;
-    private Database description2id = null;
-    private Database dn2id = null;
-    private Database id2entry = null;
+    private Environment env;
+    private Database description2id;
+    private Database dn2id;
+    private Database id2entry;
 
     @Override
     public void close() {

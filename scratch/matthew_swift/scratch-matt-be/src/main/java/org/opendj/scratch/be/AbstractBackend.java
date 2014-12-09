@@ -24,7 +24,7 @@ public abstract class AbstractBackend implements Backend {
 
     interface Importer extends Closeable {
         @Override
-        public void close();
+        void close();
 
         void put(TreeName name, ByteString key, ByteString value);
     }
