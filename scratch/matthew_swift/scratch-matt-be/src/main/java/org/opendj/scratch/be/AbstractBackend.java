@@ -20,13 +20,16 @@ import org.forgerock.opendj.ldif.EntryReader;
 
 import static org.opendj.scratch.be.Util.*;
 
+@SuppressWarnings("javadoc")
 public abstract class AbstractBackend implements Backend {
 
     interface Importer extends Closeable {
-        @Override
-        void close();
+        void createTree(TreeName name, Comparator<ByteSequence> comparator);
 
         void put(TreeName name, ByteString key, ByteString value);
+
+        @Override
+        void close();
     }
 
     interface ReadTransaction<T> {
@@ -42,26 +45,25 @@ public abstract class AbstractBackend implements Backend {
     }
 
     interface Storage extends Closeable {
-        @Override
-        void close();
+        void initialize(Map<String, String> options) throws Exception;
 
-        void createTree(TreeName name, Comparator<ByteSequence> comparator);
+        Importer startImport() throws Exception;
 
-        void deleteTrees(TreeName name);
+        void open() throws Exception;
 
-        void open();
+        // FIXME: does this need to pass in the comparator?
+        void openTree(TreeName name, Comparator<ByteSequence> comparator);
 
         <T> T read(ReadTransaction<T> readTransaction) throws Exception;
 
-        Importer startImport();
-
         void update(UpdateTransaction updateTransaction) throws Exception;
 
-        void initialize(Map<String, String> options);
+        @Override
+        void close();
     }
 
     @SuppressWarnings("serial")
-    final class StorageRuntimeException extends RuntimeException {
+    static final class StorageRuntimeException extends RuntimeException {
 
         public StorageRuntimeException(final String message) {
             super(message);
@@ -169,7 +171,7 @@ public abstract class AbstractBackend implements Backend {
     }
 
     @Override
-    public void initialize(Map<String, String> options) {
+    public void initialize(Map<String, String> options) throws Exception {
         storage.initialize(options);
     }
 
@@ -187,12 +189,10 @@ public abstract class AbstractBackend implements Backend {
     public final void importEntries(final EntryReader entries) throws Exception {
         lock.writeLock().lock();
         try {
-            storage.deleteTrees(suffix);
-            storage.createTree(id2entry, ByteSequence.COMPARATOR);
-            storage.createTree(dn2id, ByteSequence.COMPARATOR);
-            storage.createTree(description2id, ByteSequence.COMPARATOR);
-
             final Importer importer = storage.startImport();
+            importer.createTree(id2entry, ByteSequence.COMPARATOR);
+            importer.createTree(dn2id, ByteSequence.COMPARATOR);
+            importer.createTree(description2id, ByteSequence.COMPARATOR);
             try {
                 for (int nextEntryId = 0; entries.hasNext(); nextEntryId++) {
                     final Entry entry = entries.readEntry();
@@ -217,6 +217,9 @@ public abstract class AbstractBackend implements Backend {
         lock.writeLock().lock();
         try {
             storage.open();
+            storage.openTree(id2entry, ByteSequence.COMPARATOR);
+            storage.openTree(dn2id, ByteSequence.COMPARATOR);
+            storage.openTree(description2id, ByteSequence.COMPARATOR);
         } finally {
             lock.writeLock().unlock();
         }
