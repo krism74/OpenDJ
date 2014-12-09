@@ -1,24 +1,15 @@
 package org.opendj.scratch.be;
 
-import static org.forgerock.opendj.ldap.LdapException.newLdapException;
-import static org.opendj.scratch.be.Util.clearAndCreateDbDir;
-import static org.opendj.scratch.be.Util.decodeEntry;
-import static org.opendj.scratch.be.Util.encodeDescription;
-import static org.opendj.scratch.be.Util.adaptException;
-
 import java.io.File;
-import java.io.IOException;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.forgerock.opendj.ldap.ByteSequence;
 import org.forgerock.opendj.ldap.ByteString;
-import org.forgerock.opendj.ldap.DN;
-import org.forgerock.opendj.ldap.Entries;
-import org.forgerock.opendj.ldap.Entry;
-import org.forgerock.opendj.ldap.LdapException;
 import org.forgerock.opendj.ldap.ResultCode;
-import org.forgerock.opendj.ldap.requests.ModifyRequest;
-import org.forgerock.opendj.ldif.EntryReader;
+import org.forgerock.util.Utils;
 
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
@@ -27,176 +18,232 @@ import com.sleepycat.je.Durability;
 import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
 import com.sleepycat.je.LockMode;
-import com.sleepycat.je.OperationStatus;
 import com.sleepycat.je.Transaction;
 import com.sleepycat.je.TransactionConfig;
 
-public final class JEBackend implements Backend {
-    private static final File DB_DIR = new File("target/jeBackend");
+import static com.sleepycat.je.OperationStatus.*;
 
-    private Environment env;
-    private Database description2id;
-    private Database dn2id;
-    private Database id2entry;
+import static org.forgerock.opendj.ldap.LdapException.*;
+import static org.opendj.scratch.be.Util.*;
 
-    @Override
-    public void close() {
-        if (description2id != null) {
-            description2id.close();
-            description2id = null;
-        }
-        if (dn2id != null) {
-            dn2id.close();
-            dn2id = null;
-        }
-        if (id2entry != null) {
-            id2entry.close();
-            id2entry = null;
-        }
-        if (env != null) {
-            env.close();
-            env = null;
-        }
+@SuppressWarnings("javadoc")
+public final class JEBackend extends AbstractBackend {
+
+    public JEBackend() {
+        super(new JEStorage());
     }
 
-    @Override
-    public void initialize(final Map<String, String> options) throws Exception {
-        // No op
-    }
+    private static final class JEStorage implements Storage {
 
-    @Override
-    public void importEntries(final EntryReader entries) throws Exception {
-        clearAndCreateDbDir(DB_DIR);
-        initialize(true);
-        try {
-            for (int nextEntryId = 0; entries.hasNext(); nextEntryId++) {
-                final Entry entry = entries.readEntry();
-                final DatabaseEntry dbId = encodeEntryId(nextEntryId);
-                dn2id.put(null, encodeDn(entry.getName()), dbId);
-                final ByteString encodedDescription = encodeDescription(entry);
-                if (encodedDescription != null) {
-                    final DatabaseEntry key = new DatabaseEntry(encodedDescription.toByteArray());
-                    description2id.put(null, key, dbId);
-                }
-                id2entry.put(null, dbId, encodeEntry(entry));
+        private static final File DB_DIR = new File("target/jeBackend");
+        private Environment env;
+        private Map<TreeName, Database> trees = new HashMap<TreeName, Database>();
+        private DatabaseConfig dbConfig;
+
+        /** {@inheritDoc} */
+        @Override
+        public void initialize(Map<String, String> options) {
+            // No op
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void open() {
+            open(false);
+        }
+
+        private void open(final boolean isImport) {
+            final EnvironmentConfig envConfig = new EnvironmentConfig();
+            envConfig.setTransactional(!isImport);
+            envConfig.setAllowCreate(true);
+            envConfig.setLockTimeout(0, TimeUnit.MICROSECONDS);
+            envConfig.setDurability(Durability.COMMIT_WRITE_NO_SYNC);
+            envConfig.setCachePercent(60);
+            envConfig.setConfigParam(EnvironmentConfig.LOCK_N_LOCK_TABLES, String.valueOf("97"));
+            envConfig.setConfigParam(EnvironmentConfig.LOG_FILE_CACHE_SIZE, "10000");
+            envConfig.setConfigParam(EnvironmentConfig.LOG_FILE_MAX, String.valueOf(1024 * 1024 * 100));
+            env = new Environment(DB_DIR, envConfig);
+
+            dbConfig = new DatabaseConfig().setAllowCreate(true).setKeyPrefixing(true)
+                .setTransactional(!isImport).setDeferredWrite(isImport);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void close() {
+            Utils.closeSilently(trees.values());
+            trees.clear();
+            if (env != null) {
+                env.close();
+                env = null;
             }
-        } finally {
-            close();
         }
-    }
 
-    @Override
-    public void open() throws Exception {
-        initialize(false);
-    }
+        Database getTree(TreeName name) {
+            return trees.get(name);
+        }
 
-    @Override
-    public void modifyEntry(final ModifyRequest request) throws LdapException {
-        final TransactionConfig config = new TransactionConfig();
-        final Transaction txn = env.beginTransaction(null, config);
-        try {
-            // Read entry and apply updates.
-            final DatabaseEntry dbId = readDn2Id(txn, request.getName());
-            final Entry entry = readId2Entry(txn, dbId, true);
-            final ByteString oldDescriptionKey = encodeDescription(entry);
-            Entries.modifyEntry(entry, request);
-            final ByteString newDescriptionKey = encodeDescription(entry);
-            // Update description index.
-            final int comparison = oldDescriptionKey.compareTo(newDescriptionKey);
-            if (comparison != 0) {
-                final DatabaseEntry oldKey = new DatabaseEntry(oldDescriptionKey.toByteArray());
-                final DatabaseEntry newKey = new DatabaseEntry(newDescriptionKey.toByteArray());
-                if (comparison < 0) {
-                    description2id.delete(txn, oldKey);
-                    description2id.put(txn, newKey, dbId);
-                } else {
-                    description2id.put(txn, newKey, dbId);
-                    description2id.delete(txn, oldKey);
+        /** {@inheritDoc} */
+        @Override
+        public void createTree(TreeName treeName, Comparator<ByteSequence> comparator) {
+            final Database db = env.openDatabase(null, treeName.toString(), dbConfig);
+            trees.put(treeName, db);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void deleteTrees(TreeName treeName) {
+            for (Map.Entry<TreeName, Database> entry : this.trees.entrySet()) {
+                if (treeName.isSuffixOf(entry.getKey())) {
+                    entry.getValue().close();
                 }
             }
-            // Update id2entry index.
-            id2entry.put(txn, dbId, encodeEntry(entry));
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public Importer startImport() {
+            clearAndCreateDbDir(DB_DIR);
+            open(true);
+            return new JEImporter(this);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public <T> T read(ReadTransaction<T> readTransaction) throws Exception {
+            final JETxn txn = new JETxn(this);
+            for (;;) {
+                txn.begin();
+                try {
+                    return readTransaction.run(txn);
+                } catch (Exception e) {
+                    throw e;
+                } finally {
+                    txn.end();
+                }
+            }
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void update(UpdateTransaction updateTransaction) throws Exception {
+            final JETxn txn = new JETxn(this);
+            for (;;) {
+                txn.begin();
+                try {
+                    updateTransaction.run(txn);
+                    txn.commit();
+                    return;
+                } catch (Exception e) {
+                    txn.rollback();
+                    throw e;
+                } finally {
+                    txn.end();
+                }
+            }
+        }
+    }
+
+    private static final class JEImporter implements Importer {
+
+        private final JEStorage storage;
+        private final DatabaseEntry importKey = new DatabaseEntry();
+        private final DatabaseEntry importValue = new DatabaseEntry();
+
+        public JEImporter(JEStorage storage) {
+            this.storage = storage;
+        }
+
+          /** {@inheritDoc} */
+        @Override
+        public void put(TreeName treeName, ByteString key, ByteString value) {
+            setData(importKey, key);
+            setData(importValue, value);
+            storage.getTree(treeName).put(null, importKey, importValue);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void close() {
+            storage.close();
+        }
+    }
+
+    private static final class JETxn implements UpdateTxn {
+
+        private final JEStorage storage;
+        private final DatabaseEntry txnKey = new DatabaseEntry();
+        private final DatabaseEntry txnValue = new DatabaseEntry();
+        private Transaction txn;
+
+        public JETxn(JEStorage storage) {
+            this.storage = storage;
+        }
+
+        public void begin() {
+            final TransactionConfig config = new TransactionConfig();
+            this.txn = storage.env.beginTransaction(null, config);
+        }
+
+        public void commit() {
             txn.commit();
-        } catch (final Exception e) {
-            throw adaptException(e);
-        } finally {
+        }
+
+        public void rollback() {
             txn.abort();
         }
-    }
 
-    @Override
-    public Entry readEntryByDescription(final ByteString description) throws LdapException {
-        try {
-            final DatabaseEntry dbKey =
-                    new DatabaseEntry(encodeDescription(description).toByteArray());
-            final DatabaseEntry dbId = new DatabaseEntry();
-            if (description2id.get(null, dbKey, dbId, LockMode.READ_COMMITTED) != OperationStatus.SUCCESS) {
-                throw newLdapException(ResultCode.NO_SUCH_OBJECT);
+        public void end() {
+            // no op
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public ByteString get(TreeName treeName, ByteString key) {
+            return get0(treeName, key, LockMode.READ_COMMITTED);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public ByteString getRMW(TreeName treeName, ByteString key) {
+            return get0(treeName, key, LockMode.RMW);
+        }
+
+        private ByteString get0(TreeName treeName, ByteString key, LockMode lockMode) {
+            setData(txnKey, key);
+            setData(txnValue, null);
+            if (storage.getTree(treeName).get(txn, txnKey, txnValue, lockMode) != SUCCESS) {
+                throw newRuntimeLdapException(ResultCode.NO_SUCH_OBJECT);
             }
-            return readId2Entry(null, dbId, false);
-        } catch (final Exception e) {
-            throw adaptException(e);
+            return ByteString.wrap(txnValue.getData());
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void put(TreeName treeName, ByteString key, ByteString value) {
+            setData(txnKey, key);
+            setData(txnValue, value);
+            if (storage.getTree(treeName).put(txn, txnKey, txnValue) != SUCCESS) {
+                throw newRuntimeLdapException(ResultCode.NO_SUCH_OBJECT);
+            }
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void remove(TreeName treeName, ByteString key) {
+            setData(txnKey, key);
+            if (storage.getTree(treeName).delete(txn, txnKey) != SUCCESS) {
+                throw newRuntimeLdapException(ResultCode.NO_SUCH_OBJECT);
+            }
+        }
+
+        private RuntimeException newRuntimeLdapException(ResultCode resultCode) {
+            return new RuntimeException(newLdapException(resultCode));
         }
     }
 
-    @Override
-    public Entry readEntryByDN(final DN name) throws LdapException {
-        try {
-            return readId2Entry(null, readDn2Id(null, name), false);
-        } catch (final Exception e) {
-            throw adaptException(e);
-        }
-    }
-
-    private DatabaseEntry encodeDn(final DN dn) {
-        return new DatabaseEntry(Util.encodeDn(dn).toByteArray());
-    }
-
-    private DatabaseEntry encodeEntry(final Entry entry) throws IOException {
-        return new DatabaseEntry(Util.encodeEntry(entry));
-    }
-
-    private DatabaseEntry encodeEntryId(final long entryId) {
-        return new DatabaseEntry(ByteString.valueOf(entryId).toByteArray());
-    }
-
-    private void initialize(final boolean isImport) throws Exception {
-        final EnvironmentConfig envConfig = new EnvironmentConfig();
-        envConfig.setTransactional(!isImport);
-        envConfig.setAllowCreate(true);
-        envConfig.setLockTimeout(0, TimeUnit.MICROSECONDS);
-        envConfig.setDurability(Durability.COMMIT_WRITE_NO_SYNC);
-        envConfig.setCachePercent(60);
-        envConfig.setConfigParam(EnvironmentConfig.LOCK_N_LOCK_TABLES, String.valueOf("97"));
-        envConfig.setConfigParam(EnvironmentConfig.LOG_FILE_CACHE_SIZE, "10000");
-        envConfig.setConfigParam(EnvironmentConfig.LOG_FILE_MAX, String.valueOf(1024 * 1024 * 100));
-        env = new Environment(DB_DIR, envConfig);
-
-        final DatabaseConfig dbConfig =
-                new DatabaseConfig().setAllowCreate(true).setKeyPrefixing(true).setTransactional(
-                        !isImport).setDeferredWrite(isImport);
-        id2entry = env.openDatabase(null, "id2entry", dbConfig);
-        dn2id = env.openDatabase(null, "dn2id", dbConfig);
-        description2id = env.openDatabase(null, "description2id", dbConfig);
-    }
-
-    private DatabaseEntry readDn2Id(final Transaction txn, final DN name) throws LdapException {
-        final DatabaseEntry dbKey = encodeDn(name);
-        final DatabaseEntry dbId = new DatabaseEntry();
-        if (dn2id.get(txn, dbKey, dbId, LockMode.READ_COMMITTED) != OperationStatus.SUCCESS) {
-            throw newLdapException(ResultCode.NO_SUCH_OBJECT);
-        }
-        return dbId;
-    }
-
-    private Entry readId2Entry(final Transaction txn, final DatabaseEntry dbId, final boolean isRMW)
-            throws LdapException {
-        final LockMode lockMode = isRMW ? LockMode.RMW : LockMode.READ_COMMITTED;
-        final DatabaseEntry dbEntry = new DatabaseEntry();
-        if (id2entry.get(txn, dbId, dbEntry, lockMode) != OperationStatus.SUCCESS) {
-            throw newLdapException(ResultCode.NO_SUCH_OBJECT);
-        }
-        return decodeEntry(dbEntry.getData());
+    private static void setData(DatabaseEntry dbEntry, ByteString bs) {
+        dbEntry.setData(bs != null ? bs.toByteArray() : null);
     }
 
 }

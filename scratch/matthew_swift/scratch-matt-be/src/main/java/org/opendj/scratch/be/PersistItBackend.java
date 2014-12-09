@@ -26,11 +26,12 @@ import com.persistit.exception.RollbackException;
 import static org.forgerock.opendj.ldap.LdapException.*;
 import static org.opendj.scratch.be.Util.*;
 
+@SuppressWarnings("javadoc")
 public final class PersistItBackend extends AbstractBackend {
 
     private static final File DB_DIR = new File("target/persistItBackend");
 
-    PersistItBackend() {
+    public PersistItBackend() {
         super(new PersistItStorage());
     }
 
@@ -86,55 +87,11 @@ public final class PersistItBackend extends AbstractBackend {
                     db.close();
                     db = null;
                 } catch (PersistitException e) {
-                  throw new IllegalStateException(e);
+                    throw new IllegalStateException(e);
                 }
+                volumes.clear();
+                trees.clear();
             }
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public void update(UpdateTransaction updateTransaction) throws Exception {
-            final PersistItTxn txn = new PersistItTxn(this, db.getTransaction());
-            for (;;) {
-                txn.begin();
-                try {
-                    updateTransaction.run(txn);
-                    txn.commit();
-                    return;
-                } catch (RollbackException e) {
-                    // Retry.
-                } catch (Exception e) {
-                    txn.rollback();
-                    throw e;
-                } finally {
-                    txn.end();
-                }
-            }
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public <T> T read(ReadTransaction<T> readTransaction) throws Exception {
-            final PersistItTxn txn = new PersistItTxn(this, db.getTransaction());
-            for (;;) {
-                txn.begin();
-                try {
-                    return readTransaction.run(txn);
-                } catch (RollbackException e) {
-                    // Retry.
-                } catch (Exception e) {
-                    throw e;
-                } finally {
-                    txn.end();
-                }
-            }
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public Importer startImport() {
-            clearAndCreateDbDir(DB_DIR);
-            return new PersistItImporter(this);
         }
 
         /** {@inheritDoc} */
@@ -166,16 +123,55 @@ public final class PersistItBackend extends AbstractBackend {
             }
         }
 
-        private void closeVolumes() throws PersistitException {
-            for (Volume volume : this.volumes.values()) {
-                volume.close();
-            }
-            this.volumes.clear();
-        }
-
         private Exchange getExchange(TreeName treeName) throws PersistitException {
             final Volume volume = volumes.get(treeName);
             return db.getExchange(volume, treeName.toString(), false);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public Importer startImport() {
+            clearAndCreateDbDir(DB_DIR);
+            return new PersistItImporter(this);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public <T> T read(ReadTransaction<T> readTransaction) throws Exception {
+            final PersistItTxn txn = new PersistItTxn(this);
+            for (;;) {
+                txn.begin();
+                try {
+                    return readTransaction.run(txn);
+                } catch (RollbackException e) {
+                    // Retry.
+                } catch (Exception e) {
+                    throw e;
+                } finally {
+                    txn.end();
+                }
+            }
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void update(UpdateTransaction updateTransaction) throws Exception {
+            final PersistItTxn txn = new PersistItTxn(this);
+            for (;;) {
+                txn.begin();
+                try {
+                    updateTransaction.run(txn);
+                    txn.commit();
+                    return;
+                } catch (RollbackException e) {
+                    // Retry.
+                } catch (Exception e) {
+                    txn.rollback();
+                    throw e;
+                } finally {
+                    txn.end();
+                }
+            }
         }
     }
 
@@ -195,18 +191,6 @@ public final class PersistItBackend extends AbstractBackend {
 
         /** {@inheritDoc} */
         @Override
-        public void close() {
-            try {
-                importer.merge();
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
-            } finally {
-                storage.close();
-            }
-        }
-
-        /** {@inheritDoc} */
-        @Override
         public void put(TreeName treeName, ByteString key, ByteString value) {
             try {
                 final Tree tree = storage.trees.get(treeName.toString());
@@ -218,6 +202,18 @@ public final class PersistItBackend extends AbstractBackend {
                 throw new RuntimeException(e);
             }
         }
+
+        /** {@inheritDoc} */
+        @Override
+        public void close() {
+            try {
+                importer.merge();
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            } finally {
+                storage.close();
+            }
+        }
     }
 
     private static final class PersistItTxn implements UpdateTxn {
@@ -226,9 +222,9 @@ public final class PersistItBackend extends AbstractBackend {
         private final Transaction txn;
         private Map<TreeName, Exchange> exchanges = new HashMap<TreeName, Exchange>();
 
-        public PersistItTxn(PersistItStorage storage, Transaction txn) {
+        public PersistItTxn(PersistItStorage storage) {
             this.storage = storage;
-            this.txn = txn;
+            this.txn = storage.db.getTransaction();
         }
 
         public void begin() throws PersistitException {
