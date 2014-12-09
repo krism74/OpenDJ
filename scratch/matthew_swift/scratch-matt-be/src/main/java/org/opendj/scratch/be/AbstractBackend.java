@@ -1,10 +1,9 @@
 package org.opendj.scratch.be;
 
-import static org.opendj.scratch.be.Util.*;
-
 import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +17,8 @@ import org.forgerock.opendj.ldap.Entry;
 import org.forgerock.opendj.ldap.LdapException;
 import org.forgerock.opendj.ldap.requests.ModifyRequest;
 import org.forgerock.opendj.ldif.EntryReader;
+
+import static org.opendj.scratch.be.Util.*;
 
 public abstract class AbstractBackend implements Backend {
 
@@ -94,11 +95,34 @@ public abstract class AbstractBackend implements Backend {
             this.s = builder.toString();
         }
 
+        public List<String> getNames() {
+            return names;
+        }
+
         public TreeName child(final String name) {
             final List<String> newNames = new ArrayList<String>(names.size() + 1);
             newNames.addAll(names);
             newNames.add(name);
             return new TreeName(newNames);
+        }
+
+        public TreeName getSuffix() {
+            if (names.size() == 0) {
+                throw new IllegalStateException();
+            }
+            return new TreeName(Collections.singletonList(names.get(0)));
+        }
+
+        public boolean isSuffixOf(TreeName tree) {
+            if (names.size() > tree.names.size()) {
+                return false;
+            }
+            for (int i = 0; i < names.size(); i++) {
+                if (!tree.names.get(i).equals(names.get(i))) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         @Override
@@ -110,10 +134,6 @@ public abstract class AbstractBackend implements Backend {
             } else {
                 return false;
             }
-        }
-
-        public List<String> getNames() {
-            return names;
         }
 
         @Override

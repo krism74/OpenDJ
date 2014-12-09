@@ -1,23 +1,16 @@
 package org.opendj.scratch.be;
 
-import static org.forgerock.opendj.ldap.LdapException.newLdapException;
-import static org.opendj.scratch.be.Util.adaptException;
-import static org.opendj.scratch.be.Util.clearAndCreateDbDir;
-import static org.opendj.scratch.be.Util.decodeEntry;
-import static org.opendj.scratch.be.Util.encodeEntry;
-
 import java.io.File;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.forgerock.opendj.ldap.ByteSequence;
 import org.forgerock.opendj.ldap.ByteString;
-import org.forgerock.opendj.ldap.DN;
-import org.forgerock.opendj.ldap.Entries;
-import org.forgerock.opendj.ldap.Entry;
-import org.forgerock.opendj.ldap.LdapException;
 import org.forgerock.opendj.ldap.ResultCode;
-import org.forgerock.opendj.ldap.requests.ModifyRequest;
-import org.forgerock.opendj.ldif.EntryReader;
 
 import com.persistit.Exchange;
 import com.persistit.Key;
@@ -30,122 +23,84 @@ import com.persistit.Volume;
 import com.persistit.exception.PersistitException;
 import com.persistit.exception.RollbackException;
 
-public final class PersistItBackend implements Backend {
+import static org.forgerock.opendj.ldap.LdapException.*;
+import static org.opendj.scratch.be.Util.*;
+
+public final class PersistItBackend extends AbstractBackend {
+
     private static final File DB_DIR = new File("target/persistItBackend");
 
-    private Properties properties;
-    private Persistit db;
-    private Volume volume;
-
-    @Override
-    public void initialize(Map<String, String> options) throws Exception {
-        properties = new Properties();
-        properties.setProperty("datapath", DB_DIR.toString());
-        properties.setProperty("logpath", DB_DIR.toString());
-        properties.setProperty("logfile", "${logpath}/dj_${timestamp}.log");
-        properties.setProperty("buffer.count.16384", "64K");
-        properties.setProperty("volume.1", "${datapath}/dj,create,pageSize:16K,"
-                + "initialSize:50M,extensionSize:1M,maximumSize:10G");
-        properties.setProperty("journalpath", "${datapath}/dj_journal");
+    PersistItBackend() {
+        super(new PersistItStorage());
     }
 
-    @Override
-    public void importEntries(EntryReader entries) throws Exception {
-        clearAndCreateDbDir(DB_DIR);
-        open();
-        final Tree id2entry = volume.getTree("id2entry", true);
-        final Tree dn2id = volume.getTree("dn2id", true);
-        final Tree description2id = volume.getTree("description2id", true);
-        final TreeBuilder tb = new TreeBuilder(db);
-        try {
-            final Key key = new Key(db);
-            final Value value = new Value(db);
-            for (int nextEntryId = 0; entries.hasNext(); nextEntryId++) {
-                final Entry entry = entries.readEntry();
+    private static final class PersistItStorage implements Storage {
 
-                // id2entry
-                final byte[] dbId = ByteString.valueOf(nextEntryId).toByteArray();
-                value.putByteArray(encodeEntry(entry));
-                tb.store(id2entry, keyOf(key, dbId), value);
+        private Persistit db;
+        private Map<TreeName, Volume> volumes = new HashMap<TreeName, Volume>();
+        private Map<TreeName, Tree> trees = new HashMap<TreeName, Tree>();
+        private Properties properties;
 
-                // dn2id
-                value.putByteArray(dbId);
-                tb.store(dn2id, encodeDn(key, entry.getName()), value);
+        /** {@inheritDoc} */
+        @Override
+        public void initialize(Map<String, String> options) {
+            properties = new Properties();
+            properties.setProperty("datapath", DB_DIR.toString());
+            properties.setProperty("logpath", DB_DIR.toString());
+            properties.setProperty("logfile", "${logpath}/dj_${timestamp}.log");
+            properties.setProperty("buffer.count.16384", "64K");
+            properties.setProperty("journalpath", "${datapath}/dj_journal");
+        }
 
-                // description2id
-                final ByteString encodedDescription = Util.encodeDescription(entry);
-                if (encodedDescription != null) {
-                    tb.store(description2id, encodeDescription(key, encodedDescription), value);
+        /** {@inheritDoc} */
+        @Override
+        public void open() {
+            final List<TreeName> volumes = Collections.singletonList(TreeName.of("dj"));
+            try {
+                final Properties props = new Properties(properties);
+                setVolumeProperties(props, volumes);
+
+                db = new Persistit(props);
+                db.initialize();
+
+                for (TreeName volume : volumes) {
+                    this.volumes.put(volume, db.loadVolume(volume.toString()));
+                }
+            } catch (PersistitException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        private void setVolumeProperties(final Properties properties, List<TreeName> volumes) {
+            for (int i = 0; i < volumes.size(); i++) {
+                final TreeName volume = volumes.get(i);
+                properties.setProperty("volume." + i, "${datapath}/" + volume + ",create,pageSize:16K,"
+                        + "initialSize:50M,extensionSize:1M,maximumSize:10G");
+            }
+        }
+
+        @Override
+        public void close() {
+            if (db != null) {
+                try {
+                    db.close();
+                    db = null;
+                } catch (PersistitException e) {
+                  throw new IllegalStateException(e);
                 }
             }
-            tb.merge();
-        } finally {
-            close();
         }
-    }
 
-    @Override
-    public void open() throws Exception {
-        db = new Persistit(properties);
-        db.initialize();
-        volume = db.loadVolume("dj");
-    }
-
-    @Override
-    public void close() {
-        if (db != null) {
-            try {
-                db.close();
-                db = null;
-            } catch (PersistitException e) {
-                throw new IllegalStateException(e);
-            }
-        }
-    }
-
-    private Key encodeDescription(final Key key, final ByteString encodedDescription) {
-        return keyOf(key, encodedDescription.toByteArray());
-    }
-
-    private Key encodeDn(final Key key, final DN dn) {
-        return keyOf(key, dn.toIrreversibleNormalizedByteString().toByteArray());
-    }
-
-    private Key keyOf(final Key key, final byte[] bytes) {
-        return key.clear().appendByteArray(bytes, 0, bytes.length);
-    }
-
-    @Override
-    public void modifyEntry(final ModifyRequest request) throws LdapException {
-        final Transaction txn = db.getTransaction();
-        try {
+        /** {@inheritDoc} */
+        @Override
+        public void update(UpdateTransaction updateTransaction) throws Exception {
+            final PersistItTxn txn = new PersistItTxn(this, db.getTransaction());
             for (;;) {
                 txn.begin();
                 try {
-                    final byte[] dbId = readDn2Id(txn, request.getName());
-                    final Entry entry = readId2Entry(txn, dbId, true);
-                    final ByteString oldDescriptionKey = Util.encodeDescription(entry);
-                    Entries.modifyEntry(entry, request);
-                    final ByteString newDescriptionKey = Util.encodeDescription(entry);
-                    // Update description index.
-                    final int comparison = oldDescriptionKey.compareTo(newDescriptionKey);
-                    if (comparison != 0) {
-                        final Exchange ex = db.getExchange(volume, "description2id", false);
-                        encodeDescription(ex.getKey(), oldDescriptionKey);
-                        ex.remove();
-                        encodeDescription(ex.getKey(), newDescriptionKey);
-                        ex.getValue().putByteArray(dbId);
-                        ex.store();
-                        db.releaseExchange(ex);
-                    }
-                    // Update id2entry index.
-                    final Exchange ex = db.getExchange(volume, "id2entry", false);
-                    keyOf(ex.getKey(), dbId);
-                    ex.getValue().putByteArray(encodeEntry(entry));
-                    ex.store();
-                    db.releaseExchange(ex);
+                    updateTransaction.run(txn);
                     txn.commit();
-                    break;
+                    return;
                 } catch (RollbackException e) {
                     // Retry.
                 } catch (Exception e) {
@@ -155,95 +110,205 @@ public final class PersistItBackend implements Backend {
                     txn.end();
                 }
             }
-        } catch (Exception e) {
-            throw adaptException(e);
         }
-    }
 
-    @Override
-    public Entry readEntryByDescription(final ByteString description) throws LdapException {
-        return readEntry(new IndexedRead() {
-            @Override
-            public byte[] readIndex(Transaction txn) throws Exception {
-                return readDescription2Id(txn, description);
+        /** {@inheritDoc} */
+        @Override
+        public <T> T read(ReadTransaction<T> readTransaction) throws Exception {
+            final PersistItTxn txn = new PersistItTxn(this, db.getTransaction());
+            for (;;) {
+                txn.begin();
+                try {
+                    return readTransaction.run(txn);
+                } catch (RollbackException e) {
+                    // Retry.
+                } catch (Exception e) {
+                    throw e;
+                } finally {
+                    txn.end();
+                }
             }
-        });
-    }
+        }
 
-    private interface IndexedRead {
-        byte[] readIndex(Transaction txn) throws Exception;
-    }
+        /** {@inheritDoc} */
+        @Override
+        public Importer startImport() {
+            clearAndCreateDbDir(DB_DIR);
+            return new PersistItImporter(this);
+        }
 
-    @Override
-    public Entry readEntryByDN(final DN name) throws LdapException {
-        return readEntry(new IndexedRead() {
-            @Override
-            public byte[] readIndex(Transaction txn) throws Exception {
-                return readDn2Id(txn, name);
-            }
-        });
-    }
-
-    private Entry readEntry(IndexedRead reader) throws LdapException {
-        final Transaction txn = db.getTransaction();
-        try {
-            txn.begin();
+        /** {@inheritDoc} */
+        @Override
+        public void createTree(TreeName treeName, Comparator<ByteSequence> comparator) {
             try {
-                final Entry entry = readId2Entry(txn, reader.readIndex(txn), false);
-                txn.commit();
-                return entry;
+                final String name = treeName.toString();
+                if (trees.get(name) == null) {
+                    final Volume volume = volumes.get(treeName.getSuffix());
+                    final Tree newTree = volume.getTree(name, true);
+                    trees.put(treeName, newTree);
+                }
+            } catch (PersistitException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void deleteTrees(TreeName treeName) {
+            try {
+                for (Map.Entry<TreeName, Tree> entry : this.trees.entrySet()) {
+                    if (treeName.isSuffixOf(entry.getKey())) {
+                        getExchange(entry.getKey()).removeTree();
+                    }
+                }
+            } catch (PersistitException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+
+        private void closeVolumes() throws PersistitException {
+            for (Volume volume : this.volumes.values()) {
+                volume.close();
+            }
+            this.volumes.clear();
+        }
+
+        private Exchange getExchange(TreeName treeName) throws PersistitException {
+            final Volume volume = volumes.get(treeName);
+            return db.getExchange(volume, treeName.toString(), false);
+        }
+    }
+
+    private static final class PersistItImporter implements Importer {
+
+        private final PersistItStorage storage;
+        private final TreeBuilder importer;
+        private final Key importKey;
+        private final Value importValue;
+
+        public PersistItImporter(PersistItStorage storage) {
+            this.storage = storage;
+            this.importer = new TreeBuilder(storage.db);
+            this.importKey = new Key(storage.db);
+            this.importValue = new Value(storage.db);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void close() {
+            try {
+                importer.merge();
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
             } finally {
-                txn.end();
+                storage.close();
             }
-        } catch (Exception e) {
-            throw adaptException(e);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void put(TreeName treeName, ByteString key, ByteString value) {
+            try {
+                final Tree tree = storage.trees.get(treeName.toString());
+                byte[] keyBytes = key.toByteArray();
+                importKey.clear().appendByteArray(keyBytes, 0, keyBytes.length);
+                importValue.clear().putByteArray(value.toByteArray());
+                importer.store(tree, importKey, importValue);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
-    private byte[] readDn2Id(final Transaction txn, final DN name) throws Exception {
-        final Exchange ex = db.getExchange(volume, "dn2id", false);
-        try {
-            encodeDn(ex.getKey(), name);
-            ex.fetch();
-            final Value dbId = ex.getValue();
-            if (!dbId.isDefined()) {
-                throw newLdapException(ResultCode.NO_SUCH_OBJECT);
+    private static final class PersistItTxn implements UpdateTxn {
+
+        private final PersistItStorage storage;
+        private final Transaction txn;
+        private Map<TreeName, Exchange> exchanges = new HashMap<TreeName, Exchange>();
+
+        public PersistItTxn(PersistItStorage storage, Transaction txn) {
+            this.storage = storage;
+            this.txn = txn;
+        }
+
+        public void begin() throws PersistitException {
+            txn.begin();
+        }
+
+        public void end() {
+            releaseAllExchanges();
+            txn.end();
+        }
+
+        public void commit() throws PersistitException {
+            txn.commit();
+        }
+
+        public void rollback() {
+            txn.rollback();
+        }
+
+        private Exchange getExchange(TreeName treeName) throws PersistitException {
+            Exchange exchange = exchanges.get(treeName);
+            if (exchange == null) {
+                exchange = storage.getExchange(treeName);
+                exchanges.put(treeName, exchange);
             }
-            return dbId.getByteArray();
-        } finally {
-            db.releaseExchange(ex);
+            return exchange;
+        }
+
+        private void releaseAllExchanges() {
+            for (Exchange ex : exchanges.values()) {
+                storage.db.releaseExchange(ex);
+            }
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public ByteString get(TreeName treeName, ByteString key) {
+            try {
+                final Exchange ex = getExchange(treeName);
+                ex.getKey().clear().append(key.toByteArray());
+                ex.fetch();
+                final Value value = ex.getValue();
+                if (!value.isDefined()) {
+                    throw new RuntimeException(newLdapException(ResultCode.NO_SUCH_OBJECT));
+                }
+                return ByteString.wrap(value.getByteArray());
+            } catch (PersistitException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public ByteString getRMW(TreeName treeName, ByteString key) {
+            return get(treeName, key);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void put(TreeName treeName, ByteString key, ByteString value) {
+            try {
+                final Exchange ex = getExchange(treeName);
+                ex.getKey().clear().append(key.toByteArray());
+                ex.getValue().clear().putByteArray(value.toByteArray());
+                ex.store();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void remove(TreeName treeName, ByteString key) {
+            try {
+                final Exchange ex = getExchange(treeName);
+                ex.getKey().clear().append(key.toByteArray());
+                ex.remove();
+            } catch (PersistitException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
-
-    private byte[] readDescription2Id(Transaction txn, ByteString description) throws Exception {
-        final Exchange ex = db.getExchange(volume, "description2id", false);
-        try {
-            keyOf(ex.getKey(), description.toByteArray());
-            ex.fetch();
-            final Value dbId = ex.getValue();
-            if (!dbId.isDefined()) {
-                throw newLdapException(ResultCode.NO_SUCH_OBJECT);
-            }
-            return dbId.getByteArray();
-        } finally {
-            db.releaseExchange(ex);
-        }
-    }
-
-    private Entry readId2Entry(final Transaction txn, final byte[] dbId, final boolean isRMW)
-            throws Exception {
-        final Exchange ex = db.getExchange(volume, "id2entry", false);
-        try {
-            keyOf(ex.getKey(), dbId);
-            ex.fetch();
-            final Value dbEntry = ex.getValue();
-            if (!dbEntry.isDefined()) {
-                throw newLdapException(ResultCode.NO_SUCH_OBJECT);
-            }
-            return decodeEntry(dbEntry.getByteArray());
-        } finally {
-            db.releaseExchange(ex);
-        }
-    }
-
 }
