@@ -38,8 +38,7 @@ public final class RocksDBBackend implements Backend {
     }
 
     @Override
-    public void importEntries(final EntryReader entries, final Map<String, String> options)
-            throws Exception {
+    public void importEntries(final EntryReader entries) throws Exception {
         clearAndCreateDbDir(DB_DIR);
 
         RocksDB.loadLibrary();

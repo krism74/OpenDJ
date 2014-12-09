@@ -26,6 +26,7 @@ public final class MapDBBackend implements Backend {
     private ConcurrentNavigableMap<byte[], Long> description2id;
     private ConcurrentNavigableMap<byte[], Long> dn2id;
     private ConcurrentNavigableMap<Long, byte[]> id2entry;
+    private Map<String, String> options;
 
     @Override
     public void close() {
@@ -38,8 +39,7 @@ public final class MapDBBackend implements Backend {
     }
 
     @Override
-    public void importEntries(final EntryReader entries, final Map<String, String> options)
-            throws Exception {
+    public void importEntries(final EntryReader entries) throws Exception {
         clearAndCreateDbDir(DB_DIR);
         DB db =
                 DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().asyncWriteEnable()
@@ -77,6 +77,7 @@ public final class MapDBBackend implements Backend {
 
     @Override
     public void initialize(final Map<String, String> options) throws Exception {
+        this.options = options;
         final boolean useCache = options.containsKey("useCache");
         final int cacheSize =
                 options.containsKey("cacheSize") ? Integer.valueOf(options.get("cacheSize"))

@@ -217,7 +217,7 @@ public final class Server {
             this.backendClass = backendClass;
         }
 
-        public Backend createBackend(final Map<String, String> options) throws Exception {
+        public Backend createBackend() throws Exception {
             return backendClass.newInstance();
         }
     }
@@ -251,7 +251,7 @@ public final class Server {
         System.out.print("Initializing " + backendType + " backend...");
         final Backend backend;
         try {
-            backend = backendType.createBackend(backendOptions);
+            backend = backendType.createBackend();
         } catch (final Exception e) {
             System.out.println("failed");
             e.printStackTrace();
@@ -293,7 +293,7 @@ public final class Server {
                     }
                 };
                 try {
-                    backend.importEntries(countedLdif, backendOptions);
+                    backend.importEntries(countedLdif);
                 } catch (final Exception e) {
                     System.out.println("Error importing entries");
                     e.printStackTrace();

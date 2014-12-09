@@ -1,9 +1,6 @@
 package org.opendj.scratch.be;
 
-import static org.opendj.scratch.be.Util.adaptException;
-import static org.opendj.scratch.be.Util.decodeEntry;
-import static org.opendj.scratch.be.Util.encodeDescription;
-import static org.opendj.scratch.be.Util.encodeEntry;
+import static org.opendj.scratch.be.Util.*;
 
 import java.io.Closeable;
 import java.util.ArrayList;
@@ -76,9 +73,7 @@ public abstract class AbstractBackend implements Backend {
         }
     }
 
-    /*
-     * Assumes name components don't contain a '/'.
-     */
+    /** Assumes name components don't contain a '/'. */
     static final class TreeName {
         public static TreeName of(final String... names) {
             return new TreeName(Arrays.asList(names));
@@ -162,8 +157,7 @@ public abstract class AbstractBackend implements Backend {
     }
 
     @Override
-    public final void importEntries(final EntryReader entries, final Map<String, String> options)
-            throws Exception {
+    public final void importEntries(final EntryReader entries) throws Exception {
         lock.writeLock().lock();
         try {
             storage.deleteTrees(suffix);

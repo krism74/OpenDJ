@@ -35,8 +35,7 @@ public final class MapDBMemBackend implements Backend {
     }
 
     @Override
-    public void importEntries(final EntryReader entries, final Map<String, String> options)
-            throws Exception {
+    public void importEntries(final EntryReader entries) throws Exception {
         for (long nextEntryId = 0; entries.hasNext(); nextEntryId++) {
             final Entry entry = entries.readEntry();
             dn2id.put(encodeDn(entry.getName()).toByteArray(), nextEntryId);

@@ -60,10 +60,8 @@ public final class JEBackend implements Backend {
     }
 
     @Override
-    public void importEntries(final EntryReader entries, final Map<String, String> options)
-            throws Exception {
+    public void importEntries(final EntryReader entries) throws Exception {
         clearAndCreateDbDir(DB_DIR);
-        initialize(options, true);
         try {
             for (int nextEntryId = 0; entries.hasNext(); nextEntryId++) {
                 final Entry entry = entries.readEntry();

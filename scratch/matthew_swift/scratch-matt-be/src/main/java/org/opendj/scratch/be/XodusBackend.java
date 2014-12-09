@@ -41,6 +41,8 @@ public final class XodusBackend implements Backend {
     private Environment env = null;
     private Store id2entry = null;
 
+    private Map<String, String> options;
+
     @Override
     public void close() {
         if (env != null) {
@@ -53,10 +55,8 @@ public final class XodusBackend implements Backend {
     }
 
     @Override
-    public void importEntries(final EntryReader entries, final Map<String, String> options)
-            throws Exception {
+    public void importEntries(final EntryReader entries) throws Exception {
         clearAndCreateDbDir(DB_DIR);
-        initialize(options, true);
         final Transaction txn = env.beginTransaction();
         try {
             for (int nextEntryId = 0; entries.hasNext(); nextEntryId++) {
@@ -79,6 +79,7 @@ public final class XodusBackend implements Backend {
 
     @Override
     public void initialize(final Map<String, String> options) throws Exception {
+        this.options = options;
         initialize(options, false);
     }
 
@@ -176,6 +177,7 @@ public final class XodusBackend implements Backend {
         return new ArrayByteIterable(ByteString.valueOf(entryId).toByteArray());
     }
 
+    // FIXME, this method initializes differently for imports
     private void initialize(final Map<String, String> options, final boolean isImport)
             throws Exception {
         final EnvironmentConfig envConfig = new EnvironmentConfig();

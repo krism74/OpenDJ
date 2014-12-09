@@ -27,6 +27,7 @@ public final class MapDBBackend2 implements Backend {
     private static final File DB_FILE = new File(DB_DIR, "db");
 
     private TxMaker txMaker;
+    private Map<String, String> options;
 
     @Override
     public void close() {
@@ -34,8 +35,7 @@ public final class MapDBBackend2 implements Backend {
     }
 
     @Override
-    public void importEntries(final EntryReader entries, final Map<String, String> options)
-            throws Exception {
+    public void importEntries(final EntryReader entries) throws Exception {
         clearAndCreateDbDir(DB_DIR);
         DB db =
                 DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported().asyncWriteEnable()
@@ -73,6 +73,7 @@ public final class MapDBBackend2 implements Backend {
 
     @Override
     public void initialize(final Map<String, String> options) throws Exception {
+        this.options = options;
         final boolean useCache = options.containsKey("useCache");
         final int cacheSize =
                 options.containsKey("cacheSize") ? Integer.valueOf(options.get("cacheSize"))

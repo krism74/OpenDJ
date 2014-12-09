@@ -13,7 +13,7 @@ public interface Backend {
 
     void close();
 
-    void importEntries(EntryReader entries, Map<String, String> options) throws Exception;
+    void importEntries(EntryReader entries) throws Exception;
 
     void initialize(Map<String, String> options) throws Exception;
 
