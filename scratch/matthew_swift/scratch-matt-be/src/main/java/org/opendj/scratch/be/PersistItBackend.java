@@ -49,9 +49,8 @@ public final class PersistItBackend implements Backend {
     }
 
     @Override
-    public void importEntries(EntryReader entries, Map<String, String> options) throws Exception {
+    public void importEntries(EntryReader entries) throws Exception {
         clearAndCreateDbDir(DB_DIR);
-        initialize(options);
         final Tree id2entry = volume.getTree("id2entry", true);
         final Tree dn2id = volume.getTree("dn2id", true);
         final Tree description2id = volume.getTree("description2id", true);
