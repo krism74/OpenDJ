@@ -60,7 +60,6 @@ public final class MemoryBackend extends AbstractBackend {
                         db.createTreeMap(name.toString()).comparator(comparator).keySerializer(
                                 SERIALIZER).valueSerializer(SERIALIZER).make();
                 trees.put(name, tree);
-                db.getTreeMap(null);
             }
 
             @Override
@@ -68,38 +67,6 @@ public final class MemoryBackend extends AbstractBackend {
                 trees.get(name).put(key, value);
             }
         }
-
-        private static final Serializer<ByteString> SERIALIZER = new Serializer<ByteString>() {
-            @Override
-            public ByteString deserialize(final DataInput in, final int available)
-                    throws IOException {
-                final int size = DataIO.unpackInt(in);
-                final byte[] bytes = new byte[size];
-                in.readFully(bytes);
-                return ByteString.wrap(bytes);
-            }
-
-            @Override
-            public boolean equals(final ByteString a1, final ByteString a2) {
-                return a1.equals(a2);
-            }
-
-            @Override
-            public int hashCode(final ByteString bytes) {
-                return bytes.hashCode();
-            }
-
-            @Override
-            public boolean isTrusted() {
-                return true;
-            }
-
-            @Override
-            public void serialize(final DataOutput out, final ByteString value) throws IOException {
-                DataIO.packInt(out, value.length());
-                out.write(value.toByteArray()); // FIXME: extra copy!
-            }
-        };
 
         private DB db;
         private final Map<TreeName, ConcurrentNavigableMap<ByteString, ByteString>> trees =
@@ -149,4 +116,35 @@ public final class MemoryBackend extends AbstractBackend {
             updateTransaction.run(new TxnImpl());
         }
     }
+
+    static final Serializer<ByteString> SERIALIZER = new Serializer<ByteString>() {
+        @Override
+        public ByteString deserialize(final DataInput in, final int available) throws IOException {
+            final int size = DataIO.unpackInt(in);
+            final byte[] bytes = new byte[size];
+            in.readFully(bytes);
+            return ByteString.wrap(bytes);
+        }
+
+        @Override
+        public boolean equals(final ByteString a1, final ByteString a2) {
+            return a1.equals(a2);
+        }
+
+        @Override
+        public int hashCode(final ByteString bytes) {
+            return bytes.hashCode();
+        }
+
+        @Override
+        public boolean isTrusted() {
+            return true;
+        }
+
+        @Override
+        public void serialize(final DataOutput out, final ByteString value) throws IOException {
+            DataIO.packInt(out, value.length());
+            out.write(value.toByteArray()); // FIXME: extra copy!
+        }
+    };
 }
