@@ -71,8 +71,8 @@ public final class MapDBBackend extends AbstractBackend {
             }
 
             @Override
-            public void remove(final TreeName name, final ByteString key) {
-                getTree(name).remove(key);
+            public boolean remove(final TreeName name, final ByteString key) {
+                return getTree(name).remove(key) != null;
             }
 
             private Map<ByteString, ByteString> getTree(final TreeName name) {

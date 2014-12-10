@@ -157,7 +157,7 @@ public abstract class AbstractBackend implements Backend {
     interface UpdateTxn extends ReadTxn {
         void put(TreeName name, ByteString key, ByteString value);
 
-        void remove(TreeName name, ByteString key);
+        boolean remove(TreeName name, ByteString key);
     }
 
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();

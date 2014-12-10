@@ -138,11 +138,11 @@ public final class PersistItBackend extends AbstractBackend {
             }
 
             @Override
-            public void remove(TreeName treeName, ByteString key) {
+            public boolean remove(TreeName treeName, ByteString key) {
                 try {
                     final Exchange ex = getExchange(treeName);
                     ex.getKey().clear().append(key.toByteArray());
-                    ex.remove();
+                    return ex.remove();
                 } catch (PersistitException e) {
                     throw new StorageRuntimeException(e);
                 }

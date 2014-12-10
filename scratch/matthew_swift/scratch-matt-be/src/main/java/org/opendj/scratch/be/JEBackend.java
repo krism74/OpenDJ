@@ -94,9 +94,9 @@ public final class JEBackend extends AbstractBackend {
             }
 
             @Override
-            public void remove(TreeName treeName, ByteString key) {
+            public boolean remove(TreeName treeName, ByteString key) {
                 setData(txnKey, key);
-                getTree(treeName).delete(txn, txnKey);
+                return getTree(treeName).delete(txn, txnKey) == SUCCESS;
             }
         }
 

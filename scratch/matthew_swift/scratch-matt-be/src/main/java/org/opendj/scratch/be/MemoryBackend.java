@@ -43,8 +43,8 @@ public final class MemoryBackend extends AbstractBackend {
             }
 
             @Override
-            public void remove(final TreeName name, final ByteString key) {
-                trees.get(name).remove(key);
+            public boolean remove(final TreeName name, final ByteString key) {
+                return trees.get(name).remove(key) != null;
             }
         }
 
