@@ -1,158 +1,155 @@
 package org.opendj.scratch.be;
 
-import static org.opendj.scratch.be.Util.*;
+import static org.opendj.scratch.be.Util.clearAndCreateDbDir;
 
 import java.io.File;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 
+import org.forgerock.opendj.ldap.ByteSequence;
 import org.forgerock.opendj.ldap.ByteString;
 import org.forgerock.opendj.ldap.ByteStringBuilder;
-import org.forgerock.opendj.ldap.DN;
-import org.forgerock.opendj.ldap.Entries;
-import org.forgerock.opendj.ldap.Entry;
-import org.forgerock.opendj.ldap.LdapException;
-import org.forgerock.opendj.ldap.requests.ModifyRequest;
-import org.forgerock.opendj.ldif.EntryReader;
 import org.rocksdb.Options;
 import org.rocksdb.RocksDB;
+import org.rocksdb.RocksDBException;
 import org.rocksdb.WriteBatch;
 import org.rocksdb.WriteOptions;
 
-public final class RocksDBBackend implements Backend {
-    private static final File DB_DIR = new File("target/rocksBackend");
-    private static final byte PREFIX_DESCRIPTION2ID = 2;
-    private static final byte PREFIX_DN2ID = 1;
-    private static final byte PREFIX_ID2ENTRY = 0;
-
-    private RocksDB db;
-    private Options dbOptions;
-
-    @Override
-    public void close() {
-        if (db != null) {
-            db.close();
-            db = null;
-            dbOptions.dispose();
-            dbOptions = null;
-        }
+@SuppressWarnings("javadoc")
+public final class RocksDBBackend extends AbstractBackend {
+    public RocksDBBackend() {
+        super(new StorageImpl());
     }
 
-    @Override
-    public void initialize(final Map<String, String> options) throws Exception {
-        RocksDB.loadLibrary();
-        dbOptions = new Options().setCreateIfMissing(true);
-    }
+    private static final class StorageImpl implements Storage {
+        private final class ImporterImpl implements Importer {
+            @Override
+            public void createTree(final TreeName name, final Comparator<ByteSequence> comparator) {
+                nameToPrefix.put(name, nextPrefix++);
+            }
 
-    @Override
-    public void open() throws Exception {
-        db = RocksDB.open(dbOptions, DB_DIR.toString());
-    }
-
-    @Override
-    public void importEntries(final EntryReader entries) throws Exception {
-        clearAndCreateDbDir(DB_DIR);
-        open();
-
-        try {
-            final ByteStringBuilder builder = new ByteStringBuilder();
-            for (int nextEntryId = 0; entries.hasNext(); nextEntryId++) {
-                builder.clear();
-                builder.append(PREFIX_ID2ENTRY);
-                builder.append(nextEntryId);
-                final byte[] id = builder.toByteArray();
-
-                final Entry entry = entries.readEntry();
-                builder.clear();
-                builder.append(encodeEntry(entry));
-                db.put(id, builder.toByteArray());
-
-                builder.clear();
-                builder.append(PREFIX_DN2ID);
-                builder.append(encodeDn(entry.getName()));
-                db.put(builder.toByteArray(), id);
-
-                final ByteString encodedDescription = encodeDescription(entry);
-                if (encodedDescription != null) {
-                    builder.clear();
-                    builder.append(PREFIX_DESCRIPTION2ID);
-                    builder.append(encodedDescription);
-                    db.put(builder.toByteArray(), id);
+            @Override
+            public void put(final TreeName name, final ByteString key, final ByteString value) {
+                try {
+                    db.put(prefixKey(name, key), value.toByteArray());
+                } catch (final RocksDBException e) {
+                    throw new StorageRuntimeException(e);
                 }
             }
-        } finally {
-            close();
-        }
-    }
 
-    @Override
-    public void modifyEntry(final ModifyRequest request) throws LdapException {
-        final WriteBatch batchUpdate = new WriteBatch();
-        final WriteOptions writeOptions = new WriteOptions();
-        try {
-            // Read entry and apply updates.
-            final byte[] entryId = db.get(encodeDnKey(request.getName()));
-            final Entry entry = decodeEntry(db.get(entryId));
-            final ByteString oldDescriptionKey = encodeDescription(entry);
-            Entries.modifyEntry(entry, request);
-            final ByteString newDescriptionKey = encodeDescription(entry);
-            // Update description index.
-            final int comparison = oldDescriptionKey.compareTo(newDescriptionKey);
-            if (comparison != 0) {
-                final byte[] oldKey = toDescriptionKey(oldDescriptionKey);
-                final byte[] newKey = toDescriptionKey(newDescriptionKey);
-                if (comparison < 0) {
-                    batchUpdate.remove(oldKey);
-                    batchUpdate.put(newKey, entryId);
-                } else {
-                    batchUpdate.put(newKey, entryId);
-                    batchUpdate.remove(oldKey);
+            @Override
+            public void close() {
+                StorageImpl.this.close();
+            }
+        }
+
+        private final class TxnImpl implements UpdateTxn {
+            private final WriteBatch batchUpdate;
+
+            private TxnImpl(final WriteBatch batchUpdate) {
+                this.batchUpdate = batchUpdate;
+            }
+
+            @Override
+            public ByteString get(final TreeName name, final ByteString key) {
+                try {
+                    return wrap(db.get(prefixKey(name, key)));
+                } catch (final RocksDBException e) {
+                    throw new StorageRuntimeException(e);
                 }
             }
-            // Update id2entry index.
-            batchUpdate.put(entryId, encodeEntry(entry));
-            db.write(writeOptions, batchUpdate);
-        } catch (final Exception e) {
-            throw adaptException(e);
-        } finally {
-            writeOptions.dispose();
-            batchUpdate.dispose();
+
+            @Override
+            public ByteString getRMW(final TreeName name, final ByteString key) {
+                return get(name, key);
+            }
+
+            @Override
+            public void put(final TreeName name, final ByteString key, final ByteString value) {
+                batchUpdate.put(prefixKey(name, key), value.toByteArray());
+            }
+
+            @Override
+            public void remove(final TreeName name, final ByteString key) {
+                batchUpdate.remove(prefixKey(name, key));
+            }
         }
-    }
 
-    @Override
-    public Entry readEntryByDescription(final ByteString description) throws LdapException {
-        try {
-            return decodeEntry(db.get(db.get(toDescriptionKey(encodeDescription(description)))));
-        } catch (final Exception e) {
-            throw adaptException(e);
+        private static final File DB_DIR = new File("target/rocksBackend");
+        private RocksDB db;
+        private Options dbOptions;
+
+        /*
+         * In practice we would support a large number of indexes as well as
+         * persisting the prefix mapping in the DB.
+         */
+        private byte nextPrefix = 0;
+        private final Map<TreeName, Byte> nameToPrefix = new HashMap<TreeName, Byte>();
+
+        @Override
+        public void initialize(final Map<String, String> options) throws Exception {
+            RocksDB.loadLibrary();
+            dbOptions = new Options().setCreateIfMissing(true);
         }
-    }
 
-    @Override
-    public Entry readEntryByDN(final DN name) throws LdapException {
-        try {
-            return decodeEntry(db.get(db.get(encodeDnKey(name))));
-        } catch (final Exception e) {
-            throw adaptException(e);
+        @Override
+        public Importer startImport() throws Exception {
+            clearAndCreateDbDir(DB_DIR);
+            open();
+            return new ImporterImpl();
         }
-    }
 
-    private byte[] encodeDnKey(final DN name) {
-        return toDnKey(encodeDn(name));
-    }
+        @Override
+        public void open() throws Exception {
+            db = RocksDB.open(dbOptions, DB_DIR.toString());
+        }
 
-    private byte[] toDescriptionKey(final ByteString encodedDescription) {
-        final byte[] key = new byte[encodedDescription.length() + 1];
-        key[0] = PREFIX_DESCRIPTION2ID;
-        encodedDescription.copyTo(key, 1);
-        return key;
-    }
+        @Override
+        public void openTree(final TreeName name, final Comparator<ByteSequence> comparator) {
+            if (!nameToPrefix.containsKey(name)) {
+                throw new IllegalStateException();
+            }
+        }
 
-    private byte[] toDnKey(final ByteString encodedDn) {
-        final byte[] key = new byte[encodedDn.length() + 1];
-        key[0] = PREFIX_DN2ID;
-        encodedDn.copyTo(key, 1);
-        return key;
+        @Override
+        public <T> T read(final ReadTransaction<T> readTransaction) throws Exception {
+            return readTransaction.run(new TxnImpl(null));
+        }
+
+        @Override
+        public void update(final UpdateTransaction updateTransaction) throws Exception {
+            final WriteBatch batchUpdate = new WriteBatch();
+            final WriteOptions writeOptions = new WriteOptions();
+            try {
+                updateTransaction.run(new TxnImpl(batchUpdate));
+                db.write(writeOptions, batchUpdate);
+            } finally {
+                writeOptions.dispose();
+                batchUpdate.dispose();
+            }
+        }
+
+        @Override
+        public void close() {
+            if (db != null) {
+                db.close();
+                db = null;
+                dbOptions.dispose();
+                dbOptions = null;
+            }
+        }
+
+        private byte[] prefixKey(final TreeName name, final ByteString key) {
+            final ByteStringBuilder buffer = new ByteStringBuilder(key.length() + 1);
+            buffer.append(nameToPrefix.get(name));
+            buffer.append(key);
+            return buffer.toByteArray();
+        }
+
+        private ByteString wrap(final byte[] value) {
+            return value != null ? ByteString.wrap(value) : null;
+        }
     }
 
 }
