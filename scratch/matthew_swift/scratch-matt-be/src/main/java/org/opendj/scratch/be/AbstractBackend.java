@@ -15,6 +15,7 @@ import org.forgerock.opendj.ldap.DN;
 import org.forgerock.opendj.ldap.Entries;
 import org.forgerock.opendj.ldap.Entry;
 import org.forgerock.opendj.ldap.LdapException;
+import org.forgerock.opendj.ldap.ResultCode;
 import org.forgerock.opendj.ldap.requests.ModifyRequest;
 import org.forgerock.opendj.ldif.EntryReader;
 
@@ -290,18 +291,26 @@ public abstract class AbstractBackend implements Backend {
     }
 
     private ByteString readDescription2Id(final ReadTxn txn, final ByteString description)
-            throws StorageRuntimeException {
-        return txn.get(description2id, description);
+            throws LdapException, StorageRuntimeException {
+        return checkNoSuchObject(txn.get(description2id, description));
     }
 
-    private ByteString readDn2Id(final ReadTxn txn, final DN name) throws StorageRuntimeException {
-        return txn.get(dn2id, name.toIrreversibleNormalizedByteString());
+    private ByteString readDn2Id(final ReadTxn txn, final DN name) throws LdapException,
+            StorageRuntimeException {
+        return checkNoSuchObject(txn.get(dn2id, name.toIrreversibleNormalizedByteString()));
     }
 
     private Entry readId2Entry(final ReadTxn txn, final ByteString dbId, final boolean isRMW)
             throws LdapException, StorageRuntimeException {
         final ByteString entry = isRMW ? txn.getRMW(id2entry, dbId) : txn.get(id2entry, dbId);
-        return decodeEntry(entry.toByteArray());
+        return decodeEntry(checkNoSuchObject(entry).toByteArray());
+    }
+
+    private ByteString checkNoSuchObject(ByteString value) throws LdapException {
+        if (value != null) {
+            return value;
+        }
+        throw LdapException.newLdapException(ResultCode.NO_SUCH_OBJECT);
     }
 
 }
