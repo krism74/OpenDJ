@@ -50,7 +50,7 @@ public final class PersistItBackend extends Backend {
             @Override
             public void put(TreeName treeName, ByteString key, ByteString value) {
                 try {
-                    final Tree tree = trees.get(treeName.toString());
+                    final Tree tree = trees.get(treeName);
                     byte[] keyBytes = key.toByteArray();
                     importKey.clear().appendByteArray(keyBytes, 0, keyBytes.length);
                     importValue.clear().putByteArray(value.toByteArray());
@@ -73,20 +73,12 @@ public final class PersistItBackend extends Backend {
         }
 
         private final class TxnImpl implements UpdateTxn {
-            private final Transaction txn = db.getTransaction();
             private final Map<TreeName, Exchange> exchanges = new HashMap<TreeName, Exchange>();
 
-            private void begin() throws PersistitException {
-                txn.begin();
-            }
-
-            private void end() {
-                releaseAllExchanges();
-                txn.end();
-            }
-
-            private void commit() throws PersistitException {
-                txn.commit();
+            private void release() {
+                for (Exchange ex : exchanges.values()) {
+                    db.releaseExchange(ex);
+                }
             }
 
             private Exchange getExchange(TreeName treeName) throws PersistitException {
@@ -96,12 +88,6 @@ public final class PersistItBackend extends Backend {
                     exchanges.put(treeName, exchange);
                 }
                 return exchange;
-            }
-
-            private void releaseAllExchanges() {
-                for (Exchange ex : exchanges.values()) {
-                    db.releaseExchange(ex);
-                }
             }
 
             @Override
@@ -171,7 +157,7 @@ public final class PersistItBackend extends Backend {
             try {
                 db = new Persistit(properties);
                 db.initialize();
-                volume = db.loadVolume(volume.toString());
+                volume = db.loadVolume("dj");
             } catch (PersistitException e) {
                 throw new StorageRuntimeException(e);
             }
@@ -198,13 +184,25 @@ public final class PersistItBackend extends Backend {
 
         @Override
         public <T> T read(ReadTransaction<T> readTransaction) throws Exception {
-            final TxnImpl txn = new TxnImpl();
+            final Transaction txn = db.getTransaction();
             for (;;) {
                 txn.begin();
                 try {
-                    return readTransaction.run(txn);
+                    final TxnImpl txnImpl = new TxnImpl();
+                    try {
+                        final T result = readTransaction.run(txnImpl);
+                        txn.commit();
+                        return result;
+                    } catch (StorageRuntimeException e) {
+                        throw (Exception) e.getCause();
+                    } finally {
+                        txnImpl.release();
+                    }
                 } catch (RollbackException e) {
-                    // Retry.
+                    // retry
+                } catch (Exception e) {
+                    txn.rollback();
+                    throw e;
                 } finally {
                     txn.end();
                 }
@@ -213,15 +211,25 @@ public final class PersistItBackend extends Backend {
 
         @Override
         public void update(UpdateTransaction updateTransaction) throws Exception {
-            final TxnImpl txn = new TxnImpl();
+            final Transaction txn = db.getTransaction();
             for (;;) {
                 txn.begin();
                 try {
-                    updateTransaction.run(txn);
-                    txn.commit();
-                    return;
+                    final TxnImpl txnImpl = new TxnImpl();
+                    try {
+                        updateTransaction.run(txnImpl);
+                        txn.commit();
+                        return;
+                    } catch (StorageRuntimeException e) {
+                        throw (Exception) e.getCause();
+                    } finally {
+                        txnImpl.release();
+                    }
                 } catch (RollbackException e) {
-                    // Retry.
+                    // retry
+                } catch (Exception e) {
+                    txn.rollback();
+                    throw e;
                 } finally {
                     txn.end();
                 }
