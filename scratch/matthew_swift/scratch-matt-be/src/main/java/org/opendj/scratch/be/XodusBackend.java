@@ -82,8 +82,8 @@ public final class XodusBackend extends AbstractBackend {
             }
 
             @Override
-            public void remove(final TreeName name, final ByteString key) {
-                trees.get(name).delete(txn, toByteIterable(key));
+            public boolean remove(final TreeName name, final ByteString key) {
+                return trees.get(name).delete(txn, toByteIterable(key));
             }
         }
 

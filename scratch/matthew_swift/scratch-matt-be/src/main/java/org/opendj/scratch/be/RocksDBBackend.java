@@ -71,8 +71,13 @@ public final class RocksDBBackend extends AbstractBackend {
             }
 
             @Override
-            public void remove(final TreeName name, final ByteString key) {
-                batchUpdate.remove(prefixKey(name, key));
+            public boolean remove(final TreeName name, final ByteString key) {
+                // FIXME: as well as ugly, I don't think that this is strictly correct.
+                if (get(name, key) != null) {
+                    batchUpdate.remove(prefixKey(name, key));
+                    return true;
+                }
+                return false;
             }
         }
 
