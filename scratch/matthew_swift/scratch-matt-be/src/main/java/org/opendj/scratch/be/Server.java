@@ -47,6 +47,7 @@ import org.forgerock.opendj.ldap.responses.Result;
 import org.forgerock.opendj.ldif.EntryGenerator;
 import org.forgerock.opendj.ldif.EntryReader;
 
+@SuppressWarnings("javadoc")
 public final class Server {
     private static class BackendHandler implements RequestHandler<RequestContext> {
         private final Executor threadPool;

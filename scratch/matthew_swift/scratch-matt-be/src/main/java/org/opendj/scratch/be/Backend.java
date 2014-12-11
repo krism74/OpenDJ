@@ -9,6 +9,7 @@ import org.forgerock.opendj.ldap.LdapException;
 import org.forgerock.opendj.ldap.requests.ModifyRequest;
 import org.forgerock.opendj.ldif.EntryReader;
 
+@SuppressWarnings("javadoc")
 public interface Backend {
 
     void close();

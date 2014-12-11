@@ -25,6 +25,7 @@ import com.orientechnologies.orient.core.intent.OIntentMassiveInsert;
 import com.orientechnologies.orient.core.record.impl.ORecordBytes;
 import com.orientechnologies.orient.core.tx.OTransaction.TXTYPE;
 
+@SuppressWarnings("javadoc")
 public final class OrientBackend implements Backend {
     private static final class DbHolder {
         private final ODatabaseDocumentTx db;
