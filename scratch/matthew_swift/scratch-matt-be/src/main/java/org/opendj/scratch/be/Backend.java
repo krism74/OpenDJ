@@ -202,7 +202,7 @@ public abstract class Backend implements Closeable {
                     final Entry entry = entries.readEntry();
                     final ByteString dbId = ByteString.valueOf(nextEntryId);
                     importer.put(id2entry, dbId, ByteString.wrap(encodeEntry(entry)));
-                    importer.put(dn2id, dbId, entry.getName().toIrreversibleNormalizedByteString());
+                    importer.put(dn2id, entry.getName().toIrreversibleNormalizedByteString(), dbId);
                     final ByteString encodedDescription = encodeDescription(entry);
                     if (encodedDescription != null) {
                         importer.put(description2id, encodedDescription, dbId);
