@@ -23,7 +23,7 @@ import org.forgerock.opendj.ldap.ByteSequence;
 import org.forgerock.opendj.ldap.ByteString;
 
 @SuppressWarnings("javadoc")
-public final class XodusBackend extends AbstractBackend {
+public final class XodusBackend extends Backend {
     public XodusBackend() {
         super(new StorageImpl());
     }

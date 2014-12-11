@@ -24,7 +24,7 @@ import com.sleepycat.je.Transaction;
 import com.sleepycat.je.TransactionConfig;
 
 @SuppressWarnings("javadoc")
-public final class JEBackend extends AbstractBackend {
+public final class JEBackend extends Backend {
 
     public JEBackend() {
         super(new StorageImpl());

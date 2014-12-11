@@ -23,7 +23,7 @@ import com.persistit.exception.PersistitException;
 import com.persistit.exception.RollbackException;
 
 @SuppressWarnings("javadoc")
-public final class PersistItBackend extends AbstractBackend {
+public final class PersistItBackend extends Backend {
 
     public PersistItBackend() {
         super(new StorageImpl());

@@ -18,7 +18,7 @@ import org.mapdb.DataIO;
 import org.mapdb.Serializer;
 
 @SuppressWarnings("javadoc")
-public final class MemoryBackend extends AbstractBackend {
+public final class MemoryBackend extends Backend {
 
     public MemoryBackend() {
         super(new StorageImpl());

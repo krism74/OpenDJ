@@ -18,7 +18,7 @@ import org.mapdb.TxMaker;
 import org.mapdb.TxRollbackException;
 
 @SuppressWarnings("javadoc")
-public final class MapDBBackend extends AbstractBackend {
+public final class MapDBBackend extends Backend {
     private static final class StorageImpl implements Storage {
         private final class ImporterImpl implements Importer {
             private final DB db = DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported()

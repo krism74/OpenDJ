@@ -17,7 +17,7 @@ import org.rocksdb.WriteBatch;
 import org.rocksdb.WriteOptions;
 
 @SuppressWarnings("javadoc")
-public final class RocksDBBackend extends AbstractBackend {
+public final class RocksDBBackend extends Backend {
     public RocksDBBackend() {
         super(new StorageImpl());
     }

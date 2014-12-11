@@ -1,19 +1,16 @@
 package org.opendj.scratch.be;
 
-import static org.opendj.scratch.be.Util.*;
+import static org.opendj.scratch.be.Util.clearAndCreateDbDir;
 
 import java.io.File;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.forgerock.opendj.ldap.ByteSequence;
 import org.forgerock.opendj.ldap.ByteString;
-import org.forgerock.opendj.ldap.DN;
-import org.forgerock.opendj.ldap.Entries;
-import org.forgerock.opendj.ldap.Entry;
-import org.forgerock.opendj.ldap.LdapException;
-import org.forgerock.opendj.ldap.requests.ModifyRequest;
-import org.forgerock.opendj.ldif.EntryReader;
 
 import com.orientechnologies.common.serialization.types.OBinaryTypeSerializer;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
@@ -26,143 +23,163 @@ import com.orientechnologies.orient.core.record.impl.ORecordBytes;
 import com.orientechnologies.orient.core.tx.OTransaction.TXTYPE;
 
 @SuppressWarnings("javadoc")
-public final class OrientBackend implements Backend {
-    private static final class DbHolder {
-        private final ODatabaseDocumentTx db;
-        private final OIndex<?> description2entry;
-        private final OIndex<?> dn2entry;
+public final class OrientBackend extends Backend {
 
-        public DbHolder(final ODatabaseDocumentTx db) {
-            this.db = db;
-            this.dn2entry = db.getMetadata().getIndexManager().getIndex("dn2entry");
-            this.description2entry =
-                    db.getMetadata().getIndexManager().getIndex("description2entry");
-        }
-
+    public OrientBackend() {
+        super(new StorageImpl());
     }
 
-    private static final File DB_DIR = new File("target/orientBackend");
-    private static final String DB_URL = "plocal:" + DB_DIR.getAbsolutePath();
+    private static final class StorageImpl implements Storage {
+        private static final class DbHolder {
+            private final ODatabaseDocumentTx db;
+            private final Map<TreeName, OIndex<?>> trees = new HashMap<TreeName, OIndex<?>>();
 
-    private final Queue<ODatabaseDocumentTx> activeDbConnections =
-            new ConcurrentLinkedQueue<ODatabaseDocumentTx>();
+            private DbHolder(final ODatabaseDocumentTx db) {
+                this.db = db;
+            }
 
-    private final ThreadLocal<DbHolder> threadLocalDb = new ThreadLocal<DbHolder>() {
+            private OIndex<?> getTree(final TreeName name) {
+                OIndex<?> tree = trees.get(name);
+                if (tree != null) {
+                    return tree;
+                }
+                tree = db.getMetadata().getIndexManager().getIndex(name.toString());
+                trees.put(name, tree);
+                return tree;
+            }
+
+        }
+
+        private final class ImporterImpl implements Importer {
+            private final ODatabaseDocumentTx db;
+            private final Map<TreeName, OIndex<?>> trees = new HashMap<TreeName, OIndex<?>>();
+
+            public ImporterImpl() {
+                db = new ODatabaseDocumentTx(DB_URL).create();
+                db.declareIntent(new OIntentMassiveInsert());
+            }
+
+            @Override
+            public void close() {
+                db.close();
+            }
+
+            @Override
+            public void createTree(final TreeName name, final Comparator<ByteSequence> comparator) {
+                final OIndex<?> tree =
+                        db.getMetadata().getIndexManager().createIndex(name.toString(), "UNIQUE",
+                                new ORuntimeKeyIndexDefinition<byte[]>(OBinaryTypeSerializer.ID),
+                                null, null, null);
+                trees.put(name, tree);
+            }
+
+            @Override
+            public void put(final TreeName name, final ByteString key, final ByteString value) {
+                final ORecordBytes valueRecord = new ORecordBytes(db, value.toByteArray());
+                valueRecord.save();
+                trees.get(name).put(key.toByteArray(), valueRecord);
+            }
+        }
+
+        private final class TxnImpl implements UpdateTxn {
+            private final DbHolder dbHolder;
+
+            private TxnImpl(final DbHolder dbHolder) {
+                this.dbHolder = dbHolder;
+            }
+
+            @Override
+            public ByteString get(final TreeName name, final ByteString key) {
+                final ORecordId id = (ORecordId) dbHolder.getTree(name).get(key.toByteArray());
+                final ORecordBytes record = dbHolder.db.getRecord(id);
+                return ByteString.wrap(record.toStream());
+            }
+
+            @Override
+            public ByteString getRMW(final TreeName name, final ByteString key) {
+                return get(name, key);
+            }
+
+            @Override
+            public void put(final TreeName name, final ByteString key, final ByteString value) {
+                final ORecordId id = (ORecordId) dbHolder.getTree(name).get(key.toByteArray());
+                final ORecordBytes record = dbHolder.db.getRecord(id);
+                record.setDirty();
+                record.fromStream(value.toByteArray());
+                record.save();
+            }
+
+            @Override
+            public boolean remove(final TreeName name, final ByteString key) {
+                return dbHolder.getTree(name).remove(key.toByteArray());
+            }
+        }
+
+        private static final File DB_DIR = new File("target/orientBackend");
+        private static final String DB_URL = "plocal:" + DB_DIR.getAbsolutePath();
+
+        private final Queue<ODatabaseDocumentTx> activeDbConnections =
+                new ConcurrentLinkedQueue<ODatabaseDocumentTx>();
+
+        private final ThreadLocal<DbHolder> threadLocalDb = new ThreadLocal<DbHolder>() {
+            @Override
+            protected DbHolder initialValue() {
+                final ODatabaseDocumentTx db =
+                        new ODatabaseDocumentTx(DB_URL).open("admin", "admin");
+                activeDbConnections.add(db);
+                return new DbHolder(db);
+            }
+        };
+
         @Override
-        protected DbHolder initialValue() {
-            final ODatabaseDocumentTx db = new ODatabaseDocumentTx(DB_URL).open("admin", "admin");
-            activeDbConnections.add(db);
-            return new DbHolder(db);
-        }
-    };
-
-    @Override
-    public void close() {
-        for (final ODatabaseDocumentTx db : activeDbConnections) {
-            db.close();
-        }
-    }
-
-    @Override
-    public void importEntries(final EntryReader entries) throws Exception {
-        clearAndCreateDbDir(DB_DIR);
-        //        OGlobalConfiguration.USE_WAL.setValue(false);
-        //        OGlobalConfiguration.TX_USE_LOG.setValue(false);
-        final ODatabaseDocumentTx db = new ODatabaseDocumentTx(DB_URL).create();
-        final OIndex<?> dn2entry =
-                db.getMetadata().getIndexManager().createIndex("dn2entry", "UNIQUE",
-                        new ORuntimeKeyIndexDefinition<byte[]>(OBinaryTypeSerializer.ID), null,
-                        null, null);
-        final OIndex<?> description2entry =
-                db.getMetadata().getIndexManager().createIndex("description2entry", "UNIQUE",
-                        new ORuntimeKeyIndexDefinition<byte[]>(OBinaryTypeSerializer.ID), null,
-                        null, null);
-        db.declareIntent(new OIntentMassiveInsert());
-        try {
-            while (entries.hasNext()) {
-                final Entry entry = entries.readEntry();
-                final ORecordBytes entryRecord = new ORecordBytes(db, encodeEntry(entry));
-                entryRecord.save();
-                dn2entry.put(encodeDn(entry.getName()).toByteArray(), entryRecord);
-                final ByteString encodedDescription = encodeDescription(entry);
-                if (encodedDescription != null) {
-                    description2entry.put(encodedDescription.toByteArray(), entryRecord);
-                }
-            }
-        } finally {
-            db.close();
-        }
-    }
-
-    @Override
-    public void open() throws Exception {
-        // No op
-    }
-
-    @Override
-    public void initialize(final Map<String, String> options) throws Exception {
-        // OGlobalConfiguration.CACHE_LEVEL2_ENABLED.setValue(true);
-        // OGlobalConfiguration.CACHE_LEVEL2_SIZE.setValue(100000);
-    }
-
-    @Override
-    public void modifyEntry(final ModifyRequest request) throws LdapException {
-        final DbHolder dbHolder = threadLocalDb.get();
-        final byte[] dnKey = encodeDn(request.getName()).toByteArray();
-        while (true) {
-            dbHolder.db.begin(TXTYPE.OPTIMISTIC);
-            try {
-                final ORecordId id = (ORecordId) dbHolder.dn2entry.get(dnKey);
-                final ORecordBytes entryRecord = dbHolder.db.getRecord(id);
-                final Entry entry = decodeEntry(entryRecord.toStream());
-                final ByteString oldDescriptionKey = encodeDescription(entry);
-                Entries.modifyEntry(entry, request);
-                final ByteString newDescriptionKey = encodeDescription(entry);
-                entryRecord.setDirty();
-                entryRecord.fromStream(encodeEntry(entry));
-                entryRecord.save();
-                // Update description index.
-                final int comparison = oldDescriptionKey.compareTo(newDescriptionKey);
-                if (comparison != 0) {
-                    // FIXME: is this under txn? Does the order matter?
-                    dbHolder.description2entry.remove(oldDescriptionKey.toByteArray());
-                    dbHolder.description2entry.put(newDescriptionKey.toByteArray(), entryRecord);
-                }
-                dbHolder.db.commit();
-                return;
-            } catch (final OConcurrentModificationException e) {
-                // Retry.
-            } catch (final Exception e) {
-                dbHolder.db.rollback();
-                throw adaptException(e);
+        public void close() {
+            for (final ODatabaseDocumentTx db : activeDbConnections) {
+                db.close();
             }
         }
-    }
 
-    @Override
-    public Entry readEntryByDescription(final ByteString description) throws LdapException {
-        final DbHolder dbHolder = threadLocalDb.get();
-        try {
-            final byte[] descriptionKey = encodeDescription(description).toByteArray();
-            final ORecordId id = (ORecordId) dbHolder.description2entry.get(descriptionKey);
-            final ORecordBytes entryRecord = dbHolder.db.getRecord(id);
-            return decodeEntry(entryRecord.toStream());
-        } catch (final Exception e) {
-            throw adaptException(e);
+        @Override
+        public void initialize(final Map<String, String> options) throws Exception {
+            // OGlobalConfiguration.CACHE_LEVEL2_ENABLED.setValue(true);
+            // OGlobalConfiguration.CACHE_LEVEL2_SIZE.setValue(100000);
+        }
+
+        @Override
+        public void open() throws Exception {
+            // No op
+        }
+
+        @Override
+        public void openTree(final TreeName name, final Comparator<ByteSequence> comparator) {
+            // No op
+        }
+
+        @Override
+        public <T> T read(final ReadTransaction<T> readTransaction) throws Exception {
+            return readTransaction.run(new TxnImpl(threadLocalDb.get()));
+        }
+
+        @Override
+        public Importer startImport() throws Exception {
+            clearAndCreateDbDir(DB_DIR);
+            return new ImporterImpl();
+        }
+
+        @Override
+        public void update(final UpdateTransaction updateTransaction) throws Exception {
+            final DbHolder dbHolder = threadLocalDb.get();
+            for (;;) {
+                try {
+                    dbHolder.db.begin(TXTYPE.OPTIMISTIC);
+                    updateTransaction.run(new TxnImpl(dbHolder));
+                    dbHolder.db.commit();
+                    return;
+                } catch (final OConcurrentModificationException e) {
+                    // Retry.
+                } catch (final Exception e) {
+                    dbHolder.db.rollback();
+                }
+            }
         }
     }
-
-    @Override
-    public Entry readEntryByDN(final DN name) throws LdapException {
-        final DbHolder dbHolder = threadLocalDb.get();
-        try {
-            final byte[] dnKey = encodeDn(name).toByteArray();
-            final ORecordId id = (ORecordId) dbHolder.dn2entry.get(dnKey);
-            final ORecordBytes entryRecord = dbHolder.db.getRecord(id);
-            return decodeEntry(entryRecord.toStream());
-        } catch (final Exception e) {
-            throw adaptException(e);
-        }
-    }
-
 }
