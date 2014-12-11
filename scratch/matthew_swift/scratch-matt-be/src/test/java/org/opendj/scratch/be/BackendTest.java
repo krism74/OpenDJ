@@ -24,13 +24,13 @@
  */
 package org.opendj.scratch.be;
 
-import org.opendj.scratch.be.AbstractBackend.TreeName;
+import org.opendj.scratch.be.Backend.TreeName;
 import org.testng.annotations.Test;
 
 import static junit.framework.Assert.*;
 
 @SuppressWarnings("javadoc")
-public class AbstractBackendTest {
+public class BackendTest {
 
     @Test
     public void treeName() {
