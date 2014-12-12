@@ -22,15 +22,15 @@
  *
  *      Copyright 2014 ForgeRock AS
  */
-package org.opendj.scratch.be;
+package org.opendj.scratch.be.spi;
 
-import org.opendj.scratch.be.Backend.TreeName;
+import org.opendj.scratch.be.spi.TreeName;
 import org.testng.annotations.Test;
 
 import static junit.framework.Assert.*;
 
 @SuppressWarnings("javadoc")
-public class BackendTest {
+public class TreeNameTest {
 
     @Test
     public void treeName() {

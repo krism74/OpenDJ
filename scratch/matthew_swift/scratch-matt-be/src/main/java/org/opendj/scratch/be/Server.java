@@ -46,6 +46,14 @@ import org.forgerock.opendj.ldap.responses.Responses;
 import org.forgerock.opendj.ldap.responses.Result;
 import org.forgerock.opendj.ldif.EntryGenerator;
 import org.forgerock.opendj.ldif.EntryReader;
+import org.opendj.scratch.be.impl.JeStorage;
+import org.opendj.scratch.be.impl.MapDbStorage;
+import org.opendj.scratch.be.impl.MapDbMemStorage;
+import org.opendj.scratch.be.impl.OrientStorage;
+import org.opendj.scratch.be.impl.PersistItStorage;
+import org.opendj.scratch.be.impl.RocksDbStorage;
+import org.opendj.scratch.be.impl.XodusStorage;
+import org.opendj.scratch.be.spi.Storage;
 
 @SuppressWarnings("javadoc")
 public final class Server {
@@ -201,24 +209,25 @@ public final class Server {
 
     private static enum BackendType {
         // @formatter:off
-        JE(JEBackend.class),
-        MEM(MemoryBackend.class),
-        MAP(MapDBBackend.class),
-        ORIENT(OrientBackend.class),
-        ROCKS(RocksDBBackend.class),
-        PERSISTIT(PersistItBackend.class),
-        XODUS(XodusBackend.class);
+        JE(JeStorage.class),
+        MEM(MapDbMemStorage.class),
+        MAP(MapDbStorage.class),
+        ORIENT(OrientStorage.class),
+        ROCKS(RocksDbStorage.class),
+        PERSISTIT(PersistItStorage.class),
+        XODUS(XodusStorage.class);
         // @formatter:on
 
-        private final Class<? extends Backend> backendClass;
+        private final Class<? extends Storage> storageClass;
 
-        private BackendType(final Class<? extends Backend> backendClass) {
-            this.backendClass = backendClass;
+        private BackendType(final Class<? extends Storage> storageClass) {
+            this.storageClass = storageClass;
         }
 
-        public Backend createBackend(Map<String, String> backendOptions) throws Exception {
-            Backend backend = backendClass.newInstance();
-            backend.initialize(backendOptions);
+        public Backend createBackend(Map<String, String> storageOptions) throws Exception {
+            Storage storage = storageClass.newInstance();
+            Backend backend = new Backend(storage);
+            backend.initialize(storageOptions);
             return backend;
         }
     }
