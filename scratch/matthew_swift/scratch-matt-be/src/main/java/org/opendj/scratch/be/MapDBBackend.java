@@ -2,7 +2,6 @@ package org.opendj.scratch.be;
 
 import static org.forgerock.util.Utils.closeSilently;
 import static org.opendj.scratch.be.MemoryBackend.SERIALIZER;
-import static org.opendj.scratch.be.Util.clearAndCreateDbDir;
 
 import java.io.File;
 import java.util.Comparator;

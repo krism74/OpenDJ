@@ -1,7 +1,5 @@
 package org.opendj.scratch.be;
 
-import static org.opendj.scratch.be.Util.clearAndCreateDbDir;
-
 import java.io.File;
 import java.util.Comparator;
 import java.util.HashMap;

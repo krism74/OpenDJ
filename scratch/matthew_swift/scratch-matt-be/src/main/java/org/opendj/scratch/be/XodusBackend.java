@@ -2,7 +2,6 @@ package org.opendj.scratch.be;
 
 import static jetbrains.exodus.env.StoreConfig.USE_EXISTING;
 import static jetbrains.exodus.env.StoreConfig.WITHOUT_DUPLICATES_WITH_PREFIXING;
-import static org.opendj.scratch.be.Util.clearAndCreateDbDir;
 
 import java.io.File;
 import java.util.Comparator;
