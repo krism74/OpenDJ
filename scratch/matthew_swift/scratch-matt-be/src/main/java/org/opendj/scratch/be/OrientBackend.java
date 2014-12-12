@@ -28,6 +28,10 @@ public final class OrientBackend extends Backend {
     }
 
     private static final class StorageImpl implements Storage {
+        private static String orientName(final TreeName name) {
+            return name.toString().replaceAll(",", "&");
+        }
+
         private static final class DbHolder {
             private final ODatabaseDocumentTx db;
             private final Map<TreeName, OIndex<?>> trees = new HashMap<TreeName, OIndex<?>>();
@@ -41,11 +45,10 @@ public final class OrientBackend extends Backend {
                 if (tree != null) {
                     return tree;
                 }
-                tree = db.getMetadata().getIndexManager().getIndex(name.toString());
+                tree = db.getMetadata().getIndexManager().getIndex(orientName(name));
                 trees.put(name, tree);
                 return tree;
             }
-
         }
 
         private final class ImporterImpl implements Importer {
@@ -65,7 +68,7 @@ public final class OrientBackend extends Backend {
             @Override
             public void createTree(final TreeName name, final Comparator<ByteSequence> comparator) {
                 final OIndex<?> tree =
-                        db.getMetadata().getIndexManager().createIndex(name.toString(), "UNIQUE",
+                        db.getMetadata().getIndexManager().createIndex(orientName(name), "UNIQUE",
                                 new ORuntimeKeyIndexDefinition<byte[]>(OBinaryTypeSerializer.ID),
                                 null, null, null);
                 trees.put(name, tree);
