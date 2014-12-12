@@ -38,7 +38,7 @@ public abstract class Backend implements Closeable {
         @Override
         void close();
 
-        void createTree(TreeName name, Comparator<ByteSequence> comparator);
+        void createTree(TreeName name);
 
         void put(TreeName name, ByteString key, ByteString value);
     }
@@ -264,9 +264,9 @@ public abstract class Backend implements Closeable {
         lock.writeLock().lock();
         try {
             final Importer importer = storage.startImport();
-            importer.createTree(id2entry, ByteSequence.COMPARATOR);
-            importer.createTree(dn2id, ByteSequence.COMPARATOR);
-            importer.createTree(description2id, ByteSequence.COMPARATOR);
+            importer.createTree(id2entry);
+            importer.createTree(dn2id);
+            importer.createTree(description2id);
             try {
                 for (int nextEntryId = 0; entries.hasNext(); nextEntryId++) {
                     final Entry entry = entries.readEntry();

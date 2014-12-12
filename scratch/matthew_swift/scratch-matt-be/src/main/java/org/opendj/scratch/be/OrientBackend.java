@@ -66,7 +66,7 @@ public final class OrientBackend extends Backend {
             }
 
             @Override
-            public void createTree(final TreeName name, final Comparator<ByteSequence> comparator) {
+            public void createTree(final TreeName name) {
                 final OIndex<?> tree =
                         db.getMetadata().getIndexManager().createIndex(orientName(name), "UNIQUE",
                                 new ORuntimeKeyIndexDefinition<byte[]>(OBinaryTypeSerializer.ID),

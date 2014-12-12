@@ -47,7 +47,7 @@ public final class JEBackend extends Backend {
             }
 
             @Override
-            public void createTree(TreeName name, Comparator<ByteSequence> comparator) {
+            public void createTree(TreeName name) {
                 // TODO: how do we set the comparator?
                 trees.put(name, env.openDatabase(null, name.toString(), dbConfig));
             }

@@ -35,7 +35,7 @@ public final class PersistItBackend extends Backend {
             private final Value importValue = new Value(db);
 
             @Override
-            public void createTree(TreeName treeName, Comparator<ByteSequence> comparator) {
+            public void createTree(TreeName treeName) {
                 try {
                     // FIXME: how do we set the comparator?
                     final Tree tree = volume.getTree(treeName.toString(), true);

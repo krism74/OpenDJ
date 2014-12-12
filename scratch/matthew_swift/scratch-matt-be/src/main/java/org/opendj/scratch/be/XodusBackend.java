@@ -33,22 +33,15 @@ public final class XodusBackend extends Backend {
             private final Transaction txn = env.beginTransaction();
 
             @Override
-            public void createTree(final TreeName name, final Comparator<ByteSequence> comparator) {
-                env.executeInTransaction(new TransactionalExecutable() {
-                    @Override
-                    public void execute(final Transaction txn) {
-                        // FIXME: set comparator.
-                        final Store store =
-                                env.openStore(name.toString(), WITHOUT_DUPLICATES_WITH_PREFIXING,
-                                        txn);
-                        trees.put(name, store);
-                    }
-                });
+            public void createTree(final TreeName name) {
+                final Store store =
+                        env.openStore(name.toString(), WITHOUT_DUPLICATES_WITH_PREFIXING, txn);
+                trees.put(name, store);
             }
 
             @Override
             public void put(final TreeName name, final ByteString key, final ByteString value) {
-                trees.get(name).put(null, toByteIterable(key), toByteIterable(value));
+                trees.get(name).put(txn, toByteIterable(key), toByteIterable(value));
             }
 
             @Override

@@ -1,7 +1,6 @@
 package org.opendj.scratch.be;
 
 import static org.forgerock.util.Utils.closeSilently;
-import static org.opendj.scratch.be.MemoryBackend.SERIALIZER;
 
 import java.io.File;
 import java.util.Comparator;
@@ -11,8 +10,10 @@ import java.util.concurrent.ConcurrentNavigableMap;
 
 import org.forgerock.opendj.ldap.ByteSequence;
 import org.forgerock.opendj.ldap.ByteString;
+import org.mapdb.BTreeKeySerializer;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
+import org.mapdb.Serializer;
 import org.mapdb.TxMaker;
 import org.mapdb.TxRollbackException;
 
@@ -23,20 +24,21 @@ public final class MapDBBackend extends Backend {
             private final DB db = DBMaker.newFileDB(DB_FILE).mmapFileEnableIfSupported()
                     .asyncWriteEnable().commitFileSyncDisable().transactionDisable()
                     .closeOnJvmShutdown().make();
-            private final Map<TreeName, Map<ByteString, ByteString>> trees =
-                    new HashMap<TreeName, Map<ByteString, ByteString>>();
+            private final Map<TreeName, Map<byte[], byte[]>> trees =
+                    new HashMap<TreeName, Map<byte[], byte[]>>();
 
             @Override
-            public void createTree(final TreeName name, final Comparator<ByteSequence> comparator) {
-                final ConcurrentNavigableMap<ByteString, ByteString> tree =
-                        db.createTreeMap(name.toString()).comparator(comparator).keySerializer(
-                                SERIALIZER).valueSerializer(SERIALIZER).make();
+            public void createTree(final TreeName name) {
+                final ConcurrentNavigableMap<byte[], byte[]> tree =
+                        db.createTreeMap(name.toString()).keySerializer(
+                                BTreeKeySerializer.BYTE_ARRAY).valueSerializer(
+                                Serializer.BYTE_ARRAY).make();
                 trees.put(name, tree);
             }
 
             @Override
             public void put(final TreeName name, final ByteString key, final ByteString value) {
-                trees.get(name).put(key, value);
+                trees.get(name).put(key.toByteArray(), value.toByteArray());
             }
 
             @Override
@@ -47,8 +49,8 @@ public final class MapDBBackend extends Backend {
 
         private final class TxnImpl implements UpdateTxn {
             private final DB db;
-            private final Map<TreeName, Map<ByteString, ByteString>> trees =
-                    new HashMap<TreeName, Map<ByteString, ByteString>>();
+            private final Map<TreeName, Map<byte[], byte[]>> trees =
+                    new HashMap<TreeName, Map<byte[], byte[]>>();
 
             private TxnImpl(final DB db) {
                 this.db = db;
@@ -56,7 +58,7 @@ public final class MapDBBackend extends Backend {
 
             @Override
             public ByteString get(final TreeName name, final ByteString key) {
-                return getTree(name).get(key);
+                return ByteString.wrap(getTree(name).get(key.toByteArray()));
             }
 
             @Override
@@ -66,7 +68,7 @@ public final class MapDBBackend extends Backend {
 
             @Override
             public void put(final TreeName name, final ByteString key, final ByteString value) {
-                getTree(name).put(key, value);
+                getTree(name).put(key.toByteArray(), value.toByteArray());
             }
 
             @Override
@@ -74,8 +76,8 @@ public final class MapDBBackend extends Backend {
                 return getTree(name).remove(key) != null;
             }
 
-            private Map<ByteString, ByteString> getTree(final TreeName name) {
-                Map<ByteString, ByteString> tree = trees.get(name);
+            private Map<byte[], byte[]> getTree(final TreeName name) {
+                Map<byte[], byte[]> tree = trees.get(name);
                 if (tree != null) {
                     return tree;
                 }

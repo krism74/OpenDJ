@@ -2,9 +2,6 @@ package org.opendj.scratch.be;
 
 import static org.forgerock.util.Utils.closeSilently;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,9 +9,9 @@ import java.util.concurrent.ConcurrentNavigableMap;
 
 import org.forgerock.opendj.ldap.ByteSequence;
 import org.forgerock.opendj.ldap.ByteString;
+import org.mapdb.BTreeKeySerializer;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
-import org.mapdb.DataIO;
 import org.mapdb.Serializer;
 
 @SuppressWarnings("javadoc")
@@ -28,18 +25,18 @@ public final class MemoryBackend extends Backend {
         private final class TxnImpl implements UpdateTxn {
             @Override
             public ByteString get(final TreeName name, final ByteString key) {
-                return trees.get(name).get(key);
+                return ByteString.wrap(trees.get(name).get(key.toByteArray()));
             }
 
             @Override
             public ByteString getRMW(final TreeName name, final ByteString key) {
-                return trees.get(name).get(key);
+                return get(name, key);
             }
 
             @Override
             public void put(final TreeName name, final ByteString key, final ByteString value) {
                 // FIXME: how do we support RMW for MVCC? Pass in the value read in call to getRMW?
-                trees.get(name).put(key, value);
+                trees.get(name).put(key.toByteArray(), value.toByteArray());
             }
 
             @Override
@@ -55,28 +52,23 @@ public final class MemoryBackend extends Backend {
             }
 
             @Override
-            public void createTree(final TreeName name, final Comparator<ByteSequence> comparator) {
-                final ConcurrentNavigableMap<ByteString, ByteString> tree =
-                        db.createTreeMap(name.toString()).comparator(comparator).keySerializer(
-                                SERIALIZER).valueSerializer(SERIALIZER).make();
+            public void createTree(final TreeName name) {
+                final ConcurrentNavigableMap<byte[], byte[]> tree =
+                        db.createTreeMap(name.toString()).keySerializer(
+                                BTreeKeySerializer.BYTE_ARRAY).valueSerializer(
+                                Serializer.BYTE_ARRAY).make();
                 trees.put(name, tree);
             }
 
             @Override
             public void put(final TreeName name, final ByteString key, final ByteString value) {
-                trees.get(name).put(key, value);
+                trees.get(name).put(key.toByteArray(), value.toByteArray());
             }
         }
 
         private DB db;
-        private final Map<TreeName, ConcurrentNavigableMap<ByteString, ByteString>> trees =
-                new HashMap<TreeName, ConcurrentNavigableMap<ByteString, ByteString>>();
-
-        @Override
-        public void close() {
-            closeSilently(db);
-            trees.clear();
-        }
+        private final Map<TreeName, ConcurrentNavigableMap<byte[], byte[]>> trees =
+                new HashMap<TreeName, ConcurrentNavigableMap<byte[], byte[]>>();
 
         @Override
         public void initialize(final Map<String, String> options) {
@@ -84,13 +76,16 @@ public final class MemoryBackend extends Backend {
         }
 
         @Override
-        public void open() {
-            if (db != null) {
-                throw new IllegalStateException("Already open!");
-            }
+        public Importer startImport() {
             db =
                     DBMaker.newMemoryDirectDB().cacheDisable().closeOnJvmShutdown()
                             .transactionDisable().make();
+            return new ImporterImpl();
+        }
+
+        @Override
+        public void open() {
+            // No op - DB created during import.
         }
 
         @Override
@@ -107,44 +102,15 @@ public final class MemoryBackend extends Backend {
         }
 
         @Override
-        public Importer startImport() {
-            return new ImporterImpl();
-        }
-
-        @Override
         public void update(final UpdateTransaction updateTransaction) throws Exception {
             updateTransaction.run(new TxnImpl());
         }
+
+        @Override
+        public void close() {
+            closeSilently(db);
+            trees.clear();
+        }
+
     }
-
-    static final Serializer<ByteString> SERIALIZER = new Serializer<ByteString>() {
-        @Override
-        public ByteString deserialize(final DataInput in, final int available) throws IOException {
-            final int size = DataIO.unpackInt(in);
-            final byte[] bytes = new byte[size];
-            in.readFully(bytes);
-            return ByteString.wrap(bytes);
-        }
-
-        @Override
-        public boolean equals(final ByteString a1, final ByteString a2) {
-            return a1.equals(a2);
-        }
-
-        @Override
-        public int hashCode(final ByteString bytes) {
-            return bytes.hashCode();
-        }
-
-        @Override
-        public boolean isTrusted() {
-            return true;
-        }
-
-        @Override
-        public void serialize(final DataOutput out, final ByteString value) throws IOException {
-            DataIO.packInt(out, value.length());
-            out.write(value.toByteArray()); // FIXME: extra copy!
-        }
-    };
 }

@@ -23,7 +23,7 @@ public final class RocksDBBackend extends Backend {
     private static final class StorageImpl implements Storage {
         private final class ImporterImpl implements Importer {
             @Override
-            public void createTree(final TreeName name, final Comparator<ByteSequence> comparator) {
+            public void createTree(final TreeName name) {
                 nameToPrefix.put(name, nextPrefix++);
             }
 
