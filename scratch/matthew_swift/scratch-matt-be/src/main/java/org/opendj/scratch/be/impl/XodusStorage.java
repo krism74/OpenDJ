@@ -18,6 +18,7 @@ import jetbrains.exodus.env.Transaction;
 import jetbrains.exodus.env.TransactionalComputable;
 import jetbrains.exodus.env.TransactionalExecutable;
 
+import org.forgerock.opendj.ldap.ByteSequence;
 import org.forgerock.opendj.ldap.ByteString;
 import org.opendj.scratch.be.spi.Importer;
 import org.opendj.scratch.be.spi.ReadOperation;
