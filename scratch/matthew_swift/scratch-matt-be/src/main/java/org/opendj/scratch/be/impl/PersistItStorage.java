@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.forgerock.opendj.ldap.ByteSequence;
 import org.forgerock.opendj.ldap.ByteString;
 import org.opendj.scratch.be.spi.Importer;
 import org.opendj.scratch.be.spi.ReadOperation;
@@ -47,7 +48,7 @@ public final class PersistItStorage implements Storage {
         }
 
         @Override
-        public void put(TreeName treeName, ByteString key, ByteString value) {
+        public void put(TreeName treeName, ByteSequence key, ByteSequence value) {
             try {
                 final Tree tree = trees.get(treeName);
                 byte[] keyBytes = key.toByteArray();
@@ -90,7 +91,7 @@ public final class PersistItStorage implements Storage {
         }
 
         @Override
-        public ByteString get(TreeName treeName, ByteString key) {
+        public ByteString get(TreeName treeName, ByteSequence key) {
             try {
                 final Exchange ex = getExchange(treeName);
                 ex.getKey().clear().append(key.toByteArray());
@@ -106,12 +107,12 @@ public final class PersistItStorage implements Storage {
         }
 
         @Override
-        public ByteString getRMW(TreeName treeName, ByteString key) {
+        public ByteString getRMW(TreeName treeName, ByteSequence key) {
             return get(treeName, key);
         }
 
         @Override
-        public void put(TreeName treeName, ByteString key, ByteString value) {
+        public void put(TreeName treeName, ByteSequence key, ByteSequence value) {
             try {
                 final Exchange ex = getExchange(treeName);
                 ex.getKey().clear().append(key.toByteArray());
@@ -123,7 +124,7 @@ public final class PersistItStorage implements Storage {
         }
 
         @Override
-        public boolean remove(TreeName treeName, ByteString key) {
+        public boolean remove(TreeName treeName, ByteSequence key) {
             try {
                 final Exchange ex = getExchange(treeName);
                 ex.getKey().clear().append(key.toByteArray());

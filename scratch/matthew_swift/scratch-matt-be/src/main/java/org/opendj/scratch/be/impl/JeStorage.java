@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.forgerock.opendj.ldap.ByteSequence;
 import org.forgerock.opendj.ldap.ByteString;
 import org.opendj.scratch.be.spi.Importer;
 import org.opendj.scratch.be.spi.ReadOperation;
@@ -34,7 +35,7 @@ public final class JeStorage implements Storage {
         private final DatabaseEntry importValue = new DatabaseEntry();
 
         @Override
-        public void put(TreeName treeName, ByteString key, ByteString value) {
+        public void put(TreeName treeName, ByteSequence key, ByteSequence value) {
             setData(importKey, key);
             setData(importValue, value);
             getTree(treeName).put(null, importKey, importValue);
@@ -62,16 +63,16 @@ public final class JeStorage implements Storage {
         }
 
         @Override
-        public ByteString get(TreeName treeName, ByteString key) {
+        public ByteString get(TreeName treeName, ByteSequence key) {
             return get0(treeName, key, LockMode.READ_COMMITTED);
         }
 
         @Override
-        public ByteString getRMW(TreeName treeName, ByteString key) {
+        public ByteString getRMW(TreeName treeName, ByteSequence key) {
             return get0(treeName, key, LockMode.RMW);
         }
 
-        private ByteString get0(TreeName treeName, ByteString key, LockMode lockMode) {
+        private ByteString get0(TreeName treeName, ByteSequence key, LockMode lockMode) {
             setData(dbKey, key);
             setData(dbValue, null);
             if (getTree(treeName).get(txn, dbKey, dbValue, lockMode) == SUCCESS) {
@@ -81,14 +82,14 @@ public final class JeStorage implements Storage {
         }
 
         @Override
-        public void put(TreeName treeName, ByteString key, ByteString value) {
+        public void put(TreeName treeName, ByteSequence key, ByteSequence value) {
             setData(dbKey, key);
             setData(dbValue, value);
             getTree(treeName).put(txn, dbKey, dbValue);
         }
 
         @Override
-        public boolean remove(TreeName treeName, ByteString key) {
+        public boolean remove(TreeName treeName, ByteSequence key) {
             setData(dbKey, key);
             return getTree(treeName).delete(txn, dbKey) == SUCCESS;
         }
@@ -172,7 +173,7 @@ public final class JeStorage implements Storage {
         }
     }
 
-    private void setData(DatabaseEntry dbEntry, ByteString bs) {
+    private void setData(DatabaseEntry dbEntry, ByteSequence bs) {
         dbEntry.setData(bs != null ? bs.toByteArray() : null);
     }
 }

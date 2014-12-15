@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.forgerock.opendj.ldap.ByteSequence;
 import org.forgerock.opendj.ldap.ByteString;
 import org.forgerock.opendj.ldap.ByteStringBuilder;
 import org.opendj.scratch.be.spi.Importer;
@@ -30,7 +31,7 @@ public final class RocksDbStorage implements Storage {
         }
 
         @Override
-        public void put(final TreeName name, final ByteString key, final ByteString value) {
+        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
             try {
                 db.put(prefixKey(name, key), value.toByteArray());
             } catch (final RocksDBException e) {
@@ -52,7 +53,7 @@ public final class RocksDbStorage implements Storage {
         }
 
         @Override
-        public ByteString get(final TreeName name, final ByteString key) {
+        public ByteString get(final TreeName name, final ByteSequence key) {
             try {
                 return wrap(db.get(prefixKey(name, key)));
             } catch (final RocksDBException e) {
@@ -61,17 +62,17 @@ public final class RocksDbStorage implements Storage {
         }
 
         @Override
-        public ByteString getRMW(final TreeName name, final ByteString key) {
+        public ByteString getRMW(final TreeName name, final ByteSequence key) {
             return get(name, key);
         }
 
         @Override
-        public void put(final TreeName name, final ByteString key, final ByteString value) {
+        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
             batchUpdate.put(prefixKey(name, key), value.toByteArray());
         }
 
         @Override
-        public boolean remove(final TreeName name, final ByteString key) {
+        public boolean remove(final TreeName name, final ByteSequence key) {
             // FIXME: as well as ugly, I don't think that this is strictly correct.
             if (get(name, key) != null) {
                 batchUpdate.remove(prefixKey(name, key));
@@ -145,7 +146,7 @@ public final class RocksDbStorage implements Storage {
         }
     }
 
-    private byte[] prefixKey(final TreeName name, final ByteString key) {
+    private byte[] prefixKey(final TreeName name, final ByteSequence key) {
         final ByteStringBuilder buffer = new ByteStringBuilder(key.length() + 1);
         buffer.append(nameToPrefix.get(name));
         buffer.append(key);

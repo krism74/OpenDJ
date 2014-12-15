@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.forgerock.opendj.ldap.ByteSequence;
 import org.forgerock.opendj.ldap.ByteString;
 import org.opendj.scratch.be.spi.Importer;
 import org.opendj.scratch.be.spi.ReadOperation;
@@ -76,7 +77,7 @@ public final class OrientStorage implements Storage {
         }
 
         @Override
-        public void put(final TreeName name, final ByteString key, final ByteString value) {
+        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
             final ORecordBytes valueRecord = new ORecordBytes(db, value.toByteArray());
             valueRecord.save();
             trees.get(name).put(key.toByteArray(), valueRecord);
@@ -91,19 +92,19 @@ public final class OrientStorage implements Storage {
         }
 
         @Override
-        public ByteString get(final TreeName name, final ByteString key) {
+        public ByteString get(final TreeName name, final ByteSequence key) {
             final ORecordId id = (ORecordId) dbHolder.getTree(name).get(key.toByteArray());
             final ORecordBytes record = dbHolder.db.getRecord(id);
             return ByteString.wrap(record.toStream());
         }
 
         @Override
-        public ByteString getRMW(final TreeName name, final ByteString key) {
+        public ByteString getRMW(final TreeName name, final ByteSequence key) {
             return get(name, key);
         }
 
         @Override
-        public void put(final TreeName name, final ByteString key, final ByteString value) {
+        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
             final ORecordId id = (ORecordId) dbHolder.getTree(name).get(key.toByteArray());
             final ORecordBytes record = dbHolder.db.getRecord(id);
             record.setDirty();
@@ -112,7 +113,7 @@ public final class OrientStorage implements Storage {
         }
 
         @Override
-        public boolean remove(final TreeName name, final ByteString key) {
+        public boolean remove(final TreeName name, final ByteSequence key) {
             return dbHolder.getTree(name).remove(key.toByteArray());
         }
     }

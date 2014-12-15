@@ -2,7 +2,7 @@ package org.opendj.scratch.be.spi;
 
 import java.io.Closeable;
 
-import org.forgerock.opendj.ldap.ByteString;
+import org.forgerock.opendj.ldap.ByteSequence;
 
 @SuppressWarnings("javadoc")
 public interface Importer extends Closeable {
@@ -11,5 +11,5 @@ public interface Importer extends Closeable {
 
     void createTree(TreeName name);
 
-    void put(TreeName name, ByteString key, ByteString value);
+    void put(TreeName name, ByteSequence key, ByteSequence value);
 }

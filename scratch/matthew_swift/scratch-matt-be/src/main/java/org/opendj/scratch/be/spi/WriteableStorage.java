@@ -1,16 +1,16 @@
 package org.opendj.scratch.be.spi;
 
-import org.forgerock.opendj.ldap.ByteString;
+import org.forgerock.opendj.ldap.ByteSequence;
 
 @SuppressWarnings("javadoc")
 public interface WriteableStorage extends ReadableStorage {
-    void put(TreeName name, ByteString key, ByteString value);
+    void put(TreeName name, ByteSequence key, ByteSequence value);
 
     // FIXME implement
-    // boolean putIfAbsent(TreeName treeName, ByteString key, ByteString value);
+    // boolean putIfAbsent(TreeName treeName, ByteSequence key, ByteSequence value);
 
-    boolean remove(TreeName name, ByteString key);
+    boolean remove(TreeName name, ByteSequence key);
 
     // FIXME implement
-    // boolean remove(TreeName name, ByteString key, ByteString value);
+    // boolean remove(TreeName name, ByteSequence key, ByteSequence value);
 }
