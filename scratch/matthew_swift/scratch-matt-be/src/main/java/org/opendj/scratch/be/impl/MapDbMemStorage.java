@@ -22,23 +22,23 @@ import org.opendj.scratch.be.spi.WriteableStorage;
 public final class MapDbMemStorage implements Storage {
     private final class StorageImpl implements WriteableStorage {
         @Override
-        public ByteString get(final TreeName name, final ByteString key) {
+        public ByteString get(final TreeName name, final ByteSequence key) {
             return ByteString.wrap(trees.get(name).get(key.toByteArray()));
         }
 
         @Override
-        public ByteString getRMW(final TreeName name, final ByteString key) {
+        public ByteString getRMW(final TreeName name, final ByteSequence key) {
             return get(name, key);
         }
 
         @Override
-        public void put(final TreeName name, final ByteString key, final ByteString value) {
+        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
             // FIXME: how do we support RMW for MVCC? Pass in the value read in call to getRMW?
             trees.get(name).put(key.toByteArray(), value.toByteArray());
         }
 
         @Override
-        public boolean remove(final TreeName name, final ByteString key) {
+        public boolean remove(final TreeName name, final ByteSequence key) {
             return trees.get(name).remove(key) != null;
         }
     }
@@ -58,7 +58,7 @@ public final class MapDbMemStorage implements Storage {
         }
 
         @Override
-        public void put(final TreeName name, final ByteString key, final ByteString value) {
+        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
             trees.get(name).put(key.toByteArray(), value.toByteArray());
         }
     }

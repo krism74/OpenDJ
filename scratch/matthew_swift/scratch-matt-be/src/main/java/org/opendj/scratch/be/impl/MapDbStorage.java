@@ -40,7 +40,7 @@ public final class MapDbStorage implements Storage {
         }
 
         @Override
-        public void put(final TreeName name, final ByteString key, final ByteString value) {
+        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
             trees.get(name).put(key.toByteArray(), value.toByteArray());
         }
 
@@ -60,22 +60,22 @@ public final class MapDbStorage implements Storage {
         }
 
         @Override
-        public ByteString get(final TreeName name, final ByteString key) {
+        public ByteString get(final TreeName name, final ByteSequence key) {
             return ByteString.wrap(getTree(name).get(key.toByteArray()));
         }
 
         @Override
-        public ByteString getRMW(final TreeName name, final ByteString key) {
+        public ByteString getRMW(final TreeName name, final ByteSequence key) {
             return get(name, key);
         }
 
         @Override
-        public void put(final TreeName name, final ByteString key, final ByteString value) {
+        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
             getTree(name).put(key.toByteArray(), value.toByteArray());
         }
 
         @Override
-        public boolean remove(final TreeName name, final ByteString key) {
+        public boolean remove(final TreeName name, final ByteSequence key) {
             return getTree(name).remove(key) != null;
         }
 

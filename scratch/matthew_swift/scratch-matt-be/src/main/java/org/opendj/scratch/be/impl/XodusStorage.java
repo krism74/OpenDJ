@@ -41,7 +41,7 @@ public final class XodusStorage implements Storage {
         }
 
         @Override
-        public void put(final TreeName name, final ByteString key, final ByteString value) {
+        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
             trees.get(name).put(txn, toByteIterable(key), toByteIterable(value));
         }
 
@@ -60,22 +60,22 @@ public final class XodusStorage implements Storage {
         }
 
         @Override
-        public ByteString get(final TreeName name, final ByteString key) {
+        public ByteString get(final TreeName name, final ByteSequence key) {
             return toByteString(trees.get(name).get(txn, toByteIterable(key)));
         }
 
         @Override
-        public ByteString getRMW(final TreeName name, final ByteString key) {
+        public ByteString getRMW(final TreeName name, final ByteSequence key) {
             return get(name, key);
         }
 
         @Override
-        public void put(final TreeName name, final ByteString key, final ByteString value) {
+        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
             trees.get(name).put(txn, toByteIterable(key), toByteIterable(value));
         }
 
         @Override
-        public boolean remove(final TreeName name, final ByteString key) {
+        public boolean remove(final TreeName name, final ByteSequence key) {
             return trees.get(name).delete(txn, toByteIterable(key));
         }
     }
@@ -151,7 +151,7 @@ public final class XodusStorage implements Storage {
         }
     }
 
-    private ByteIterable toByteIterable(final ByteString value) {
+    private ByteIterable toByteIterable(final ByteSequence value) {
         return value != null ? new ArrayByteIterable(value.toByteArray()) : null;
     }
 
