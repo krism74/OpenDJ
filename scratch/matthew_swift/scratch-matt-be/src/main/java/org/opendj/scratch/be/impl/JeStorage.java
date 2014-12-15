@@ -48,7 +48,6 @@ public final class JeStorage implements Storage {
 
         @Override
         public void createTree(TreeName treeName) {
-            // TODO: how do we set the comparator?
             trees.put(treeName, env.openDatabase(null, treeName.toString(), dbConfig));
         }
     }

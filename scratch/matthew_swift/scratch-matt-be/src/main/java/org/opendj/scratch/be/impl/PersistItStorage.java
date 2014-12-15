@@ -39,7 +39,6 @@ public final class PersistItStorage implements Storage {
         @Override
         public void createTree(TreeName treeName) {
             try {
-                // FIXME: how do we set the comparator?
                 final Tree tree = volume.getTree(treeName.toString(), true);
                 trees.put(treeName, tree);
             } catch (PersistitException e) {
