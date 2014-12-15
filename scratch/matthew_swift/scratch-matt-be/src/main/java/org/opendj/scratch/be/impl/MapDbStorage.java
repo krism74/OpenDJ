@@ -53,8 +53,8 @@ public final class MapDbStorage implements Storage {
 
     private final class StorageImpl implements WriteableStorage {
         private final DB db;
-        private final Map<TreeName, Map<byte[], byte[]>> trees =
-                new HashMap<TreeName, Map<byte[], byte[]>>();
+        private final Map<TreeName, ConcurrentNavigableMap<byte[], byte[]>> trees =
+                new HashMap<TreeName, ConcurrentNavigableMap<byte[], byte[]>>();
 
         private StorageImpl(final DB db) {
             this.db = db;
@@ -76,12 +76,17 @@ public final class MapDbStorage implements Storage {
         }
 
         @Override
+        public boolean putIfAbsent(TreeName treeName, ByteSequence key, ByteSequence value) {
+            return getTree(treeName).putIfAbsent(key.toByteArray(), value.toByteArray()) == null;
+        }
+
+        @Override
         public boolean remove(final TreeName treeName, final ByteSequence key) {
             return getTree(treeName).remove(key) != null;
         }
 
-        private Map<byte[], byte[]> getTree(final TreeName treeName) {
-            Map<byte[], byte[]> tree = trees.get(treeName);
+        private ConcurrentNavigableMap<byte[], byte[]> getTree(final TreeName treeName) {
+            ConcurrentNavigableMap<byte[], byte[]> tree = trees.get(treeName);
             if (tree != null) {
                 return tree;
             }
@@ -89,7 +94,6 @@ public final class MapDbStorage implements Storage {
             trees.put(treeName, tree);
             return tree;
         }
-
     }
 
     private static final File DB_DIR = new File("target/mapBackend");

@@ -18,7 +18,6 @@ import org.opendj.scratch.be.spi.TreeName;
 import org.opendj.scratch.be.spi.WriteOperation;
 import org.opendj.scratch.be.spi.WriteableStorage;
 
-import com.sleepycat.je.Cursor;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseEntry;
@@ -87,6 +86,13 @@ public final class JeStorage implements Storage {
             setData(dbKey, key);
             setData(dbValue, value);
             getTree(treeName).put(txn, dbKey, dbValue);
+        }
+
+        @Override
+        public boolean putIfAbsent(TreeName treeName, ByteSequence key, ByteSequence value) {
+            setData(dbKey, key);
+            setData(dbValue, value);
+            return getTree(treeName).putNoOverwrite(txn, dbKey, dbValue) == SUCCESS;
         }
 
         @Override

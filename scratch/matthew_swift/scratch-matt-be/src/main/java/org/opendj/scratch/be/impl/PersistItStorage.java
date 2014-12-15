@@ -124,6 +124,25 @@ public final class PersistItStorage implements Storage {
         }
 
         @Override
+        public boolean putIfAbsent(TreeName treeName, ByteSequence key, ByteSequence value) {
+            try {
+                final Exchange ex = getExchange(treeName);
+                ex.getKey().clear().append(key.toByteArray());
+                ex.fetch();
+                // FIXME poor man's CAS: this will not work under high volume,
+                // but PersistIt does not provide APIs for this use case. 
+                if (ex.isValueDefined()) {
+                    return false;
+                }
+                ex.getValue().clear().putByteArray(value.toByteArray());
+                ex.store();
+                return true;
+            } catch (Exception e) {
+                throw new StorageRuntimeException(e);
+            }
+        }
+
+        @Override
         public boolean remove(TreeName treeName, ByteSequence key) {
             try {
                 final Exchange ex = getExchange(treeName);

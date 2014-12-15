@@ -113,6 +113,11 @@ public final class OrientStorage implements Storage {
         }
 
         @Override
+        public boolean putIfAbsent(TreeName treeName, ByteSequence key, ByteSequence value) {
+            return dbHolder.getTree(treeName).;
+        }
+
+        @Override
         public boolean remove(final TreeName treeName, final ByteSequence key) {
             return dbHolder.getTree(treeName).remove(key.toByteArray());
         }

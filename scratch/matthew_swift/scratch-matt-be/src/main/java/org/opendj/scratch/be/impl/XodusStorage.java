@@ -76,6 +76,11 @@ public final class XodusStorage implements Storage {
         }
 
         @Override
+        public boolean putIfAbsent(TreeName treeName, ByteSequence key, ByteSequence value) {
+            return trees.get(treeName).add(txn, toByteIterable(key), toByteIterable(value));
+        }
+
+        @Override
         public boolean remove(final TreeName treeName, final ByteSequence key) {
             return trees.get(treeName).delete(txn, toByteIterable(key));
         }

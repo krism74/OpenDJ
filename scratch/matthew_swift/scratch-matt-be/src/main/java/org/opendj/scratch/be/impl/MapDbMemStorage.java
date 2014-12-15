@@ -39,6 +39,11 @@ public final class MapDbMemStorage implements Storage {
         }
 
         @Override
+        public boolean putIfAbsent(TreeName treeName, ByteSequence key, ByteSequence value) {
+            return trees.get(treeName).putIfAbsent(key.toByteArray(), value.toByteArray()) == null;
+        }
+
+        @Override
         public boolean remove(final TreeName treeName, final ByteSequence key) {
             return trees.get(treeName).remove(key) != null;
         }

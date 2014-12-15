@@ -72,6 +72,11 @@ public final class RocksDbStorage implements Storage {
         }
 
         @Override
+        public boolean putIfAbsent(TreeName treeName, ByteSequence key, ByteSequence value) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
         public boolean remove(final TreeName treeName, final ByteSequence key) {
             // FIXME: as well as ugly, I don't think that this is strictly correct.
             if (get(treeName, key) != null) {

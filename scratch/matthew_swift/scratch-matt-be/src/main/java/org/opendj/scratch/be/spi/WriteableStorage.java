@@ -6,11 +6,7 @@ import org.forgerock.opendj.ldap.ByteSequence;
 public interface WriteableStorage extends ReadableStorage {
     void put(TreeName treeName, ByteSequence key, ByteSequence value);
 
-    void put(TreeName treeName, ByteSequence key, ByteSequence newValue, ByteSequence oldValue);
-
     boolean putIfAbsent(TreeName treeName, ByteSequence key, ByteSequence value);
 
     boolean remove(TreeName treeName, ByteSequence key);
-
-    boolean remove(TreeName treeName, ByteSequence key, ByteSequence value);
 }
