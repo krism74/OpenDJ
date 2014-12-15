@@ -237,7 +237,7 @@ public final class PersistItStorage implements Storage {
     }
 
     @Override
-    public void openTree(TreeName name) {
+    public void openTree(TreeName treeName) {
         // Nothing to do.
     }
 }

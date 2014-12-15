@@ -11,7 +11,7 @@ public interface Storage extends Closeable {
 
     void open() throws Exception;
 
-    void openTree(TreeName name);
+    void openTree(TreeName treeName);
 
     <T> T read(ReadOperation<T> operation) throws Exception;
 

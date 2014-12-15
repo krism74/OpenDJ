@@ -9,7 +9,7 @@ public interface Importer extends Closeable {
     @Override
     void close();
 
-    void createTree(TreeName name);
+    void createTree(TreeName treeName);
 
-    void put(TreeName name, ByteSequence key, ByteSequence value);
+    void put(TreeName treeName, ByteSequence key, ByteSequence value);
 }

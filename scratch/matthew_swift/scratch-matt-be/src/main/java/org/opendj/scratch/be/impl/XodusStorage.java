@@ -35,15 +35,15 @@ public final class XodusStorage implements Storage {
         private final Transaction txn = env.beginTransaction();
 
         @Override
-        public void createTree(final TreeName name) {
+        public void createTree(final TreeName treeName) {
             final Store store =
-                    env.openStore(name.toString(), WITHOUT_DUPLICATES_WITH_PREFIXING, txn);
-            trees.put(name, store);
+                    env.openStore(treeName.toString(), WITHOUT_DUPLICATES_WITH_PREFIXING, txn);
+            trees.put(treeName, store);
         }
 
         @Override
-        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
-            trees.get(name).put(txn, toByteIterable(key), toByteIterable(value));
+        public void put(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
+            trees.get(treeName).put(txn, toByteIterable(key), toByteIterable(value));
         }
 
         @Override
@@ -61,23 +61,23 @@ public final class XodusStorage implements Storage {
         }
 
         @Override
-        public ByteString get(final TreeName name, final ByteSequence key) {
-            return toByteString(trees.get(name).get(txn, toByteIterable(key)));
+        public ByteString get(final TreeName treeName, final ByteSequence key) {
+            return toByteString(trees.get(treeName).get(txn, toByteIterable(key)));
         }
 
         @Override
-        public ByteString getRMW(final TreeName name, final ByteSequence key) {
-            return get(name, key);
+        public ByteString getRMW(final TreeName treeName, final ByteSequence key) {
+            return get(treeName, key);
         }
 
         @Override
-        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
-            trees.get(name).put(txn, toByteIterable(key), toByteIterable(value));
+        public void put(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
+            trees.get(treeName).put(txn, toByteIterable(key), toByteIterable(value));
         }
 
         @Override
-        public boolean remove(final TreeName name, final ByteSequence key) {
-            return trees.get(name).delete(txn, toByteIterable(key));
+        public boolean remove(final TreeName treeName, final ByteSequence key) {
+            return trees.get(treeName).delete(txn, toByteIterable(key));
         }
     }
 
@@ -106,11 +106,11 @@ public final class XodusStorage implements Storage {
     }
 
     @Override
-    public void openTree(final TreeName name) {
+    public void openTree(final TreeName treeName) {
         env.executeInTransaction(new TransactionalExecutable() {
             @Override
             public void execute(final Transaction txn) {
-                trees.put(name, env.openStore(name.toString(), USE_EXISTING, txn));
+                trees.put(treeName, env.openStore(treeName.toString(), USE_EXISTING, txn));
             }
         });
     }

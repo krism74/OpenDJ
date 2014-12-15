@@ -4,13 +4,13 @@ import org.forgerock.opendj.ldap.ByteSequence;
 
 @SuppressWarnings("javadoc")
 public interface WriteableStorage extends ReadableStorage {
-    void put(TreeName name, ByteSequence key, ByteSequence value);
+    void put(TreeName treeName, ByteSequence key, ByteSequence value);
 
-    // FIXME implement
-    // boolean putIfAbsent(TreeName treeName, ByteSequence key, ByteSequence value);
+    void put(TreeName treeName, ByteSequence key, ByteSequence newValue, ByteSequence oldValue);
 
-    boolean remove(TreeName name, ByteSequence key);
+    boolean putIfAbsent(TreeName treeName, ByteSequence key, ByteSequence value);
 
-    // FIXME implement
-    // boolean remove(TreeName name, ByteSequence key, ByteSequence value);
+    boolean remove(TreeName treeName, ByteSequence key);
+
+    boolean remove(TreeName treeName, ByteSequence key, ByteSequence value);
 }

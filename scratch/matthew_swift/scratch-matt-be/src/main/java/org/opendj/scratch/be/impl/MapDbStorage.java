@@ -33,16 +33,16 @@ public final class MapDbStorage implements Storage {
                 new HashMap<TreeName, Map<byte[], byte[]>>();
 
         @Override
-        public void createTree(final TreeName name) {
+        public void createTree(final TreeName treeName) {
             final ConcurrentNavigableMap<byte[], byte[]> tree =
-                    db.createTreeMap(name.toString()).keySerializer(BTreeKeySerializer.BYTE_ARRAY)
+                    db.createTreeMap(treeName.toString()).keySerializer(BTreeKeySerializer.BYTE_ARRAY)
                             .valueSerializer(Serializer.BYTE_ARRAY).make();
-            trees.put(name, tree);
+            trees.put(treeName, tree);
         }
 
         @Override
-        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
-            trees.get(name).put(key.toByteArray(), value.toByteArray());
+        public void put(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
+            trees.get(treeName).put(key.toByteArray(), value.toByteArray());
         }
 
         @Override
@@ -61,32 +61,32 @@ public final class MapDbStorage implements Storage {
         }
 
         @Override
-        public ByteString get(final TreeName name, final ByteSequence key) {
-            return ByteString.wrap(getTree(name).get(key.toByteArray()));
+        public ByteString get(final TreeName treeName, final ByteSequence key) {
+            return ByteString.wrap(getTree(treeName).get(key.toByteArray()));
         }
 
         @Override
-        public ByteString getRMW(final TreeName name, final ByteSequence key) {
-            return get(name, key);
+        public ByteString getRMW(final TreeName treeName, final ByteSequence key) {
+            return get(treeName, key);
         }
 
         @Override
-        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
-            getTree(name).put(key.toByteArray(), value.toByteArray());
+        public void put(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
+            getTree(treeName).put(key.toByteArray(), value.toByteArray());
         }
 
         @Override
-        public boolean remove(final TreeName name, final ByteSequence key) {
-            return getTree(name).remove(key) != null;
+        public boolean remove(final TreeName treeName, final ByteSequence key) {
+            return getTree(treeName).remove(key) != null;
         }
 
-        private Map<byte[], byte[]> getTree(final TreeName name) {
-            Map<byte[], byte[]> tree = trees.get(name);
+        private Map<byte[], byte[]> getTree(final TreeName treeName) {
+            Map<byte[], byte[]> tree = trees.get(treeName);
             if (tree != null) {
                 return tree;
             }
-            tree = db.getTreeMap(name.toString());
-            trees.put(name, tree);
+            tree = db.getTreeMap(treeName.toString());
+            trees.put(treeName, tree);
             return tree;
         }
 
@@ -126,7 +126,7 @@ public final class MapDbStorage implements Storage {
     }
 
     @Override
-    public void openTree(final TreeName name) {
+    public void openTree(final TreeName treeName) {
         // Nothing to do. Trees are opened for each txn.
     }
 

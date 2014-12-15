@@ -23,24 +23,24 @@ import org.opendj.scratch.be.spi.WriteableStorage;
 public final class MapDbMemStorage implements Storage {
     private final class StorageImpl implements WriteableStorage {
         @Override
-        public ByteString get(final TreeName name, final ByteSequence key) {
-            return ByteString.wrap(trees.get(name).get(key.toByteArray()));
+        public ByteString get(final TreeName treeName, final ByteSequence key) {
+            return ByteString.wrap(trees.get(treeName).get(key.toByteArray()));
         }
 
         @Override
-        public ByteString getRMW(final TreeName name, final ByteSequence key) {
-            return get(name, key);
+        public ByteString getRMW(final TreeName treeName, final ByteSequence key) {
+            return get(treeName, key);
         }
 
         @Override
-        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
+        public void put(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
             // FIXME: how do we support RMW for MVCC? Pass in the value read in call to getRMW?
-            trees.get(name).put(key.toByteArray(), value.toByteArray());
+            trees.get(treeName).put(key.toByteArray(), value.toByteArray());
         }
 
         @Override
-        public boolean remove(final TreeName name, final ByteSequence key) {
-            return trees.get(name).remove(key) != null;
+        public boolean remove(final TreeName treeName, final ByteSequence key) {
+            return trees.get(treeName).remove(key) != null;
         }
     }
 
@@ -51,16 +51,16 @@ public final class MapDbMemStorage implements Storage {
         }
 
         @Override
-        public void createTree(final TreeName name) {
+        public void createTree(final TreeName treeName) {
             final ConcurrentNavigableMap<byte[], byte[]> tree =
-                    db.createTreeMap(name.toString()).keySerializer(BTreeKeySerializer.BYTE_ARRAY)
+                    db.createTreeMap(treeName.toString()).keySerializer(BTreeKeySerializer.BYTE_ARRAY)
                             .valueSerializer(Serializer.BYTE_ARRAY).make();
-            trees.put(name, tree);
+            trees.put(treeName, tree);
         }
 
         @Override
-        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
-            trees.get(name).put(key.toByteArray(), value.toByteArray());
+        public void put(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
+            trees.get(treeName).put(key.toByteArray(), value.toByteArray());
         }
     }
 
@@ -87,9 +87,9 @@ public final class MapDbMemStorage implements Storage {
     }
 
     @Override
-    public void openTree(final TreeName name) {
+    public void openTree(final TreeName treeName) {
         // The trees should already be present after the import.
-        if (!trees.containsKey(name)) {
+        if (!trees.containsKey(treeName)) {
             throw new IllegalStateException();
         }
     }

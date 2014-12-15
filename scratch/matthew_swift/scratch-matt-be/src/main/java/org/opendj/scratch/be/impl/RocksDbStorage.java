@@ -26,14 +26,14 @@ import org.rocksdb.WriteOptions;
 public final class RocksDbStorage implements Storage {
     private final class ImporterImpl implements Importer {
         @Override
-        public void createTree(final TreeName name) {
-            nameToPrefix.put(name, nextPrefix++);
+        public void createTree(final TreeName treeName) {
+            nameToPrefix.put(treeName, nextPrefix++);
         }
 
         @Override
-        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
+        public void put(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
             try {
-                db.put(prefixKey(name, key), value.toByteArray());
+                db.put(prefixKey(treeName, key), value.toByteArray());
             } catch (final RocksDBException e) {
                 throw new StorageRuntimeException(e);
             }
@@ -53,29 +53,29 @@ public final class RocksDbStorage implements Storage {
         }
 
         @Override
-        public ByteString get(final TreeName name, final ByteSequence key) {
+        public ByteString get(final TreeName treeName, final ByteSequence key) {
             try {
-                return wrap(db.get(prefixKey(name, key)));
+                return wrap(db.get(prefixKey(treeName, key)));
             } catch (final RocksDBException e) {
                 throw new StorageRuntimeException(e);
             }
         }
 
         @Override
-        public ByteString getRMW(final TreeName name, final ByteSequence key) {
-            return get(name, key);
+        public ByteString getRMW(final TreeName treeName, final ByteSequence key) {
+            return get(treeName, key);
         }
 
         @Override
-        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
-            batchUpdate.put(prefixKey(name, key), value.toByteArray());
+        public void put(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
+            batchUpdate.put(prefixKey(treeName, key), value.toByteArray());
         }
 
         @Override
-        public boolean remove(final TreeName name, final ByteSequence key) {
+        public boolean remove(final TreeName treeName, final ByteSequence key) {
             // FIXME: as well as ugly, I don't think that this is strictly correct.
-            if (get(name, key) != null) {
-                batchUpdate.remove(prefixKey(name, key));
+            if (get(treeName, key) != null) {
+                batchUpdate.remove(prefixKey(treeName, key));
                 return true;
             }
             return false;
@@ -112,8 +112,8 @@ public final class RocksDbStorage implements Storage {
     }
 
     @Override
-    public void openTree(final TreeName name) {
-        if (!nameToPrefix.containsKey(name)) {
+    public void openTree(final TreeName treeName) {
+        if (!nameToPrefix.containsKey(treeName)) {
             throw new IllegalStateException();
         }
     }
@@ -146,9 +146,9 @@ public final class RocksDbStorage implements Storage {
         }
     }
 
-    private byte[] prefixKey(final TreeName name, final ByteSequence key) {
+    private byte[] prefixKey(final TreeName treeName, final ByteSequence key) {
         final ByteStringBuilder buffer = new ByteStringBuilder(key.length() + 1);
-        buffer.append(nameToPrefix.get(name));
+        buffer.append(nameToPrefix.get(treeName));
         buffer.append(key);
         return buffer.toByteArray();
     }

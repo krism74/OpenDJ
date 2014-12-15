@@ -30,8 +30,8 @@ import com.orientechnologies.orient.core.tx.OTransaction.TXTYPE;
 @SuppressWarnings("javadoc")
 public final class OrientStorage implements Storage {
 
-    private static String orientName(final TreeName name) {
-        return name.toString().replaceAll(",", "&");
+    private static String orientName(final TreeName treeName) {
+        return treeName.toString().replaceAll(",", "&");
     }
 
     private static final class DbHolder {
@@ -42,13 +42,13 @@ public final class OrientStorage implements Storage {
             this.db = db;
         }
 
-        private OIndex<?> getTree(final TreeName name) {
-            OIndex<?> tree = trees.get(name);
+        private OIndex<?> getTree(final TreeName treeName) {
+            OIndex<?> tree = trees.get(treeName);
             if (tree != null) {
                 return tree;
             }
-            tree = db.getMetadata().getIndexManager().getIndex(orientName(name));
-            trees.put(name, tree);
+            tree = db.getMetadata().getIndexManager().getIndex(orientName(treeName));
+            trees.put(treeName, tree);
             return tree;
         }
     }
@@ -68,19 +68,19 @@ public final class OrientStorage implements Storage {
         }
 
         @Override
-        public void createTree(final TreeName name) {
+        public void createTree(final TreeName treeName) {
             final OIndex<?> tree =
-                    db.getMetadata().getIndexManager().createIndex(orientName(name), "UNIQUE",
+                    db.getMetadata().getIndexManager().createIndex(orientName(treeName), "UNIQUE",
                             new ORuntimeKeyIndexDefinition<byte[]>(OBinaryTypeSerializer.ID), null,
                             null, null);
-            trees.put(name, tree);
+            trees.put(treeName, tree);
         }
 
         @Override
-        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
+        public void put(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
             final ORecordBytes valueRecord = new ORecordBytes(db, value.toByteArray());
             valueRecord.save();
-            trees.get(name).put(key.toByteArray(), valueRecord);
+            trees.get(treeName).put(key.toByteArray(), valueRecord);
         }
     }
 
@@ -92,20 +92,20 @@ public final class OrientStorage implements Storage {
         }
 
         @Override
-        public ByteString get(final TreeName name, final ByteSequence key) {
-            final ORecordId id = (ORecordId) dbHolder.getTree(name).get(key.toByteArray());
+        public ByteString get(final TreeName treeName, final ByteSequence key) {
+            final ORecordId id = (ORecordId) dbHolder.getTree(treeName).get(key.toByteArray());
             final ORecordBytes record = dbHolder.db.getRecord(id);
             return ByteString.wrap(record.toStream());
         }
 
         @Override
-        public ByteString getRMW(final TreeName name, final ByteSequence key) {
-            return get(name, key);
+        public ByteString getRMW(final TreeName treeName, final ByteSequence key) {
+            return get(treeName, key);
         }
 
         @Override
-        public void put(final TreeName name, final ByteSequence key, final ByteSequence value) {
-            final ORecordId id = (ORecordId) dbHolder.getTree(name).get(key.toByteArray());
+        public void put(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
+            final ORecordId id = (ORecordId) dbHolder.getTree(treeName).get(key.toByteArray());
             final ORecordBytes record = dbHolder.db.getRecord(id);
             record.setDirty();
             record.fromStream(value.toByteArray());
@@ -113,8 +113,8 @@ public final class OrientStorage implements Storage {
         }
 
         @Override
-        public boolean remove(final TreeName name, final ByteSequence key) {
-            return dbHolder.getTree(name).remove(key.toByteArray());
+        public boolean remove(final TreeName treeName, final ByteSequence key) {
+            return dbHolder.getTree(treeName).remove(key.toByteArray());
         }
     }
 
@@ -152,7 +152,7 @@ public final class OrientStorage implements Storage {
     }
 
     @Override
-    public void openTree(final TreeName name) {
+    public void openTree(final TreeName treeName) {
         // No op
     }
 

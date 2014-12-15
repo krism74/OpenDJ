@@ -18,6 +18,7 @@ import org.opendj.scratch.be.spi.TreeName;
 import org.opendj.scratch.be.spi.WriteOperation;
 import org.opendj.scratch.be.spi.WriteableStorage;
 
+import com.sleepycat.je.Cursor;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseEntry;
@@ -47,9 +48,9 @@ public final class JeStorage implements Storage {
         }
 
         @Override
-        public void createTree(TreeName name) {
+        public void createTree(TreeName treeName) {
             // TODO: how do we set the comparator?
-            trees.put(name, env.openDatabase(null, name.toString(), dbConfig));
+            trees.put(treeName, env.openDatabase(null, treeName.toString(), dbConfig));
         }
     }
 
@@ -111,8 +112,8 @@ public final class JeStorage implements Storage {
     }
 
     @Override
-    public void openTree(TreeName name) {
-        trees.put(name, env.openDatabase(null, name.toString(), dbConfig));
+    public void openTree(TreeName treeName) {
+        trees.put(treeName, env.openDatabase(null, treeName.toString(), dbConfig));
     }
 
     private void open(final boolean isImport) {
@@ -139,8 +140,8 @@ public final class JeStorage implements Storage {
         trees.clear();
     }
 
-    private Database getTree(TreeName name) {
-        return trees.get(name);
+    private Database getTree(TreeName treeName) {
+        return trees.get(treeName);
     }
 
     @Override
