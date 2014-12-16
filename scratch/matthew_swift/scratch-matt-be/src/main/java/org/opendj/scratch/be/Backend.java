@@ -145,17 +145,17 @@ final class Backend implements Closeable {
                 @Override
                 public void run(final WriteableStorage storage) throws Exception {
                     final ByteString dbId = readDn2Id(storage, request.getName());
-                    final Entry entry = readId2Entry(storage, dbId, true);
+                    final Entry entry = readId2Entry(storage, dbId);
                     final ByteString oldDescriptionKey = encodeDescription(entry);
                     Entries.modifyEntry(entry, request);
                     final ByteString newDescriptionKey = encodeDescription(entry);
                     final boolean descriptionHasChanged =
                             oldDescriptionKey.compareTo(newDescriptionKey) != 0;
                     if (descriptionHasChanged) {
-                        storage.remove(description2id, oldDescriptionKey);
-                        storage.put(description2id, newDescriptionKey, dbId);
+                        storage.delete(description2id, oldDescriptionKey);
+                        storage.create(description2id, newDescriptionKey, dbId);
                     }
-                    storage.put(id2entry, dbId, encodeEntry(entry));
+                    storage.create(id2entry, dbId, encodeEntry(entry));
                 }
             });
         } catch (final Exception e) {
@@ -183,8 +183,7 @@ final class Backend implements Closeable {
             return storage.read(new ReadOperation<Entry>() {
                 @Override
                 public Entry run(final ReadableStorage storage) throws Exception {
-                    final ByteString dbId = readDescription2Id(storage, description);
-                    return readId2Entry(storage, dbId, true);
+                    return readId2Entry(storage, readDescription2Id(storage, description));
                 }
             });
         } catch (final Exception e) {
@@ -200,8 +199,7 @@ final class Backend implements Closeable {
             return storage.read(new ReadOperation<Entry>() {
                 @Override
                 public Entry run(final ReadableStorage storage) throws Exception {
-                    final ByteString dbId = readDn2Id(storage, name);
-                    return readId2Entry(storage, dbId, true);
+                    return readId2Entry(storage, readDn2Id(storage, name));
                 }
             });
         } catch (final Exception e) {
@@ -220,18 +218,17 @@ final class Backend implements Closeable {
 
     private ByteString readDescription2Id(final ReadableStorage txn, final ByteString description)
             throws LdapException, StorageRuntimeException {
-        return checkNoSuchObject(txn.get(description2id, description));
+        return checkNoSuchObject(txn.read(description2id, description));
     }
 
     private ByteString readDn2Id(final ReadableStorage txn, final DN name) throws LdapException,
             StorageRuntimeException {
-        return checkNoSuchObject(txn.get(dn2id, name.toIrreversibleNormalizedByteString()));
+        return checkNoSuchObject(txn.read(dn2id, name.toIrreversibleNormalizedByteString()));
     }
 
-    private Entry readId2Entry(final ReadableStorage txn, final ByteString dbId, final boolean isRMW)
+    private Entry readId2Entry(final ReadableStorage txn, final ByteString dbId)
             throws LdapException, StorageRuntimeException {
-        final ByteString entry = isRMW ? txn.getRMW(id2entry, dbId) : txn.get(id2entry, dbId);
-        return decodeEntry(checkNoSuchObject(entry));
+        return decodeEntry(checkNoSuchObject(txn.read(id2entry, dbId)));
     }
 
 }

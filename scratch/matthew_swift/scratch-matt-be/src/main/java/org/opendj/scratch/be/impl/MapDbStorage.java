@@ -20,6 +20,7 @@ import org.opendj.scratch.be.spi.Importer;
 import org.opendj.scratch.be.spi.ReadOperation;
 import org.opendj.scratch.be.spi.Storage;
 import org.opendj.scratch.be.spi.TreeName;
+import org.opendj.scratch.be.spi.UpdateFunction;
 import org.opendj.scratch.be.spi.WriteOperation;
 import org.opendj.scratch.be.spi.WriteableStorage;
 
@@ -35,8 +36,9 @@ public final class MapDbStorage implements Storage {
         @Override
         public void createTree(final TreeName treeName) {
             final ConcurrentNavigableMap<byte[], byte[]> tree =
-                    db.createTreeMap(treeName.toString()).keySerializer(BTreeKeySerializer.BYTE_ARRAY)
-                            .valueSerializer(Serializer.BYTE_ARRAY).make();
+                    db.createTreeMap(treeName.toString()).keySerializer(
+                            BTreeKeySerializer.BYTE_ARRAY).valueSerializer(Serializer.BYTE_ARRAY)
+                            .make();
             trees.put(treeName, tree);
         }
 
@@ -61,28 +63,30 @@ public final class MapDbStorage implements Storage {
         }
 
         @Override
-        public ByteString get(final TreeName treeName, final ByteSequence key) {
-            return ByteString.wrap(getTree(treeName).get(key.toByteArray()));
-        }
-
-        @Override
-        public ByteString getRMW(final TreeName treeName, final ByteSequence key) {
-            return get(treeName, key);
-        }
-
-        @Override
-        public void put(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
+        public void create(TreeName treeName, ByteSequence key, ByteSequence value) {
             getTree(treeName).put(key.toByteArray(), value.toByteArray());
         }
 
         @Override
-        public boolean putIfAbsent(TreeName treeName, ByteSequence key, ByteSequence value) {
-            return getTree(treeName).putIfAbsent(key.toByteArray(), value.toByteArray()) == null;
+        public ByteString read(final TreeName treeName, final ByteSequence key) {
+            return ByteString.wrap(getTree(treeName).get(key.toByteArray()));
         }
 
         @Override
-        public boolean remove(final TreeName treeName, final ByteSequence key) {
-            return getTree(treeName).remove(key) != null;
+        public void update(TreeName treeName, ByteSequence key, UpdateFunction f) {
+            final ConcurrentNavigableMap<byte[], byte[]> tree = getTree(treeName);
+            final byte[] kb = key.toByteArray();
+            final byte[] vb = f.computeNewValue(null).toByteArray();
+            final byte[] ovb = tree.putIfAbsent(kb, vb);
+            if (ovb != null) {
+                final byte[] nvb = f.computeNewValue(ByteString.wrap(ovb)).toByteArray();
+                tree.put(kb, nvb);
+            }
+        }
+
+        @Override
+        public void delete(final TreeName treeName, final ByteSequence key) {
+            getTree(treeName).remove(key);
         }
 
         private ConcurrentNavigableMap<byte[], byte[]> getTree(final TreeName treeName) {

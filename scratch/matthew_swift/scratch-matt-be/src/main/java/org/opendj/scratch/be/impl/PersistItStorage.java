@@ -14,6 +14,7 @@ import org.opendj.scratch.be.spi.ReadOperation;
 import org.opendj.scratch.be.spi.Storage;
 import org.opendj.scratch.be.spi.StorageRuntimeException;
 import org.opendj.scratch.be.spi.TreeName;
+import org.opendj.scratch.be.spi.UpdateFunction;
 import org.opendj.scratch.be.spi.WriteOperation;
 import org.opendj.scratch.be.spi.WriteableStorage;
 
@@ -90,7 +91,19 @@ public final class PersistItStorage implements Storage {
         }
 
         @Override
-        public ByteString get(TreeName treeName, ByteSequence key) {
+        public void create(TreeName treeName, ByteSequence key, ByteSequence value) {
+            try {
+                final Exchange ex = getExchange(treeName);
+                ex.getKey().clear().append(key.toByteArray());
+                ex.getValue().clear().putByteArray(value.toByteArray());
+                ex.store();
+            } catch (Exception e) {
+                throw new StorageRuntimeException(e);
+            }
+        }
+
+        @Override
+        public ByteString read(TreeName treeName, ByteSequence key) {
             try {
                 final Exchange ex = getExchange(treeName);
                 ex.getKey().clear().append(key.toByteArray());
@@ -105,48 +118,30 @@ public final class PersistItStorage implements Storage {
             }
         }
 
-        @Override
-        public ByteString getRMW(TreeName treeName, ByteSequence key) {
-            return get(treeName, key);
-        }
 
         @Override
-        public void put(TreeName treeName, ByteSequence key, ByteSequence value) {
-            try {
-                final Exchange ex = getExchange(treeName);
-                ex.getKey().clear().append(key.toByteArray());
-                ex.getValue().clear().putByteArray(value.toByteArray());
-                ex.store();
-            } catch (Exception e) {
-                throw new StorageRuntimeException(e);
-            }
-        }
-
-        @Override
-        public boolean putIfAbsent(TreeName treeName, ByteSequence key, ByteSequence value) {
+        public void update(TreeName treeName, ByteSequence key, UpdateFunction f) {
             try {
                 final Exchange ex = getExchange(treeName);
                 ex.getKey().clear().append(key.toByteArray());
                 ex.fetch();
-                // FIXME poor man's CAS: this will not work under high volume,
-                // but PersistIt does not provide APIs for this use case. 
-                if (ex.isValueDefined()) {
-                    return false;
-                }
-                ex.getValue().clear().putByteArray(value.toByteArray());
+                final Value value = ex.getValue();
+                final ByteSequence oldValue =
+                        value.isDefined() ? ByteString.wrap(value.getByteArray()) : null;
+                final ByteSequence newValue = f.computeNewValue(oldValue);
+                ex.getValue().clear().putByteArray(newValue.toByteArray());
                 ex.store();
-                return true;
             } catch (Exception e) {
                 throw new StorageRuntimeException(e);
             }
         }
 
         @Override
-        public boolean remove(TreeName treeName, ByteSequence key) {
+        public void delete(TreeName treeName, ByteSequence key) {
             try {
                 final Exchange ex = getExchange(treeName);
                 ex.getKey().clear().append(key.toByteArray());
-                return ex.remove();
+                ex.remove();
             } catch (PersistitException e) {
                 throw new StorageRuntimeException(e);
             }

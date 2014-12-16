@@ -15,6 +15,7 @@ import org.opendj.scratch.be.spi.Importer;
 import org.opendj.scratch.be.spi.ReadOperation;
 import org.opendj.scratch.be.spi.Storage;
 import org.opendj.scratch.be.spi.TreeName;
+import org.opendj.scratch.be.spi.UpdateFunction;
 import org.opendj.scratch.be.spi.WriteOperation;
 import org.opendj.scratch.be.spi.WriteableStorage;
 
@@ -25,6 +26,7 @@ import com.sleepycat.je.Durability;
 import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
 import com.sleepycat.je.LockMode;
+import com.sleepycat.je.OperationStatus;
 import com.sleepycat.je.Transaction;
 import com.sleepycat.je.TransactionConfig;
 
@@ -62,42 +64,47 @@ public final class JeStorage implements Storage {
         }
 
         @Override
-        public ByteString get(TreeName treeName, ByteSequence key) {
-            return get0(treeName, key, LockMode.READ_COMMITTED);
-        }
-
-        @Override
-        public ByteString getRMW(TreeName treeName, ByteSequence key) {
-            return get0(treeName, key, LockMode.RMW);
-        }
-
-        private ByteString get0(TreeName treeName, ByteSequence key, LockMode lockMode) {
-            setData(dbKey, key);
-            setData(dbValue, null);
-            if (getTree(treeName).get(txn, dbKey, dbValue, lockMode) == SUCCESS) {
-                return ByteString.wrap(dbValue.getData());
-            }
-            return null;
-        }
-
-        @Override
-        public void put(TreeName treeName, ByteSequence key, ByteSequence value) {
+        public void create(TreeName treeName, ByteSequence key, ByteSequence value) {
             setData(dbKey, key);
             setData(dbValue, value);
             getTree(treeName).put(txn, dbKey, dbValue);
         }
 
         @Override
-        public boolean putIfAbsent(TreeName treeName, ByteSequence key, ByteSequence value) {
+        public ByteString read(TreeName treeName, ByteSequence key) {
             setData(dbKey, key);
-            setData(dbValue, value);
-            return getTree(treeName).putNoOverwrite(txn, dbKey, dbValue) == SUCCESS;
+            setData(dbValue, null);
+            if (getTree(treeName).get(txn, dbKey, dbValue, LockMode.READ_COMMITTED) == SUCCESS) {
+                return ByteString.wrap(dbValue.getData());
+            }
+            return null;
         }
 
         @Override
-        public boolean remove(TreeName treeName, ByteSequence key) {
+        public void update(TreeName treeName, ByteSequence key, UpdateFunction f) {
+            final Database db = getTree(treeName);
             setData(dbKey, key);
-            return getTree(treeName).delete(txn, dbKey) == SUCCESS;
+            for (;;) {
+                setData(dbValue, f.computeNewValue(null));
+                if (db.putNoOverwrite(txn, dbKey, dbValue) == SUCCESS) {
+                    return;
+                }
+                setData(dbValue, null);
+                final OperationStatus status = db.get(txn, dbKey, dbValue, LockMode.RMW);
+                if (status == SUCCESS) {
+                    final ByteString oldValue = ByteString.wrap(dbValue.getData());
+                    setData(dbValue, f.computeNewValue(oldValue));
+                    db.put(txn, dbKey, dbValue);
+                    return;
+                }
+                // NOT FOUND.
+            }
+        }
+
+        @Override
+        public void delete(TreeName treeName, ByteSequence key) {
+            setData(dbKey, key);
+            getTree(treeName).delete(txn, dbKey);
         }
     }
 

@@ -16,6 +16,7 @@ import org.opendj.scratch.be.spi.Importer;
 import org.opendj.scratch.be.spi.ReadOperation;
 import org.opendj.scratch.be.spi.Storage;
 import org.opendj.scratch.be.spi.TreeName;
+import org.opendj.scratch.be.spi.UpdateFunction;
 import org.opendj.scratch.be.spi.WriteOperation;
 import org.opendj.scratch.be.spi.WriteableStorage;
 
@@ -23,29 +24,36 @@ import org.opendj.scratch.be.spi.WriteableStorage;
 public final class MapDbMemStorage implements Storage {
     private final class StorageImpl implements WriteableStorage {
         @Override
-        public ByteString get(final TreeName treeName, final ByteSequence key) {
-            return ByteString.wrap(trees.get(treeName).get(key.toByteArray()));
-        }
-
-        @Override
-        public ByteString getRMW(final TreeName treeName, final ByteSequence key) {
-            return get(treeName, key);
-        }
-
-        @Override
-        public void put(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
-            // FIXME: how do we support RMW for MVCC? Pass in the value read in call to getRMW?
+        public void create(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
             trees.get(treeName).put(key.toByteArray(), value.toByteArray());
         }
 
         @Override
-        public boolean putIfAbsent(TreeName treeName, ByteSequence key, ByteSequence value) {
-            return trees.get(treeName).putIfAbsent(key.toByteArray(), value.toByteArray()) == null;
+        public ByteString read(final TreeName treeName, final ByteSequence key) {
+            return ByteString.wrap(trees.get(treeName).get(key.toByteArray()));
         }
 
         @Override
-        public boolean remove(final TreeName treeName, final ByteSequence key) {
-            return trees.get(treeName).remove(key) != null;
+        public void update(TreeName treeName, ByteSequence key, UpdateFunction f) {
+            final ConcurrentNavigableMap<byte[], byte[]> tree = trees.get(treeName);
+            final byte[] kb = key.toByteArray();
+            for (;;) {
+                final byte[] vb = f.computeNewValue(null).toByteArray();
+                final byte[] ovb = tree.putIfAbsent(kb, vb);
+                if (ovb == null) {
+                    return;
+                }
+                final byte[] nvb = f.computeNewValue(ByteString.wrap(ovb)).toByteArray();
+                if (tree.replace(kb, ovb, nvb)) {
+                    return;
+                }
+                // CONFLICT.
+            }
+        }
+
+        @Override
+        public void delete(final TreeName treeName, final ByteSequence key) {
+            trees.get(treeName).remove(key);
         }
     }
 
@@ -58,8 +66,9 @@ public final class MapDbMemStorage implements Storage {
         @Override
         public void createTree(final TreeName treeName) {
             final ConcurrentNavigableMap<byte[], byte[]> tree =
-                    db.createTreeMap(treeName.toString()).keySerializer(BTreeKeySerializer.BYTE_ARRAY)
-                            .valueSerializer(Serializer.BYTE_ARRAY).make();
+                    db.createTreeMap(treeName.toString()).keySerializer(
+                            BTreeKeySerializer.BYTE_ARRAY).valueSerializer(Serializer.BYTE_ARRAY)
+                            .make();
             trees.put(treeName, tree);
         }
 

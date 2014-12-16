@@ -25,6 +25,7 @@ import org.opendj.scratch.be.spi.ReadOperation;
 import org.opendj.scratch.be.spi.Storage;
 import org.opendj.scratch.be.spi.StorageRuntimeException;
 import org.opendj.scratch.be.spi.TreeName;
+import org.opendj.scratch.be.spi.UpdateFunction;
 import org.opendj.scratch.be.spi.WriteOperation;
 import org.opendj.scratch.be.spi.WriteableStorage;
 
@@ -61,28 +62,31 @@ public final class XodusStorage implements Storage {
         }
 
         @Override
-        public ByteString get(final TreeName treeName, final ByteSequence key) {
-            return toByteString(trees.get(treeName).get(txn, toByteIterable(key)));
-        }
-
-        @Override
-        public ByteString getRMW(final TreeName treeName, final ByteSequence key) {
-            return get(treeName, key);
-        }
-
-        @Override
-        public void put(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
+        public void create(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
             trees.get(treeName).put(txn, toByteIterable(key), toByteIterable(value));
         }
 
         @Override
-        public boolean putIfAbsent(TreeName treeName, ByteSequence key, ByteSequence value) {
-            return trees.get(treeName).add(txn, toByteIterable(key), toByteIterable(value));
+        public ByteString read(final TreeName treeName, final ByteSequence key) {
+            return toByteString(trees.get(treeName).get(txn, toByteIterable(key)));
         }
 
         @Override
-        public boolean remove(final TreeName treeName, final ByteSequence key) {
-            return trees.get(treeName).delete(txn, toByteIterable(key));
+        public void update(TreeName treeName, ByteSequence key, UpdateFunction f) {
+            final Store store = trees.get(treeName);
+            final ByteIterable bik = toByteIterable(key);
+            final ByteIterable biv = toByteIterable(f.computeNewValue(null));
+            if (!store.add(txn, bik, biv)) {
+                final ByteIterable oldValue = store.get(txn, bik);
+                final ByteIterable newValue =
+                        toByteIterable(f.computeNewValue(toByteString(oldValue)));
+                store.put(txn, bik, newValue);
+            }
+        }
+
+        @Override
+        public void delete(final TreeName treeName, final ByteSequence key) {
+            trees.get(treeName).delete(txn, toByteIterable(key));
         }
     }
 

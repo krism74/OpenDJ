@@ -14,6 +14,7 @@ import org.opendj.scratch.be.spi.ReadOperation;
 import org.opendj.scratch.be.spi.Storage;
 import org.opendj.scratch.be.spi.StorageRuntimeException;
 import org.opendj.scratch.be.spi.TreeName;
+import org.opendj.scratch.be.spi.UpdateFunction;
 import org.opendj.scratch.be.spi.WriteOperation;
 import org.opendj.scratch.be.spi.WriteableStorage;
 import org.rocksdb.Options;
@@ -53,7 +54,12 @@ public final class RocksDbStorage implements Storage {
         }
 
         @Override
-        public ByteString get(final TreeName treeName, final ByteSequence key) {
+        public void create(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
+            batchUpdate.put(prefixKey(treeName, key), value.toByteArray());
+        }
+
+        @Override
+        public ByteString read(final TreeName treeName, final ByteSequence key) {
             try {
                 return wrap(db.get(prefixKey(treeName, key)));
             } catch (final RocksDBException e) {
@@ -62,28 +68,23 @@ public final class RocksDbStorage implements Storage {
         }
 
         @Override
-        public ByteString getRMW(final TreeName treeName, final ByteSequence key) {
-            return get(treeName, key);
-        }
-
-        @Override
-        public void put(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
-            batchUpdate.put(prefixKey(treeName, key), value.toByteArray());
-        }
-
-        @Override
-        public boolean putIfAbsent(TreeName treeName, ByteSequence key, ByteSequence value) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean remove(final TreeName treeName, final ByteSequence key) {
-            // FIXME: as well as ugly, I don't think that this is strictly correct.
-            if (get(treeName, key) != null) {
-                batchUpdate.remove(prefixKey(treeName, key));
-                return true;
+        public void update(TreeName treeName, ByteSequence key, UpdateFunction f) {
+            try {
+                // FIXME: this is not transactional.
+                final byte[] prefixKey = prefixKey(treeName, key);
+                byte[] oldValue = db.get(prefixKey);
+                final byte[] newValue =
+                        f.computeNewValue(oldValue != null ? ByteString.wrap(oldValue) : null)
+                                .toByteArray();
+                batchUpdate.put(prefixKey, newValue);
+            } catch (RocksDBException e) {
+                throw new StorageRuntimeException(e);
             }
-            return false;
+        }
+
+        @Override
+        public void delete(final TreeName treeName, final ByteSequence key) {
+            batchUpdate.remove(prefixKey(treeName, key));
         }
     }
 

@@ -14,6 +14,7 @@ import org.opendj.scratch.be.spi.Importer;
 import org.opendj.scratch.be.spi.ReadOperation;
 import org.opendj.scratch.be.spi.Storage;
 import org.opendj.scratch.be.spi.TreeName;
+import org.opendj.scratch.be.spi.UpdateFunction;
 import org.opendj.scratch.be.spi.WriteOperation;
 import org.opendj.scratch.be.spi.WriteableStorage;
 
@@ -78,7 +79,7 @@ public final class OrientStorage implements Storage {
 
         @Override
         public void put(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
-            final ORecordBytes valueRecord = new ORecordBytes(db, value.toByteArray());
+            final ORecordBytes valueRecord = new ORecordBytes(value.toByteArray());
             valueRecord.save();
             trees.get(treeName).put(key.toByteArray(), valueRecord);
         }
@@ -92,34 +93,33 @@ public final class OrientStorage implements Storage {
         }
 
         @Override
-        public ByteString get(final TreeName treeName, final ByteSequence key) {
+        public void create(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
+            final ORecordBytes valueRecord = new ORecordBytes(value.toByteArray());
+            valueRecord.save();
+            dbHolder.getTree(treeName).put(key.toByteArray(), valueRecord);
+        }
+
+        @Override
+        public ByteString read(final TreeName treeName, final ByteSequence key) {
             final ORecordId id = (ORecordId) dbHolder.getTree(treeName).get(key.toByteArray());
             final ORecordBytes record = dbHolder.db.getRecord(id);
-            return ByteString.wrap(record.toStream());
+            return record != null ? ByteString.wrap(record.toStream()) : null;
         }
 
         @Override
-        public ByteString getRMW(final TreeName treeName, final ByteSequence key) {
-            return get(treeName, key);
+        public void update(TreeName treeName, ByteSequence key, UpdateFunction f) {
+            //            final byte[] kb = key.toByteArray();
+            //            final ORecordId id = (ORecordId) dbHolder.getTree(treeName).get(kb);
+            //            final ORecordBytes record = dbHolder.db.getRecord(id);
+            //            record.setDirty();
+            //            record.fromStream(value.toByteArray());
+            //            record.save();
+            // FIXME
         }
 
         @Override
-        public void put(final TreeName treeName, final ByteSequence key, final ByteSequence value) {
-            final ORecordId id = (ORecordId) dbHolder.getTree(treeName).get(key.toByteArray());
-            final ORecordBytes record = dbHolder.db.getRecord(id);
-            record.setDirty();
-            record.fromStream(value.toByteArray());
-            record.save();
-        }
-
-        @Override
-        public boolean putIfAbsent(TreeName treeName, ByteSequence key, ByteSequence value) {
-            return dbHolder.getTree(treeName).;
-        }
-
-        @Override
-        public boolean remove(final TreeName treeName, final ByteSequence key) {
-            return dbHolder.getTree(treeName).remove(key.toByteArray());
+        public void delete(final TreeName treeName, final ByteSequence key) {
+            dbHolder.getTree(treeName).remove(key.toByteArray());
         }
     }
 
