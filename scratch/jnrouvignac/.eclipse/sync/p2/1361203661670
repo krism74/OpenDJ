@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?p2f version='1.0.0'?>
 <p2f version='1.0.0'>
-  <ius size='16'>
+  <ius size='12'>
 <!--Eclipse MarketPlace - TODO test these
 JDeodorant - automatically fixes bad smells: feature envy, type checking, long methods, god class
 DBeaver - Like TOAD but for any DB
@@ -26,12 +26,6 @@ DBeaver - Like TOAD but for any DB
         <repository location='http://workspacemechanic.eclipselabs.org.codespot.com/git.update/mechanic'/>
       </repositories>
     </iu>
-    <!-- Mouse Feed - Pops-up the shortkey for menu actions - great to learn short keys -->
-    <iu id='com.mousefeed.feature.feature.group' name='MouseFeed' version='1.0.1.201103081613'>
-      <repositories size='1'>
-        <repository location='http://download.sigasi.com/update/mousefeed/'/>
-      </repositories>
-    </iu>
     <!-- Cut Copy Paste Plus - Multiple paste history - cycles through clipboard -->
     <iu id='CutCopyPastePlusFeature.feature.group' name='Cut Copy Paste Plus Feature' version='1.0.3'>
       <repositories size='1'>
@@ -39,7 +33,7 @@ DBeaver - Like TOAD but for any DB
       </repositories>
     </iu>
     <!-- TestNG - TestNG integration into Eclipse -->
-    <iu id='org.testng.eclipse.feature.group' name='TestNG' version='6.8.0.20121120_1820'>
+    <iu id='org.testng.eclipse.feature.group' name='TestNG' version='6.8.6.20130607_0745'>
       <repositories size='1'>
         <repository location='http://beust.com/eclipse'/>
       </repositories>
@@ -88,7 +82,7 @@ DBeaver - Like TOAD but for any DB
         <repository location='http://subclipse.tigris.org/update_1.8.x'/>
       </repositories>
     </iu>
-    <iu id='org.tigris.subversion.subclipse.mylyn.feature.group' name='Subclipse Integration for Mylyn 3.x (Optional)' version='3.0.0'>
+    <!--iu id='org.tigris.subversion.subclipse.mylyn.feature.group' name='Subclipse Integration for Mylyn 3.x (Optional)' version='3.0.0'>
       <repositories size='1'>
         <repository location='http://subclipse.tigris.org/update_1.8.x'/>
       </repositories>
@@ -97,6 +91,6 @@ DBeaver - Like TOAD but for any DB
       <repositories size='1'>
         <repository location='http://subclipse.tigris.org/update_1.8.x'/>
       </repositories>
-    </iu>
+    </iu-->
   </ius>
 </p2f>

@@ -1,0 +1,9 @@
+# @title UCDetector
+# @description Settings for Eclipse Preferences > UCDetector
+# @task_type LASTMOD
+#
+# Created by the Workspace Mechanic Preference Recorder
+#Wed May 14 23:34:44 CEST 2014
+file_export_version=3.0
+/instance/org.ucdetector/org.ucdetector.finalField=WARNING
+/instance/org.ucdetector/org.ucdetector.internal.mode.name=JNR Mode
