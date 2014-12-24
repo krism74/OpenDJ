@@ -26,7 +26,6 @@ import com.sleepycat.je.Durability;
 import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
 import com.sleepycat.je.LockMode;
-import com.sleepycat.je.OperationStatus;
 import com.sleepycat.je.Transaction;
 import com.sleepycat.je.TransactionConfig;
 
@@ -90,8 +89,7 @@ public final class JeStorage implements Storage {
                     return;
                 }
                 setData(dbValue, null);
-                final OperationStatus status = db.get(txn, dbKey, dbValue, LockMode.RMW);
-                if (status == SUCCESS) {
+                if (db.get(txn, dbKey, dbValue, LockMode.RMW) == SUCCESS) {
                     final ByteString oldValue = ByteString.wrap(dbValue.getData());
                     setData(dbValue, f.computeNewValue(oldValue));
                     db.put(txn, dbKey, dbValue);
