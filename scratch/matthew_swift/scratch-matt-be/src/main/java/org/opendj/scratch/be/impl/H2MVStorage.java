@@ -26,6 +26,8 @@ import org.opendj.scratch.be.spi.WriteableStorage;
  * A prototype backend using H2's MVStore. This implementation is quite
  * primitive because it does not use transactions in order to ensure updates are
  * atomic. In addition, no attempt has been made to tune it.
+ * <p>
+ * See http://www.h2database.com/html/mvstore.html
  */
 public final class H2MVStorage implements Storage {
     private static final class ByteArrayDataType implements DataType {
