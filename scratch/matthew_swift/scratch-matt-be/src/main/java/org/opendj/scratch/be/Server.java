@@ -46,6 +46,7 @@ import org.forgerock.opendj.ldap.responses.Responses;
 import org.forgerock.opendj.ldap.responses.Result;
 import org.forgerock.opendj.ldif.EntryGenerator;
 import org.forgerock.opendj.ldif.EntryReader;
+import org.opendj.scratch.be.impl.H2MVStorage;
 import org.opendj.scratch.be.impl.JeStorage;
 import org.opendj.scratch.be.impl.MapDbStorage;
 import org.opendj.scratch.be.impl.MapDbMemStorage;
@@ -212,6 +213,7 @@ public final class Server {
         JE(JeStorage.class),
         MEM(MapDbMemStorage.class),
         MAP(MapDbStorage.class),
+        H2(H2MVStorage.class),
         ORIENT(OrientStorage.class),
         ROCKS(RocksDbStorage.class),
         PERSISTIT(PersistItStorage.class),
