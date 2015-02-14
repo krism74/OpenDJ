@@ -53,6 +53,11 @@
       <artifactId>xodus-environment</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>1.4.185</version>
+    </dependency>
   </dependencies>
 
   <build>
