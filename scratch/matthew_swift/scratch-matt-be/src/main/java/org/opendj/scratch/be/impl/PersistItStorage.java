@@ -156,11 +156,13 @@ public final class PersistItStorage implements Storage {
     @Override
     public void initialize(Map<String, String> options) {
         properties = new Properties();
+        properties.setProperty("appendonly", "false");
         properties.setProperty("datapath", DB_DIR.toString());
         properties.setProperty("logpath", DB_DIR.toString());
         properties.setProperty("logfile", "${logpath}/dj_${timestamp}.log");
         properties.setProperty("buffer.count.16384", "64K");
         properties.setProperty("journalpath", "${datapath}/dj_journal");
+        properties.setProperty("txnpolicy", "soft");
         properties.setProperty("volume.1", "${datapath}/dj,create,pageSize:16K,"
                 + "initialSize:50M,extensionSize:1M,maximumSize:10G");
     }
@@ -170,8 +172,9 @@ public final class PersistItStorage implements Storage {
         try {
             db = new Persistit(properties);
             db.initialize();
+            db.getManagement().setAppendOnly(false);
             volume = db.loadVolume("dj");
-        } catch (PersistitException e) {
+        } catch (Exception e) {
             throw new StorageRuntimeException(e);
         }
     }
